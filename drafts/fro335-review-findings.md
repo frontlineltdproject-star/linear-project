@@ -2,6 +2,19 @@
 
 Review in progress. This is investigation evidence, not an approved replacement description.
 
+## User decisions confirmed after the first review
+
+1. Every pending new colli must be Saved or Cancelled before Create. Validate and focus the pending row; never silently include or discard it. Save remains local to the unsaved Order.
+2. Permit removal of every draft colli, including the last one; return to the valid empty state.
+3. After successful Order creation with partial upload failure, stay on the saved-result view with the returned Order ID, per-file outcomes and retry controls. Continue to Details is explicit.
+4. Keep FRO-335 frontend-only. Lost create/upload responses produce Result unknown, preserve the draft/files and require checking saved records before retrying. No new server idempotency dependency, blind automatic retry or claim of exactly-once persistence.
+
+The questions in the investigation table below are historical findings, resolved by these decisions. The production playbook planning-model checkpoint has now been requested and remains awaiting an explicit Continue. No implementation plan or Site modifications yet.
+
+Further dependency reads confirmed FRO-329/334/295/294/332 own complete retirement and current-form integration. Do not make their earlier releases wait for FRO-335 or independently remove their backend contracts. Add identical must exclude retired PCS/Notes/colli DN rather than retain hidden values.
+
+Live main lacks initial-state creation, Unit price, split Notes, independent Pickup, regime/capability and new handling-flag contracts; Collection agent validation is still active. A functional full target frontend cannot be integrated yet. A real presentation/interaction slice can reuse existing APIs, but must not silently discard target inputs, fabricate contract support or emulate atomic creation via subsequent transitions. Full integration remains dependency-blocked; the fixture-only Site can demonstrate the agreed target.
+
 ## Scope and provenance
 
 - User requests missing-information/logic review, production-design-system UI alignment, ChatGPT Sites publication instead of Cloudflare Pages, and subsequent frontend/UI branch work.

@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-335 first behavior decisions accepted; planning checkpoint pending
+
+- User chose Q1: require each pending colli addition to Save or Cancel before Create (overriding the initial recommendation). Q2: allow removing every draft colli including the last. Q3: stay on saved-Order upload-result view with retry/explicit Continue to Details. Q4: frontend-only Result unknown recovery for ambiguous create/upload results; preserve draft/files and check records before retry, no new backend idempotency dependency.
+- Further live FRO-329/334/295/294/332 reads confirm dependency-owned retirement/current-form delivery. Current main still lacks initial-state, Unit price, split Notes, Pickup, regime/capabilities and new flags; agent validation remains active. Full working FRO-335 integration cannot be claimed from a frontend-only branch today. Prototype may simulate target; real branch cannot manufacture inputs, drop values or use create-then-transition workaround.
+- Updated drafts/fro335-review-findings.md with decisions and integration boundary. Planning model checkpoint requested using the production playbook's explicit pause; awaiting Continue. No implementation plan, Site edits/publication, Linear writes or production branch/source changes yet. Prior branch ruleset publication constraint remains unresolved.
+
 ### 2026-10-22 — FRO-335 review and Sites/branch scope; first decision round pending
 
 - User requests full workflow review and production-design-system UI alignment. Explicitly replaced Cloudflare Pages with ChatGPT Sites and requested continuing to frontend/UI branch work. Preserve final ticket and verified-diff approval gates; no PR/merge authorized.
