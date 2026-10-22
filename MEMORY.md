@@ -762,3 +762,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Refreshed planning pull and current FRO-346/FRO-326. FRO-346 remains unchanged at 2026-10-20T11:09:18.022Z, Todo, Order/Pending_Review/Backend/Story, 0.0.4, No priority, no attachments, blocks FRO-326 only. FRO-326 approved retirement update is current.
 - Prepared drafts/fro346-revised-spec.md: explicit final field/card boundaries, IN_STOCK ordinary-only preservation, expected draft version, correction date/remark rules, atomicity/audit, backend-first rollout and FRO-326 page-retirement ownership. Reminder behavior preserved; no new prerequisite or scope expansion. No new UI, preview or production branch. Existing vocabulary sufficient; no ADR warranted.
 - Full draft is being shown in chat for exact-text approval. No Linear writes; all metadata/relations to be preserved. Verification is specification/source review, not implementation or deployed verification.
+
+### 2026-10-22 — FRO-346 approved description saved and verified
+
+- User approved the complete revised specification with ok. Saved drafts/fro346-revised-spec.md to FRO-346; updatedAt 2026-10-22T10:07:58.799Z.
+- Re-read independently and verified complete description against approved draft after normalizing Linear issue mentions, bold-marker placement, link formatting and line endings. Verified unchanged title, Todo, complete Order/Pending_Review/Backend/Story labels, assignment, No priority, Pre-releases 0.0.x / 0.0.4, empty attachments/documents and exact relations (blocks FRO-326 only).
+- Final specification includes confirmed past/today/future manual correction dates, stale-save rejection with retained drafts, final Details/card boundaries, ordinary IN_STOCK editing preservation, atomic audit and backend-first rollout coordinated with FRO-326's Edit-page retirement. Existing reminder behavior retained.
+- FRO-346 review/edit complete. No Ready promotion, new UI/preview, production branch, code or database change. Implementation and post-deployment verification remain future work.
