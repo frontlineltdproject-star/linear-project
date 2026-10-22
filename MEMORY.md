@@ -26,7 +26,7 @@ Scope: Linear issues, ticket-writing/review workflow, requirements, decisions an
 5. Prepare the complete reviewable draft before any approval required by the applicable workflow. Historical new-ticket sessions used full-body approval, then created the issue. Existing explicit authorization to make an edit remains valid; do not ask again for the same action.
 6. Apply the approved change, re-read the full saved description and verify metadata, relations and attachments. Record decisions and remaining uncertainty in memory.
 
-Relevant installed skills: `frontline-ticket-flow` for the end-to-end workflow and `frontline-linear-issues` for issue structure. Load their current instructions when doing that work; this memory is not a frozen replacement for those skills.
+The mandatory end-to-end ticket workflow is embedded in AGENTS.md. Follow it directly; loading the external frontline-ticket-flow skill is no longer required. Continue to load its required supporting skills, including frontline-linear-issues for issue structure. Historical session entries below describe the workflow used at the time.
 
 - Entity-spec archetype: “Defines the **Entity**…” → typed Fields tables → child entities named after actual actions/buttons → Dropdown menus with real option lists → list actions. FRO-238 and FRO-240 were the original examples.
 - Feature tickets should explain the outcome and behavior rather than force an entity template. Include acceptance criteria, decisions, relevant context for agents and post-deployment verification where useful.
@@ -151,6 +151,13 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 - Current work must not inherit obsolete “pending approval” notes when later entries record approval and creation. Resolve chronology and fetch the live issue.
 
 ## Session log
+
+### 2026-10-22 — Ticket workflow embedded in AGENTS.md
+
+- User requested the full frontline-ticket-flow skill content inside AGENTS.md, making execution of the workflow mandatory instead of requiring invocation of that external skill.
+- Embedded the complete current local source, including metadata, steps, gates, reference tables and examples. Retained supporting-skill requirements and the existing project rules for interactive reviews, reused redesign ownership and standalone final specifications.
+- Clarified precedence for historical workspace paths, planning-repository synchronization, read-only production-repository access, before/after comparisons outside ticket descriptions and equivalent tools.
+- Pulled the planning repository successfully before editing. User reviewed the differences and explicitly approved committing and pushing both files on 2026-10-22. No Linear issues or production resources changed.
 
 ### 2026-10-21 — FRO-303 renewed independent review; clarification round pending
 
