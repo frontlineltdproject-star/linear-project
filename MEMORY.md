@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-292 approved description saved and verified
+
+- User approved the complete displayed draft with "ok". Pulled planning repository successfully, read unchanged target, saved drafts/fro292-internal-external-notes.md to FRO-292, then independently re-read the saved issue.
+- Verified complete approved description after Linear Markdown/link/issue-mention normalization, unchanged title, Todo, complete Ready/Shipment/Order label set, Chris assignment, priority, project/milestone 0.0.3, attachments and exact relations. Saved updatedAt: 2026-10-22T09:11:01.742Z. No linked-ticket edits or status promotion.
+- Review/edit complete. All agreed backend, visibility, PDF, split, lifecycle, migration and safe-update requirements are in the ticket. UI remains owned by the four redesigns; customer-page presentation is separate future work. No new UI/preview, production branch, production changes or deployment verification.
+
 ### 2026-10-22 — FRO-292 decisions settled; complete revised draft awaiting approval
 
 - User replied "ok" to the remaining customer boundary: deliver customer API filtering now; customer-page placement is separate future work. All earlier accepted decisions remain in force.
