@@ -566,6 +566,11 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 - Pending interview: whether class/details stay optional, terminal inclusion policy, and historical shipment count semantics. Recommendations are proposals, not decisions. Full revised draft and write approval remain pending under the skill.
 - Created CONTEXT.md with already-established Order/purchase-order/stock-list terminology, colli identity and Damaged Packing distinction. No ADR earned.
 
+### 2026-10-22 — Mandatory planning-repository synchronization
+
+- User requires a successful GitHub pull before any Linear ticket work, and committing/pushing repository changes after completing ticket creation, modification or any other repository file changes.
+- Updated AGENTS.md with the pull/push requirements and replaced its previous prohibition on pushing this planning folder. Production repository access remains read-only. Synchronization uses the configured planning-repository upstream.
+
 ## Maintaining this file
 
 Keep durable ticket decisions, issue IDs, dependency ownership and unresolved questions. Date material changes, identify superseded rules, and distinguish ticket changes from unimplemented proposals. Fetch current design/attachment links from Linear when needed. Do not append deployment logs, credentials or lengthy preview test histories here.

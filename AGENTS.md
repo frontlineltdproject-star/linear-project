@@ -6,6 +6,12 @@ This folder is the working home for Front Line Linear issue planning, drafting, 
 
 Read `MEMORY.md` at the start of a session. Treat its issue summaries and board metadata as historical context; fetch the current issue and current board metadata before relying on them.
 
+## Mandatory GitHub synchronization
+
+- Before any work related to a Linear issue or ticket, including reviewing, planning, drafting, creating or modifying one, **MUST run `git pull --ff-only` in this planning repository** to retrieve potential GitHub updates. Read the updated project instructions and context before proceeding. If the pull fails or requires conflict resolution, resolve it before continuing ticket work; do not discard local changes.
+- After completing any ticket creation or modification, or any other file changes in this repository, **MUST commit the task's repository changes and run `git push`** to its configured upstream. This includes updates to `AGENTS.md`, `MEMORY.md`, `CONTEXT.md`, drafts and decision records. Record completed ticket work in `MEMORY.md` before committing. Verify that the push succeeded before reporting synchronization complete; if blocked, report the blocker explicitly. Preserve unrelated local changes and never force-push.
+- These pull and push requirements apply to this planning repository. Production repository access remains read-only.
+
 ## Mandatory Linear skill
 
 **Whenever reviewing, creating or editing a Linear issue, load and use the `frontline-ticket-flow` skill before reviewing, drafting or making changes. This applies to every issue review, creation or edit, including small edits and metadata changes.**
@@ -39,4 +45,4 @@ This project root replaces the skill's historical `FrontLine/Linear/` path. Reso
 
 The live production repository is `Frontline-Forwarding/frontline-forwarding`. Old archives and local snapshots are historical background, not evidence of current behavior.
 
-Follow the skill's read-only production boundaries and narrowly scoped preview rules. Do not write to the production portal or its database. Do not push this working folder to GitHub or store credentials in it.
+Follow the skill's read-only production boundaries and narrowly scoped preview rules. Do not write to the production portal or its database. Synchronize this planning repository with GitHub as required above; never store credentials in it.
