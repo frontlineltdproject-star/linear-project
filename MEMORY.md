@@ -152,6 +152,12 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 
 ## Session log
 
+### 2026-10-22 — FRO-337 decisions accepted; full draft awaiting approval
+
+- User accepted Q1: reject stale invoice-row saves, retain the draft and require refresh/review before resubmission; FRO-337 owns the protection. Accepted Q2: retain numeric(19,2) capacity for price/product, maximum 99,999,999,999,999,999.99 inclusive, with exact end-to-end monetary representation.
+- Re-read FRO-337 unchanged at 2026-10-20T11:09:08.340Z. Prepared complete standalone specification in drafts/fro337-revised-spec.md, retaining existing scope and adding collection semantics, both split paths, preservation rules, exact transport/bounds, concurrency, Context for agents and read-only verification mapping. Complete draft must be approved before Linear write.
+- Preserve current title, Todo, Order/Pending_Review/Backend/Story, project/milestone, assignment/priority, empty attachments and existing blocking relations. No new UI, preview, production branch or Linear mutation. No new vocabulary or qualifying architectural decision requires CONTEXT.md or an ADR.
+
 ### 2026-10-22 — FRO-337 review; first decision round pending
 
 - Pulled planning repository successfully. Read current FRO-337, FRO-335/FRO-326, target comments (none), team labels/statuses and live production sources through gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Linear shared-notes tool was advertised but returned Tool not found; direct issue reads worked.
