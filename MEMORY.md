@@ -643,3 +643,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Optional Pickup with unset distinct from No remains agreed. Pending second-round decisions: allow clearing a saved choice to unset; inherit the parent's value including unset once in both actual split paths, with independent later edits. These recommendations are not yet decisions.
 - No Linear changes made; complete revised draft remains pending clarification and approval.
 - Q4 subsequently accepted: authorized editors may clear a saved Yes/No back to unset. Unrelated edits preserve the saved value. Q5 split inheritance remains pending.
+
+### 2026-10-22 — FRO-333 decisions settled; revised draft pending approval
+
+- User accepted copying Pickup once, including unset, to children in both manual and Shipment-preparation splits; later parent/child edits remain independent.
+- Complete proposed description saved in drafts/fro333-pickup-responsibility.md. Covers optional/clearable nullable value, omitted-field preservation, current-page integration with backend delivery, mock-only introduction, both split paths, existing guards and consumer ownership, acceptance and read-only verification.
+- Added resolved Pickup vocabulary to CONTEXT.md. No ADR warranted. Target issue re-read unchanged; proposed edit preserves title, Todo, all four labels, project/milestone, existing relations and attachments. No Ready promotion proposed.
+- No Linear write made. Full draft must be approved before writing. No new UI preview or production branch; deployment verification not performed.

@@ -2,6 +2,9 @@
 
 Shared vocabulary for Order and colli ticket planning.
 
+**Pickup responsibility**:
+Whether Front Line is responsible for collecting an Order's goods from the supplier. Yes records that responsibility; No records that Front Line is not responsible; unset means it has not been recorded. It does not record completed collection and is independent of Greece, warehouse location and Shipment route.
+
 ## Language
 
 **Order DN Import / DN Export**:
