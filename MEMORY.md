@@ -748,3 +748,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - User requested updating FRO-326 before continuing FRO-346. Loaded frontline-linear-issues, pulled planning repo, re-read target and inspected live Edit route/Details link through gh.
 - Prepared four targeted description changes: replace retirement deferral with single-page editing/navigation/old-URL redirect and retained-capability checks; remove retirement exclusion; add acceptance/read-only verification row; add live route source. Preserve creation shared form, separate card drafts/saves, permissions, field removals, existing backend consumers and backend-first rollout. Metadata/relations/11 attachments unchanged; FRO-346 untouched.
 - Linear save was rejected by automatic approval review: full revised ticket and exact-text approval had not been provided. No write succeeded. Full proposed ticket saved at drafts/fro326-edit-page-retirement.md and opened for review. Must obtain exact draft approval before retry; do not bypass rejection.
+
+### 2026-10-22 — FRO-326 Edit-page retirement approved, saved and verified
+
+- User approved the complete draft with OK. Applied the four approved description patches to FRO-326 only; saved updatedAt 2026-10-22T10:01:07.485Z.
+- Re-read saved issue. Complete description matches approved draft after normalizing Linear issue-mention markup and line endings. Verified unchanged title, Todo, complete Order/Pending_Review/Frontend/Story labels, priority, assignment, project/milestone, documents, exact relations and all 11 attachment identities/titles/unsigned URLs.
+- FRO-326 now owns separate Edit-page retirement, navigation replacement, old-URL redirection and retained editing capability checks while preserving independent card saves, backend consumers and creation form. Earlier backend rollout retains the old editing path until Details is ready.
+- FRO-346 remains unchanged and its review is the next work. No new UI, preview, production branch, code or database changes; no implementation/deployment verification claimed.
