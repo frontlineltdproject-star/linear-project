@@ -642,3 +642,4 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - User approved making Pickup visible and usable on current Create/Edit/Details pages when backend support is delivered, without waiting for FRO-335/FRO-326. Reuse existing controls and agreed labels; later redesigns consume the same behavior. No new design/preview or production branch.
 - Optional Pickup with unset distinct from No remains agreed. Pending second-round decisions: allow clearing a saved choice to unset; inherit the parent's value including unset once in both actual split paths, with independent later edits. These recommendations are not yet decisions.
 - No Linear changes made; complete revised draft remains pending clarification and approval.
+- Q4 subsequently accepted: authorized editors may clear a saved Yes/No back to unset. Unrelated edits preserve the saved value. Q5 split inheritance remains pending.
