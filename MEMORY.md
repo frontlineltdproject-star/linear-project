@@ -703,3 +703,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Complete standalone draft: drafts/fro332-import-dn-consolidation.md. Includes all four decisions, supported REST/GraphQL/MCP consumers, current-form integration, both split paths/nested descendants and independent later edits, preservation of outputs/history/guards, acceptance criteria and read-only verification matrix. Existing vocabulary suffices; no ADR earned.
 - Re-fetched FRO-332 unchanged at updatedAt 2026-10-20T11:08:57.551Z. Proposed description-only update preserves title, Todo, all four labels, assignment, priority, project/milestone, blockers/relations and attachments. No Ready promotion proposed.
 - Full draft requires explicit approval before any Linear write. Canvas/preview and production branch remain excluded. No production implementation or deployment verification performed.
+
+### 2026-10-22 — FRO-332 approved description saved and verified
+
+- User approved the complete proposed description with "write it". Saved drafts/fro332-import-dn-consolidation.md to FRO-332 and re-read the complete issue. Description matches the approved draft after Linear's automatic issue-link and bold-format normalization.
+- Verified unchanged title, Todo status, complete labels (Order, Pending_Review, Backend, Story), unassigned state, No priority, Pre-releases 0.0.x project, milestone 0.0.3, parent/cycle/estimate/due date, empty attachments/documents and relations. Still blocks FRO-335/FRO-326 and relates to FRO-329; no Ready promotion or comment added.
+- Saved specification explicitly requires current Create/Edit input/hidden-state/payload removal with backend delivery, full duplicate storage/input/output retirement, mock-only cleanup preserving existing Order DN Import, and omission-preserving/explicit-clear DN Import updates. Both split paths and nested children, document preservation, acceptance criteria and read-only verification are included.
+- Linear updatedAt: 2026-10-22T09:04:39.098Z. No production code, database, branch, UI preview or deployment changes; implementation and post-deployment verification remain future work.
