@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-335 planning checkpoint accepted; plan prepared
+
+- User explicitly confirmed Continue with planning. Wrote docs/superpowers/plans/2026-10-22-fro335-ui-review.md using writing-plans. It separates production-based canvas selection, existing private Site update/QA/publication, exact-ticket approval/save, and conditional real frontend handoff. Native execution recommended; execution-method/plan agreement and separate implementation-model checkpoint remain pending.
+- Plan preserves all four accepted decisions and existing Site privacy/identity, uses actual current comfortable density as baseline with compact alternative, identifies genuinely new compositions, and keeps all behavior/visual verification scoped. Full frontend integration remains blocked on absent dependency contracts; branch publication also blocked on unverified required ruleset enforcement. No production source edits, branch, Site edits/publication or Linear write yet.
+
 ### 2026-10-22 — FRO-335 first behavior decisions accepted; planning checkpoint pending
 
 - User chose Q1: require each pending colli addition to Save or Cancel before Create (overriding the initial recommendation). Q2: allow removing every draft colli including the last. Q3: stay on saved-Order upload-result view with retry/explicit Continue to Details. Q4: frontend-only Result unknown recovery for ambiguous create/upload results; preserve draft/files and check records before retry, no new backend idempotency dependency.
