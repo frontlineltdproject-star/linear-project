@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-334 approved description saved and verified
+
+- User approved the complete proposed description with "ok". Pulled planning repository successfully, re-read unchanged FRO-334, saved drafts/fro334-collection-agent-removal.md, and re-read the saved issue.
+- Full description matches the approved text after Linear Markdown/link/issue-mention normalization. Verified unchanged title, Todo, complete Order/Pending_Review/Backend/Story labels, assignment, priority, project/milestone 0.0.3, attachments and exact relations. No Ready promotion or linked-ticket edits.
+- Saved updatedAt: 2026-10-22T08:55:21.038Z. Ticket review/edit complete. No new UI/preview, production branch, production changes or deployment verification.
+
 ### 2026-10-22 — FRO-334 review decisions settled; revised draft awaiting approval
 
 - Planning pull succeeded. Read current FRO-334, comments (none), linked FRO-335/FRO-326/FRO-333/FRO-329/FRO-290, current labels/statuses and live production source through gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Linear shared-notes endpoint returned tool-not-found; direct reads succeeded.
