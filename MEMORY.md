@@ -650,3 +650,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Complete proposed description saved in drafts/fro333-pickup-responsibility.md. Covers optional/clearable nullable value, omitted-field preservation, current-page integration with backend delivery, mock-only introduction, both split paths, existing guards and consumer ownership, acceptance and read-only verification.
 - Added resolved Pickup vocabulary to CONTEXT.md. No ADR warranted. Target issue re-read unchanged; proposed edit preserves title, Todo, all four labels, project/milestone, existing relations and attachments. No Ready promotion proposed.
 - No Linear write made. Full draft must be approved before writing. No new UI preview or production branch; deployment verification not performed.
+
+### 2026-10-22 — FRO-333 approved description saved and verified
+
+- User approved the complete proposed description. Saved drafts/fro333-pickup-responsibility.md to FRO-333 and re-read the issue; full description matches after Linear link/format normalization.
+- Verified unchanged title, Todo status, complete labels (Order, Pending_Review, Backend, Story), assignee, priority, project, milestone 0.0.3, attachments and relations. Blocks FRO-335/FRO-326; related to FRO-329/FRO-334. No Ready promotion or comment added.
+- Approved specification includes optional and clearable Pickup, distinct unset/No, omission-preserving updates, mock-only introduction, current-page integration with backend, and one-time independent inheritance for both split paths.
+- Linear updatedAt: 2026-10-22T08:45:38.306Z. No production code/branch or preview changes; deployment verification remains future implementation work.
