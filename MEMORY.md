@@ -790,3 +790,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Draft covers state/date/remark matrix, omission/null defaults, coordinated backend-first rollout, direct registration and colli events, empty Ready versus stock confirmation, create authorization, separate attachment outcomes, preservation rules, acceptance criteria and read-only verification. Aligns date-selection wording with FRO-335 and removes supersession narrative.
 - Proposed description-only update preserves title, Todo, Order/Pending_Review/Backend/Story, project/milestone, priority, assignment, relations and attachments. No Ready promotion. Full text is shown for approval; no Linear write yet.
 - Canvas/preview and production branch remain excluded. No new vocabulary or qualifying ADR; no production implementation or deployed verification performed.
+
+### 2026-10-22 — FRO-336 approved description saved and verified
+
+- User approved the complete draft with ok. Saved drafts/fro336-initial-readiness.md to FRO-336 and independently re-read the issue; full description matches after normalizing Linear mention/link/bold formatting and line endings.
+- Linear auto-added a related-to FRO-326 relation from the description. Removed that unintended addition to preserve the approved relation set, then re-read: all metadata matches the pre-save issue, including Todo, full Order/Pending_Review/Backend/Story labels, milestone 0.0.4, priority, assignment, attachments/documents and relations (blocks FRO-335 only). Final updatedAt 2026-10-22T10:19:04.176Z.
+- Approved backend-first rollout, current date-to-Received mapping, optional existing/API Awaiting remarks and explicit READY API confirmation are now in the saved specification, with precise history, stock preservation and verification requirements.
+- No Ready promotion, production branch, UI, preview, production code or database changes. Specification review/edit complete; implementation and post-deployment verification remain future work.
