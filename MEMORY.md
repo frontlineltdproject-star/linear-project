@@ -152,6 +152,12 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 
 ## Session log
 
+### 2026-10-22 — FRO-337 approved, saved and verified
+
+- User approved the complete draft with "ok". Saved drafts/fro337-revised-spec.md to FRO-337, including stale-save rejection/draft retention, exact monetary transport and numeric(19,2) limits, collection semantics, both split paths, consumer preservation, rollout compatibility and verification.
+- Re-read saved issue at updatedAt 2026-10-22T08:26:39.994Z. Description matches approved text after Linear formatting/mention normalization. Verified unchanged title, Todo, complete Order/Pending_Review/Backend/Story label set, assignment, No priority, Pre-releases 0.0.x / 0.0.3, empty attachments and relations (blocks FRO-335/FRO-326; no blockers or related issues).
+- Only FRO-337 changed. No UI, preview, production branch or production writes. Ticket review/edit complete; implementation and post-deployment verification remain future work.
+
 ### 2026-10-22 — FRO-337 decisions accepted; full draft awaiting approval
 
 - User accepted Q1: reject stale invoice-row saves, retain the draft and require refresh/review before resubmission; FRO-337 owns the protection. Accepted Q2: retain numeric(19,2) capacity for price/product, maximum 99,999,999,999,999,999.99 inclusive, with exact end-to-end monetary representation.
