@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-334 review decisions settled; revised draft awaiting approval
+
+- Planning pull succeeded. Read current FRO-334, comments (none), linked FRO-335/FRO-326/FRO-333/FRO-329/FRO-290, current labels/statuses and live production source through gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Linear shared-notes endpoint returned tool-not-found; direct reads succeeded.
+- User accepted retiring access granted solely by Order Collection agent, preserving independent authorization; mock-only assignment cleanup without archive/reassignment or real legacy deletion; minimal current Create/Edit/Details integration with backend in 0.0.3 rather than waiting for redesigns in 0.0.5.
+- Confirmed participant scope exists in both PurchaseOrderAuthorizationService and PurchaseOrderRepository; downstream effects include list totals/groups, scoped lineage, colli current-membership tracking, Order attachments and stock-list PDF authorization. Preserve independent Shipment access and partner mutation restrictions. Greece remains separately stored/defaulted; remove only its agent dependency.
+- Prepared complete standalone draft at drafts/fro334-collection-agent-removal.md with both split paths, cross-adapter/generated-client removal, compatibility, consumer ownership and read-only verification matrix. Full draft requires approval before any Linear write.
+- Current target unchanged at 2026-10-20T11:09:00.972Z: Todo, Order/Pending_Review/Backend/Story, unassigned, No priority, Pre-releases 0.0.x / 0.0.3, no attachments; blocks FRO-335/FRO-326, related FRO-290/FRO-333/FRO-329. Preserve metadata; no Ready promotion proposed.
+- Canvas/preview skipped because linked redesign contracts suffice. Production branch excluded by user; no production changes or deployment verification. Existing vocabulary suffices; no new glossary term or qualifying architectural trade-off identified. Review occurred from the planning workspace via remote source reads, not a production checkout/playbook execution.
+
 Extracted 2026-10-21 from `FrontLine backup 14-09-2026/Linear/MEMORY.md` in the previous workspace. Source history runs through 2026-10-20. This is a curated handoff for a standalone Linear project, not a live board export. The original memory is preserved.
 
 Scope: Linear issues, ticket-writing/review workflow, requirements, decisions and unresolved questions. Preview implementation logs, deployment commands, credentials, source commits, local servers, PDF production and unrelated email/data-processing work are omitted. This file is self-contained; the original folder's documents and preview source files have not been copied.
