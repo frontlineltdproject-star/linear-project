@@ -216,3 +216,5 @@ Read-only checks only. Use existing authorized records and test evidence; never 
 
 **Reference:** Live production sources above; FRO-326 shared Details specification; dependency ownership table; private FRO-335 Site.
 
+
+*[Archived preview — version 23 (19 October 2026)](https://fro-335-create-order-preview.frontlineltdproject.chatgpt.site/archive/v23/) — reference only; superseded by the current preview.*
