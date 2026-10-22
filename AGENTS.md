@@ -6,6 +6,11 @@ This folder is the working home for Front Line Linear issue planning, drafting, 
 
 Read `MEMORY.md` at the start of a session. Treat its issue summaries and board metadata as historical context; fetch the current issue and current board metadata before relying on them.
 
+Before ticket work, search WORKFLOW_LEARNINGS.md for lessons relevant
+to the task and read the matching entries. These lessons are process
+guidance; they do not establish current product behavior or grant
+permission. Current instructions and approved decisions take precedence.
+
 ## Mandatory GitHub synchronization
 
 - Before any work related to a Linear issue or ticket, including reviewing, planning, drafting, creating or modifying one, **MUST run `git pull --ff-only` in this planning repository** to retrieve potential GitHub updates. Read the updated project instructions and context before proceeding. If the pull fails or requires conflict resolution, resolve it before continuing ticket work; do not discard local changes.
@@ -236,7 +241,50 @@ Keep the token out of the repo and out of `FrontLine/` — that folder already h
 
 **Cleanup.** Record the project name in the ticket. When the feature ships, delete it — `npx wrangler pages project delete "$NAME"` — that project only, and only when the user says so.
 
-## 3. Spec check after the design
+## 3. Spec check — consumer tracing and design reconciliation
+
+### Trace the affected business rule
+
+For a proposed change to business behavior, trace each affected rule
+through the live production repository before completing the draft.
+Start during fact lookup in step 1 and revisit the trace after design
+or scope decisions. This check also applies when canvas and preview
+steps are skipped.
+
+1. Identify where the rule is stored, calculated and enforced.
+2. Find its relevant readers and callers: backend services, API
+   operations, UI screens, summaries, filters, documents, exports and
+   integrations. Check permissions, lifecycle transitions, historical
+   records and migration or recalculation needs where applicable.
+3. Follow references beyond the initially touched screen or field.
+   Search results identify candidates; read the relevant code to
+   establish behavior.
+4. Show a concise impact table in the review:
+
+   | Consumer or affected area | Current behavior and source | Required outcome | Owner |
+   | --- | --- | --- | --- |
+
+   Record whether each area changes, preserves its behavior or has an
+   unresolved question. Identify ownership as this ticket, a linked
+   ticket or unresolved.
+5. Put agreed requirements, preservation rules, dependencies and
+   applicable acceptance criteria into the final ticket. Keep the
+   investigation narrative in chat; retain necessary implementation
+   references in Context for agents.
+
+Scale the trace to the affected rule. An unrelated area needs no audit.
+A wording or metadata edit with no behavior change needs only a brief
+explanation that consumer tracing does not apply.
+
+Finding another consumer does not authorize expanding scope. Resolve
+ownership with the user and reuse existing tickets where appropriate.
+
+The check is complete when relevant consumers have a supported outcome
+and an owner. Name inaccessible sources and unresolved behavior
+explicitly. A draft may expose those gaps for discussion, but must not
+present dependent requirements as settled.
+
+### Reconcile the design with the specification
 
 A design round changes rules, not only pixels. A new control, a removed column, a new mode — each changes what the backend must compute. Before drafting the ticket, compare the design with the spec line by line.
 
@@ -324,7 +372,10 @@ Prepare this step for an approved UI ticket; branch creation, committing and pub
 
 ## 5. Record the session
 
-Append a dated entry to **`FrontLine/Linear/MEMORY.md`** (Session log, newest first): what was discussed, the decisions, the deliverables, the open threads. Refine *How we think in these sessions* whenever the user corrects an approach, and keep *Board state* current. Facts and reasoning, not transcripts.
+Append a dated entry to MEMORY.md: approved decisions, deliverables,
+issue ownership and unresolved questions. Treat recorded board state
+as historical context. Record reusable process lessons in
+WORKFLOW_LEARNINGS.md according to that file's maintenance rules.
 
 ⚠️ Never push the `FrontLine` working folder to GitHub — its remote is dead and it holds plaintext API-key files. The nested repos (`Font Line Helper`, the marketing site) are pushed individually, and only when the user asks.
 

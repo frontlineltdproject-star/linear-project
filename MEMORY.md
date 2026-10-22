@@ -578,7 +578,17 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 - User requires a successful GitHub pull before any Linear ticket work, and committing/pushing repository changes after completing ticket creation, modification or any other repository file changes.
 - Updated AGENTS.md with the pull/push requirements and replaced its previous prohibition on pushing this planning folder. Production repository access remains read-only. Synchronization uses the configured planning-repository upstream.
 
+### 2026-10-22 — Consumer tracing and workflow learnings
+
+- User approved consumer tracing for changes to business behavior: investigate relevant readers and callers, show supported outcomes and ownership in an impact table, and carry agreed requirements into the final ticket. This applies without a UI design round and does not authorize scope expansion.
+- Updated AGENTS.md step 3 and the session-recording instructions; created WORKFLOW_LEARNINGS.md with maintenance rules and an entry format, initially without lessons. Ticket history, vocabulary and architectural decisions retain their existing homes.
+- Existing historical entries remain intact. Verification result labels and extraction of older lessons were outside this change; no Linear or production-repository changes were made.
+
 ## Maintaining this file
+
+Record reusable process lessons in WORKFLOW_LEARNINGS.md. Keep ticket
+history and approved business decisions here; existing historical
+entries remain intact.
 
 Keep durable ticket decisions, issue IDs, dependency ownership and unresolved questions. Date material changes, identify superseded rules, and distinguish ticket changes from unimplemented proposals. Fetch current design/attachment links from Linear when needed. Do not append deployment logs, credentials or lengthy preview test histories here.
 
