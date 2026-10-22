@@ -844,3 +844,11 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Complete description matches the approved draft after Linear issue-mention/link/bold/line-ending normalization. Verified unchanged title, Todo, all Order/Pending_Review/Ready/Frontend/Story labels, unassigned state, priority, project/milestone 0.0.4, parent/cycle/estimate/due date, empty attachments/documents and exact relations (blocks FRO-326; related FRO-335/FRO-313). No status promotion, linked-ticket edits or relation cleanup needed.
 - Linear updatedAt: 2026-10-22T10:30:49.499Z. Final specification includes all three accepted decisions, lifecycle/date eligibility, preparation/confirmation across every manual adapter, read-only review, stale-context/content protection, repeat-confirmation idempotency, atomic queueing, delivery/history guarantees, staged rollout and preserved scheduled/response/legacy behavior.
 - Ticket review/edit complete. No UI/canvas/preview, production branch, production code or database changes. Implementation and post-deployment verification remain future work.
+
+### FRO-335 design comparison — 2026-10-22
+- User approved the implementation plan and implementation model checkpoint, with inline implementation and review before handoff.
+- Built local source-based comparison in the existing Site checkout: dist/design-review.html, design-system.css, design-review.js, component-map.md. Existing published index remains unchanged.
+- A uses current comfortable tokens; B uses compact tokens. Current-production General-tab reference is explicitly a static illustration with fictional fixtures.
+- Verified HTTP 200, node --check, browser rendering, EN/EL switching, and no horizontal overflow at 400px for A and B; browser warning/error log empty. Full interactive prototype QA remains pending.
+- Local comparison: http://127.0.0.1:8335/design-review.html. Screenshot in visualization root: fro335-design-comparison.png. Local server retained for user selection.
+- Awaiting required design selection; no Linear write, Site deployment, production edit or branch publication occurred. Existing dependency/enforcement blockers remain.
