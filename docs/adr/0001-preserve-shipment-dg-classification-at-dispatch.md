@@ -1,0 +1,3 @@
+# Preserve shipment DG classification at dispatch
+
+FRO-297 requires a dispatched shipment's dangerous-goods count to remain unchanged after later corrections to a colli's DG flag (user decision, 21 October 2026). Capture the participating collis' DG classification at dispatch and derive the historical count from that snapshot, rather than recomputing it from their current flags. This adds historical data retention so later edits cannot rewrite what a shipment was recorded as carrying. Shipments dispatched before this feature show Unavailable: current flags cannot prove dispatch-time classification, and missing history must not be backfilled as zero (Q6 approved, 21 October 2026).
