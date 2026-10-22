@@ -1,5 +1,15 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-335 review and Sites/branch scope; first decision round pending
+
+- User requests full workflow review and production-design-system UI alignment. Explicitly replaced Cloudflare Pages with ChatGPT Sites and requested continuing to frontend/UI branch work. Preserve final ticket and verified-diff approval gates; no PR/merge authorized.
+- Planning pull succeeded. Current FRO-335 unchanged at 2026-10-21T11:48:51.896Z, Todo, Order/Pending_Review/Frontend/Story, milestone 0.0.5, one preview attachment, no comments. Read live FRO-326/333/336/356/297/337/292, current labels/statuses and source. No Linear edits.
+- Production checkout HEAD 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Initial playbook output encoding failed; UTF-8 resume successfully preserved snapshot: committed, SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Separate production planning/implementation model checkpoints remain pending. Isolated temp checkout remains detached and application source unchanged.
+- Existing private FRO-335 Site appgprj_6acca09bd25081918eda0fa6bb3b5936, version 23, source f013e38d5c33371a836599090b94786f3f57cd11 retrieved into this chat's visualization workspace. No Site edit/publication. Preserve audience and current URL. No credentials recorded.
+- Review evidence/component mapping and remaining work are in drafts/fro335-review-findings.md. Confirmed obsolete unresolved Pickup/default language, resolved no-default regime rule, conflicting seven-step success presentation, old-preview styling versus live components, incomplete verification sections, pending colli/Create ambiguity, last-row removal contradiction and create/upload uncertain-result recovery gap. Backend create/upload are not idempotent; do not promise duplicate-safe retry through UI disable alone.
+- Q1–Q3 asked via clickable options, no answers yet: recommend validate/include all visible colli rows on Create; allow final unsaved colli removal; retain saved-Order upload-result view for retry or explicit continue. Recommendations are not decisions. Uncertain retry/backend ownership remains to discuss. No new glossary term or ADR.
+- GitHub push permission is true, but rulesets endpoint returned HTTP 403 (plan upgrade required). Required branch-restriction enforcement cannot be verified; publication blocked under step 4e pending resolution. Do not alter repository settings or treat generic branch request as approval of an unseen diff. Review/design/local preparation may continue.
+
 ### 2026-10-22 — FRO-292 approved description saved and verified
 
 - User approved the complete displayed draft with "ok". Pulled planning repository successfully, read unchanged target, saved drafts/fro292-internal-external-notes.md to FRO-292, then independently re-read the saved issue.
