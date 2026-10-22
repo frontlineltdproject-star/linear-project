@@ -635,3 +635,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Live lifecycle has both manual PENDING-child splitting and Shipment-preparation IN_STOCK-child splitting. Both need explicit Pickup inheritance, including unset. Existing mutation authorization/state/reservation guards must be retained unless separately decided. Nullable update must distinguish omitted (preserve) from explicit clearing rather than copy the existing Greece boolean behavior.
 - Pending first-round answers: mock-only rollout versus real existing unknown Orders; minimal existing-form integration in 0.0.3 versus release with redesigns. Later clarification: clearability and copying/inheritance. Recommendations are not decisions.
 - Canvas/preview skipped because FRO-335/FRO-326 own presentation; no new design need established. Production branch explicitly excluded. No Linear writes or production changes. Review and clarification remain in progress; no implementation/deployment verification claimed.
+
+### 2026-10-22 — FRO-333 rollout and current-page integration agreed
+
+- User confirmed affected existing data is mock data; real legacy import/reconciliation is outside this delivery. No real-data deletion is authorized.
+- User approved making Pickup visible and usable on current Create/Edit/Details pages when backend support is delivered, without waiting for FRO-335/FRO-326. Reuse existing controls and agreed labels; later redesigns consume the same behavior. No new design/preview or production branch.
+- Optional Pickup with unset distinct from No remains agreed. Pending second-round decisions: allow clearing a saved choice to unset; inherit the parent's value including unset once in both actual split paths, with independent later edits. These recommendations are not yet decisions.
+- No Linear changes made; complete revised draft remains pending clarification and approval.
