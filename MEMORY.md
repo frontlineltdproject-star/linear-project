@@ -755,3 +755,10 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 - Re-read saved issue. Complete description matches approved draft after normalizing Linear issue-mention markup and line endings. Verified unchanged title, Todo, complete Order/Pending_Review/Frontend/Story labels, priority, assignment, project/milestone, documents, exact relations and all 11 attachment identities/titles/unsigned URLs.
 - FRO-326 now owns separate Edit-page retirement, navigation replacement, old-URL redirection and retained editing capability checks while preserving independent card saves, backend consumers and creation form. Earlier backend rollout retains the old editing path until Details is ready.
 - FRO-346 remains unchanged and its review is the next work. No new UI, preview, production branch, code or database changes; no implementation/deployment verification claimed.
+
+### 2026-10-22 — FRO-346 clarification complete; full revised draft pending approval
+
+- User accepted Q1: manual EXPECTED_READINESS corrections allow past/today/future calendar dates; retain existing correction semantics. Accepted Q2: reject stale ordinary-only and combined saves entirely, retaining drafts and requiring refresh/review.
+- Refreshed planning pull and current FRO-346/FRO-326. FRO-346 remains unchanged at 2026-10-20T11:09:18.022Z, Todo, Order/Pending_Review/Backend/Story, 0.0.4, No priority, no attachments, blocks FRO-326 only. FRO-326 approved retirement update is current.
+- Prepared drafts/fro346-revised-spec.md: explicit final field/card boundaries, IN_STOCK ordinary-only preservation, expected draft version, correction date/remark rules, atomicity/audit, backend-first rollout and FRO-326 page-retirement ownership. Reminder behavior preserved; no new prerequisite or scope expansion. No new UI, preview or production branch. Existing vocabulary sufficient; no ADR warranted.
+- Full draft is being shown in chat for exact-text approval. No Linear writes; all metadata/relations to be preserved. Verification is specification/source review, not implementation or deployed verification.
