@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-22 — FRO-292 decisions settled; complete revised draft awaiting approval
+
+- User replied "ok" to the remaining customer boundary: deliver customer API filtering now; customer-page placement is separate future work. All earlier accepted decisions remain in force.
+- Pulled planning repository (up to date), re-read unchanged FRO-292 and refreshed live production SHA/schema evidence through gh: 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Prepared complete standalone draft at drafts/fro292-internal-external-notes.md, covering visibility, lifecycle, atomic creation, independent partial updates/clears, stale-edit protection and legacy compatibility, migration, both split paths, PDF output, UI ownership, acceptance and read-only verification.
+- Draft proposal preserves existing title, Todo, Ready/Shipment/Order, Chris, priority, project/milestone and exact relations/attachments. No label additions or Ready transition. Full text must be approved before any Linear save; the user's "ok" settled the open behavior question and did not approve an unseen full description.
+- Canvas/preview skipped because all presentation is owned by FRO-335/FRO-326/FRO-341/FRO-316. No production branch or production changes. No new glossary vocabulary or qualifying ADR. Review preparation complete; Linear write and saved-issue verification pending approval.
+
 ### 2026-10-22 — FRO-292 review and decisions; customer UI boundary pending
 
 - Planning pull succeeded. Read current FRO-292 (updated 2026-10-20T11:09:11.339Z), comments (none), FRO-335/FRO-326/FRO-316/FRO-341/FRO-344 and current labels/statuses. Shared Linear notes endpoint returned tool-not-found; direct reads worked. Current target: Todo, Ready/Shipment/Order, Chris, No priority, Pre-releases 0.0.x milestone 0.0.3, no attachments; blocks all four redesigns, related FRO-344. No Linear changes.
