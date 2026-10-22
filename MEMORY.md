@@ -152,6 +152,15 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 
 ## Session log
 
+### 2026-10-22 — FRO-337 review; first decision round pending
+
+- Pulled planning repository successfully. Read current FRO-337, FRO-335/FRO-326, target comments (none), team labels/statuses and live production sources through gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Linear shared-notes tool was advertised but returned Tool not found; direct issue reads worked.
+- FRO-337 remains Todo, Order/Pending_Review/Backend/Story, Pre-releases 0.0.x milestone 0.0.3, no attachments, blocks FRO-335/FRO-326 (both milestone 0.0.5). Baseline: drafts/fro337-review-source.md. No Linear changes.
+- Existing specification already covers two-decimal unit prices, server calculation, mock-only rollout, copy behavior and standalone-form compatibility. No new UI/preview needed; existing redesigns own presentation. Production branch explicitly excluded by user.
+- Confirmed gaps: GraphQL money uses Float and existing client submits Number(totalAmount), requiring exact input/output transport for claimed decimal accuracy; total_amount is numeric(19,2), but price/product bounds unspecified; full invoice collection replacement distinguishes omitted/null (unchanged) from [] (clear), validates identities and deletes omitted rows. Current update reads/locks server version but accepts no client expected version, so it does not detect an old browser draft saved after another completed update.
+- Consumer trace: explicit pre-arrival Order split and partial-Shipment child creation both call PurchaseOrderInvoiceRowRepository.copyTo; preserve full-row copying and fresh child IDs, add unit price with no apportionment. StockListPdfModelFactory, DeliveryNoteDraftSourceService/DeliveryNoteLineFactory and AadeDeliveryNoteXmlBuilder do not consume these row monetary values; preserve those outputs and independent customs/header values.
+- Pending recommendations, not decisions: retain current numeric(19,2) total capacity and enforce price/product bounds with exact end-to-end representation; reject stale invoice-collection saves and retain drafts for refresh/review. Need explicit update-collection semantics, copy-path criteria, Context for agents and concrete read-only verification in eventual draft. Existing mock-only decision is retained; no historical reconciliation or nullable-price mode proposed. No new glossary term or ADR resolved.
+
 ### 2026-10-22 — Ticket workflow embedded in AGENTS.md
 
 - User requested the full frontline-ticket-flow skill content inside AGENTS.md, making execution of the workflow mandatory instead of requiring invocation of that external skill.
