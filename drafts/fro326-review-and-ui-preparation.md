@@ -17,9 +17,9 @@ Review in progress, 22 October 2026. This is a review record, not an approved re
 | Later Invoice company correction | FRO-303 permits restricted correction beyond ordinary states. Current Details Edit link and general service guards stop at IN_STOCK. | Shared Edit must remain available for this permitted field only; consume document conflict/review behavior. | FRO-303 contract; FRO-326 integration |
 | Later ALK correction | FRO-356 permits ALK-only corrections and requires shared-registration impact review. FRO-326 broadly says unchanged-status Save submits directly. | Separate status, customs and fiscal review triggers; lock unrelated fields in restricted mode. | FRO-356 contract; FRO-326 integration |
 | Concurrent restricted capabilities | No linked contract provides one atomic save for Invoice company plus ALK in later stages. | User accepted one correction per edit session; shared Edit offers permitted correction choice. | FRO-326 presentation; respective backend owners |
-| Pickup | FRO-333 now defines optional, unset, clearable and copied-on-split behavior; FRO-326 calls these unresolved. | Consume current nullable contract, distinguish omission from explicit clear, never infer No. Awaiting user answer. | FRO-333 contract; FRO-326 presentation |
-| Current customs indicators | FRO-326 says retain Bonded indicators; FRO-356 replaces flag-derived current regime. | Source current regime from explicit Order regime; preserve recorded historical events separately. Awaiting user answer. | FRO-356 contract; FRO-326 presentation |
-| Leaving Details | Ticket retains drafts across tabs/language but does not settle navigation to a different Order/page. | Proposed discard confirmation, with tab/language retention unchanged. Awaiting user answer. | FRO-326 |
+| Pickup | FRO-333 now defines optional, unset, clearable and copied-on-split behavior; FRO-326 calls these unresolved. | Consume current nullable contract, distinguish omission from explicit clear, never infer No. Accepted by user on 22 October 2026. | FRO-333 contract; FRO-326 presentation |
+| Current customs indicators | FRO-326 says retain Bonded indicators; FRO-356 replaces flag-derived current regime. | Source current regime from explicit Order regime; preserve recorded historical events separately. Accepted by user on 22 October 2026. | FRO-356 contract; FRO-326 presentation |
+| Leaving Details | Ticket retains drafts across tabs/language but does not settle navigation to a different Order/page. | Proposed discard confirmation, with tab/language retention unchanged. Accepted by user on 22 October 2026. | FRO-326 |
 | Readiness review | FRO-328 now defines read-only recipient/content review and stale-context protection. | Replace ambiguous recipient-selection language; both button locations consume one preparation/confirmation flow. | FRO-328 contract; FRO-326 integration |
 | Verification | Ticket mixes mutation acceptance checks, production inspection and historical preview reports. | Separate test-environment acceptance from concrete read-only Post-deployment verification; add Context for agents and remove revision narration. | FRO-326 |
 
@@ -48,7 +48,7 @@ All paths below are relative to `frontline-forwarding-client/`. The local static
 - User authorizes continued review and local UI preparation; Cloudflare publishing deferred. Current broad OAuth is not a Pages-only credential; do not publish with it.
 - Accepted Q1: shared Edit integrates later-stage Invoice company-only and ALK-only editing with other fields locked and required impact review.
 - Accepted Q4: one restricted correction per edit session, not a newly invented combined backend transaction.
-- Q2 pending: consume current Pickup and explicit-regime indicator contracts.
-- Q3 pending: navigation discard confirmation.
+- Accepted Q2: consume current Pickup and explicit-regime indicator contracts.
+- Accepted Q3: confirm before discarding drafts when leaving Details; tabs/language retain drafts.
 - Design comparison follows the required interview gate; proposed directions stay within stacked cards and production components. Do not revive rejected historic layouts.
 - No Linear change, hosted preview change, production implementation, branch, deployment or production verification has occurred.
