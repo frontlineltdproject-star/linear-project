@@ -584,6 +584,11 @@ These are contextual descriptions, not guaranteed current titles or states. Fetc
 - Updated AGENTS.md step 3 and the session-recording instructions; created WORKFLOW_LEARNINGS.md with maintenance rules and an entry format, initially without lessons. Ticket history, vocabulary and architectural decisions retain their existing homes.
 - Existing historical entries remain intact. Verification result labels and extraction of older lessons were outside this change; no Linear or production-repository changes were made.
 
+### 2026-10-22 — Eight workflow lessons extracted
+
+- User approved adding all eight proposed lessons to WORKFLOW_LEARNINGS.md: five active reminders and three corrections already incorporated into AGENTS.md. Entries retain the original 2026-10-21 evidence dates and link to their supporting session records and authoritative workflow sections.
+- Existing MEMORY.md history remains intact; no entries were moved or rewritten. No AGENTS.md, Linear or production changes were made.
+
 ## Maintaining this file
 
 Record reusable process lessons in WORKFLOW_LEARNINGS.md. Keep ticket
