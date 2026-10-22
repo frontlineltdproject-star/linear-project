@@ -626,3 +626,12 @@ Keep durable ticket decisions, issue IDs, dependency ownership and unresolved qu
 
 
 
+
+### 2026-10-22 — FRO-333 review; first clarification round pending
+
+- Pulled planning repository successfully; read current FRO-333, FRO-335, FRO-326 and FRO-334 plus current statuses. Production source accessed read-only through authenticated gh. Linear shared agent-context endpoint returned tool-not-found; issue reads succeeded.
+- User confirmed Pickup is optional and may remain unset. Yes, No and unset must remain distinguishable; no automatic No default is approved. Clearing an existing value and exact omitted-versus-null update semantics still need resolution.
+- Review findings: requiredness/default, existing-data treatment and copy rules were already explicitly unresolved. FRO-333 description names only FRO-326 although live blockers correctly include FRO-335. FRO-333 milestone 0.0.3 precedes both redesigns at 0.0.5; existing-form delivery ownership is unresolved. Current Todo plus Pending_Review differs from project draft convention; metadata was preserved.
+- Live lifecycle has both manual PENDING-child splitting and Shipment-preparation IN_STOCK-child splitting. Both need explicit Pickup inheritance, including unset. Existing mutation authorization/state/reservation guards must be retained unless separately decided. Nullable update must distinguish omitted (preserve) from explicit clearing rather than copy the existing Greece boolean behavior.
+- Pending first-round answers: mock-only rollout versus real existing unknown Orders; minimal existing-form integration in 0.0.3 versus release with redesigns. Later clarification: clearability and copying/inheritance. Recommendations are not decisions.
+- Canvas/preview skipped because FRO-335/FRO-326 own presentation; no new design need established. Production branch explicitly excluded. No Linear writes or production changes. Review and clarification remain in progress; no implementation/deployment verification claimed.
