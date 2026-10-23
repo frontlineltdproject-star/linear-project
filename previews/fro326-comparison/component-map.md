@@ -21,3 +21,7 @@ All client paths below are under `frontline-forwarding-client/src/`. `full.html`
 | Discard confirmation | modal.tsx, button.tsx | New composition: confirm leaving dirty page; retain tab/language drafts |
 
 Prototype-only review toolbar controls locale, lifecycle fixture, access, loading/error/empty state and save outcome. Business-rule notes and New component markers are visible review aids, never production UI.
+
+### Local design revision, 23 October 2026 — awaiting visual acceptance
+
+User rejected persistent readiness-button status/date text, the status presentation and colli expansion. Selected compact table rows with clean two-column details form. Preview now uses contextual reasons beside disabled email controls (hover/focus/tap), a more prominent rounded-md status with production tone and dot, active flag badges in read view, inline dimensions in edit view, and a bounded Description/Package form with separate DG group. Removed internal implementation prose from expansion. These alter presentation only, not permissions, eligibility, payloads or audit. Badge/Table/Input/Select/Choice remain mapped above; contextual help is a new composition requiring production overlay accessibility. Final ticket reconciliation is pending visual acceptance; current full draft has not been approved or changed in Linear.
