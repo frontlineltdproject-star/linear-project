@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 source review and accepted decisions; revised draft pending approval
+
+- Mandatory planning pull succeeded. Refetched full FRO-325, comments (none), current FRO labels/statuses and linked 316/341/344/295/297/339/303/322 contracts. FRO-165 is archived email-tagging; Shipment Details owner is FRO-316. Target remains Todo, Pending_Review/Backend/Epic/Shipment, unassigned, no priority, milestone0.0.7, original relations and two attachments unchanged.
+- Read live production through authenticated gh at3820e89e8caa341261e2d48bcb282d93e1bb1d03. Playbook committed policy fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc; same-snapshot UTF-8 resume recovered Windows display encoding. Optional Linear shared context endpoint unavailable; direct reads worked.
+- User accepted coordinated activation with compatible consumers (UI milestones0.0.9), stock confirmation for every participating Order before Ready, and explicit pre-dispatch number clearing without readiness loss while dispatch remains blocked. Fiscal draft-reconciliation question withdrawn after source confirmed grouping-only edits preserve its HU-weight/membership source. No automatic fiscal reconciliation scope added.
+- Findings: PCS-preservation wording conflicts with295 retirement; Ready DG count needs297 coordination; consume339 current geography validation; load-unit deletion/mutation must preserve referenced LOADED history; no-op, expected-version/concurrent-command/retry contracts need specificity; migration guards/adapters/authorities/rollout need coverage. Review and consumer table: drafts/fro325-review.md. Full standalone proposal: drafts/fro325-reviewed-spec.md.
+- Canvas/preview/UI branch skipped: presentation owned by316/341; user prohibits production branch. No Linear write, production source/database write, branch, deployment or post-deployment test. No glossary/ADR change. Await complete draft approval under AGENTS4c; retain exact metadata/relations/attachments. Preserve unrelated326/330 local work. Synchronize only this entry and two325 drafts.
+
 ### 2026-10-23 — FRO-348 approved historical UI footer saved and verified
 
 - User approved the exact historical-reference addition. Mandatory planning pull succeeded; fetched full current348, appended only the approved italic footer via patch and retained complete labels. Footer links original Details version20/20October2026 at https://supplier-invoice-details-preview.frontlineltdproject.chatgpt.site/baseline-v20.html and states current specification/selectedA take precedence.
