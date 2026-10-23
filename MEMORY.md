@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 approved revision saved and verified
+
+- User explicitly approved writing the exact reviewed revision while keeping metadata unchanged. Mandatory planning pull succeeded. Read the current full issue before saving the approved description from drafts/fro348-details-page-review.md, retaining the complete label set.
+- Independent re-read matches the approved description after Linear's formatting normalization only. Linear automatically added FRO-303 as related from a mention; removed only that save-induced relation under the user's metadata-preservation instruction, then independently re-read again. Final metadata matches the before snapshot: title, Todo, supplier invoice/Pending_Review/Frontend/Story labels, priority, project/milestone, exact blockers/related issues, existing preview attachment and other returned metadata unchanged. Explicit read confirms unassigned, no delegate/estimate/parent/cycle/due date.
+- Verified saved issue https://linear.app/front-line-ltd/issue/FRO-348/supplier-invoice-details-page-ui at updatedAt 2026-10-23T11:23:44.164Z. Description includes selected A and all approved guarded editing, cancellation and draft/recovery decisions. No Ready promotion, production code/database write, UI branch or publication authorization. Preserve unrelated FRO-326/FRO-330 changes; synchronize this entry only.
+
 ### 2026-10-23 — FRO-347 partial frontend prepared; verified diff, integration/publication blocked
 
 - User approved native plan execution and explicitly completed the separate implementation-model checkpoint. Planning pull succeeded; current FRO-347 re-read unchanged at 2026-10-23T10:40:30.688Z, Todo with supplier invoice/Pending_Review/Frontend/Story, relations and attachment retained. No Linear writes.
