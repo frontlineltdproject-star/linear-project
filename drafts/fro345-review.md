@@ -1,6 +1,6 @@
 # FRO-345 review — 23 October 2026
 
-Review in progress; interview decisions and any replacement description require user answers and approval. No Linear mutation authorized or performed.
+Review complete. User approved the full replacement description; saved and independently verified on 23 October 2026.
 
 ## Scope and evidence
 
@@ -56,10 +56,18 @@ Retry/correlation mechanisms are engineering requirements to make the existing o
 
 ## Workflow state
 
-0 Preflight complete. 1 Grill: all five decisions accepted. 2 Canvas / 2b Preview: skipped, presentation already owned. 3 Spec check: consumer outcomes incorporated in the draft. 4 Ticket: complete replacement in drafts/fro345-reviewed-spec.md, awaiting exact-text approval before Linear writes. 4e UI branch: skipped by explicit user instruction. 5 Memory: accepted decisions and draft recorded. 6 Post-deployment verification: specified for later implementation; no deployment or product testing performed.
+0 Preflight complete. 1 Grill: all five decisions accepted. 2 Canvas / 2b Preview: skipped, presentation already owned. 3 Spec check: consumer outcomes incorporated. 4 Ticket: complete replacement in drafts/fro345-reviewed-spec.md approved, saved and independently verified. 4e UI branch: skipped by explicit user instruction. 5 Memory: accepted decisions and completed write recorded. 6 Post-deployment verification: specified for later implementation; no deployment or product testing performed.
 
 ## Proposed write and review comparison
 
 Fresh FRO-345 read and live main check on 23 October confirm unchanged target updatedAt 2026-10-20T11:09:58.191Z and main3820e89e8caa341261e2d48bcb282d93e1bb1d03. Current team labels/statuses refreshed. Proposed write is description-only; retain exact title, Todo, Pending_Review/Shipment, assignment/priority, project/milestone, blocks316, related325/344/326, no blockers and empty attachments/documents. No Ready promotion or label additions. Mentions of other owners are references, not approval for extra relations; restore only save-induced relation changes if needed to preserve the explicitly approved set.
 
 Before/after for review outside the final description: unspecified timestamp ordering -> recorded-time/command order with separate occurrence precision; broad retry promise -> stable request/replay/conflict/outcome contract; equal command-ID grouping -> root operation with explicit child command links; generic paginated reads -> exact exception event/predecessor lookup; deferred comment size/state -> accepted2000/all statuses; unlisted Notes changes -> accepted one metadata-only Notes-updated summary; general legacy backfill -> confirmed mock-only scope with preserved facts/unknowns and historical-arrival fixtures; generic verification -> acceptance-mapped read-only checks. Original protections and all enumerated operation categories remain, including handover context, append-only snapshots and separate attachment/DN audit ownership.
+
+## Saved issue verification
+
+User approved the complete displayed replacement with "ok". Mandatory planning pull succeeded; fresh full issue remained unchanged before save. Saved the exact approved drafts/fro345-reviewed-spec.md content and re-passed both existing labels. Independent re-read matched the approved description after only Linear issue-mention/link/list formatting normalization.
+
+Linear automatically added related FRO-324/FRO-292/FRO-341 from mentions. Removed only these save-induced additions to preserve the explicitly approved relation set, then independently re-read the full issue again. Final description matches; title, Todo, full Shipment/Pending_Review label set, unassigned state, null delegate/estimate/parent/cycle/due date, priority, project/milestone, original relations and empty attachments/documents all match the before snapshot. Final updatedAt: 2026-10-23T13:06:53.505Z. No Ready promotion or linked-ticket edit.
+
+Saved issue: https://linear.app/front-line-ltd/issue/FRO-345/shipment-details-page-status-history-recorded-operations-and-comments . No production code/database/UI/branch/deployment changes. Future implementation and post-deployment behavior remain unverified.
