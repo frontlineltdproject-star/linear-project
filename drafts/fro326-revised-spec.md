@@ -12,11 +12,11 @@ Use the live production `DESIGN.md`, `src/styles/theme.css` and shared component
 | Tabs | Overview · Collis · Invoice rows · History & activity · Documents · Available actions. Retain authorized content and access. |
 | Overview | Order details → Notes → Split relationships. No Route and readiness card or empty replacement. |
 | Order details | Top-right Edit; compact nested Order status, four-column main field grid, two-column Customs regime/ΑΛΚ section between full-width dividers, then Urgent and full-width Urgent information. Two columns at intermediate widths and one on phones; long Greek labels must not clip. |
-| Order status | Neutral sub-card with label and current status; no progress bar, step counter or Next text. Two secondary readiness-email buttons in its header; at most one eligible main lifecycle action below. Wrap controls on narrow screens. |
+| Order status | Neutral sub-card with a clearly readable status badge using the production rounded-md shape, semantic state tone, leading dot and text. Place the badge beside the eligible main lifecycle action below the header. No progress bar, step counter or Next text. Keep the two secondary readiness-email buttons in the header. Wrap controls on narrow screens. |
 | History & activity | Order activity → Comments → Reminder history, as separate cards. |
 | Available actions | Four standalone cards: Request readiness date → Confirm readiness date → Create supplier invoice → Entry Note. No enclosing duplicate card, More actions menu, Other actions heading, Add comment or Colli shortcut. |
 
-Reuse Card, FormField/Label, Input/Textarea, Select, searchable Combobox for authorized entity references, DatePicker, Button, Tabs, Badge/StatusPill, Modal and AttachmentPanel. New compositions are the restricted-correction chooser, shared Details/correction review, expanded colli rows and two-location readiness review; build them from existing primitives.
+Reuse Card, FormField/Label, Input/Textarea, Select, searchable Combobox for authorized entity references, DatePicker, Button, Tabs, Badge/StatusPill, Modal and AttachmentPanel. New compositions are the restricted-correction chooser, shared Details/correction review, expanded colli rows, contextual unavailable-action help and two-location readiness review; build them from existing primitives.
 
 All labels, reasons, errors, accessible names and dialogs require EN/EL, keyboard access, visible focus and usable 375–400px layouts. Contain table scrolling inside its panel. Dialogs trap focus and return it to the opening control; Escape/Cancel never submits. Status requires text as well as colour. Preserve reduced-motion and theme support.
 
@@ -101,7 +101,7 @@ Display PENDING as **Awaiting Readiness Date / Αναμονή ημερομηνί
 
 Preserve existing eligibility, reservation guards, command validation and irreversible confirmation. Stock entry retains the full-width measurements panel, storage position, all active-colli measurements, independent draft and review; no shortcut that skips validation. Set readiness transitions PENDING → EXPECTED_READINESS and records date/remark, actor/time. Mark ready transitions EXPECTED_READINESS → READY, preserves readiness date/remark and unrelated drafts, records actual transition/operation audit and READY_FOR_COLLECTION journeys for active nonterminal collis only. Neither action records collection or sends email. Cancel writes nothing; denied, failed or stale commands retain drafts. Recheck guards at submit and prevent duplicate execution.
 
-Both readiness-email buttons appear in the Order status header and Available actions for authorized senders, sharing one eligibility state, review and command. Keep unavailable buttons visible with specific EN/EL reasons, including Ready/later states; view-only users have no send controls.
+Both readiness-email buttons appear in the Order status header and Available actions for authorized senders, sharing one eligibility state, review and command. Keep unavailable buttons visible, including Ready/later states. In the compact status header, show the specific EN/EL reason through an adjacent labelled information control on hover, keyboard focus or tap; do not display a persistent sentence beside each button. Keep the explanation available to assistive technology and dismissible without submitting. Available actions may show the same reason as supporting text. Use plain business wording tied to the actual blocking condition; view-only users have no send controls.
 
 | Button | Enablement |
 | -- | -- |
@@ -126,7 +126,7 @@ Reminder history shows Created (full localized time), Request (type and automati
 
 ## Collis
 
-Default collapsed continuous rows share these headings: selection · Colli · Flags · Dimensions (cm) · Gross weight (kg) · Net weight (kg) · Actions. Vertically center headings. Identity/expand control and terminal notice stay in the Colli column. Description and Package type belong only in expansion. Multiple expansions and drafts are independent; selection is independent of flags/expansion. Terminal rows remain visible, expandable and unselectable.
+Compact, default-collapsed continuous rows share these headings: selection · Colli · Flags · Dimensions (cm) · Gross weight (kg) · Net weight (kg) · Actions. Vertically center headings. Identity/expand control and terminal notice stay in the Colli column. Description and Package type belong only in a clean, bounded two-column expansion, with aligned labels and controls. Group optional Class of DG and UN / DG details in a separate Dangerous goods section below, shown only when DG is enabled. Use a single-column form on narrow screens; keep table scrolling contained. Do not include implementation commentary in the expanded form. In read view, show active handling flags as concise badges; show all four independent checkboxes when editing. Keep dimension inputs together on one line. Multiple expansions and drafts are independent; selection is independent of flags/expansion. Terminal rows remain visible, expandable and unselectable.
 
 Per-row Edit opens that expansion and unlocks only its permitted fields. Save applies that row; Cancel restores it. Preserve identity/history, other rows and drafts, authorized state/reservation checks, explicit prohibition of Add/Edit/Remove during open-Shipment participation, and authoritative refresh. Net weight is never derived from gross. Retain existing numeric validation, units and missing values.
 
@@ -135,7 +135,7 @@ Per-row Edit opens that expansion and unlocks only its permitted fields. Save ap
 | Description | Existing free text, expanded. |
 | Package type | Authorized enum: PALLET, WOODEN_BOX, FUMIGATED_WOODEN_BOX, SKELETON_WOODEN_BOX, FUMIGATED_SKELETON_WOODEN_BOX, SKELETON_METAL_BOX, CARDBOARD_BOX, METAL_BOX, METAL_CAN, BARREL, PLYWOOD_BOX, PLASTIC_BOX, FUMIGATED_PALLET, ENVELOPE, OTHER; existing localized labels. |
 | Dimensions / gross / net | Existing declared numeric cm/kg fields, editable in summary; preserve optionality and validation. |
-| DG / Fragile / Unpacked / Damaged Packing | Four independent booleans in summary only. Damaged Packing never means terminal DAMAGED. |
+| DG / Fragile / Unpacked / Damaged Packing | Four independent booleans in summary only; active badges in read view, checkboxes in edit view. Damaged Packing never means terminal DAMAGED. |
 | Class of DG | Optional FRO-297 class 1–9 dropdown, expanded only when DG. |
 | UN / DG details | Optional plain text, max 200; preserve wording/line breaks, reject overlength without truncation. Expanded only when DG. |
 
@@ -176,6 +176,8 @@ Entry Note follows FRO-355/FRO-319. Resolve direct and inherited admission cover
 | Decision | Reason |
 | -- | -- |
 | Direction A, stacked cards and production comfortable components | Consistent with the current design system and Order creation; wide-screen scanning without miniature controls. |
+| Compact colli rows with a structured two-column expansion | Keep the list easy to scan while grouping the less frequent fields clearly. |
+| Contextual readiness explanations and a prominent status badge | Keep eligibility understandable without persistent explanatory text crowding the actions. |
 | One Details page with independent card saves | Retire duplicate editing UI without losing capabilities or conflating unrelated drafts. |
 | Shared Edit includes narrow later-stage corrections | Preserve FRO-303/FRO-356 capabilities when ordinary editing is unavailable. |
 | One restricted correction per session | Existing owners do not define a combined Invoice-company/ΑΛΚ transaction. |
