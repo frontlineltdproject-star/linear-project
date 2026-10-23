@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 full-grill revision saved and verified
+
+- User approved the complete revised description with οκ. Planning pull succeeded; fresh pre-write issue matched the reviewed baseline. Saved exact drafts/fro325-reviewed-spec.md with all four existing labels.
+- Independent read matched approved text after Linear formatting normalization. Removed only three automatic save-added related links (FRO-339/295/297) to preserve approved relations. Final independent read at 2026-10-23T13:09:14.726Z confirms exact description and every returned metadata field except expected updatedAt, including original relations and both attachments. Todo/Pending_Review preserved.
+- Full grill, specification reconciliation, approved write and ticket verification complete. No UI, preview, production branch/code/database write or deployment; implementation/post-deployment verification remains future work. Planning records synchronized separately; unrelated local changes preserved.
+
 ### 2026-10-23 — FRO-325 full grill resolved; revised description awaiting approval
 
 - User accepted Q3: explicit confirmation establishes attested physical packing in affected colli journeys; creation-time/ordinary saved plans do not assert physical work. Q1/Q2 remain accepted: physically completed Ready and direct atomic changed reconfirmation. No further business-decision frontier found.

@@ -9,10 +9,10 @@ User requested a full interview after the approved revision was saved, then inst
 - [x] 2 Canvas: skipped; FRO-316/FRO-341 own presentation.
 - [x] 2b Preview: skipped; no new UI required.
 - [x] 3 Spec check: accepted rules reconciled across commands, lifecycle, physical history, legacy records, consumers and verification.
-- [ ] 4 Ticket: only propose a revision if findings justify it; show full draft and obtain fresh approval.
+- [x] 4 Ticket: full revision shown, approved with οκ, saved and independently re-read on 23 October 2026.
 - [x] 4e UI branch: excluded by user instruction.
 - [x] 5 Memory: reopened scope and unresolved questions recorded; update as decisions resolve.
-- [ ] 6 Verification: deployment checks deferred until implementation; re-read any eventual authorized ticket write.
+- [x] 6 Ticket verification: saved description matches approved draft; metadata, relations and attachments preserved. Deployment checks remain deferred until implementation.
 
 ## Evidence baseline
 
