@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-342 independent workflow review; clarification pending
+
+- Planning pull succeeded and live GitHub/Linear read access verified. Reviewed current342 (updated13:51:31.724Z),335/341/316/326/325/324 and board metadata; production source through gh, creation trace at5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Linear agent-context endpoint unavailable. No Linear mutation.
+- Confirmed335 post-create upload/recovery contract contradicts342 atomic staged association;335 milestone0.0.5 precedes3420.0.8.341 historical ARRIVED promises pending attachments whereas342 excludes that operation. Saved Details316/326 can retain ordinary attachment behavior; no new UI/preview needed, production branch excluded by user.
+- Review record drafts/fro342-review.md covers source trace, upload lost-response retry, context/attempt closure and corrected retries, no-file/result recovery, adapter parity, pending persistence constraints and exact validation. Existing atomicity, permissions, inheritance and cleanup protections are substantially covered; preserve them.
+- User accepted Q1:342 should be a backend implementation specification, while this chat remains planning-only. Pending Q2 historical exclusion versus inclusion, Q3 permission to prepare targeted335 reconciliation, Q4 explicit upload/creation recovery guarantees. Recommendations are not decisions. No complete replacement or Linear approval yet; no glossary/ADR.
+- Synchronize only this review and this memory entry; preserve unrelated326/330 work and existing local memory changes.
+
 ### 2026-10-23 — FRO-342 expanded to Order and Shipment creation uploads
 
 - User explicitly authorized extending FRO-342 to both Orders and Shipments. Planning pull succeeded; current attachment and Order creation contracts checked read-only through gh at production main fb8d5d534281da0c9eac5773e34ef2438588cb72. No new business-rule choices or glossary/ADR changes; reuse the existing upload safeguards for both entities.
