@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 push prerequisite check blocked
+
+- User requested the next step after approved local commit. Mandatory planning pull succeeded. Resumed same committed3820e89 policy/fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Local mock/fro-348-supplier-invoice-details clean at68d19009dd21c188449412bff7e7eaf44cf9b2d1; exact reviewed patch match; remote branch absent; main remains3820e89e8caa341261e2d48bcb282d93e1bb1d03.
+- Current GitHub permissions maintain/pushtrue adminfalse. Main protected=false, protection.enabled=false, enforcement off. Ruleset listing including parents and effective mock-branch rules return403 with GitHub plan-upgrade message. Required restricted write enforcement cannot be verified. No permissions/protections changed; no production push/PR/deployment/Linear action.
+- AGENTS.md4e blocks publication pending protection configuration/verification or an explicit user revision; other tickets' exceptions do not transfer. Partial integration and inherited required-check limitations remain as disclosed in the handoff. Deferred exact command: git push github mock/fro-348-supplier-invoice-details:mock/fro-348-supplier-invoice-details. Not executed; retain local branch. Planning records synchronized separately, preserving unrelated work.
+
 ### 2026-10-23 — FRO-348 reviewed local branch and commit created; no push
 
 - User explicitly approved proposed local branch mock/fro-348-supplier-invoice-details and committing the exact reviewed nine-file diff, without pushing. Mandatory planning pull succeeded. Resumed existing committed policy snapshot at3820e89, SHA256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc; prior checkpoints preserved.

@@ -73,6 +73,12 @@ Temporary loopback-only fixture harness outside the production checkout rendered
 
 The plan's acceptance table maps every complete-ticket criterion to prepared presentation or retained deferred work. This preparation does not satisfy all twelve FRO-348 criteria. FRO-348 re-read unchanged at `2026-10-23T11:23:44.164Z`; no metadata/status/comment write.
 
+### Push prerequisite check — 23 October 2026
+
+Verified local commit and reviewed patch unchanged, clean checkout and remote branch absent. Current GitHub identity has maintain/push, not admin. `main` reports protected=false, protection.enabled=false and enforcement off. Listing repository/parent rulesets and effective rules for the mock branch both return403 with a plan-upgrade message. The restricted write enforcement required by AGENTS.md cannot be verified; no protection/permission changes made. Publication stays blocked under the current instruction, in addition to the disclosed integration/check limitations. Other tickets' exceptions do not transfer.
+
+Deferred command, **not executed**: `git push github mock/fro-348-supplier-invoice-details:mock/fro-348-supplier-invoice-details`. Proceed only after the required protection gate is resolved or the user explicitly revises it for this exact push and acknowledges the existing integration/check limitations. No PR, merge or deployment is included.
+
 ## Review, rulings and deferred minor
 
 Fresh independent reviewer read all nine files, spec, plan, ledger and primitives. No Critical findings. One Important finding (short-viewport dialog clipping) fixed locally and verified by the browser Red→Green measurements plus the final175-test suite/build. No second review was substituted for those checks.
