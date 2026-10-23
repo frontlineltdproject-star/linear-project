@@ -79,7 +79,8 @@ Paths below are under `frontline-forwarding-client/` at the reviewed SHA.
 
 ## Next steps
 
-- Await user choice A/B or requested canvas edits. This is a design-choice gate, not approval of an unseen Linear description.
-- After direction selection, refine selected prototype and verification, then show the complete standalone ticket with full metadata and chat-only before/after comparison for exact-text write approval.
-- Concurrent FRO-347 work completed its review and saved a new specification while this canvas was being prepared. Refresh that issue and its selected comfortable preview before drafting FRO-348; the earlier stale-FRO-347 finding is historical evidence, not current board state.
+- User selected A. Main preview now uses A; comparison remains canvas.html and previous preview is baseline-v20.html. Desktop/Greek artboards are direction-a.jpg and greek-mobile-review.jpg. Selected source ee0417735336cd39f672e287dafa1b2def2a319e; native private deployment appgdep_6adb3d8047648191a4b1394133152016 succeeded, existing owner-only audience preserved.
+- FRO-347 was refreshed after its separately completed review and now supplies its approved comfortable shared form contract. Earlier stale-FRO-347 findings are historical review evidence.
+- Complete standalone draft: fro348-details-page-review.md. Independent builder check found no material unanswered decisions. Selected root/correction behavior, exact baseline preservation after line-ending normalization, syntax, console and desktop/Greek 400px screenshots were verified.
+- Show full description and metadata, with before/after/consumer comparison outside it, then await exact-text approval before writing to Linear. Preserve actual Todo/Pending_Review metadata and original relations/attachment; do not promote Ready.
 - Production branch work is outside current read-only scope. No deployment verification is claimed.
