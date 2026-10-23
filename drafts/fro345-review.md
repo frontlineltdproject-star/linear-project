@@ -37,15 +37,29 @@ Review in progress; interview decisions and any replacement description require 
 
 Java paths above are under `frontline-forwarding-app/src/main/java/com/frontline/forwarding/`: `web/shipments/service/ShipmentsApiService.java`, `web/shipments/output/ShipmentOutput.java`, `web/shipments/ShipmentsRestApi.java`, `domain/shipments/ShipmentAuthorizationService.java`, `web/purchaseorders/service/PurchaseOrdersApiService.java` and `web/attachments/service/AttachmentsApiService.java`.
 
-## First interview round — pending
+## First interview round — accepted
 
 1. Preserve audit/command order for history; display occurrence separately, including backdated/unknown/date-only facts? Recommendation: yes, with immutable recorded sequence/tie breaker rather than sorting transition meaning by supplied occurrence dates.
 2. Allow authorized internal comments in all saved Shipment statuses, including ARRIVED/CANCELLED/LOCATION_UNKNOWN? Recommendation: yes; status guards stay on operational changes, comments do not reopen or alter a plan.
 3. Is existing Shipment data demo-only, operational or expected imports, and should evidence-backed old history be backfilled? Recommendation: preserve all existing facts, never reset data, and reconstruct only events with explicit provenance; otherwise expose unknown/partial history. Confirm population before specifying migration.
 4. Use the existing Order convention of a 2,000-character maximum for a Shipment comment? Recommendation: yes, backend-authoritative validation and matching published contract, no silent truncation.
 
-Further questions may follow these answers, particularly the Notes boundary. Retry/correlation mechanisms are engineering requirements to make existing accepted intent implementable; no production implementation is authorized.
+User accepted Q1, Q2 and Q4 and confirmed Q3 is mock data. Use recording/command order with occurrence displayed separately, permit authorized comments in all saved Shipment states and set the comment maximum to 2,000 characters. Current data population is mock-only; this is not permission to delete or reset records. Historical-arrival business support remains required under FRO-324 even though a production legacy-reconstruction project is unnecessary for the confirmed population.
+
+## Final interview decision — accepted
+
+Current FRO-292 was read again (updated 2026-10-22T09:11:01.742Z). It allows Shipment Notes edits in all statuses, protects readiness/movement, requires actor/time attribution and prohibits leaking Internal Notes into broader audit payloads. It does not explicitly require a Notes-updated entry in FRO-345's Recorded operations.
+
+User accepted Q5: successful Internal/External Notes changes appear as one Notes updated operation identifying changed field(s), actor and recording time, with existing protected audit references preserved. Do not copy note text into the general activity summary. A combined save remains one operation; unchanged/rejected saves create none. Comments retain their separate stream.
+
+Retry/correlation mechanisms are engineering requirements to make the existing one-operation-per-success intent implementable; no production implementation is authorized. Current FRO-345 re-read unchanged at 2026-10-20T11:09:58.191Z. Current FRO-324 confirms historical-entry actor/recording time and unknown/date-only actual dates remain separate; consume that contract without inventing preceding transitions.
 
 ## Workflow state
 
-0 Preflight complete. 1 Grill: first round pending. 2 Canvas / 2b Preview: skipped, presentation already owned. 3 Spec check: supported findings/consumer trace captured; decisions pending. 4 Ticket: no replacement draft or Linear write yet. 4e UI branch: skipped by explicit user instruction. 5 Memory: review checkpoint recorded. 6 Post-deployment verification: not applicable to a planning review; implementation and deployed behavior remain unverified.
+0 Preflight complete. 1 Grill: all five decisions accepted. 2 Canvas / 2b Preview: skipped, presentation already owned. 3 Spec check: consumer outcomes incorporated in the draft. 4 Ticket: complete replacement in drafts/fro345-reviewed-spec.md, awaiting exact-text approval before Linear writes. 4e UI branch: skipped by explicit user instruction. 5 Memory: accepted decisions and draft recorded. 6 Post-deployment verification: specified for later implementation; no deployment or product testing performed.
+
+## Proposed write and review comparison
+
+Fresh FRO-345 read and live main check on 23 October confirm unchanged target updatedAt 2026-10-20T11:09:58.191Z and main3820e89e8caa341261e2d48bcb282d93e1bb1d03. Current team labels/statuses refreshed. Proposed write is description-only; retain exact title, Todo, Pending_Review/Shipment, assignment/priority, project/milestone, blocks316, related325/344/326, no blockers and empty attachments/documents. No Ready promotion or label additions. Mentions of other owners are references, not approval for extra relations; restore only save-induced relation changes if needed to preserve the explicitly approved set.
+
+Before/after for review outside the final description: unspecified timestamp ordering -> recorded-time/command order with separate occurrence precision; broad retry promise -> stable request/replay/conflict/outcome contract; equal command-ID grouping -> root operation with explicit child command links; generic paginated reads -> exact exception event/predecessor lookup; deferred comment size/state -> accepted2000/all statuses; unlisted Notes changes -> accepted one metadata-only Notes-updated summary; general legacy backfill -> confirmed mock-only scope with preserved facts/unknowns and historical-arrival fixtures; generic verification -> acceptance-mapped read-only checks. Original protections and all enumerated operation categories remain, including handover context, append-only snapshots and separate attachment/DN audit ownership.
