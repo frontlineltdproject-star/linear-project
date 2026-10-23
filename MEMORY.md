@@ -935,3 +935,9 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - User said to move on after reviewing revised local preview; treated as acceptance of presentation, not authorization to write Linear or publish.
 - Updated full standalone draft with contextual disabled-action explanations, prominent production status badge beside lifecycle action, compact colli rows/active flag badges, two-column expanded fields and separate conditional DG group. Narrow screens require single-column expansion in production. No eligibility, permission, storage or transaction changes.
 - Refreshed target: updatedAt 2026-10-22T10:19:04.185Z, Todo, labels Order/Pending_Review/Frontend/Story, 11 attachments. No intervening target change. Complete revised text is pending explicit write approval; preserve metadata/relations/attachments. Cloudflare and production publication remain deferred.
+
+### 2026-10-23 — FRO-326 approved description saved and verified
+
+- User approved the complete revised draft with “ok”. Applied only the approved description and re-passed all existing labels.
+- Re-read Linear updatedAt 2026-10-23T06:26:49.637Z. Description matches approved text after normalizing Linear issue mentions, URL formatting and ordered-list indentation. All metadata and relations preserved; all 11 attachment identities/titles/URLs preserved (only expiring signatures refreshed). Status Todo; labels Order, Pending_Review, Frontend, Story unchanged.
+- No Cloudflare/site publish, production branch or production writes. Local preview remains at http://127.0.0.1:8327/full.html. Post-deployment verification is pending actual implementation/deployment.
