@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 previous Create-page reference corrected
+
+- User explicitly requested replacing the historical-preview reference with their previous Create-page UI. Planning pull succeeded; fetched current complete issue and applied only the exact reference replacement. Updated link label: Previous Create-page UI (version 28); URL: https://supplier-invoice-create-preview.frontlineltdproject.chatgpt.site/baseline-v28.html . The updated Create preview remains alongside it.
+- Independent reread confirms the complete description equals the prior saved description with only that link/label replacement; labels, Todo, relations and attachment preserved. Saved updatedAt: 2026-10-23T10:40:30.688Z. Updated the local draft to match. Reference-only correction needs no business consumer trace or new canvas. No Site/production/linked-ticket changes. Preserve unrelated local changes.
+
 ### 2026-10-23 — FRO-347 approved revision saved and verified
 
 - User explicitly approved writing the complete displayed revision. Planning pull succeeded; refreshed full target was unchanged since review. Saved drafts/fro347-create-page-review.md as the description and re-passed all four existing labels.
