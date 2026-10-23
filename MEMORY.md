@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-324 evidence review; first interview round pending
+
+- Mandatory planning pull succeeded; live gh authentication/source and Linear reads verified. Current324 updated2026-10-23T13:06:53.395Z, Todo, Pending_Review/Backend/Story/Shipment, milestone0.0.8, blocks316/341 and related320/323/343/339/325; four attachments preserved. No Linear write. Read current linked contracts, comments (none), labels/statuses; production consumer checks pinned5c51030680c9d45b3827a7e19b8320c19aa5ed9a.
+- Review in drafts/fro324-review.md: unknown-arrival stock confirmation/last-known location; initial EXPECTED stay reuse; immutable existing-arrival provenance; explicit closed historical participation; null/date-safe reads, chronology and operation retry;342 historical-upload exclusion conflicts with341; fiscal preparation boundary; compatible-consumer release timing and stale prescriptive UI text.
+- Grilling/domain-modeling applied with focused delegated read-only evidence. Pending Q1 unknown-date stock confirmation, Q2 mismatched opening expectation, Q3 conflicting matched-arrival dates, Q4 historical pending-upload integration, Q5 historical fiscal preparation. Recommendations remain proposals.342 review also has historical-upload ownership pending; reconcile the same decision rather than independently approve contradictory contracts.
+- Canvas/preview skipped because316/341 own presentation; production branch prohibited. No production checkout/code/database changes or deployment check. Remote production guidance read; local playbook snapshot/fingerprint not claimed. No glossary/ADR decision yet. Synchronize only324 review and this checkpoint, preserving unrelated local work.
+
 ### 2026-10-23 — FRO-342 independent workflow review; clarification pending
 
 - Planning pull succeeded and live GitHub/Linear read access verified. Reviewed current342 (updated13:51:31.724Z),335/341/316/326/325/324 and board metadata; production source through gh, creation trace at5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Linear agent-context endpoint unavailable. No Linear mutation.
