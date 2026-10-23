@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-320 review; naming and invalid-selection decisions pending
+
+- Mandatory planning pull succeeded; authenticated live gh source pinned5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Read full320/comments (none),316/341/339/324/344 and current team labels/statuses.320 remains Todo, Ready/Shipment, Chris, milestone0.0.8, blocks341, original related issues and two attachments unchanged. Linear shared agent-context endpoint unavailable; direct reads work.
+- Grilling/domain-modeling applied with skill-required read-only backend trace. Findings and consumer matrix in drafts/fro320-review.md: stale UI prescriptions contradict341; explicit active kind/operator/geography eligibility; retained invalid destination after origin changes; naming scope across list/details; stock-confirmation reserved Order outcome PREPARED_FOR_SHIPMENT versus stay IN_STOCK;324 already-stocked history preservation; release timing and verification gaps.
+- User accepted Q1 coordinated activation with compatible316/341 (milestone0.0.9), preparation permitted earlier, no milestone change. Q2 naming scope and Q3 clear-versus-retain-invalid destination remain pending. Recommendations are not decisions. No full replacement or Linear write approved.
+- Canvas/preview skipped because316/341 own presentation; production branch expressly prohibited. No UI/source/database/deployment changes or new glossary/ADR. Remote production guidance read; no local production playbook snapshot claimed. Preserve unrelated planning modifications and synchronize only this checkpoint/review.
+
 ### 2026-10-23 — FRO-324 approved replacement saved and verified
 
 - User approved the complete displayed draft with "ok". Mandatory planning pull succeeded; fresh324 baseline unchanged at13:06:53.395Z. Saved exact drafts/fro324-reviewed-spec.md and re-passed Pending_Review/Backend/Story/Shipment.
