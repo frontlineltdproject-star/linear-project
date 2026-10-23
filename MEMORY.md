@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-321 approved description saved and verified
+
+- User approved the complete displayed draft with "ok". Planning pull succeeded; re-read target unchanged before saving drafts/fro321-supplier-invoice-rules.md. Re-passed full supplier invoice/Pending_Review labels.
+- Independently re-read saved description: full content matches approved text after Linear issue-mention and Markdown/bold normalization. Verified title, Todo, labels, assignment, priority, project/milestone 0.0.6 and all three attachments unchanged.
+- Description save automatically added relatedTo FRO-303/FRO-318. Removed only those additions to restore the expressly approved unchanged relation set; removal succeeded. Final reread confirms exact original relations. Final updatedAt 2026-10-23T09:48:14.353Z.
+- FRO-321 write complete. FRO-347 advanced-creation/recovery alignment and FRO-317 non-UD Not required alignment remain separately scoped follow-up work; neither ticket changed. No UI/preview, production branch/code/database writes or deployment verification.
+- Planning synchronization stages only this entry, preserving unrelated local FRO-326/FRO-330 changes.
+
 ### 2026-10-23 — FRO-321 decisions settled; full replacement draft awaiting approval
 
 - User accepted Q5-Q11 in full: required nonfuture Invoice date; optional authorized Client-associated Invoice vessel, no automatic copying; missing Invoice company allowed for capture. Nonnegative exact money with two decimals and maximum 99,999,999,999,999,999.99, no silent rounding/conversion. Trim outer invoice-number whitespace and retain case-sensitive Supplier/number uniqueness including cancelled records.
