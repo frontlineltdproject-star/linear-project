@@ -3,11 +3,11 @@
 ## Workflow checkpoint
 
 - [x] 0 Preflight: planning pull succeeded; gh authentication/live repository read and Linear read succeeded. Optional Linear agent-context endpoint unavailable; direct issue reads work.
-- [ ] 1 Grill: Q1–Q4 accepted; Q5 return selection pending.
+- [x] 1 Grill: Q1–Q5 accepted.
 - [x] 2 Canvas: skipped; FRO-341 owns inline form/return presentation, reusing FRO-335. FRO-316/326 own saved Details.
 - [x] 2b Preview: skipped; no new presentation required by this review.
-- [ ] 3 Spec check: initial consumer trace below; finalize after decisions.
-- [ ] 4 Ticket: no replacement yet; complete draft and explicit approval required before writing.
+- [x] 3 Spec check: consumer outcomes and owners reconciled in complete draft.
+- [ ] 4 Ticket: complete drafts/fro343-reviewed-spec.md awaiting full-text approval.
 - [x] 4e UI branch: excluded explicitly by user.
 - [x] 5 Memory: review checkpoint recorded; no newly resolved vocabulary or ADR.
 - [ ] 6 Verify: no Linear mutation or deployment; saved-ticket verification applies after approved write.
@@ -57,12 +57,18 @@ Paths beginning App above are relative to frontline-forwarding-app/src/main/java
 
 Reasons: independent saving preserves ordinary Order identity and avoids rollback ambiguity; both workflows serve the requested entry point while retaining separate eligibility; shared initial-state contracts avoid duplicate lifecycle rules; editable warehouse suggestions reduce entry effort without manufacturing location evidence.
 
-## Follow-up — Q5 pending
+## Follow-up — Q5 accepted
 
 Recommend automatically selecting the complete current nonterminal colli set once, on confirmed Order-create return, only after successful workflow-specific eligibility validation. Preserve prior selections and partial decisions. No reservations or Order editing locks until Shipment save. No silent subset when whole-Order rules fail.
 
 If route context is insufficient, the Order is ineligible or eligibility lookup fails, retain its saved identity and explain saved-but-not-selected. Do not select automatically later when the route/status changes or a retry makes it eligible; require explicit selection through the existing controls. Replaying the create result must not re-add an Order/collis the operator deliberately deselected. A new intentional Order uses a fresh Order context; no retry can create another Order.
 
-Q5 is a proposal. Recovery otherwise follows already-agreed342 contracts: uncertain creation is not failure, same-attempt recovery, separate Order/Shipment contexts and no duplicate effects. Historical occurrence/registration separation follows336/324; preserve explicit registration facts without backdating readiness or inventing physical movement. No new historical shortcut is proposed.
+Q5 accepted by user. Recovery otherwise follows already-agreed342 contracts: uncertain creation is not failure, same-attempt recovery, separate Order/Shipment contexts and no duplicate effects. Historical occurrence/registration separation follows336/324; preserve explicit registration facts without backdating readiness or inventing physical movement. No new historical shortcut is proposed.
 
 Refreshed343/324/342/336 after Q1–Q4.343 remains unchanged; production main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a.342 updated2026-10-23T14:20:09.844Z;324 updated2026-10-23T14:20:09.829Z. Full ticket replacement and any metadata proposal require separate complete-text approval. No Linear, UI or production changes; no glossary/ADR needed.
+
+## Complete replacement prepared
+
+All original protections and five accepted decisions reconciled in drafts/fro343-reviewed-spec.md. Before/after: unresolved save boundary → independent atomic Order save; unresolved lifecycle →336 three states; unspecified return → eligible whole set selected once with explicit later selection; generic retry →342 separate contexts/attempt recovery; vague acceptance →ten testable criteria and mapped read-only checks. No existing metadata or attachments removed. Historical investigation notes above are review history, not final ticket text.
+
+Proposal changes description only; preserve title, Todo, Shipment/Pending_Review/Backend/Story, priority, assignment, project/milestone0.0.8, blocks341, related322/324/325/344/316, no blockers and empty attachments/documents. New dependency references do not authorize relation additions; preserve this exact relation set after save. No Ready promotion. Full text must be approved before Linear write. No new vocabulary/ADR, UI/preview or production branch.
