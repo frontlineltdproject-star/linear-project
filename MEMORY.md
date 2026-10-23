@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-349 approved revision saved and verified
+
+- User approved the complete renewed draft with "ok". Mandatory planning pull succeeded; refreshed target remained unchanged before writing. Saved exactly the approved description and re-passed all five labels.
+- Independent reread confirms description matches approved text after Linear mention/Markdown normalization; title, Todo, labels, project/milestone 0.0.6, priority, assignment and attachments preserved. Save auto-added relatedTo FRO-335/317/319/356; removed only these additions to restore the approved unchanged relation set. Final reread verifies original blockers/blocks/related issues and full description preserved.
+- FRO-347 alignment remains separate and required before functional handoff; release-milestone mismatch remains flagged. No FRO-347 description change, new UI/preview, production branch/code/database write or deployment verification. Planning synchronization includes only this entry and preserves unrelated FRO-326 working changes.
+
 ### 2026-10-23 — FRO-349 renewed review after approved FRO-321 update
 
 - Mandatory pull succeeded. Refetched full FRO-349/321/347/326/335, FRO-349 comments (none), current team statuses/labels. FRO-349 remains unchanged at 2026-10-20T11:09:46.986Z, Todo, milestone 0.0.6, five existing labels, no Linear mutation. FRO-321 now updated 2026-10-23T09:48:14.353Z; FRO-347 remains its older 20 October specification. Live production main reverified via authenticated gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03; prior inspected source evidence still applies.
