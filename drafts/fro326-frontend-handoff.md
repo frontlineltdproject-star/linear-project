@@ -48,3 +48,7 @@ Reviewer-declined domains: browser geometry/focus were checked by the implemente
 FRO-346 owns atomic/versioned Details/readiness saves; FRO-303/356 restricted Invoice company/ALK corrections; FRO-333/334/356 explicit Pickup/customs; FRO-292 independently scoped Notes; FRO-337 invoice unit-price/versioned editing; FRO-294/295/297/332 final colli fields and inline mutations; FRO-328 prepared/idempotent email review; FRO-349/355 with FRO-353/354 Supplier Invoice/Entry Note routes. Existing Edit stays until parity. Current direct-send reminders and legacy bonded values are preserved without pretending to implement these future contracts.
 
 Next gate: user reviews this complete diff and verification limitations. Branch creation, production commit/push and all publishing remain deferred. Planning repository synchronization is separate and required by its project instructions.
+
+## Heading follow-up
+
+The user requested removal of Client · Vessel from the top Order card. The subtitle paragraph was removed and the running React preview visibly verified; complete patch refreshed and reverse-apply checked. Prettier and diff checks pass. The full suite/build evidence above predates this four-line presentation-only removal; no domain or API behavior changed.

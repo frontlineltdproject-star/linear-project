@@ -137,7 +137,7 @@ index 01e1470..226bdb4 100644
 +  })
 +})
 diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
-index 04502c9..c6b2128 100644
+index 04502c9..01d2fbb 100644
 --- a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
 +++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
 @@ -1,9 +1,10 @@
@@ -275,7 +275,18 @@ index 04502c9..c6b2128 100644
                {purchaseOrder.hasDangerousGoods ? (
                  <Badge tone="danger">DG</Badge>
                ) : null}
-@@ -122,262 +215,246 @@ export function PurchaseOrderDetail({
+@@ -59,10 +152,6 @@ export function PurchaseOrderDetail({
+                 tag={purchaseOrder.splitLineageTag}
+               />
+             </div>
+-            <p className="mt-1 text-sm text-fg-muted">
+-              {purchaseOrder.clientCompany.name}
+-              {purchaseOrder.vessel ? ` · ${purchaseOrder.vessel.name}` : ''}
+-            </p>
+             {parentPurchaseOrder ? (
+               <Link
+                 to="/secured/purchase-orders/$purchaseOrderId"
+@@ -122,262 +211,246 @@ export function PurchaseOrderDetail({
              ) : null}
            </div>
          </div>
@@ -634,16 +645,16 @@ index 04502c9..c6b2128 100644
 +            />
 +          </Section>
 +        </TabPanel>
- 
--          <TabPanel value="history">
--            <div className="space-y-5">
--              <Section title={text.warehouseStays}>
++
 +        <TabPanel value="invoiceRows">
 +          <Section title={text.invoiceRows}>
 +            <InvoiceRowsTable purchaseOrder={purchaseOrder} />
 +          </Section>
 +        </TabPanel>
-+
+ 
+-          <TabPanel value="history">
+-            <div className="space-y-5">
+-              <Section title={text.warehouseStays}>
 +        <TabPanel value="history">
 +          <div className="space-y-5">
 +            {slots?.comments}
@@ -754,7 +765,7 @@ index 04502c9..c6b2128 100644
  }) {
    const { text, enumLabel } = usePurchaseOrderLabels()
    const movable = purchaseOrder.handlingUnits.filter(
-@@ -396,6 +473,7 @@ export function PurchaseOrderActions({
+@@ -396,6 +469,7 @@ export function PurchaseOrderActions({
    const stockConfirmationSubmitting = useRef(false)
    const [splitIds, setSplitIds] = useState<Array<string>>([])
    const [reason, setReason] = useState('')
@@ -762,7 +773,7 @@ index 04502c9..c6b2128 100644
    const [terminalId, setTerminalId] = useState('')
    const [disposition, setDisposition] = useState('DAMAGED')
    const [message, setMessage] = useState('')
-@@ -413,6 +491,7 @@ export function PurchaseOrderActions({
+@@ -413,6 +487,7 @@ export function PurchaseOrderActions({
        ]),
      ),
    )
@@ -770,7 +781,7 @@ index 04502c9..c6b2128 100644
    type CommandDocument = { name: string; gql: RequestDocument }
    type CommandPayload = {
      document: CommandDocument
-@@ -431,6 +510,26 @@ export function PurchaseOrderActions({
+@@ -431,6 +506,26 @@ export function PurchaseOrderActions({
      setError('')
      try {
        await mutation.mutateAsync({ document, variables })
@@ -797,7 +808,7 @@ index 04502c9..c6b2128 100644
        toast({ title: success, tone: 'success' })
        return true
      } catch (caught) {
-@@ -477,397 +576,425 @@ export function PurchaseOrderActions({
+@@ -477,397 +572,425 @@ export function PurchaseOrderActions({
      }
    }
  
@@ -1581,7 +1592,7 @@ index 04502c9..c6b2128 100644
        <Modal
          open={stockConfirmationOpen}
          onClose={closeStockConfirmation}
-@@ -901,6 +1028,26 @@ export function PurchaseOrderActions({
+@@ -901,6 +1024,26 @@ export function PurchaseOrderActions({
            {text.confirmInStockWarning}
          </p>
        </Modal>
@@ -1608,7 +1619,7 @@ index 04502c9..c6b2128 100644
      </Section>
    )
  }
-@@ -947,10 +1094,12 @@ function InvoiceRowsTable({ purchaseOrder }: { purchaseOrder: PurchaseOrder }) {
+@@ -947,10 +1090,12 @@ function InvoiceRowsTable({ purchaseOrder }: { purchaseOrder: PurchaseOrder }) {
  
  function Section({ title, children }: { title: string; children: ReactNode }) {
    return (
@@ -1625,7 +1636,7 @@ index 04502c9..c6b2128 100644
    )
  }
  
-@@ -971,13 +1120,13 @@ function ActionCard({
+@@ -971,13 +1116,13 @@ function ActionCard({
  
  function Facts({ items }: { items: Array<[string, ReactNode]> }) {
    return (
@@ -1645,7 +1656,7 @@ index 04502c9..c6b2128 100644
          </div>
        ))}
      </dl>
-@@ -989,7 +1138,9 @@ function Timeline({
+@@ -989,7 +1134,9 @@ function Timeline({
  }: {
    rows: Array<{ id: string; title: string; detail: string }>
  }) {
