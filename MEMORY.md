@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 reviewed local branch and commit created; no push
+
+- User explicitly approved local branch creation and committing the reviewed FRO-347 diff, while deferring push. Planning pull succeeded; resumed committed policy snapshot at3820e89, SHA256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc; prior checkpoints preserved.
+- Production main refreshed unchanged at3820e89e8caa341261e2d48bcb282d93e1bb1d03; branch name absent locally/remotely; index empty; no active local hooks. Seven working files and staged diff each matched approved patch byte-for-byte, SHA25634621bb5f156cdc14fd3fce339b3c13a46bc9945a97e780615f6213642b06e16.
+- Created local mock/fro-347-supplier-invoice-create in the isolated fro347-frontend checkout. Commit ac539a93f3e3884b70de5e57dfc83563aa2346db — feat(FRO-347): prepare supplier invoice create UI. Exact seven frontend paths/1015insertions; postcommit verified correct branch, parentbase, approvedpatchmatch, cleanworkingtree, no upstream and whitespacechecks. No source changes or repeated tests/build; prior171-test/build evidence applies to identical reviewed content.
+- Updated drafts/fro347-frontend-handoff.md with local commit ownership/status. Partial unconnected scope, missing entity/API/authority/recovery/regime/controller contracts, baseline dependency/type/format limits, required branch enforcement and deferred coverage minor remain. No Linear, PR, backend or deployment action. No push to any repository this turn; planning checkpoint retained locally under explicit push deferral. Preserve unrelated326/330 changes.
+
 ### 2026-10-23 — FRO-348 approved revision saved and verified
 
 - User explicitly approved writing the exact reviewed revision while keeping metadata unchanged. Mandatory planning pull succeeded. Read the current full issue before saving the approved description from drafts/fro348-details-page-review.md, retaining the complete label set.

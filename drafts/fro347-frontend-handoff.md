@@ -1,8 +1,9 @@
 # FRO-347 — verified frontend preparation
 
 Prepared the approved **partial, unconnected React presentation**. FRO-347 is
-not fully implemented, routed or ready for production. No production branch,
-commit, push, PR, deployment or Linear mutation occurred.
+not fully implemented, routed or ready for production. The reviewed diff is now
+committed locally on the approved branch; no push, PR, deployment or Linear
+mutation occurred.
 
 ## Complete diff
 
@@ -11,12 +12,15 @@ commit, push, PR, deployment or Linear mutation occurred.
 - Patch SHA-256:
   `34621bb5f156cdc14fd3fce339b3c13a46bc9945a97e780615f6213642b06e16`.
 - Repository: `Frontline-Forwarding/frontline-forwarding`.
-- Base and detached HEAD:
+- Base:
   `3820e89e8caa341261e2d48bcb282d93e1bb1d03` (`github/main`, refreshed after checks).
 - Checkout:
   `C:/Users/Giorgos/.codex/visualizations/2026/10/23/01a16833-e860-7a01-98a1-e7bbe7859984/fro347-frontend`.
-- Proposed future branch, **not created**:
+- Local branch, created under explicit approval:
   `mock/fro-347-supplier-invoice-create`.
+- Local commit: `ac539a93f3e3884b70de5e57dfc83563aa2346db` —
+  `feat(FRO-347): prepare supplier invoice create UI`.
+- No upstream or push; further publication remains deferred.
 
 All paths below are under
 `frontline-forwarding-client/src/features/supplier-invoices/`.
@@ -109,9 +113,10 @@ width by approximately 15px; content scroll width equals its viewport width.
 
 Do not expose these components through a normal route or claim the ticket's
 acceptance criteria complete until dependent contracts/controller work are
-implemented and verified. Do not create/commit/push the proposed branch under
-the current authorization. The reviewed diff and its verification must be
-presented again at the branch approval gate once publication blockers are resolved.
+implemented and verified. Local branch creation and committing this exact reviewed diff were explicitly
+approved on 23 October 2026 and are complete. No further commit or push is
+authorized. Publication blockers and a separate explicit push approval remain
+required before a remote handoff.
 
 ## Independent review, rulings and deferred item
 
@@ -141,5 +146,20 @@ test would strengthen coverage. Browser fixture callbacks corroborate row/owner
 presentation, not actual backend binding. This is a coverage limitation, not an
 observed production defect.
 
-Planning records and evidence are synchronized separately from the untouched
-production branch state. No glossary term, ADR or Linear edit is needed here.
+The preparation evidence was previously synchronized. This local-commit
+checkpoint is recorded locally with pushing deferred under the user instruction.
+No glossary term, ADR or Linear edit is needed here.
+
+
+## Local commit checkpoint — 23 October 2026
+
+The user explicitly approved creating the local branch and committing the reviewed
+seven-file diff, with no push. Verified the unchanged base, branch-name availability,
+empty index, no active hooks, and byte-for-byte patch equality before committing.
+Created the branch from the recorded base and committed only the seven approved
+frontend paths. Post-commit checks confirm the exact approved patch, parent base,
+correct branch, clean tree and no upstream. The command reporting the absent
+upstream returned 1 as expected; the commit itself succeeded. No source changes
+or repeated test/build runs occurred; the existing 171-test/build evidence applies
+to identical content. All integration, baseline-check and publication limitations
+remain as documented above. No push to any repository was made in this checkpoint.
