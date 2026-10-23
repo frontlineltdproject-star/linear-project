@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 approved revision saved and verified
+
+- User explicitly approved writing the complete displayed revision. Planning pull succeeded; refreshed full target was unchanged since review. Saved drafts/fro347-create-page-review.md as the description and re-passed all four existing labels.
+- Independent reread confirms the approved description after Linear issue-mention/link/list-format normalization. Title, Todo, supplier invoice/Pending_Review/Frontend/Story, unassigned state, priority, project/milestone 0.0.6, complete relations and preview attachment remain unchanged. No automatic relation additions occurred. Saved updatedAt: 2026-10-23T10:34:18.919Z.
+- Review/edit is complete. The selected comfortable private preview remains published as version 30; no new Site changes this turn. No Ready promotion, linked-ticket edits, production code/branch/database writes or production-deployment verification. Backend and later integration dependencies remain explicit. Planning synchronization includes only this completion entry; unrelated FRO-326/FRO-330 working changes are preserved.
+
 ### 2026-10-23 — FRO-347 comfortable preview published; complete ticket draft awaiting approval
 
 - User accepted Q3/Q4: explicit standalone saved-result screen and Start another invoice; confirm dirty Cancel; preserve in-app drafts/file bytes with unload warning, without durable/reload-resilient storage. User selected A — Comfortable after the current/A/B comparison and live component mapping. Earlier Q2 fixed-status/no-progress/no-event-dates decision remains accepted.
