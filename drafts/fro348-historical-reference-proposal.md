@@ -1,11 +1,11 @@
-# FRO-348 — proposed historical-reference addition
+# FRO-348 — approved historical-reference addition
 
 Title: Supplier Invoice — Details page UI
 Status: Todo
 Labels: supplier invoice, Pending_Review, Frontend, Story
 All metadata, relations and attachments remain unchanged. Only the final italic historical-reference paragraph is added.
 
-## Complete proposed description
+## Complete approved description
 
 **As a Front Line staff operator I want to view and correct a saved Supplier Invoice** so that its invoice facts, source relationships, documents and permitted confirmations remain consistent and auditable.
 

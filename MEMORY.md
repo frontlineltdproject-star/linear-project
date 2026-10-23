@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 approved historical UI footer saved and verified
+
+- User approved the exact historical-reference addition. Mandatory planning pull succeeded; fetched full current348, appended only the approved italic footer via patch and retained complete labels. Footer links original Details version20/20October2026 at https://supplier-invoice-details-preview.frontlineltdproject.chatgpt.site/baseline-v20.html and states current specification/selectedA take precedence.
+- Independent read verified previous description plus exact footer after Markdown URL normalization. Save auto-added related303; removed only that save-induced relation under approved metadata-preservation scope. Second independent read confirms exact description and all returned metadata/labels/relations/attachment unchanged; updatedAt2026-10-23T12:22:47.749Z. No other Linear, Site or production changes.
+- Synchronized saved-description draft and marked complete historical-reference proposal approved. Reference-only scope; no business-rule/design change or new glossary/ADR. Planning records synchronized separately, preserving unrelated326/330 changes.
+
 ### 2026-10-23 — FRO-348 historical-reference footer prepared for approval
 
 - User requested the original UI as a historical reference at the end of348. Mandatory planning pull succeeded; full current target read unchanged at2026-10-23T11:23:44.164Z. Original version20 preview was verified to match20October source b6311c7 dist/index.html after line-ending normalization; preserved at /baseline-v20.html on the existing private Site.
