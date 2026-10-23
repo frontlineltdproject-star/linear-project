@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 conditional push not executed; other checks still fail
+
+- User authorized pushing only if protections are the sole issue. Rechecked local mock/fro-347-supplier-invoice-create at ac539a93f3e3884b70de5e57dfc83563aa2346db: clean tree, main3820e89 unchanged, target branch still absent remotely; rulesets still403. Planning pull succeeded.
+- Fresh npx --no-install tsc --noEmit fails with the same two TS2352 casts in delivery-note-service.test.ts77/81. Read-only manifest/lock comparison confirms existing mismatch (Floating UI, GraphQL/codegen, clsx, tailwind-merge, prettier root entries absent). Existing formatting and integration limits remain as documented; no fixes or repeated broader checks authorized.
+- Protections are not the sole blocker, so the conditional authorization does not permit this push. No push/PR/Linear/source changes. Any later push despite these other blockers requires explicit acceptance; do not treat this message as unconditional permission or transfer another ticket's exception. Retain local checkpoint under existing push deferral; preserve unrelated changes.
+
 ### 2026-10-23 — FRO-347 reviewed local branch and commit created; no push
 
 - User explicitly approved local branch creation and committing the reviewed FRO-347 diff, while deferring push. Planning pull succeeded; resumed committed policy snapshot at3820e89, SHA256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc; prior checkpoints preserved.
