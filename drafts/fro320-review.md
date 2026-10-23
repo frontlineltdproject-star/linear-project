@@ -1,6 +1,6 @@
 # FRO-320 workflow review — 2026-10-23
 
-Status: evidence review and interactive interview; no Linear write approved.
+Status: interview complete; full replacement in fro320-reviewed-spec.md awaiting exact-text approval. No Linear write approved.
 
 ## Baseline
 
@@ -37,7 +37,9 @@ Backend citation base: `frontline-forwarding-app/src/main/java/com/frontline/for
 ## Interview
 
 - Q1 accepted: coordinate activation with compatible316/341; preparation can precede release. No milestone change authorized.
-- Q2 pending: recommend consistent human-facing Warehouse transfer wording across Shipment consumers, including existing records, while retaining internal enum/category contracts.
-- Q3 pending: recommend clear invalid destination after origin/geography/refreshed reference changes, explain and require reselection; block submission and revalidate server-side, preserving unrelated draft facts. Alternative: retain visibly invalid and block.
+- Q2 accepted: consistent human-facing Warehouse transfer wording across Shipment consumers, including existing records, while retaining internal enum/category contracts.
+- Q3 accepted: clear a destination proven invalid after origin/geography/refreshed reference changes, explain and require reselection; block submission and revalidate server-side, preserving unrelated draft facts. A failed lookup alone does not prove reference invalidity.
+
+2026-10-23 continuation: mandatory pull succeeded; full current320 remains unchanged at2026-10-20T11:10:16.059Z and source HEAD remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Full replacement preserves all original business behavior with the documented reservation/historical qualifications, current UI ownership and three accepted decisions. Existing image retained as an unsigned historical image reference; both attachment objects retained. No metadata/relation changes proposed, including mentions of339/344. Exact-text approval is the next gate.
 
 Recommendations are not decisions until accepted. Full standalone replacement and fresh exact-text approval are required before any Linear mutation. Existing metadata/relations/attachments remain unchanged. No new glossary term or qualifying ADR has been resolved.

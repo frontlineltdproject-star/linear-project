@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-320 decisions settled; replacement awaiting approval
+
+- User accepted Q2 consistent human-facing Warehouse transfer wording across Shipment consumers/existing records and Q3 clear proven-invalid destination, explain and require reselection while preserving unrelated draft facts. Earlier coordinated316/341 activation decision retained. No new glossary term/ADR required.
+- Mandatory pull succeeded; fresh full320 unchanged at2026-10-20T11:10:16.059Z; live source remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Applied ticket-writing skill; full standalone replacement drafts/fro320-reviewed-spec.md and before/after/consumer record drafts/fro320-review.md prepared.
+- Draft covers both kind/operator pairs,339 geography, stale selection versus lookup failure, global display naming/internal contract preservation, reserved Order stock outcome,324 historical preservation,344 ownership, coordinated release and AC-mapped read-only verification. Historical screenshot/preview retained as references; no new UI/preview/production branch or production write.
+- Pending exact full-text approval before Linear write. Preserve title, Todo, Ready/Shipment, Chris, priority/project/milestone, all relations and both attachments; no metadata changes authorized. Synchronize only320 planning changes and this entry, preserving unrelated work.
+
 ### 2026-10-23 — FRO-320 review; naming and invalid-selection decisions pending
 
 - Mandatory planning pull succeeded; authenticated live gh source pinned5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Read full320/comments (none),316/341/339/324/344 and current team labels/statuses.320 remains Todo, Ready/Shipment, Chris, milestone0.0.8, blocks341, original related issues and two attachments unchanged. Linear shared agent-context endpoint unavailable; direct reads work.
