@@ -1,6 +1,6 @@
 # FRO-348 — verified frontend preparation
 
-Prepared the approved **partial, unconnected Details presentation** using production components. FRO-348 is not fully integrated, routed or ready to publish. Production work remains isolated, detached, unstaged and uncommitted; no branch, commit, push, PR, deployment or Linear mutation occurred.
+Prepared the approved **partial, unconnected Details presentation** using production components. FRO-348 is not fully integrated, routed or ready to publish. The exact reviewed diff is committed on its approved isolated local branch; no push, PR, deployment or Linear mutation occurred.
 
 ## Complete diff
 
@@ -9,7 +9,9 @@ Prepared the approved **partial, unconnected Details presentation** using produc
 - Repository: `Frontline-Forwarding/frontline-forwarding`; verified `github` remote.
 - Base: `3820e89e8caa341261e2d48bcb282d93e1bb1d03` (`github/main`, refreshed after implementation, unchanged).
 - Checkout: `C:/Users/Giorgos/.codex/visualizations/2026/10/23/01a1683e-7796-7b71-a01e-27e0158a7080/fro348-frontend`.
-- No local branch refs or staged changes. Only the nine feature files are untracked. Generated route ordering and checkout line endings restored to baseline; manifest/lock unchanged.
+- Local branch: `mock/fro-348-supplier-invoice-details`, created under explicit user approval.
+- Local commit: `68d19009dd21c188449412bff7e7eaf44cf9b2d1` — `feat(FRO-348): prepare supplier invoice details UI`.
+- Verified clean working tree, empty index, no upstream, correct parent/base and byte-for-byte committed diff match to the reviewed patch. No push. Generated route ordering and checkout line endings restored to baseline; manifest/lock unchanged.
 - Verified patch applicability against an empty base for these new paths, reverse applicability against prepared contents and patch whitespace.
 
 All files are under `frontline-forwarding-client/src/features/supplier-invoices/`:
@@ -85,4 +87,4 @@ Rulings made during execution:
 4. Deliver the agreed nine-file presentation without inventing a route/controller/API; cost: working integration remains later work.
 5. Keep the reviewer's deferred domain, authorization, navigation and publication areas unverified and blocked under that scope; cost: later integration and verification gates remain.
 
-Playbook provenance: committed policy at `3820e89e8caa341261e2d48bcb282d93e1bb1d03`, SHA-256 `b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc`. Both model checkpoints and native plan approval are complete; preserve on continuation. Only planning records/evidence are synchronized. Production branch/commit/push approval is not requested while integration/check prerequisites remain unmet.
+Playbook provenance: committed policy at `3820e89e8caa341261e2d48bcb282d93e1bb1d03`, SHA-256 `b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc`. Both model checkpoints and native plan approval are complete; preserve on continuation. User separately approved the local branch and commit after reviewing this exact diff; both are now verified. Prior tests/build apply to identical committed contents; no source changes or repeated application checks in the local-commit step. Only planning records/evidence are synchronized. Production push remains deferred, with integration/check/publication restrictions unchanged.

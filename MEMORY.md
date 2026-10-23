@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 reviewed local branch and commit created; no push
+
+- User explicitly approved proposed local branch mock/fro-348-supplier-invoice-details and committing the exact reviewed nine-file diff, without pushing. Mandatory planning pull succeeded. Resumed existing committed policy snapshot at3820e89, SHA256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc; prior checkpoints preserved.
+- Before mutation verified detached clean tracked baseline/main3820e89e8caa341261e2d48bcb282d93e1bb1d03, correct github remote, empty index, unused branch locally/remotely and no active hooks. Working patch and staged diff each matched approved patch byte-for-byte, SHA256 f1a49e01f76b81f17ae863727a9ce9d66fb17393128ca08efe14a04aa68568b6.
+- Created approved local branch and commit68d19009dd21c188449412bff7e7eaf44cf9b2d1 — feat(FRO-348): prepare supplier invoice details UI. Verified parent/base, exact9frontendfiles1239insertions, committed patch match, clean working tree, empty index and no upstream. No production push/PR/deployment/Linear mutation. No source changes or repeated app tests; prior175-test/build evidence applies to identical reviewed contents.
+- Updated drafts/fro348-frontend-handoff.md with local ownership/commit. Partial unconnected presentation, missing invoice/regime/API/authority/attempt/file/controller integration, inherited install/type/format failures and initial-editor-focus documentation minor remain. Push deferred; no other ticket's publication exception transfers. Planning records synchronized separately; unrelated326/330 work preserved.
+
 ### 2026-10-23 — FRO-348 partial frontend prepared; verified diff remains branchless
 
 - User approved plan/native execution and separately completed implementation-model checkpoint. Mandatory planning pull succeeded. Resumed FRO348 committed policy at3820e89e8caa341261e2d48bcb282d93e1bb1d03, SHA256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Isolated fro348-frontend remains detached with nine new untracked frontend files; index empty, no local branch refs, production commits/pushes/PR/deployment/Linear writes.
