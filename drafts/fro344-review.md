@@ -1,14 +1,14 @@
 # FRO-344 review — 23 October 2026
 
-Status: first interview round accepted; second-round fiscal decisions pending. Linear has not been changed. Initial findings below retain the review context; the accepted-decisions section supersedes their open-question status.
+Status: all six interview decisions accepted; complete replacement draft prepared for approval. Linear has not been changed. Initial findings below retain review context; accepted decisions and the final draft supersede their open-question status.
 
 ## Workflow
 
 - 0 Preflight: planning fast-forward pull succeeded; gh authenticated as frontlineltdproject-star and live production reads succeeded; Linear issue/comments/board reads succeeded. Optional get_agent_context endpoint is unavailable.
-- 1 Grill: grilling and domain-modeling loaded; focused read-only research delegated under grilling. First round accepted; dependent fiscal round pending.
+- 1 Grill: complete; Q1–Q6 accepted. No newly resolved vocabulary or qualifying ADR.
 - 2 Canvas / 2b Preview: skipped; FRO-316/FRO-341 own existing presentation. FRO-165 is archived email tagging, not Shipment UI.
-- 3 Spec check: initial consumer trace below; revisit after decisions.
-- 4 Ticket: no replacement draft or write yet; full draft and explicit approval required.
+- 3 Spec check: final draft covers consumer outcomes/owners below, all six decisions and preservation requirements.
+- 4 Ticket: complete replacement in fro344-reviewed-spec.md; full text and explicit approval required before writing.
 - 4e UI branch: skipped, expressly prohibited by user.
 - 5 Memory: review checkpoint recorded; no newly resolved vocabulary or ADR.
 - 6 Verify: review evidence only; no implementation/deployment verification.
@@ -68,3 +68,22 @@ Fresh target read is unchanged at 2026-10-20T11:09:54.879Z; main remains 38edae8
 Q5. Route changes can affect operator-entered loading/destination addresses or other movement details on existing drafts. Recommend explicit review/confirmation or correction of the affected draft values, saved atomically with the route edit, retaining unaffected values. Do not guess addresses from geography or silently overwrite snapshots. FRO-316 owns any required integration into its existing edit/review flow; no separate UI is built here. Until an adapter can supply the explicit resolution, reject the affected route edit with actionable feedback.
 
 Q6. If an otherwise valid origin edit makes the Shipment ineligible for Front Line delivery notes, recommend allowing explicit removal of existing wholly unsubmitted DRAFT notes in the same authorized transaction, retaining audit evidence and creating no replacements. Issued, submitted, failed-with-fiscal-identity and uncertain documents remain protected until their existing reconciliation workflow resolves them. This is a proposal for future application behavior, not authorization to delete current records.
+
+## Second round accepted and draft prepared
+
+User accepted Q5 and Q6. These are now agreed product requirements: explicit atomic route/draft-value resolution; explicit removal of wholly unsubmitted drafts on lost fiscal eligibility with audit and no replacement. They authorize no action on current production records.
+
+Mandatory pull succeeded; target and board metadata refreshed, target unchanged at 2026-10-20T11:09:54.879Z; live main remains 38edae8e3cf92b9c6f8b4b9b53febcd96ce5c03e. frontline-linear-issues applied. Complete standalone draft at drafts/fro344-reviewed-spec.md; approval remains pending. Preserve title, status, labels, all other metadata, relations and empty attachments/documents. No Ready promotion or linked-ticket edits.
+
+Before / after summary for chat (outside final ticket):
+
+| Before | After |
+| --- | --- |
+| Draft reconciliation explicitly unresolved | Atomic goods/groups/totals, explicit route-value resolution, state matrix and confirmed removal on lost eligibility. |
+| Partial edits reuse creation restrictions | Explicit stocked-reserved partial exception; retained child and released remainder, immutable history. |
+| Origin broadly editable with separate saves | Clear impossible-intermediate-save limitation and deliberate cancellation/new-creation path. |
+| Eligibility/release described generally | Own retained reservations, overdue upcoming exception and current-state restoration specified. |
+| Audit/concurrency/packing generic | Removal/re-add history, empty-unit resolution, physical-history preservation and FRO-345 retry/version integration. |
+| Old evidence and broad verification | Current source paths, affected consumer ownership, release coordination and AC-mapped read-only checks. |
+
+All existing field/state boundaries, no-op/cancel/error behavior, full-child preservation, arrival-source deduplication, no inline Order creation, fiscal/history protection and ownership retained. No UI/preview/branch or production mutation. No new glossary/ADR.
