@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 approved revision saved and verified
+
+- User approved the complete displayed draft with ok. Mandatory planning pull succeeded; fresh full issue remained unchanged at2026-10-20T11:09:51.244Z. Saved exact drafts/fro325-reviewed-spec.md and re-passed all four existing labels.
+- Independent read confirmed the complete description after Linear mention/link/list normalization. Save auto-added related295/297/339; removed only those save-induced additions under approved metadata-preservation scope. Second independent read confirms exact original relations, labels, title/status/priority/project/milestone, both attachments and all other returned metadata. Final updatedAt2026-10-23T12:30:06.313Z; no Ready promotion.
+- Review record marked saved. No UI/preview changes, production branch/code/database writes, deployment or implementation tests. No new glossary/ADR. Synchronize only this entry and325 review record; preserve unrelated326/330 local work.
+
 ### 2026-10-23 — FRO-325 source review and accepted decisions; revised draft pending approval
 
 - Mandatory planning pull succeeded. Refetched full FRO-325, comments (none), current FRO labels/statuses and linked 316/341/344/295/297/339/303/322 contracts. FRO-165 is archived email-tagging; Shipment Details owner is FRO-316. Target remains Todo, Pending_Review/Backend/Epic/Shipment, unassigned, no priority, milestone0.0.7, original relations and two attachments unchanged.
