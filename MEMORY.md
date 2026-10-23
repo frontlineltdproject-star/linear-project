@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 historical-reference footer prepared for approval
+
+- User requested the original UI as a historical reference at the end of348. Mandatory planning pull succeeded; full current target read unchanged at2026-10-23T11:23:44.164Z. Original version20 preview was verified to match20October source b6311c7 dist/index.html after line-ending normalization; preserved at /baseline-v20.html on the existing private Site.
+- Prepared complete description-only append proposal in drafts/fro348-historical-reference-proposal.md, preserving all current content and metadata/relations/attachment. Footer identifies original version20/20October2026 as historical only, current specification/selectedA take precedence. Reference-only change: no product behavior, consumer tracing or new design work. Ticket-writing skill loaded; no Linear/Site/production mutation. Await exact-footer approval under AGENTS4c, then append/re-read/verify and synchronize saved draft.
+
 ### 2026-10-23 — FRO-348 reviewed partial UI branch pushed by explicit exception
 
 - User explicitly authorized pushing the reviewed FRO348 partial UI branch despite known protection, integration and baseline-check limitations, with no PR or deployment. This overrides those publication gates for this exact push only; no protection/permission changes. Prior conditional request superseded by this clear scoped authorization.
