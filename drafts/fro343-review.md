@@ -3,7 +3,7 @@
 ## Workflow checkpoint
 
 - [x] 0 Preflight: planning pull succeeded; gh authentication/live repository read and Linear read succeeded. Optional Linear agent-context endpoint unavailable; direct issue reads work.
-- [ ] 1 Grill: evidence gathered; first decision round pending.
+- [ ] 1 Grill: Q1–Q4 accepted; Q5 return selection pending.
 - [x] 2 Canvas: skipped; FRO-341 owns inline form/return presentation, reusing FRO-335. FRO-316/326 own saved Details.
 - [x] 2b Preview: skipped; no new presentation required by this review.
 - [ ] 3 Spec check: initial consumer trace below; finalize after decisions.
@@ -48,11 +48,21 @@ Live production main: 5c51030680c9d45b3827a7e19b8320c19aa5ed9a, read through gh.
 
 Paths beginning App above are relative to frontline-forwarding-app/src/main/java/com/frontline/forwarding/, except GraphQL schemas in frontline-forwarding-app/src/main/resources/graphql/.
 
-## First decision round (recommendations, not accepted)
+## First decision round — accepted by user
 
 1. Save each completed Order independently; retain it and its attached files if Shipment is abandoned/rejected, with no automatic deletion. Later Shipment submission references saved identities.
 2. Support both Preparing and historical Arrived, each consuming its dedicated existing/planned contract; activation waits for compatible dependencies.
 3. Reuse FRO336/FRO335's three initial-state choices without implicit stock/readiness/arrival. Saved but ineligible Orders return with a reason. Initial historical registration must not invent past readiness evidence.
 4. Suggest origin for Preparing and receiving warehouse for Arrived only when known, keep editable, and leave blank otherwise. Override never silently alters the Shipment route or proves eligibility.
 
-Return auto-selection, incomplete route/readback recovery, historical readiness chronology and exact file-context orchestration will be resolved after prerequisites. Full ticket replacement and any metadata proposal require separate complete-text approval.
+Reasons: independent saving preserves ordinary Order identity and avoids rollback ambiguity; both workflows serve the requested entry point while retaining separate eligibility; shared initial-state contracts avoid duplicate lifecycle rules; editable warehouse suggestions reduce entry effort without manufacturing location evidence.
+
+## Follow-up — Q5 pending
+
+Recommend automatically selecting the complete current nonterminal colli set once, on confirmed Order-create return, only after successful workflow-specific eligibility validation. Preserve prior selections and partial decisions. No reservations or Order editing locks until Shipment save. No silent subset when whole-Order rules fail.
+
+If route context is insufficient, the Order is ineligible or eligibility lookup fails, retain its saved identity and explain saved-but-not-selected. Do not select automatically later when the route/status changes or a retry makes it eligible; require explicit selection through the existing controls. Replaying the create result must not re-add an Order/collis the operator deliberately deselected. A new intentional Order uses a fresh Order context; no retry can create another Order.
+
+Q5 is a proposal. Recovery otherwise follows already-agreed342 contracts: uncertain creation is not failure, same-attempt recovery, separate Order/Shipment contexts and no duplicate effects. Historical occurrence/registration separation follows336/324; preserve explicit registration facts without backdating readiness or inventing physical movement. No new historical shortcut is proposed.
+
+Refreshed343/324/342/336 after Q1–Q4.343 remains unchanged; production main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a.342 updated2026-10-23T14:20:09.844Z;324 updated2026-10-23T14:20:09.829Z. Full ticket replacement and any metadata proposal require separate complete-text approval. No Linear, UI or production changes; no glossary/ADR needed.
