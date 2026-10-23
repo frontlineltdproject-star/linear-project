@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-342 expanded to Order and Shipment creation uploads
+
+- User explicitly authorized extending FRO-342 to both Orders and Shipments. Planning pull succeeded; current attachment and Order creation contracts checked read-only through gh at production main fb8d5d534281da0c9eac5773e34ef2438588cb72. No new business-rule choices or glossary/ADR changes; reuse the existing upload safeguards for both entities.
+- Saved title Order & Shipment — structural support for file uploads during creation; added Order label and blocks FRO-335, preserving existing blocks FRO-341 and related FRO-325/FRO-316. Expanded creator/entity/context ownership, Order permissions, atomic child/state/audit association, recovery, cleanup and verification. Remains structural design/specification only; no production/UI/preview/code/branch/deployment work.
+- Independent read verified complete description after Linear formatting normalization, all original labels plus Order, Todo/Pending_Review, priority/project/milestone and other metadata. Final updatedAt 2026-10-23T13:51:31.724Z. FRO-335 description is byte-for-byte unchanged; reciprocal blockedBy FRO-342 confirmed.
+- FRO-335 needs a targeted follow-up text reconciliation: existing create-first/upload-after, partial saved-Order upload recovery, frontend-only uncertainty/no backend idempotency, cancellation-without-writes, relevant acceptance/verification and browser-local-only preview statements conflict with staged uploads/atomic creation. User asked for advice, not that rewrite; no FRO-335 text or preview changes. Preserve its carefully developed layout, fields, initial-readiness/customs/colli/invoice/notes rules. Full saved specification and review receipt under workspace Generated files/FRO-342/Drafts and notes/.
+
+
 ### 2026-10-23 — FRO-325 full-grill revision saved and verified
 
 - User approved the complete revised description with οκ. Planning pull succeeded; fresh pre-write issue matched the reviewed baseline. Saved exact drafts/fro325-reviewed-spec.md with all four existing labels.
