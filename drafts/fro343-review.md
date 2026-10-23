@@ -7,10 +7,10 @@
 - [x] 2 Canvas: skipped; FRO-341 owns inline form/return presentation, reusing FRO-335. FRO-316/326 own saved Details.
 - [x] 2b Preview: skipped; no new presentation required by this review.
 - [x] 3 Spec check: consumer outcomes and owners reconciled in complete draft.
-- [ ] 4 Ticket: complete drafts/fro343-reviewed-spec.md awaiting full-text approval.
+- [x] 4 Ticket: approved full replacement saved and independently verified.
 - [x] 4e UI branch: excluded explicitly by user.
 - [x] 5 Memory: review checkpoint recorded; no newly resolved vocabulary or ADR.
-- [ ] 6 Verify: no Linear mutation or deployment; saved-ticket verification applies after approved write.
+- [x] 6 Verify: approved text and full metadata/relations verified after save; no deployment performed.
 
 ## Current issue
 
@@ -72,3 +72,6 @@ Refreshed343/324/342/336 after Q1–Q4.343 remains unchanged; production main re
 All original protections and five accepted decisions reconciled in drafts/fro343-reviewed-spec.md. Before/after: unresolved save boundary → independent atomic Order save; unresolved lifecycle →336 three states; unspecified return → eligible whole set selected once with explicit later selection; generic retry →342 separate contexts/attempt recovery; vague acceptance →ten testable criteria and mapped read-only checks. No existing metadata or attachments removed. Historical investigation notes above are review history, not final ticket text.
 
 Proposal changes description only; preserve title, Todo, Shipment/Pending_Review/Backend/Story, priority, assignment, project/milestone0.0.8, blocks341, related322/324/325/344/316, no blockers and empty attachments/documents. New dependency references do not authorize relation additions; preserve this exact relation set after save. No Ready promotion. Full text must be approved before Linear write. No new vocabulary/ADR, UI/preview or production branch.
+## Approved save receipt
+
+User approved the complete replacement with ok. Fresh343 was unchanged at2026-10-20T11:10:12.558Z. Saved exact approved draft and all four labels. Independent re-read matches after Linear issue-mention, bold-mention, link and whitespace normalization. Save auto-added related336/335/342/326; removed only those additions under approved metadata preservation. Second independent read confirms text match and zero metadata differences from baseline, including exact original relations and empty attachments/documents. Final updatedAt2026-10-23T14:34:08.855Z. No Ready promotion, linked-ticket edits or production/UI/branch changes.
