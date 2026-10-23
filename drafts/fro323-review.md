@@ -1,7 +1,7 @@
 # FRO-323 review — 23 October 2026
 
 ## Status
-Interview complete; complete replacement in fro323-reviewed-spec.md awaits explicit Linear write approval. No Linear mutation or UI/production branch/code/database/deployment work.
+Approved replacement saved to Linear and independently verified on 23 October 2026. No UI/production branch/code/database/deployment work.
 
 ## Evidence
 Mandatory planning git pull --ff-only succeeded (initial sandbox denial recovered through approved escalation). Live gh auth and production reads verified at main 5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Full FRO-323/comments (none), current labels/statuses, and linked316/341/324/325/343 read. Target updatedAt2026-10-23T13:30:52.471Z.
@@ -43,3 +43,7 @@ Blocks341; no blockers; related320/316/325/324; no duplicate.
 One attachment f8429aff-301b-4a37-986f-9df06369b794, Interactive UI preview, https://fro-323-996a85.pages.dev ; no documents.
 Proposed write description only; retain complete label set and existing relations/attachment. No Ready promotion or linked-ticket edits. Any save-generated extra relations must be detected, not silently accepted.
 No new resolved vocabulary or qualifying ADR.
+
+## Approved save verification
+
+User approved the complete replacement with ok. Fresh pre-write target matched the reviewed baseline. Saved the exact reviewed draft with all four labels. Independent read confirms approved text after Linear mention/link normalization and zero metadata differences except updatedAt2026-10-23T14:59:26.642Z. Original relations, preview attachment, Todo and milestone0.0.8 preserved. No relation cleanup needed, linked-ticket changes or Ready promotion.
