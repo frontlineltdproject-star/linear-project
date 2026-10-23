@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-320 approved replacement saved and verified
+
+- User approved the complete displayed draft with "ok". Required pull succeeded; current320 baseline unchanged. Saved drafts/fro320-reviewed-spec.md with Ready/Shipment labels.
+- Independent read matched approved text after Linear mention/link/image normalization. Removed only auto-added related339/344 to preserve the approved relation set and re-read. Title, Todo, labels, Chris, priority/project/milestone0.0.8, all original relations and both attachments preserved.
+- Receipt updated in drafts/fro320-review.md. No UI/preview, production branch/code/database change or deployment verification. Synchronize only this memory entry/review receipt; preserve unrelated local work.
+
 ### 2026-10-23 — FRO-320 decisions settled; replacement awaiting approval
 
 - User accepted Q2 consistent human-facing Warehouse transfer wording across Shipment consumers/existing records and Q3 clear proven-invalid destination, explain and require reselection while preserving unrelated draft facts. Earlier coordinated316/341 activation decision retained. No new glossary term/ADR required.

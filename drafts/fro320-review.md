@@ -1,6 +1,8 @@
 # FRO-320 workflow review — 2026-10-23
 
-Status: interview complete; full replacement in fro320-reviewed-spec.md awaiting exact-text approval. No Linear write approved.
+Status: approved replacement saved and independently verified on 2026-10-23.
+
+User approved the complete displayed replacement with "ok". Fresh baseline was unchanged; saved fro320-reviewed-spec.md with both existing labels. Independent read matched the full approved text after Linear mention/link/image normalization. Removed only save-induced related339/344 additions to preserve the approved relation set; final read verified all original metadata/relations/attachments. No production/UI/preview/branch changes. Implementation and post-deployment verification remain future work.
 
 ## Baseline
 
