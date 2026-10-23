@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-349 review decisions settled; revision awaiting approval
+
+- Planning pull succeeded. Reviewed live FRO-349, FRO-326/335/347/321/318, target comments (none), and current team statuses/labels. FRO-349 remains Todo, milestone 0.0.6, supplier invoice/Order/Pending_Review/Frontend/Story, no attachments. Blocks FRO-326; blocked by FRO-321/FRO-347. No Linear write.
+- Live gh source review at main 3820e89e8caa341261e2d48bcb282d93e1bb1d03 confirms no Supplier Invoice creation route/schema/authority; billing is fixture-only and Order invoice rows are separate. Existing attachments support Order/Shipment ownership. Dependency delivery must supply the real contracts; no fabricated route or permission.
+- User accepted: Back/return resumes invoice draft/files; explicit new creation protects an existing draft. After saved result/upload outcomes, explicitly return to originating Order, identifying the actual selected Order when different. Missing Invoice company adds no eligibility restriction. Preserve FRO-349 -> FRO-326 dependency and flag 0.0.6 -> 0.0.5 scheduling mismatch without milestone changes. FRO-347 owns shared partial/unknown recovery; FRO-349 requires/tests it, with any FRO-347 edit separately reviewed.
+- Revision must align action placement with current FRO-326 standalone card, consume its dirty-draft navigation guard, initialize full FRO-347 Order/type/note flow, preserve distinct origin/selected Order contexts, avoid resetting explicit reselection, distinguish rejected/unknown/persisted-with-upload-failure outcomes, and expand source/verification sections. No new design/preview; presentation remains FRO-326/FRO-347 with FRO-335 shared Documents patterns. No production branch or writes authorized/performed. No new glossary or ADR needed.
+- Complete proposed FRO-349 description prepared in chat; exact-text approval pending. Metadata preserved, including Todo + Pending_Review; scheduling conflict and FRO-347 shared recovery contract remain dependency concerns. Linear agent-context tool advertised but unavailable; review used direct issues and live code. Existing unrelated FRO-326 working changes preserved.
+
 ### 2026-10-22 — FRO-335 planning checkpoint accepted; plan prepared
 
 - User explicitly confirmed Continue with planning. Wrote docs/superpowers/plans/2026-10-22-fro335-ui-review.md using writing-plans. It separates production-based canvas selection, existing private Site update/QA/publication, exact-ticket approval/save, and conditional real frontend handoff. Native execution recommended; execution-method/plan agreement and separate implementation-model checkpoint remain pending.
