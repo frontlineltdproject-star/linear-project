@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-321 rollout and cancellation decisions accepted
+
+- User accepted Q2-Q4: staged basic invoice delivery with later Export/Entry Note integrations; new records/fixtures only, no real legacy import; cancellation only for unassigned invoices without recorded stamping/sending events, retaining identity/files/history/duplicate protection, with no ordinary hard deletion or reactivation. Q1 remains ordinary UD creation at Not started, advanced historical entry separately audited. These decisions are not approval to write an unseen ticket.
+- Planning pull succeeded; current FRO-321 unchanged (updated 2026-10-20T11:09:35.982Z). No Linear/UI/production changes. Existing skill and live-source findings retained.
+- Next interview frontier: invoice date/vessel requiredness and vessel eligibility; monetary sign/precision/bounds; exact-number duplicate normalization; physical-event chronology; saved type/Order correction guards and existing company-correction ownership; post-create upload failure/unknown-result recovery; parent Order cancellation consistency. Recommendations will be shown in chat and remain unapproved.
+- Preserve existing presentation owners FRO-347/348, separate linked-ticket approvals and metadata. No glossary change or ADR. Only this entry is staged; unrelated local memory/drafts remain untouched.
+
 ### 2026-10-23 — FRO-321 review; first decision round in progress
 
 - Planning pull succeeded; live production gh access verified at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Applied embedded workflow with grilling/domain-modeling; fact-lookup subagent inspected backend read-only. Read current FRO-321/347/348/317/319/356/248/318/303/337, target comments (none), team labels/statuses. Shared Linear context tool unavailable; direct issue reads succeeded.
