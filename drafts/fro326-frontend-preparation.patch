@@ -137,7 +137,7 @@ index 01e1470..226bdb4 100644
 +  })
 +})
 diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
-index 04502c9..01d2fbb 100644
+index 04502c9..8f871a0 100644
 --- a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
 +++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
 @@ -1,9 +1,10 @@
@@ -152,15 +152,16 @@ index 04502c9..01d2fbb 100644
  import { Badge } from '#/components/ui/badge'
  import { FormField, Input, Textarea } from '#/components/ui/input'
  import { Select } from '#/components/ui/select'
-@@ -21,6 +22,7 @@ import { PurchaseOrderStatusPill } from './purchase-order-status-pill'
+@@ -21,6 +22,8 @@ import { PurchaseOrderStatusPill } from './purchase-order-status-pill'
  import { PurchaseOrderSplitLineageBadge } from './purchase-order-split-lineage-badge'
  import { usePurchaseOrderLabels } from '../localization/purchase-order-labels'
  import { AttachmentPanel } from '#/features/attachments/components/attachment-panel'
 +import { PurchaseOrderCollis } from './purchase-order-collis'
++import { useOrderUiText } from './order-ui-fields'
  import { ReadinessReminderAction } from './readiness-reminder-action'
  
  export function PurchaseOrderDetail({
-@@ -28,6 +30,98 @@ export function PurchaseOrderDetail({
+@@ -28,7 +31,100 @@ export function PurchaseOrderDetail({
  }: {
    purchaseOrder: PurchaseOrder
  }) {
@@ -257,9 +258,11 @@ index 04502c9..01d2fbb 100644
 +  const [tab, setTab] = useState('overview')
 +  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
    const { text, enumLabel } = usePurchaseOrderLabels()
++  const uiText = useOrderUiText()
    const rootPurchaseOrder = purchaseOrder.rootPurchaseOrderId
      ? purchaseOrder.lineagePurchaseOrders.find(
-@@ -41,14 +135,13 @@ export function PurchaseOrderDetail({
+         (candidate) =>
+@@ -41,14 +137,13 @@ export function PurchaseOrderDetail({
    )
    return (
      <div className="space-y-5">
@@ -275,7 +278,7 @@ index 04502c9..01d2fbb 100644
                {purchaseOrder.hasDangerousGoods ? (
                  <Badge tone="danger">DG</Badge>
                ) : null}
-@@ -59,10 +152,6 @@ export function PurchaseOrderDetail({
+@@ -59,10 +154,6 @@ export function PurchaseOrderDetail({
                  tag={purchaseOrder.splitLineageTag}
                />
              </div>
@@ -286,7 +289,7 @@ index 04502c9..01d2fbb 100644
              {parentPurchaseOrder ? (
                <Link
                  to="/secured/purchase-orders/$purchaseOrderId"
-@@ -122,262 +211,246 @@ export function PurchaseOrderDetail({
+@@ -122,262 +213,268 @@ export function PurchaseOrderDetail({
              ) : null}
            </div>
          </div>
@@ -313,7 +316,6 @@ index 04502c9..01d2fbb 100644
 +        <div className="overflow-x-auto">
 +          <TabList className="min-w-max">
 +            <Tab value="overview">{text.detailOverviewTab}</Tab>
-+            <Tab value="documents">{text.documentsTab}</Tab>
 +            <Tab value="collis">
 +              {text.collisTab} · {purchaseOrder.handlingUnits.length}
 +            </Tab>
@@ -321,6 +323,7 @@ index 04502c9..01d2fbb 100644
 +              {text.invoiceRowsTab} · {purchaseOrder.invoiceRows.length}
 +            </Tab>
 +            <Tab value="history">{text.historyTab}</Tab>
++            <Tab value="documents">{text.documentsTab}</Tab>
 +            {slots && <Tab value="actions">{text.availableActions}</Tab>}
 +          </TabList>
 +        </div>
@@ -411,6 +414,28 @@ index 04502c9..01d2fbb 100644
 +              <Facts
 +                items={[
 +                  [text.client, purchaseOrder.clientCompany.name],
++                  [text.vessel, purchaseOrder.vessel?.name],
++                  [
++                    text.warehouse,
++                    purchaseOrder.currentWarehouseStay?.warehouse.name,
++                  ],
++                  [
++                    text.pickupInGreece,
++                    uiText(
++                      purchaseOrder.pickupInGreece
++                        ? ['Yes', 'Ναι']
++                        : ['No', 'Όχι'],
++                    ),
++                  ],
++                  [text.deliveryNoteImport, purchaseOrder.deliveryNoteImport],
++                  [text.deliveryNoteExport, purchaseOrder.deliveryNoteExport],
++                  [
++                    text.urgent,
++                    uiText(
++                      purchaseOrder.urgent ? ['Yes', 'Ναι'] : ['No', 'Όχι'],
++                    ),
++                  ],
++                  [text.urgentInformation, purchaseOrder.urgentInformation],
 +                  [text.supplier, purchaseOrder.supplierCompany?.name],
 +                  [text.invoiceCompany, purchaseOrder.invoiceCompany?.name],
 +                  [
@@ -645,16 +670,16 @@ index 04502c9..01d2fbb 100644
 +            />
 +          </Section>
 +        </TabPanel>
-+
+ 
+-          <TabPanel value="history">
+-            <div className="space-y-5">
+-              <Section title={text.warehouseStays}>
 +        <TabPanel value="invoiceRows">
 +          <Section title={text.invoiceRows}>
 +            <InvoiceRowsTable purchaseOrder={purchaseOrder} />
 +          </Section>
 +        </TabPanel>
- 
--          <TabPanel value="history">
--            <div className="space-y-5">
--              <Section title={text.warehouseStays}>
++
 +        <TabPanel value="history">
 +          <div className="space-y-5">
 +            {slots?.comments}
@@ -765,7 +790,7 @@ index 04502c9..01d2fbb 100644
  }) {
    const { text, enumLabel } = usePurchaseOrderLabels()
    const movable = purchaseOrder.handlingUnits.filter(
-@@ -396,6 +469,7 @@ export function PurchaseOrderActions({
+@@ -396,6 +493,7 @@ export function PurchaseOrderActions({
    const stockConfirmationSubmitting = useRef(false)
    const [splitIds, setSplitIds] = useState<Array<string>>([])
    const [reason, setReason] = useState('')
@@ -773,7 +798,7 @@ index 04502c9..01d2fbb 100644
    const [terminalId, setTerminalId] = useState('')
    const [disposition, setDisposition] = useState('DAMAGED')
    const [message, setMessage] = useState('')
-@@ -413,6 +487,7 @@ export function PurchaseOrderActions({
+@@ -413,6 +511,7 @@ export function PurchaseOrderActions({
        ]),
      ),
    )
@@ -781,7 +806,7 @@ index 04502c9..01d2fbb 100644
    type CommandDocument = { name: string; gql: RequestDocument }
    type CommandPayload = {
      document: CommandDocument
-@@ -431,6 +506,26 @@ export function PurchaseOrderActions({
+@@ -431,6 +530,26 @@ export function PurchaseOrderActions({
      setError('')
      try {
        await mutation.mutateAsync({ document, variables })
@@ -808,7 +833,7 @@ index 04502c9..01d2fbb 100644
        toast({ title: success, tone: 'success' })
        return true
      } catch (caught) {
-@@ -477,397 +572,425 @@ export function PurchaseOrderActions({
+@@ -477,397 +596,425 @@ export function PurchaseOrderActions({
      }
    }
  
@@ -1592,7 +1617,7 @@ index 04502c9..01d2fbb 100644
        <Modal
          open={stockConfirmationOpen}
          onClose={closeStockConfirmation}
-@@ -901,6 +1024,26 @@ export function PurchaseOrderActions({
+@@ -901,6 +1048,26 @@ export function PurchaseOrderActions({
            {text.confirmInStockWarning}
          </p>
        </Modal>
@@ -1619,7 +1644,7 @@ index 04502c9..01d2fbb 100644
      </Section>
    )
  }
-@@ -947,10 +1090,12 @@ function InvoiceRowsTable({ purchaseOrder }: { purchaseOrder: PurchaseOrder }) {
+@@ -947,10 +1114,12 @@ function InvoiceRowsTable({ purchaseOrder }: { purchaseOrder: PurchaseOrder }) {
  
  function Section({ title, children }: { title: string; children: ReactNode }) {
    return (
@@ -1636,7 +1661,7 @@ index 04502c9..01d2fbb 100644
    )
  }
  
-@@ -971,13 +1116,13 @@ function ActionCard({
+@@ -971,13 +1140,13 @@ function ActionCard({
  
  function Facts({ items }: { items: Array<[string, ReactNode]> }) {
    return (
@@ -1656,7 +1681,7 @@ index 04502c9..01d2fbb 100644
          </div>
        ))}
      </dl>
-@@ -989,7 +1134,9 @@ function Timeline({
+@@ -989,7 +1158,9 @@ function Timeline({
  }: {
    rows: Array<{ id: string; title: string; detail: string }>
  }) {
@@ -1860,13 +1885,1653 @@ index d1ba505..8806604 100644
 +  CORROSIVES: 'Διαβρωτικές ουσίες',
 +  MISCELLANEOUS_DANGEROUS_SUBSTANCES: 'Διάφορες επικίνδυνες ουσίες',
 +}
+diff --git a/frontline-forwarding-client/dev/fro326/index.html b/frontline-forwarding-client/dev/fro326/index.html
+new file mode 100644
+index 0000000..c3a52ef
+--- /dev/null
++++ b/frontline-forwarding-client/dev/fro326/index.html
+@@ -0,0 +1,12 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>FRO-326 — local React review</title>
++  </head>
++  <body>
++    <div id="root"></div>
++    <script type="module" src="./review.tsx"></script>
++  </body>
++</html>
+diff --git a/frontline-forwarding-client/dev/fro326/review.tsx b/frontline-forwarding-client/dev/fro326/review.tsx
+new file mode 100644
+index 0000000..96d05f4
+--- /dev/null
++++ b/frontline-forwarding-client/dev/fro326/review.tsx
+@@ -0,0 +1,1616 @@
++// Development entry only: not imported by src/client.tsx or any application route.
++// Fictional data and effects stay in this composition. Components contain no fake API adapters.
++import { useCallback, useEffect, useRef, useState } from 'react'
++import { createRoot } from 'react-dom/client'
++import { LabelsProvider, useLocale } from '#/app/providers/labels-provider'
++import { ThemeProvider } from '#/app/providers/theme-provider'
++import { ThemeModeToggle } from '#/components/layout/theme-mode-toggle'
++import { LanguageSelector } from '#/components/layout/language-selector'
++import { Sidebar } from '#/components/layout/side-bar'
++import { Card } from '#/components/ui/card'
++import { Badge, StatusPill } from '#/components/ui/badge'
++import { Button } from '#/components/ui/button'
++import { FormField, Input, Textarea } from '#/components/ui/input'
++import { Select } from '#/components/ui/select'
++import { Modal } from '#/components/ui/modal'
++import { Checkbox } from '#/components/ui/choice'
++import { Table, THead, TBody, TR, TH, TD } from '#/components/ui/table'
++import { OrderDetailsPreparedPage } from '#/features/purchase-orders/components/order-details-prepared-page'
++import {
++  OrderDetailsNotes,
++  type NoteValue,
++} from '#/features/purchase-orders/components/order-details-notes'
++import {
++  OrderDetailsEditor,
++  type DetailsUiIntent,
++  type DetailsUiSnapshot,
++} from '#/features/purchase-orders/components/order-details-editor'
++import { OrderEditableRows } from '#/features/purchase-orders/components/order-editable-rows'
++import {
++  OrderReviewedEmails,
++  OrderDocumentAction,
++  type PreparedEmailView,
++  type DocumentActionView,
++} from '#/features/purchase-orders/components/order-reviewed-actions'
++import {
++  OrderUiControl,
++  useOrderUiText,
++  type OrderUiField,
++  type UiOption,
++} from '#/features/purchase-orders/components/order-ui-fields'
++import { purchaseOrderStatusTone } from '#/features/purchase-orders/components/purchase-order-status-pill'
++import { usePurchaseOrderLabels } from '#/features/purchase-orders/localization/purchase-order-labels'
++import type {
++  OrderDraftValues,
++  SavedOrderUiRow,
++} from '#/features/purchase-orders/components/order-ui-values'
++import '#/styles/theme.css'
++
++const option = (value: string, en = value, el = en): UiOption => ({
++  value,
++  label: [en, el],
++})
++const regimes = [
++  option('Ελεύθερη Κυκλοφορία'),
++  option('Τελωνειακή Αποθήκευση'),
++  option('Τελωνειακή Αποταμίευση'),
++]
++const parties = [
++  option('supplier-a', 'Fixture supplier A', 'Εικονικός προμηθευτής Α'),
++  option('supplier-b', 'Fixture supplier B', 'Εικονικός προμηθευτής Β'),
++]
++const companies = [
++  option(
++    'invoice-a',
++    'Fixture invoice company A',
++    'Εικονική εταιρεία τιμολόγησης Α',
++  ),
++  option(
++    'invoice-b',
++    'Fixture invoice company B',
++    'Εικονική εταιρεία τιμολόγησης Β',
++  ),
++]
++const detailsFields: OrderUiField[] = [
++  { key: 'client', label: ['Client', 'Πελάτης'], readonly: true },
++  { key: 'vessel', label: ['Vessel', 'Πλοίο'], readonly: true },
++  {
++    key: 'warehouse',
++    label: ['Current warehouse', 'Τρέχουσα αποθήκη'],
++    readonly: true,
++  },
++  {
++    key: 'supplier',
++    label: ['Supplier', 'Προμηθευτής'],
++    type: 'entity',
++    options: parties,
++  },
++  {
++    key: 'invoiceCompany',
++    label: ['Invoice company', 'Εταιρεία τιμολόγησης'],
++    type: 'entity',
++    options: companies,
++  },
++  {
++    key: 'ownerReference',
++    label: ['Owner reference', 'Αναφορά πελάτη'],
++    required: true,
++  },
++  {
++    key: 'supplierReference',
++    label: ['Supplier reference', 'Αναφορά προμηθευτή'],
++  },
++  { key: 'messageNumber', label: ['Message number', 'Αριθμός μηνύματος'] },
++  {
++    key: 'readinessDate',
++    label: ['Expected readiness date', 'Αναμενόμενη ημερομηνία ετοιμότητας'],
++    readonly: true,
++  },
++  { key: 'greece', label: ['Greece', 'Ελλάδα'], type: 'boolean' },
++  {
++    key: 'pickup',
++    label: ['Pickup', 'Παραλαβή'],
++    type: 'select',
++    options: [option('true', 'Yes', 'Ναι'), option('false', 'No', 'Όχι')],
++  },
++  { key: 'dnImport', label: ['DN Import', 'DN εισαγωγής'], maxLength: 255 },
++  { key: 'dnExport', label: ['DN Export', 'DN εξαγωγής'], maxLength: 255 },
++  {
++    key: 'regime',
++    label: ['Customs regime', 'Τελωνειακό καθεστώς'],
++    type: 'select',
++    options: regimes,
++  },
++  { key: 'alk', label: ['ΑΛΚ', 'ΑΛΚ'], maxLength: 50 },
++  { key: 'urgent', label: ['Urgent', 'Επείγον'], type: 'boolean' },
++  {
++    key: 'urgentInformation',
++    label: ['Urgent information', 'Πληροφορίες επείγοντος'],
++    type: 'textarea',
++    maxLength: 1000,
++    wide: true,
++  },
++]
++const packageCodes = [
++  'PALLET',
++  'WOODEN_BOX',
++  'FUMIGATED_WOODEN_BOX',
++  'SKELETON_WOODEN_BOX',
++  'FUMIGATED_SKELETON_WOODEN_BOX',
++  'SKELETON_METAL_BOX',
++  'CARDBOARD_BOX',
++  'METAL_BOX',
++  'METAL_CAN',
++  'BARREL',
++  'PLYWOOD_BOX',
++  'PLASTIC_BOX',
++  'FUMIGATED_PALLET',
++  'ENVELOPE',
++  'OTHER',
++]
++const packageGreek = [
++  'Παλέτα',
++  'Ξύλινο κιβώτιο',
++  'Υποκαπνισμένο ξύλινο κιβώτιο',
++  'Ξύλινος σκελετός',
++  'Υποκαπνισμένος ξύλινος σκελετός',
++  'Μεταλλικός σκελετός',
++  'Χαρτοκιβώτιο',
++  'Μεταλλικό κιβώτιο',
++  'Μεταλλικό δοχείο',
++  'Βαρέλι',
++  'Κιβώτιο κόντρα πλακέ',
++  'Πλαστικό κιβώτιο',
++  'Υποκαπνισμένη παλέτα',
++  'Φάκελος',
++  'Άλλο',
++]
++const dgCodes = [
++  'EXPLOSIVES',
++  'GASES_COMPRESSED_LIQUEFIED_OR_DISSOLVED_UNDER_PRESSURE',
++  'FLAMMABLE_LIQUIDS',
++  'FLAMMABLE_SOLIDS',
++  'OXIDIZING_SUBSTANCES_AND_ORGANIC_PEROXIDES',
++  'TOXIC_AND_INFECTIOUS_SUBSTANCES',
++  'RADIOACTIVE_MATERIALS',
++  'CORROSIVES',
++  'MISCELLANEOUS_DANGEROUS_SUBSTANCES',
++]
++const colliFields: OrderUiField[] = [
++  { key: 'description', label: ['Description', 'Περιγραφή'] },
++  {
++    key: 'packageType',
++    label: ['Package type', 'Τύπος συσκευασίας'],
++    type: 'select',
++    required: true,
++    options: packageCodes.map((code, i) =>
++      option(code, code.toLowerCase().replaceAll('_', ' '), packageGreek[i]),
++    ),
++  },
++  ...(['length', 'width', 'height', 'gross', 'net'] as const).map((key, i) => ({
++    key,
++    label: [
++      ['Length', 'Width', 'Height', 'Gross weight', 'Net weight'][i],
++      ['Μήκος', 'Πλάτος', 'Ύψος', 'Μικτό βάρος', 'Καθαρό βάρος'][i],
++    ] as const,
++  })),
++  { key: 'dg', label: ['DG', 'DG'], type: 'boolean' },
++  { key: 'fragile', label: ['Fragile', 'Εύθραυστο'], type: 'boolean' },
++  { key: 'unpacked', label: ['Unpacked', 'Ασυσκεύαστο'], type: 'boolean' },
++  {
++    key: 'damagedPacking',
++    label: ['Damaged Packing', 'Φθαρμένη συσκευασία'],
++    type: 'boolean',
++  },
++  {
++    key: 'dgClass',
++    label: ['Class of DG', 'Κλάση DG'],
++    type: 'select',
++    options: dgCodes.map((code, i) =>
++      option(
++        code,
++        `${i + 1} · ${code.toLowerCase().replaceAll('_', ' ')}`,
++        `${i + 1}`,
++      ),
++    ),
++  },
++  {
++    key: 'dgText',
++    label: ['UN / DG details', 'UN / στοιχεία DG'],
++    type: 'textarea',
++    maxLength: 200,
++  },
++]
++const invoiceFields: OrderUiField[] = [
++  {
++    key: 'description',
++    label: ['Description', 'Περιγραφή'],
++    required: true,
++    maxLength: 1000,
++  },
++  { key: 'hs', label: ['HS code', 'Κωδικός HS'], maxLength: 100 },
++  { key: 'quantity', label: ['Quantity', 'Ποσότητα'], required: true },
++  {
++    key: 'unit',
++    label: ['Unit', 'Μονάδα'],
++    type: 'select',
++    required: true,
++    options: ['PC', 'SET', 'PKT'].map((v) => option(v)),
++  },
++  { key: 'price', label: ['Unit price', 'Τιμή μονάδας'], required: true },
++  {
++    key: 'currency',
++    label: ['Currency', 'Νόμισμα'],
++    type: 'select',
++    required: true,
++    options: [option('EUR'), option('USD')],
++  },
++]
++const emptyColli = {
++  description: '',
++  packageType: 'CARDBOARD_BOX',
++  length: '',
++  width: '',
++  height: '',
++  gross: '',
++  net: '',
++  dg: 'false',
++  fragile: 'false',
++  unpacked: 'false',
++  damagedPacking: 'false',
++  dgClass: '',
++  dgText: '',
++}
++const initialCollis: SavedOrderUiRow[] = [
++  {
++    id: 'DEMO-C01',
++    revision: '1',
++    values: {
++      ...emptyColli,
++      description: 'Fixture spare parts',
++      length: '120',
++      width: '80',
++      height: '95',
++      gross: '100',
++      net: '90',
++      dg: 'true',
++      dgClass: 'FLAMMABLE_LIQUIDS',
++      dgText: 'Fictional UN / DG details',
++    },
++  },
++  {
++    id: 'DEMO-C02',
++    revision: '1',
++    values: {
++      ...emptyColli,
++      description: 'Fixture fittings',
++      packageType: 'PALLET',
++      length: '80',
++      width: '60',
++      height: '50',
++      gross: '40',
++      fragile: 'true',
++    },
++  },
++  {
++    id: 'DEMO-C03',
++    revision: '1',
++    terminal: 'DAMAGED',
++    values: { ...emptyColli, description: 'Terminal fixture' },
++  },
++]
++const initialInvoice: SavedOrderUiRow[] = [
++  {
++    id: 'DEMO-I01',
++    revision: '1',
++    values: {
++      description: 'Fixture spare parts',
++      hs: '',
++      quantity: '3',
++      unit: 'PC',
++      price: '0.10',
++      currency: 'EUR',
++    },
++  },
++]
++const initialDetails: DetailsUiSnapshot = {
++  revision: '1',
++  values: {
++    client: 'Fixture client A',
++    vessel: 'Fixture vessel A',
++    warehouse: 'DEMO-WH · A-01',
++    supplier: 'supplier-a',
++    invoiceCompany: 'invoice-a',
++    ownerReference: 'DEMO-REF-01',
++    supplierReference: 'DEMO-SUP-01',
++    messageNumber: '',
++    readinessDate: '2026-10-23',
++    greece: 'true',
++    pickup: '',
++    dnImport: 'DEMO-IN-01',
++    dnExport: '',
++    regime: 'Τελωνειακή Αποταμίευση',
++    alk: '00123456',
++    urgent: 'false',
++    urgentInformation: '',
++    status: 'EXPECTED_READINESS',
++  },
++}
++type Reminder = {
++  id: string
++  created: string
++  type: string
++  recipient: string
++  status: string
++}
++
++function Review() {
++  const t = useOrderUiText()
++  const { locale } = useLocale()
++  const { enumLabel } = usePurchaseOrderLabels()
++  const params = new URLSearchParams(location.search)
++  const [scenario, setScenario] = useState(params.get('scenario') || 'ordinary')
++  const [access, setAccess] = useState(params.get('access') || 'editor')
++  const [screenState, setScreenState] = useState(
++    params.get('state') || 'default',
++  )
++  const [outcome, setOutcome] = useState('success')
++  const [entry, setEntry] = useState<DocumentActionView['state']>(
++    (params.get('entryNote') as DocumentActionView['state']) || 'create',
++  )
++  const [reset, setReset] = useState(0)
++  const [details, setDetails] = useState<DetailsUiSnapshot>(() => ({
++    ...initialDetails,
++    values: {
++      ...initialDetails.values,
++      status:
++        scenario === 'late'
++          ? 'SHIPPED'
++          : scenario === 'stock'
++            ? 'READY'
++            : scenario === 'pending'
++              ? 'PENDING'
++              : 'EXPECTED_READINESS',
++      readinessDate: scenario === 'pending' ? '' : '2026-10-23',
++    },
++  }))
++  const [notes, setNotes] = useState<
++    Record<'internal' | 'external', NoteValue>
++  >({
++    internal: {
++      value:
++        'Fictional internal handling instructions.\nKeep this note within the office.',
++      revision: '1',
++    },
++    external: { value: '', revision: '1' },
++  })
++  const [reminders, setReminders] = useState<Reminder[]>([])
++  const [comments, setComments] = useState<string[]>([])
++  const [comment, setComment] = useState<string | null>(null)
++  const [collis, setCollis] = useState(initialCollis)
++  const [invoices, setInvoices] = useState(initialInvoice)
++  const [notice, setNotice] = useState('')
++  const [busy, setBusy] = useState(false)
++  const [drafts, setDrafts] = useState<Set<string>>(() => new Set())
++  const dirty = useCallback(
++    (key: string, active: boolean) =>
++      setDrafts((current) => {
++        if (current.has(key) === active) return current
++        const next = new Set(current)
++        active ? next.add(key) : next.delete(key)
++        return next
++      }),
++    [],
++  )
++  const [leave, setLeave] = useState<(() => void) | null>(null)
++  const [lifecycle, setLifecycle] = useState(false)
++  const [lifeDate, setLifeDate] = useState('')
++  const [remark, setRemark] = useState('')
++  const [position, setPosition] = useState('')
++  const [measurements, setMeasurements] = useState<
++    Record<string, OrderDraftValues>
++  >({})
++  const [confirmedReady, setConfirmedReady] = useState(false)
++  const counter = useRef(10)
++  const prepared = useRef(new Map<string, string>())
++  const status = details.values.status
++  const editor = access === 'editor'
++  const ordinary =
++    editor &&
++    ['PENDING', 'EXPECTED_READINESS', 'READY', 'IN_STOCK'].includes(status) &&
++    scenario !== 'reserved'
++  const colliEditable = ordinary && status !== 'IN_STOCK'
++  const context = JSON.stringify([
++    status,
++    details.values.readinessDate,
++    details.values.supplier,
++    details.revision,
++    access,
++  ])
++  const guard = (action: () => void) => {
++    if (drafts.size || comment !== null || lifecycle || busy)
++      setLeave(() => action)
++    else action()
++  }
++  const resetScenario = (value: string) =>
++    guard(() => {
++      setScenario(value)
++      setDetails({
++        ...initialDetails,
++        values: {
++          ...initialDetails.values,
++          status:
++            value === 'late'
++              ? 'SHIPPED'
++              : value === 'stock'
++                ? 'READY'
++                : value === 'pending'
++                  ? 'PENDING'
++                  : 'EXPECTED_READINESS',
++          readinessDate: value === 'pending' ? '' : '2026-10-23',
++        },
++      })
++      setCollis(initialCollis)
++      setInvoices(initialInvoice)
++      setDrafts(new Set())
++      setReset((v) => v + 1)
++    })
++  useEffect(() => {
++    const handler = (event: BeforeUnloadEvent) => {
++      if (drafts.size || busy || comment !== null || lifecycle) {
++        event.preventDefault()
++        event.returnValue = ''
++      }
++    }
++    window.addEventListener('beforeunload', handler)
++    return () => window.removeEventListener('beforeunload', handler)
++  }, [drafts, busy, comment, lifecycle])
++  const simulate = async () => {
++    setBusy(true)
++    try {
++      await new Promise((resolve) =>
++        setTimeout(resolve, outcome === 'pending' ? 4000 : 250),
++      )
++      if (outcome === 'failure')
++        throw new Error(
++          t([
++            'Simulated save failure. Your draft is retained.',
++            'Εικονική αποτυχία αποθήκευσης. Το πρόχειρο διατηρείται.',
++          ]),
++        )
++      if (outcome === 'conflict')
++        throw new Error(
++          t([
++            'Simulated stale revision. Refresh and review before retrying.',
++            'Εικονική παλιά έκδοση. Ανανεώστε και ελέγξτε πριν επανάληψη.',
++          ]),
++        )
++    } finally {
++      setBusy(false)
++    }
++  }
++  const saveDetails = async (intent: DetailsUiIntent) => {
++    await simulate()
++    const values = { ...details.values, ...intent.values }
++    if (values.greece === 'false') {
++      values.regime = ''
++      values.alk = ''
++    } else if (!values.regime)
++      throw new Error(
++        t(['Choose a customs regime.', 'Επιλέξτε τελωνειακό καθεστώς.']),
++      )
++    if (values.regime !== 'Τελωνειακή Αποταμίευση') values.alk = ''
++    if (values.status === 'PENDING') values.readinessDate = ''
++    const saved = { revision: String(++counter.current), values }
++    setDetails(saved)
++    return saved
++  }
++  const saveRow =
++    (kind: 'colli' | 'invoice') =>
++    async (id: string | null, values: OrderDraftValues, revision: string) => {
++      await simulate()
++      const saved = {
++        id: id ?? `DEMO-${kind}-${++counter.current}`,
++        revision: String(++counter.current),
++        values: { ...values },
++      }
++      const update = (rows: SavedOrderUiRow[]) =>
++        id ? rows.map((r) => (r.id === id ? saved : r)) : [...rows, saved]
++      if (
++        id &&
++        !(kind === 'colli' ? collis : invoices).some(
++          (r) => r.id === id && r.revision === revision,
++        )
++      )
++        throw new Error(
++          t(['The saved revision changed.', 'Η αποθηκευμένη έκδοση άλλαξε.']),
++        )
++      kind === 'colli' ? setCollis(update) : setInvoices(update)
++      return saved
++    }
++  const send = async (message: PreparedEmailView) => {
++    if (prepared.current.get(message.reference) === 'queued') return
++    await simulate()
++    prepared.current.set(message.reference, 'queued')
++    setReminders((current) => [
++      {
++        id: message.reference,
++        created: new Date().toLocaleString(locale === 'el' ? 'el-GR' : 'en-GB'),
++        type: message.subject,
++        recipient: message.recipient,
++        status: 'PENDING',
++      },
++      ...current,
++    ])
++  }
++  const queued = reminders.some((r) => r.status === 'PENDING')
++  const noEmail = t([
++    'This action is unavailable for the saved status and date.',
++    'Η ενέργεια δεν είναι διαθέσιμη για την αποθηκευμένη κατάσταση και ημερομηνία.',
++  ])
++  const availability = {
++    request: {
++      allowed:
++        editor &&
++        status === 'PENDING' &&
++        !details.values.readinessDate &&
++        !queued,
++      reason: queued
++        ? t([
++            'A reminder is awaiting delivery.',
++            'Μια υπενθύμιση αναμένει παράδοση.',
++          ])
++        : noEmail,
++    },
++    confirm: {
++      allowed:
++        editor &&
++        status === 'EXPECTED_READINESS' &&
++        !!details.values.readinessDate &&
++        !queued,
++      reason: queued
++        ? t([
++            'A reminder is awaiting delivery.',
++            'Μια υπενθύμιση αναμένει παράδοση.',
++          ])
++        : noEmail,
++    },
++  }
++  const lifeLabel =
++    status === 'PENDING'
++      ? t(['Set expected readiness', 'Ορισμός αναμενόμενης ετοιμότητας'])
++      : status === 'EXPECTED_READINESS'
++        ? t(['Mark ready at supplier', 'Έτοιμα στον προμηθευτή'])
++        : ['READY', 'AWAITING_IMPORT'].includes(status)
++          ? t([
++              'Confirm stock and measurements',
++              'Επιβεβαίωση αποθέματος και μετρήσεων',
++            ])
++          : status === 'IN_STOCK'
++            ? t(['Start shipment', 'Έναρξη αποστολής'])
++            : status === 'SHIPPED' || status === 'PREPARED_FOR_SHIPMENT'
++              ? t(['Open Shipment', 'Άνοιγμα αποστολής'])
++              : ''
++  const lifecycleCommit = async () => {
++    try {
++      if (status === 'PENDING' && !lifeDate)
++        throw new Error(
++          t([
++            'Readiness date is required.',
++            'Απαιτείται ημερομηνία ετοιμότητας.',
++          ]),
++        )
++      if (status === 'EXPECTED_READINESS' && !confirmedReady)
++        throw new Error(
++          t([
++            'Confirm all active collis are ready.',
++            'Επιβεβαιώστε ότι όλα τα ενεργά κόλλι είναι έτοιμα.',
++          ]),
++        )
++      if (
++        ['READY', 'AWAITING_IMPORT'].includes(status) &&
++        collis
++          .filter((r) => !r.terminal)
++          .some((r) =>
++            ['length', 'width', 'height', 'gross'].some(
++              (k) => !(Number(measurements[r.id]?.[k]) > 0),
++            ),
++          )
++      )
++        throw new Error(
++          t([
++            'Complete positive measurements for every active colli.',
++            'Συμπληρώστε θετικές μετρήσεις για κάθε ενεργό κόλλι.',
++          ]),
++        )
++      await simulate()
++      setDetails((current) => ({
++        ...current,
++        revision: String(++counter.current),
++        values: {
++          ...current.values,
++          status:
++            status === 'PENDING'
++              ? 'EXPECTED_READINESS'
++              : status === 'EXPECTED_READINESS'
++                ? 'READY'
++                : 'IN_STOCK',
++          readinessDate:
++            status === 'PENDING' ? lifeDate : current.values.readinessDate,
++        },
++      }))
++      setLifecycle(false)
++      setNotice(
++        t([
++          'Local lifecycle example updated. No production operation occurred.',
++          'Το τοπικό παράδειγμα ενημερώθηκε. Δεν έγινε ενέργεια στην παραγωγή.',
++        ]),
++      )
++    } catch (e) {
++      setNotice((e as Error).message)
++    }
++  }
++  const openLife = () => {
++    if (['IN_STOCK', 'SHIPPED', 'PREPARED_FOR_SHIPMENT'].includes(status)) {
++      guard(() =>
++        setNotice(
++          t([
++            'Navigation intent reviewed. The production destination is not opened by this local showcase.',
++            'Το αίτημα πλοήγησης ελέγχθηκε. Η επίδειξη δεν ανοίγει προορισμό παραγωγής.',
++          ]),
++        ),
++      )
++      return
++    }
++    setLifeDate(details.values.readinessDate || '')
++    setConfirmedReady(false)
++    setMeasurements(
++      Object.fromEntries(
++        collis.filter((r) => !r.terminal).map((r) => [r.id, { ...r.values }]),
++      ),
++    )
++    setLifecycle(true)
++  }
++  const tools = (
++    <Card className="space-y-3 border-warning">
++      <p className="font-semibold">
++        {t([
++          'LOCAL REACT REVIEW — fictional data; no production saves, email or documents',
++          'ΤΟΠΙΚΟΣ ΕΛΕΓΧΟΣ REACT — εικονικά δεδομένα· χωρίς αποθήκευση, email ή έγγραφα παραγωγής',
++        ])}
++      </p>
++      <p className="text-sm text-fg-muted">
++        {t([
++          'New compositions: Notes editors, shared Details review, expanded row editors, email review and document actions. Backend integration remains pending.',
++          'Νέες συνθέσεις: σημειώσεις, έλεγχος στοιχείων, γραμμές, έλεγχος email και ενέργειες εγγράφων. Η σύνδεση με το backend εκκρεμεί.',
++        ])}
++      </p>
++      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
++        <FormField label={t(['Example', 'Παράδειγμα'])}>
++          <Select
++            aria-label="Example"
++            value={scenario}
++            onChange={(e) => resetScenario(e.target.value)}
++          >
++            {[
++              ['ordinary', 'Ordinary / Κανονικό'],
++              ['pending', 'Pending / Αναμονή'],
++              ['stock', 'Stock entry / Απόθεμα'],
++              ['late', 'Later stage / Μεταγενέστερο στάδιο'],
++              ['reserved', 'Reserved / Δεσμευμένο'],
++            ].map(([value, label]) => (
++              <option key={value} value={value}>
++                {label}
++              </option>
++            ))}
++          </Select>
++        </FormField>
++        <FormField label={t(['Access', 'Πρόσβαση'])}>
++          <Select
++            aria-label="Access"
++            value={access}
++            onChange={(e) => {
++              const value = e.target.value
++              guard(() => {
++                setAccess(value)
++                setReset((v) => v + 1)
++                setDrafts(new Set())
++              })
++            }}
++          >
++            <option value="editor">Editor / Συντάκτης</option>
++            <option value="reader">Staff reader / Ανάγνωση</option>
++            <option value="external">External reader / Εξωτερικός</option>
++          </Select>
++        </FormField>
++        <FormField label={t(['Page state', 'Κατάσταση σελίδας'])}>
++          <Select
++            aria-label="Page state"
++            value={screenState}
++            onChange={(e) => {
++              const value = e.target.value
++              guard(() => setScreenState(value))
++            }}
++          >
++            {['default', 'loading', 'empty', 'error'].map((v) => (
++              <option key={v}>{v}</option>
++            ))}
++          </Select>
++        </FormField>
++        <FormField label={t(['Save outcome', 'Αποτέλεσμα αποθήκευσης'])}>
++          <Select
++            aria-label="Save outcome"
++            value={outcome}
++            onChange={(e) => setOutcome(e.target.value)}
++          >
++            {['success', 'failure', 'conflict', 'pending'].map((v) => (
++              <option key={v}>{v}</option>
++            ))}
++          </Select>
++        </FormField>
++        <FormField label="Entry Note">
++          <Select
++            aria-label="Entry Note example"
++            value={entry}
++            onChange={(e) =>
++              setEntry(e.target.value as DocumentActionView['state'])
++            }
++          >
++            {['create', 'open', 'loading', 'error', 'denied'].map((v) => (
++              <option key={v}>{v}</option>
++            ))}
++          </Select>
++        </FormField>
++      </div>
++      <div className="flex flex-wrap gap-2">
++        <Button
++          variant="secondary"
++          onClick={() =>
++            guard(() => {
++              setNotice(
++                t([
++                  'Left Details locally. No navigation or production action occurred.',
++                  'Τοπική έξοδος από τα στοιχεία. Δεν έγινε ενέργεια παραγωγής.',
++                ]),
++              )
++              setReset((v) => v + 1)
++              setDrafts(new Set())
++              setComment(null)
++              setLifecycle(false)
++            })
++          }
++        >
++          {t(['Test leaving Details', 'Έλεγχος εξόδου από τα στοιχεία'])}
++        </Button>
++        {queued && (
++          <Button
++            variant="secondary"
++            onClick={() =>
++              setReminders((current) =>
++                current.map((r) => ({ ...r, status: 'SENT' })),
++              )
++            }
++          >
++            {t(['Simulate delivered email', 'Προσομοίωση παράδοσης email'])}
++          </Button>
++        )}
++      </div>
++    </Card>
++  )
++  return (
++    <div className="flex min-h-screen bg-canvas">
++      <div className="hidden lg:flex">
++        <Sidebar
++          activeKey="orders"
++          brand={<span className="font-semibold">FRONT LINE</span>}
++          items={[
++            {
++              key: 'dashboard',
++              label: t(['Dashboard', 'Πίνακας ελέγχου']),
++              onClick: () => guard(() => setNotice('Local navigation only')),
++            },
++            {
++              key: 'orders',
++              label: t(['Purchase orders', 'Παραγγελίες']),
++              onClick: () => guard(() => setNotice('Local navigation only')),
++            },
++            {
++              key: 'shipments',
++              label: t(['Shipments', 'Αποστολές']),
++              onClick: () => guard(() => setNotice('Local navigation only')),
++            },
++          ]}
++        />
++      </div>
++      <div className="min-w-0 flex-1">
++        <header className="flex flex-wrap items-center justify-between gap-3 bg-chrome px-5 py-3 text-fg-on-chrome">
++          <span>FRONT LINE · {t(['Order review', 'Έλεγχος παραγγελίας'])}</span>
++          <div className="flex items-center gap-3">
++            <LanguageSelector />
++            <ThemeModeToggle />
++          </div>
++        </header>
++        <main className="mx-auto max-w-[1600px] space-y-5 p-4 md:p-6">
++          {tools}
++          {notice && (
++            <div
++              role="status"
++              className="flex items-start justify-between gap-3 rounded-md border border-border bg-surface p-3"
++            >
++              <p>{notice}</p>
++              <Button size="sm" variant="ghost" onClick={() => setNotice('')}>
++                {t(['Dismiss', 'Κλείσιμο'])}
++              </Button>
++            </div>
++          )}
++          {screenState === 'loading' ? (
++            <Card>
++              <p role="status">
++                {t(['Loading Order…', 'Φόρτωση παραγγελίας…'])}
++              </p>
++            </Card>
++          ) : screenState === 'error' ? (
++            <Card>
++              <p role="alert">
++                {t([
++                  'Order could not be loaded.',
++                  'Η φόρτωση της παραγγελίας απέτυχε.',
++                ])}
++              </p>
++              <Button onClick={() => setScreenState('default')}>
++                {t(['Retry', 'Επανάληψη'])}
++              </Button>
++            </Card>
++          ) : (
++            <OrderReviewedEmails
++              contextKey={context}
++              visible={editor}
++              availability={availability}
++              onPrepare={async (intent) => {
++                await simulate()
++                const reference = `review-${++counter.current}`
++                prepared.current.set(reference, context)
++                return {
++                  reference,
++                  recipient: 'fixture-supplier@example.test',
++                  subject:
++                    intent === 'request'
++                      ? 'Request readiness date'
++                      : `Confirm readiness date: ${details.values.readinessDate}`,
++                  body: `Fictional email review for PO-DEMO-0042.\n${intent === 'confirm' ? details.values.readinessDate : 'Please provide a readiness date.'}\n[Nonfunctional response-link placeholder]`,
++                }
++              }}
++              onSend={send}
++            >
++              {(slots) => (
++                <OrderDetailsPreparedPage
++                  key={reset}
++                  number="PO-DEMO-0042"
++                  flags={
++                    <>
++                      {collis.some(
++                        (r) => !r.terminal && r.values.dg === 'true',
++                      ) && <Badge tone="danger">DG</Badge>}
++                      {details.values.greece === 'true' && (
++                        <Badge tone="neutral">{details.values.regime}</Badge>
++                      )}
++                    </>
++                  }
++                  panels={{
++                    overview: (
++                      <>
++                        <OrderDetailsEditor
++                          saved={details}
++                          fields={detailsFields}
++                          modes={
++                            ordinary
++                              ? ['ordinary']
++                              : editor &&
++                                  scenario !== 'reserved' &&
++                                  status === 'SHIPPED'
++                                ? details.values.greece === 'true' &&
++                                  details.values.regime ===
++                                    'Τελωνειακή Αποταμίευση'
++                                  ? ['invoiceCompany', 'alk']
++                                  : ['invoiceCompany']
++                                : []
++                          }
++                          correctionAllowed={
++                            ordinary &&
++                            ['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
++                              status,
++                            )
++                          }
++                          onDraftChange={(active) => dirty('details', active)}
++                          status={
++                            <div className="space-y-3 rounded-md border border-border bg-surface-2 p-4">
++                              <div className="flex flex-wrap items-center justify-between gap-3">
++                                <h4 className="text-xs font-semibold">
++                                  {t(['Order status', 'Κατάσταση παραγγελίας'])}
++                                </h4>
++                                {slots.buttons}
++                              </div>
++                              <div className="flex flex-wrap items-center gap-3">
++                                <StatusPill
++                                  tone={purchaseOrderStatusTone(status)}
++                                  className="px-3 py-2 text-sm"
++                                >
++                                  {status === 'PENDING'
++                                    ? t([
++                                        'Awaiting Readiness Date',
++                                        'Αναμονή ημερομηνίας ετοιμότητας',
++                                      ])
++                                    : status === 'EXPECTED_READINESS'
++                                      ? t([
++                                          'Received Readiness Date',
++                                          'Λήφθηκε ημερομηνία ετοιμότητας',
++                                        ])
++                                      : enumLabel(status)}
++                                </StatusPill>
++                                {editor &&
++                                  scenario !== 'reserved' &&
++                                  lifeLabel && (
++                                    <Button onClick={openLife}>
++                                      {lifeLabel}
++                                    </Button>
++                                  )}
++                              </div>
++                            </div>
++                          }
++                          onReview={async (intent) => {
++                            await simulate()
++                            return {
++                              token: `details-review-${counter.current}`,
++                              summary:
++                                (() => {
++                                  const proposed = {
++                                    ...details.values,
++                                    ...intent.values,
++                                  }
++                                  const clears = []
++                                  if (
++                                    proposed.greece === 'false' &&
++                                    details.values.regime
++                                  )
++                                    clears.push(
++                                      t([
++                                        'Customs regime',
++                                        'Τελωνειακό καθεστώς',
++                                      ]) +
++                                        ': ' +
++                                        details.values.regime +
++                                        ' → —',
++                                    )
++                                  if (
++                                    (proposed.greece === 'false' ||
++                                      proposed.regime !==
++                                        'Τελωνειακή Αποταμίευση') &&
++                                    details.values.alk
++                                  )
++                                    clears.push(
++                                      'ΑΛΚ: ' + details.values.alk + ' → —',
++                                    )
++                                  return clears.length
++                                    ? t([
++                                        'Confirm save explicitly accepts these required clearings (Back keeps your draft):',
++                                        'Η επιβεβαίωση αποδέχεται ρητά τους υποχρεωτικούς καθαρισμούς (Πίσω διατηρεί το πρόχειρο):',
++                                      ]) +
++                                        '\n' +
++                                        clears.join('\n') +
++                                        '\n\n'
++                                    : ''
++                                })() +
++                                t([
++                                  'Review all proposed changes. Customs clearing, shared registration and fiscal document effects must be supplied by the owning backend contract; this is a fictional compatible example.',
++                                  'Ελέγξτε όλες τις αλλαγές. Οι επιπτώσεις τελωνείου, κοινής καταχώρησης και εγγράφων παρέχονται από το backend· εδώ πρόκειται για εικονικό συμβατό παράδειγμα.',
++                                ]) +
++                                (intent.values.status === 'PENDING'
++                                  ? t([
++                                      ' Readiness date and remark will clear.',
++                                      ' Η ημερομηνία και παρατήρηση ετοιμότητας θα καθαριστούν.',
++                                    ])
++                                  : ''),
++                            }
++                          }}
++                          onConfirm={saveDetails}
++                        />
++                        <OrderDetailsNotes
++                          internal={
++                            access === 'external' ? undefined : notes.internal
++                          }
++                          external={notes.external}
++                          editable={ordinary}
++                          onDraftChange={(kind, active) =>
++                            dirty(`note-${kind}`, active)
++                          }
++                          onSave={async (kind, value, revision) => {
++                            await simulate()
++                            if (revision !== notes[kind].revision)
++                              throw new Error('Stale note revision')
++                            const saved = {
++                              value,
++                              revision: String(++counter.current),
++                            }
++                            setNotes((current) => ({
++                              ...current,
++                              [kind]: saved,
++                            }))
++                            return saved
++                          }}
++                        />
++                        <Card className="space-y-3">
++                          <h3 className="text-subheading">
++                            {t(['Split relationships', 'Σχέσεις διαχωρισμού'])}
++                          </h3>
++                          <dl className="grid gap-4 md:grid-cols-2">
++                            {[
++                              ['Root PO', 'Αρχική παραγγελία', 'PO-DEMO-ROOT'],
++                              [
++                                'Parent PO',
++                                'Γονική παραγγελία',
++                                'PO-DEMO-ROOT',
++                              ],
++                              [
++                                'Child purchase orders',
++                                'Θυγατρικές παραγγελίες',
++                                '—',
++                              ],
++                              [
++                                'Purchase-order family',
++                                'Οικογένεια παραγγελιών',
++                                'PO-DEMO-0042',
++                              ],
++                            ].map(([en, el, value]) => (
++                              <div key={en}>
++                                <dt className="text-xs font-semibold">
++                                  {t([en, el])}
++                                </dt>
++                                <dd>
++                                  {value === 'PO-DEMO-ROOT' ? (
++                                    <Button
++                                      variant="ghost"
++                                      onClick={() =>
++                                        guard(() =>
++                                          setNotice(
++                                            t([
++                                              'Local lineage navigation intent: fixture root.',
++                                              'Τοπικό αίτημα πλοήγησης: εικονική αρχική παραγγελία.',
++                                            ]),
++                                          ),
++                                        )
++                                      }
++                                    >
++                                      {value}
++                                    </Button>
++                                  ) : (
++                                    value
++                                  )}
++                                </dd>
++                              </div>
++                            ))}
++                          </dl>
++                        </Card>
++                      </>
++                    ),
++                    collis: (
++                      <OrderEditableRows
++                        kind="colli"
++                        onTrace={(row) =>
++                          guard(() =>
++                            setNotice(
++                              t([
++                                'Local trace navigation intent: ',
++                                'Τοπικό αίτημα ιχνηλασιμότητας: ',
++                              ]) + row.id,
++                            ),
++                          )
++                        }
++                        rows={screenState === 'empty' ? [] : collis}
++                        fields={colliFields}
++                        initialValues={emptyColli}
++                        editable={colliEditable}
++                        canSplit={
++                          colliEditable &&
++                          ['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
++                            status,
++                          )
++                        }
++                        canDispose={ordinary}
++                        onDraftChange={(key, active) =>
++                          dirty(`colli-${key}`, active)
++                        }
++                        onSave={saveRow('colli')}
++                        onRemove={async (row) => {
++                          await simulate()
++                          setCollis((current) =>
++                            current.map((r) =>
++                              r.id === row.id
++                                ? { ...r, terminal: 'CANCELLED' }
++                                : r,
++                            ),
++                          )
++                        }}
++                        onOperation={async (kind, ids) => {
++                          await simulate()
++                          setNotice(
++                            t([
++                              `Reviewed ${kind} request for ${ids.join(', ')}. No split or disposition was fabricated.`,
++                              `Ελέγχθηκε αίτημα ${kind} για ${ids.join(', ')}. Δεν δημιουργήθηκε ολοκληρωμένη ενέργεια.`,
++                            ]),
++                          )
++                        }}
++                      />
++                    ),
++                    invoices: (
++                      <OrderEditableRows
++                        kind="invoice"
++                        rows={screenState === 'empty' ? [] : invoices}
++                        fields={invoiceFields}
++                        initialValues={{
++                          description: '',
++                          hs: '',
++                          quantity: '1',
++                          unit: 'PC',
++                          price: '',
++                          currency: 'EUR',
++                        }}
++                        editable={ordinary}
++                        onDraftChange={(key, active) =>
++                          dirty(`invoice-${key}`, active)
++                        }
++                        onSave={saveRow('invoice')}
++                        onRemove={async (row) => {
++                          await simulate()
++                          setInvoices((current) =>
++                            current.filter((r) => r.id !== row.id),
++                          )
++                        }}
++                      />
++                    ),
++                    history: (
++                      <>
++                        <Card className="space-y-4">
++                          <h3 className="text-subheading">
++                            {t(['Order activity', 'Δραστηριότητα παραγγελίας'])}
++                          </h3>
++                          {[
++                            [
++                              'Warehouse stays',
++                              'Παραμονές αποθήκης',
++                              '23/10/2026 09:00 · Fixture operator — DEMO-WH · A-01',
++                            ],
++                            [
++                              'PO status history',
++                              'Ιστορικό κατάστασης',
++                              '23/10/2026 08:30 · Fixture operator — EXPECTED_READINESS',
++                            ],
++                            [
++                              'Recorded operations',
++                              'Καταγεγραμμένες ενέργειες',
++                              '23/10/2026 08:30 · Fixture operator — Readiness set · PO-DEMO-0042',
++                            ],
++                          ].map(([en, el, value]) => (
++                            <section key={en}>
++                              <h4 className="mb-2 text-xs font-semibold">
++                                {t([en, el])}
++                              </h4>
++                              <p className="whitespace-pre-wrap break-words text-sm">
++                                {screenState === 'empty' ? '—' : value}
++                              </p>
++                            </section>
++                          ))}
++                        </Card>
++                        <Card className="space-y-3">
++                          <div className="flex justify-between gap-3">
++                            <h3 className="text-subheading">
++                              {t(['Comments', 'Σχόλια'])}
++                            </h3>
++                            {editor && comment === null && (
++                              <Button
++                                variant="secondary"
++                                onClick={() => setComment('')}
++                              >
++                                {t(['Add comment', 'Προσθήκη σχολίου'])}
++                              </Button>
++                            )}
++                          </div>
++                          {comment !== null && (
++                            <>
++                              <Textarea
++                                aria-label={t(['Comment', 'Σχόλιο'])}
++                                value={comment}
++                                disabled={busy}
++                                onChange={(e) => setComment(e.target.value)}
++                              />
++                              <div className="flex justify-end gap-2">
++                                <Button
++                                  variant="secondary"
++                                  disabled={busy}
++                                  onClick={() => setComment(null)}
++                                >
++                                  {t(['Cancel', 'Ακύρωση'])}
++                                </Button>
++                                <Button
++                                  loading={busy}
++                                  disabled={!comment.trim()}
++                                  onClick={async () => {
++                                    try {
++                                      await simulate()
++                                      setComments((current) => [
++                                        `${new Date().toLocaleString()} · Fixture operator — ${comment.trim()}`,
++                                        ...current,
++                                      ])
++                                      setComment(null)
++                                    } catch (e) {
++                                      setNotice((e as Error).message)
++                                    }
++                                  }}
++                                >
++                                  {t(['Add', 'Προσθήκη'])}
++                                </Button>
++                              </div>
++                            </>
++                          )}
++                          {comments.length ? (
++                            comments.map((text, i) => (
++                              <p
++                                className="whitespace-pre-wrap break-words text-sm"
++                                key={i}
++                              >
++                                {text}
++                              </p>
++                            ))
++                          ) : (
++                            <p>—</p>
++                          )}
++                        </Card>
++                        <Card className="space-y-3">
++                          <h3 className="text-subheading">
++                            {t(['Reminder history', 'Ιστορικό υπενθυμίσεων'])}
++                          </h3>
++                          <div className="overflow-x-auto">
++                            <Table>
++                              <THead>
++                                <TR>
++                                  {[
++                                    ['Created', 'Δημιουργία'],
++                                    ['Request', 'Αίτημα'],
++                                    ['Recipient', 'Παραλήπτης'],
++                                    ['Delivery status', 'Κατάσταση παράδοσης'],
++                                  ].map(([en, el]) => (
++                                    <TH key={en}>{t([en, el])}</TH>
++                                  ))}
++                                </TR>
++                              </THead>
++                              <TBody>
++                                {reminders.map((r) => (
++                                  <TR key={r.id}>
++                                    <TD>{r.created}</TD>
++                                    <TD>{r.type} · MANUAL</TD>
++                                    <TD>{r.recipient}</TD>
++                                    <TD>{r.status}</TD>
++                                  </TR>
++                                ))}
++                              </TBody>
++                            </Table>
++                          </div>
++                          {!reminders.length && <p>—</p>}
++                        </Card>
++                      </>
++                    ),
++                    documents: (
++                      <ReviewDocuments
++                        editable={editor}
++                        empty={screenState === 'empty'}
++                        guard={guard}
++                      />
++                    ),
++                    actions: (
++                      <>
++                        {slots.cards}
++                        <OrderDocumentAction
++                          kind="invoice"
++                          view={{ state: editor ? 'create' : 'denied' }}
++                          onRetry={() => {}}
++                          onNavigate={() =>
++                            guard(() =>
++                              setNotice(
++                                t([
++                                  'Supplier Invoice navigation intent: Order ID 42. Awaiting the real create route; nothing was created.',
++                                  'Αίτημα πλοήγησης τιμολογίου για Order ID42. Εκκρεμεί η πραγματική σελίδα· δεν δημιουργήθηκε εγγραφή.',
++                                ]),
++                              ),
++                            )
++                          }
++                        />
++                        <OrderDocumentAction
++                          kind="entry"
++                          view={{
++                            state:
++                              access === 'external'
++                                ? 'denied'
++                                : entry === 'create' && !editor
++                                  ? 'disabled'
++                                  : entry,
++                            owner:
++                              entry === 'open' ? 'PO-DEMO-ROOT' : undefined,
++                            reason:
++                              entry === 'error'
++                                ? t([
++                                    'Current-note lookup failed. Absence is not established.',
++                                    'Η αναζήτηση απέτυχε. Δεν έχει επιβεβαιωθεί απουσία δελτίου.',
++                                  ])
++                                : undefined,
++                          }}
++                          onRetry={() => setEntry('create')}
++                          onNavigate={() =>
++                            guard(() =>
++                              setNotice(
++                                t([
++                                  'Entry Note navigation intent reviewed. No route or record was fabricated.',
++                                  'Το αίτημα πλοήγησης δελτίου ελέγχθηκε. Δεν δημιουργήθηκε διαδρομή ή εγγραφή.',
++                                ]),
++                              ),
++                            )
++                          }
++                        />
++                      </>
++                    ),
++                  }}
++                />
++              )}
++            </OrderReviewedEmails>
++          )}
++        </main>
++      </div>
++      <Modal
++        open={!!leave}
++        onClose={() => {
++          if (!busy) setLeave(null)
++        }}
++        title={t([
++          'Discard unsaved changes?',
++          'Απόρριψη μη αποθηκευμένων αλλαγών;',
++        ])}
++        ariaLabel={t([
++          'Discard unsaved changes?',
++          'Απόρριψη μη αποθηκευμένων αλλαγών;',
++        ])}
++        footer={
++          <>
++            <Button
++              variant="secondary"
++              disabled={busy}
++              onClick={() => setLeave(null)}
++            >
++              {t(['Keep editing', 'Συνέχεια επεξεργασίας'])}
++            </Button>
++            <Button
++              disabled={busy}
++              onClick={() => {
++                leave?.()
++                setLeave(null)
++              }}
++            >
++              {t(['Discard and leave', 'Απόρριψη και έξοδος'])}
++            </Button>
++          </>
++        }
++      >
++        <p>
++          {t([
++            'Unsaved drafts will be discarded.',
++            'Τα μη αποθηκευμένα πρόχειρα θα απορριφθούν.',
++          ])}
++        </p>
++      </Modal>
++      <Modal
++        open={lifecycle}
++        onClose={() => {
++          if (!busy) setLifecycle(false)
++        }}
++        title={lifeLabel}
++        ariaLabel={lifeLabel}
++        size="xl"
++        footer={
++          <>
++            <Button
++              variant="secondary"
++              disabled={busy}
++              onClick={() => setLifecycle(false)}
++            >
++              {t(['Cancel', 'Ακύρωση'])}
++            </Button>
++            <Button loading={busy} onClick={() => void lifecycleCommit()}>
++              {t([
++                'Confirm local example',
++                'Επιβεβαίωση τοπικού παραδείγματος',
++              ])}
++            </Button>
++          </>
++        }
++      >
++        <div className="max-h-[60vh] space-y-4 overflow-y-auto">
++          {status === 'PENDING' && (
++            <OrderUiControl
++              field={{
++                key: 'date',
++                label: ['Readiness date', 'Ημερομηνία ετοιμότητας'],
++                type: 'date',
++                required: true,
++              }}
++              value={lifeDate}
++              onChange={setLifeDate}
++            />
++          )}{' '}
++          {status === 'EXPECTED_READINESS' && (
++            <Checkbox
++              label={t([
++                'Every active colli is ready',
++                'Κάθε ενεργό κόλλι είναι έτοιμο',
++              ])}
++              checked={confirmedReady}
++              onChange={(e) => setConfirmedReady(e.target.checked)}
++            />
++          )}{' '}
++          {['READY', 'AWAITING_IMPORT'].includes(status) && (
++            <>
++              <FormField label={t(['Storage position', 'Θέση αποθήκευσης'])}>
++                <Input
++                  value={position}
++                  onChange={(e) => setPosition(e.target.value)}
++                />
++              </FormField>
++              {collis
++                .filter((r) => !r.terminal)
++                .map((row) => (
++                  <fieldset
++                    key={row.id}
++                    className="space-y-2 rounded-md border border-border p-3"
++                  >
++                    <legend>{row.id}</legend>
++                    <div className="grid grid-cols-2 gap-3">
++                      {['length', 'width', 'height', 'gross', 'net'].map(
++                        (key) => (
++                          <OrderUiControl
++                            key={key}
++                            field={colliFields.find((f) => f.key === key)!}
++                            value={measurements[row.id]?.[key] ?? ''}
++                            onChange={(value) =>
++                              setMeasurements((current) => ({
++                                ...current,
++                                [row.id]: { ...current[row.id], [key]: value },
++                              }))
++                            }
++                          />
++                        ),
++                      )}
++                    </div>
++                  </fieldset>
++                ))}
++            </>
++          )}
++          <FormField
++            label={t(['Remark (optional)', 'Παρατήρηση (προαιρετική)'])}
++          >
++            <Textarea
++              value={remark}
++              maxLength={1000}
++              onChange={(e) => setRemark(e.target.value)}
++            />
++          </FormField>
++          {notice && <p role="alert">{notice}</p>}
++        </div>
++      </Modal>
++    </div>
++  )
++}
++
++function ReviewDocuments({
++  editable,
++  empty,
++  guard,
++}: {
++  editable: boolean
++  empty: boolean
++  guard: (action: () => void) => void
++}) {
++  const t = useOrderUiText()
++  const [files, setFiles] = useState<string[]>([])
++  return (
++    <Card className="space-y-4">
++      <h3 className="text-subheading">{t(['Attachments', 'Συνημμένα'])}</h3>
++      <p className="text-sm text-fg-muted">
++        {t([
++          'Documents and photos for this Order. Local file selection only; no upload occurs.',
++          'Έγγραφα και φωτογραφίες παραγγελίας. Μόνο τοπική επιλογή· δεν γίνεται μεταφόρτωση.',
++        ])}
++      </p>
++      {editable && (
++        <label className="inline-flex cursor-pointer rounded-md border border-border-strong bg-surface px-4 py-2 text-sm font-semibold">
++          {t(['Choose documents or photos', 'Επιλογή εγγράφων ή φωτογραφιών'])}
++          <input
++            type="file"
++            multiple
++            className="sr-only"
++            onChange={(e) =>
++              setFiles((current) => [
++                ...current,
++                ...Array.from(e.target.files ?? []).map((f) => f.name),
++              ])
++            }
++          />
++        </label>
++      )}
++      <div className="space-y-3 rounded-md border border-border bg-surface-2 p-4">
++        {!empty && (
++          <div>
++            <p>fixture-inherited-document.txt</p>
++            <p className="text-xs text-fg-muted">
++              {t([
++                'Inherited from PO-DEMO-ROOT · read-only',
++                'Από PO-DEMO-ROOT · μόνο ανάγνωση',
++              ])}
++            </p>
++            <Button
++              variant="ghost"
++              onClick={() =>
++                guard(() => {
++                  const link = document.createElement('a')
++                  link.href = URL.createObjectURL(
++                    new Blob(['Fictional document only'], {
++                      type: 'text/plain',
++                    }),
++                  )
++                  link.download = 'fixture-inherited-document.txt'
++                  link.click()
++                  URL.revokeObjectURL(link.href)
++                })
++              }
++            >
++              {t(['Download', 'Λήψη'])}
++            </Button>
++          </div>
++        )}
++        {files.map((name, i) => (
++          <div
++            key={`${name}-${i}`}
++            className="flex items-center justify-between gap-3"
++          >
++            <span className="break-all">{name}</span>
++            {editable && (
++              <Button
++                variant="ghost"
++                onClick={() =>
++                  setFiles((current) =>
++                    current.filter((_, index) => index !== i),
++                  )
++                }
++              >
++                {t(['Remove local selection', 'Αφαίρεση τοπικής επιλογής'])}
++              </Button>
++            )}
++          </div>
++        ))}
++        {empty && !files.length && <p>—</p>}
++      </div>
++    </Card>
++  )
++}
++
++if (
++  import.meta.env.DEV &&
++  ['127.0.0.1', 'localhost', '[::1]'].includes(location.hostname)
++) {
++  const root = createRoot(document.getElementById('root')!)
++  import.meta.hot?.dispose(() => root.unmount())
++  root.render(
++    <LabelsProvider>
++      <ThemeProvider>
++        <Review />
++      </ThemeProvider>
++    </LabelsProvider>,
++  )
++} else {
++  document.body.textContent = 'Local development review only.'
++}
 diff --git a/frontline-forwarding-client/docs/fro-326-ui-preparation.md b/frontline-forwarding-client/docs/fro-326-ui-preparation.md
 new file mode 100644
-index 0000000..0b6e48d
+index 0000000..8b88024
 --- /dev/null
 +++ b/frontline-forwarding-client/docs/fro-326-ui-preparation.md
-@@ -0,0 +1,28 @@
-+# FRO-326 supported frontend preparation
+@@ -0,0 +1,51 @@
++# FRO-326 frontend preparation
 +
 +This change prepares supported Order Details presentation against the current API. It does not complete FRO-326 or activate unavailable contracts. An Order is the backend purchase order; a colli is a permanent handling unit.
 +
@@ -1894,6 +3559,2483 @@ index 0000000..0b6e48d
 +Browser validation uses the actual Vite application with a temporary fixture API at localhost, a fixture-only session, and both API environment URLs explicitly pointing to that server. The fixture launcher/configuration and data live outside the production checkout and are not part of application delivery. No live portal request or business-data mutation is needed. Exercise desktop/400px EN/EL, loading/error/not-found/empty, editor/view-only, terminal colli inspection, stock cancellation, failed/pending command behavior and inherited files. Fixtures demonstrate frontend behavior only; they cannot verify backend permissions, concurrency, idempotency or transactionality.
 +
 +Baseline limitations on the preparation machine: checked-in package manifest and lockfile are inconsistent (`npm ci` fails). Local verification uses `npm install --package-lock=false`, leaving both files unchanged. Node24.13.0/npm11.6.2 were available (repository guidance prefers Node22.13.0). Existing delivery-note test casts prevent a clean typecheck, and existing repository-wide formatting drift prevents a clean format check. These unrelated files are outside this UI change.
++
++## Full UI preparation (approved continuation)
++
++The reusable UI is prepared now, independently of live API activation:
++
++- OrderDetailsNotes: separate Internal/External sections, independent TanStack Form drafts, trim/clear/max length, failure retention and reviewed revisions. Omit the internal prop entirely for external readers; this is not a substitute for server filtering.
++- OrderDetailsEditor: one ordinary or restricted correction session, adapter-supplied field locks/capabilities, review before confirmation, revision invalidation. The adapter must return authoritative fiscal/customs impacts and apply the actual atomic command.
++- OrderEditableRows: independent colli/invoice drafts, copy whitelist, terminal protections, stale operation checks, per-row callbacks and trace navigation callback. UI interfaces are not wire contracts. Generic safe colli persistence ownership remains unresolved.
++- Exact invoice totals use integer decimal arithmetic. No float approximation or invented transport API.
++- OrderReviewedEmails: shared two-location preparation/explicit-send state; context invalidation and retained failures. OrderDocumentAction distinguishes pending/error/denied/create/open; unresolved routes remain navigation callbacks.
++- OrderDetailsPreparedPage composes all six tabs using production primitives. The original route retains working commands until integration parity. It now also displays supported Vessel/Greece/current warehouse/DN/Urgent fields and uses the agreed tab order.
++
++### Local review entry
++
++Run the existing client Vite dev server bound to loopback, then open /dev/fro326/index.html. On this machine it is available at http://127.0.0.1:8341/dev/fro326/index.html.
++
++The entry imports reusable React components and production design primitives. It is DEV + loopback gated, not imported by the normal application, and absent from the standard production build. It makes no API requests. All callbacks are explicitly fictional local simulations. Refresh resets data. The toolbar offers lifecycle, access, screen and failure examples; query parameters include scenario, access, state, entryNote. Stock entry example starts Ready so the transition can be reviewed. It is not a backend implementation or proof of authoritative permissions/impact checks.
++
++History, comments, attachments, lifecycle forms and missing document destinations are local review compositions; existing production components remain on the normal route. Local document selection does not upload. Email Send queues a fictional row only. Customs clearing is explicitly listed before confirmation; real coverage-resolution choices still require FRO-356. The local review demonstrates compatible impacts, not every possible backend conflict resolution.
++
++### Continuation verification
++
++45 test files / 181 tests passed. Build passed. Typecheck reports only the two pre-existing delivery-note test casts. New focused coverage includes independent Notes/row drafts, exact totals/copy whitelist, locked fields, stale Details confirmations, Escape cancellation, revoked disposition capability and email preparation/context invalidation. Browser checks include Notes errors/retention, draft navigation, customs clearing review, colli expansion, Greek400px and external-reader visibility. Backend authorization, concurrency, real email delivery and document workflows remain unverified. No production branch/commit/publication occurred.
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.test.tsx
+new file mode 100644
+index 0000000..f14963c
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.test.tsx
+@@ -0,0 +1,71 @@
++import { cleanup, fireEvent, render, screen } from '@testing-library/react'
++import { afterEach, expect, it, vi } from 'vitest'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import {
++  OrderDetailsEditor,
++  type OrderDetailsEditorProps,
++} from './order-details-editor'
++afterEach(cleanup)
++const base: OrderDetailsEditorProps = {
++  saved: { revision: '1', values: { alk: '123', urgent: 'true' } },
++  fields: [
++    { key: 'alk', label: ['ΑΛΚ', 'ΑΛΚ'], readonly: true },
++    {
++      key: 'urgent',
++      label: ['Urgent', 'Επείγον'],
++      type: 'boolean',
++      readonly: true,
++    },
++  ],
++  modes: ['ordinary'],
++  status: null,
++  correctionAllowed: false,
++  onReview: async () => ({ summary: 'Reviewed', token: 't' }),
++  onConfirm: vi.fn(),
++}
++it('preserves adapter field locks when Details enters edit mode', () => {
++  render(
++    <LabelsProvider>
++      <OrderDetailsEditor {...base} />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++  expect(screen.queryByRole('textbox', { name: 'ΑΛΚ' })).toBeNull()
++  expect(
++    (screen.getByRole('checkbox', { name: 'Urgent' }) as HTMLInputElement)
++      .disabled,
++  ).toBe(true)
++})
++it('does not confirm an obsolete review and retains the draft', async () => {
++  const confirm = vi.fn()
++  const props = {
++    ...base,
++    fields: [{ key: 'alk', label: ['ΑΛΚ', 'ΑΛΚ'] as [string, string] }],
++    onConfirm: confirm,
++  }
++  const view = render(
++    <LabelsProvider>
++      <OrderDetailsEditor {...props} />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++  fireEvent.change(screen.getByRole('textbox', { name: 'ΑΛΚ' }), {
++    target: { value: '456' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++  await screen.findByRole('button', { name: 'Confirm save' })
++  view.rerender(
++    <LabelsProvider>
++      <OrderDetailsEditor
++        {...props}
++        saved={{ revision: '2', values: { alk: '789' } }}
++      />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm save' }))
++  await screen.findByRole('alert')
++  expect(confirm).not.toHaveBeenCalled()
++  expect(
++    (screen.getByRole('textbox', { name: 'ΑΛΚ' }) as HTMLInputElement).value,
++  ).toBe('456')
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.tsx
+new file mode 100644
+index 0000000..6c3eddc
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-editor.tsx
+@@ -0,0 +1,462 @@
++import { useEffect, useRef, useState, type ReactNode } from 'react'
++import { useAppForm } from '#/components/form'
++import { Card } from '#/components/ui/card'
++import { Button } from '#/components/ui/button'
++import { Modal } from '#/components/ui/modal'
++import { FormField, Textarea } from '#/components/ui/input'
++import { Select } from '#/components/ui/select'
++import {
++  OrderUiControl,
++  cancelText,
++  editText,
++  fieldsError,
++  saveText,
++  useOrderUiText,
++  type OrderUiField,
++  type UiText,
++} from './order-ui-fields'
++import type { OrderDraftValues } from './order-ui-values'
++
++export type DetailsEditMode = 'ordinary' | 'invoiceCompany' | 'alk'
++export type DetailsUiSnapshot = { values: OrderDraftValues; revision: string }
++export type DetailsUiIntent = {
++  mode: DetailsEditMode
++  values: OrderDraftValues
++  reviewedRevision: string
++  reason: string
++}
++// Eligibility and impact are supplied by the eventual authorized adapter, never inferred here.
++export type OrderDetailsEditorProps = {
++  saved: DetailsUiSnapshot
++  fields: OrderUiField[]
++  modes: DetailsEditMode[]
++  status: ReactNode
++  correctionAllowed: boolean
++  onReview: (
++    intent: DetailsUiIntent,
++  ) => Promise<{ summary: string; token: string }>
++  onConfirm: (
++    intent: DetailsUiIntent,
++    reviewToken: string,
++  ) => Promise<DetailsUiSnapshot>
++  onDraftChange?: (active: boolean) => void
++}
++const modeLabels: Record<DetailsEditMode, UiText> = {
++  ordinary: ['Order details', 'Στοιχεία παραγγελίας'],
++  invoiceCompany: [
++    'Invoice company correction',
++    'Διόρθωση εταιρείας τιμολόγησης',
++  ],
++  alk: ['ΑΛΚ correction', 'Διόρθωση ΑΛΚ'],
++}
++export function OrderDetailsEditor(props: OrderDetailsEditorProps) {
++  const t = useOrderUiText()
++  const [saved, setSaved] = useState(props.saved)
++  const [mode, setMode] = useState<DetailsEditMode | null>(null)
++  const [choose, setChoose] = useState(false)
++  const [revision, setRevision] = useState(props.saved.revision)
++  const [error, setError] = useState('')
++  const [pending, setPending] = useState(false)
++  const [review, setReview] = useState<{
++    intent: DetailsUiIntent
++    summary: string
++    token: string
++  } | null>(null)
++  const editRef = useRef<HTMLButtonElement>(null)
++  const draftCallback = useRef(props.onDraftChange)
++  draftCallback.current = props.onDraftChange
++  useEffect(() => setSaved(props.saved), [props.saved])
++  useEffect(() => {
++    draftCallback.current?.(mode !== null)
++    return () => draftCallback.current?.(false)
++  }, [mode])
++  const close = () => {
++    if (pending) return
++    setMode(null)
++    setReview(null)
++    setError('')
++    requestAnimationFrame(() => editRef.current?.focus())
++  }
++  const success = (result: DetailsUiSnapshot) => {
++    setSaved(result)
++    setMode(null)
++    setReview(null)
++    setError('')
++    requestAnimationFrame(() => editRef.current?.focus())
++  }
++  const form = useAppForm({
++    defaultValues: props.saved.values,
++    onSubmit: async ({ value }) => {
++      if (!mode || pending || !props.modes.includes(mode)) return
++      if (saved.revision !== revision) {
++        setError(
++          t([
++            'This Order changed. Cancel and reopen to review the latest values. Your draft remains here.',
++            'Η παραγγελία άλλαξε. Ακυρώστε και ανοίξτε ξανά για έλεγχο. Το πρόχειρο παραμένει εδώ.',
++          ]),
++        )
++        return
++      }
++      const activeFields = props.fields.filter(
++        (f) => mode === 'ordinary' || f.key === mode,
++      )
++      const invalid = fieldsError(activeFields, value)
++      if (invalid) {
++        setError(t(invalid))
++        return
++      }
++      if (value.alk && !/^\d{1,50}$/.test(value.alk)) {
++        setError(
++          t([
++            'ΑΛΚ must contain up to 50 digits.',
++            'Το ΑΛΚ απαιτεί έως 50 ψηφία.',
++          ]),
++        )
++        return
++      }
++      const correction =
++        mode === 'ordinary' && value.status !== saved.values.status
++      if (
++        correction &&
++        (!props.correctionAllowed ||
++          !['PENDING', 'EXPECTED_READINESS', 'READY'].includes(value.status))
++      ) {
++        setError(
++          t([
++            'Readiness correction is unavailable.',
++            'Η διόρθωση ετοιμότητας δεν είναι διαθέσιμη.',
++          ]),
++        )
++        return
++      }
++      if (
++        correction &&
++        (!value.reason?.trim() ||
++          value.reason.length > 1000 ||
++          (value.status === 'EXPECTED_READINESS' && !value.readinessDate))
++      ) {
++        setError(
++          t([
++            'Provide a correction reason and the required readiness date.',
++            'Συμπληρώστε αιτιολογία διόρθωσης και την απαιτούμενη ημερομηνία.',
++          ]),
++        )
++        return
++      }
++      const values =
++        mode === 'ordinary' ? { ...value } : { [mode]: value[mode] }
++      const intent: DetailsUiIntent = {
++        mode,
++        values,
++        reviewedRevision: revision,
++        reason: correction ? value.reason.trim() : '',
++      }
++      setPending(true)
++      setError('')
++      try {
++        // Review is requested for every save: unchanged status does not waive fiscal/customs impacts.
++        const result = await props.onReview(intent)
++        setReview({ ...result, intent })
++      } catch (e) {
++        setError(
++          e instanceof Error
++            ? e.message
++            : t(['Review failed.', 'Ο έλεγχος απέτυχε.']),
++        )
++      } finally {
++        setPending(false)
++      }
++    },
++  })
++  const start = (next: DetailsEditMode) => {
++    form.reset({ ...saved.values, reason: '' })
++    setRevision(saved.revision)
++    setMode(next)
++    setChoose(false)
++    setError('')
++  }
++  const confirm = async () => {
++    if (!review || pending || !props.modes.includes(review.intent.mode)) return
++    if (saved.revision !== review.intent.reviewedRevision) {
++      setReview(null)
++      setError(
++        t([
++          'This Order changed. Cancel and reopen to review the latest values. Your draft remains here.',
++          'Η παραγγελία άλλαξε. Ακυρώστε και ανοίξτε ξανά για έλεγχο. Το πρόχειρο παραμένει εδώ.',
++        ]),
++      )
++      return
++    }
++    setPending(true)
++    setError('')
++    try {
++      success(await props.onConfirm(review.intent, review.token))
++    } catch (e) {
++      setError(
++        e instanceof Error
++          ? e.message
++          : t([
++              'Save failed. Your draft is retained.',
++              'Η αποθήκευση απέτυχε. Το πρόχειρο διατηρείται.',
++            ]),
++      )
++      setReview(null)
++    } finally {
++      setPending(false)
++    }
++  }
++  return (
++    <Card className="space-y-5">
++      <div className="flex flex-wrap items-center justify-between gap-3">
++        <h3 className="text-subheading">{t(modeLabels.ordinary)}</h3>
++        {!mode && props.modes.length > 0 && (
++          <Button
++            ref={editRef}
++            variant="secondary"
++            onClick={() =>
++              props.modes.length === 1 ? start(props.modes[0]) : setChoose(true)
++            }
++          >
++            {t(editText)}
++          </Button>
++        )}
++      </div>
++      {props.status}
++      <form.Subscribe selector={(state) => state.values}>
++        {(values) => (
++          <form
++            onSubmit={(e) => {
++              e.preventDefault()
++              void form.handleSubmit()
++            }}
++            onKeyDown={(e) => {
++              if (e.key === 'Escape' && !review) {
++                e.preventDefault()
++                close()
++              }
++            }}
++          >
++            <fieldset disabled={pending} className="space-y-4">
++              {mode && (
++                <p className="text-sm font-semibold">{t(modeLabels[mode])}</p>
++              )}
++              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
++                {props.fields
++                  .filter(
++                    (f) =>
++                      ![
++                        'regime',
++                        'alk',
++                        'urgent',
++                        'urgentInformation',
++                      ].includes(f.key),
++                  )
++                  .map((field) => (
++                    <OrderUiControl
++                      key={field.key}
++                      field={{
++                        ...field,
++                        readonly:
++                          field.readonly ||
++                          !mode ||
++                          (mode !== 'ordinary' && field.key !== mode),
++                      }}
++                      value={(mode ? values : saved.values)[field.key] ?? ''}
++                      onChange={(value) => {
++                        form.setFieldValue(field.key, value)
++                        setReview(null)
++                      }}
++                    />
++                  ))}
++              </div>
++              <div className="grid grid-cols-1 gap-4 border-y border-border py-4 md:grid-cols-2">
++                {props.fields
++                  .filter((f) => ['regime', 'alk'].includes(f.key))
++                  .map((field) => (
++                    <OrderUiControl
++                      key={field.key}
++                      field={{
++                        ...field,
++                        readonly:
++                          field.readonly ||
++                          !mode ||
++                          (mode !== 'ordinary' && field.key !== mode),
++                      }}
++                      value={(mode ? values : saved.values)[field.key] ?? ''}
++                      onChange={(value) => {
++                        form.setFieldValue(field.key, value)
++                        setReview(null)
++                      }}
++                    />
++                  ))}
++              </div>
++              {props.fields
++                .filter((f) => ['urgent', 'urgentInformation'].includes(f.key))
++                .map((field) => (
++                  <OrderUiControl
++                    key={field.key}
++                    field={{
++                      ...field,
++                      readonly: field.readonly || !mode || mode !== 'ordinary',
++                    }}
++                    disabled={!mode || mode !== 'ordinary'}
++                    value={(mode ? values : saved.values)[field.key] ?? ''}
++                    onChange={(value) => form.setFieldValue(field.key, value)}
++                  />
++                ))}
++              {mode === 'ordinary' && props.correctionAllowed && (
++                <div className="grid gap-4 rounded-md bg-surface-2 p-4 md:grid-cols-2">
++                  <FormField
++                    label={t(['Readiness status', 'Κατάσταση ετοιμότητας'])}
++                  >
++                    <Select
++                      aria-label={t([
++                        'Readiness status',
++                        'Κατάσταση ετοιμότητας',
++                      ])}
++                      value={values.status}
++                      onChange={(e) =>
++                        form.setFieldValue('status', e.target.value)
++                      }
++                    >
++                      {[
++                        [
++                          'PENDING',
++                          'Awaiting Readiness Date',
++                          'Αναμονή ημερομηνίας ετοιμότητας',
++                        ],
++                        [
++                          'EXPECTED_READINESS',
++                          'Received Readiness Date',
++                          'Λήφθηκε ημερομηνία ετοιμότητας',
++                        ],
++                        ['READY', 'Ready', 'Έτοιμο'],
++                      ].map(([key, en, el]) => (
++                        <option key={key} value={key}>
++                          {t([en, el])}
++                        </option>
++                      ))}
++                    </Select>
++                  </FormField>
++                  {values.status !== saved.values.status && (
++                    <>
++                      <FormField
++                        label={t(['Correction reason', 'Αιτιολογία διόρθωσης'])}
++                        required
++                      >
++                        <Textarea
++                          aria-label={t([
++                            'Correction reason',
++                            'Αιτιολογία διόρθωσης',
++                          ])}
++                          value={values.reason ?? ''}
++                          maxLength={1000}
++                          onChange={(e) =>
++                            form.setFieldValue('reason', e.target.value)
++                          }
++                        />
++                      </FormField>
++                      {values.status === 'EXPECTED_READINESS' && (
++                        <OrderUiControl
++                          field={{
++                            key: 'readinessDate',
++                            label: [
++                              'Corrected readiness date',
++                              'Διορθωμένη ημερομηνία ετοιμότητας',
++                            ],
++                            type: 'date',
++                            required: true,
++                          }}
++                          value={values.readinessDate ?? ''}
++                          onChange={(v) =>
++                            form.setFieldValue('readinessDate', v)
++                          }
++                        />
++                      )}
++                    </>
++                  )}
++                </div>
++              )}
++              {error && (
++                <p role="alert" className="text-danger-fg">
++                  {error}
++                </p>
++              )}
++              {mode && (
++                <div className="flex justify-end gap-2">
++                  <Button type="button" variant="secondary" onClick={close}>
++                    {t(cancelText)}
++                  </Button>
++                  <Button type="submit" loading={pending}>
++                    {t(saveText)}
++                  </Button>
++                </div>
++              )}
++            </fieldset>
++          </form>
++        )}
++      </form.Subscribe>
++      <Modal
++        open={choose}
++        onClose={() => setChoose(false)}
++        title={t(['Choose one correction', 'Επιλέξτε μία διόρθωση'])}
++        ariaLabel={t(['Choose one correction', 'Επιλέξτε μία διόρθωση'])}
++      >
++        <div className="flex flex-col gap-3">
++          {props.modes.map((m) => (
++            <Button key={m} variant="secondary" onClick={() => start(m)}>
++              {t(modeLabels[m])}
++            </Button>
++          ))}
++        </div>
++      </Modal>
++      <Modal
++        open={!!review}
++        onClose={() => {
++          if (!pending) setReview(null)
++        }}
++        title={t(['Review changes', 'Έλεγχος αλλαγών'])}
++        ariaLabel={t(['Review changes', 'Έλεγχος αλλαγών'])}
++        size="xl"
++        footer={
++          <>
++            <Button
++              variant="secondary"
++              disabled={pending}
++              onClick={() => setReview(null)}
++            >
++              {t(['Back', 'Πίσω'])}
++            </Button>
++            <Button loading={pending} onClick={() => void confirm()}>
++              {t(['Confirm save', 'Επιβεβαίωση αποθήκευσης'])}
++            </Button>
++          </>
++        }
++      >
++        <div className="max-h-[60vh] space-y-4 overflow-y-auto">
++          {review &&
++            Object.entries(review.intent.values)
++              .filter(
++                ([key, v]) =>
++                  key !== 'reason' && v !== (saved.values[key] ?? ''),
++              )
++              .map(([key, v]) => (
++                <p key={key}>
++                  <strong>
++                    {t(
++                      props.fields.find((f) => f.key === key)?.label ?? [
++                        key,
++                        key,
++                      ],
++                    )}
++                  </strong>
++                  : {saved.values[key] || '—'} → {v || '—'}
++                </p>
++              ))}
++          <p className="whitespace-pre-wrap">{review?.summary}</p>
++          {review?.intent.reason && <p>{review.intent.reason}</p>}
++        </div>
++      </Modal>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.test.tsx
+new file mode 100644
+index 0000000..31b123a
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.test.tsx
+@@ -0,0 +1,70 @@
++import {
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  waitFor,
++  within,
++} from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import { OrderDetailsNotes } from './order-details-notes'
++
++afterEach(cleanup)
++describe('independent Order notes', () => {
++  it('retains another draft and failed input; submits only the selected value and reviewed revision', async () => {
++    const save = vi
++      .fn()
++      .mockRejectedValueOnce(new Error('Save failed'))
++      .mockResolvedValueOnce({ value: 'new internal', revision: '2' })
++    render(
++      <LabelsProvider>
++        <OrderDetailsNotes
++          internal={{ value: 'old internal', revision: '1' }}
++          external={{ value: 'old external', revision: '7' }}
++          editable
++          onSave={save}
++        />
++      </LabelsProvider>,
++    )
++    const internal = within(
++      screen.getByRole('region', { name: 'Internal notes' }),
++    )
++    const external = within(
++      screen.getByRole('region', { name: 'External notes' }),
++    )
++    fireEvent.click(internal.getByRole('button', { name: 'Edit' }))
++    fireEvent.click(external.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(internal.getByRole('textbox'), {
++      target: { value: '  new internal  ' },
++    })
++    fireEvent.change(external.getByRole('textbox'), {
++      target: { value: 'keep external draft' },
++    })
++    fireEvent.click(internal.getByRole('button', { name: 'Save' }))
++    await screen.findByText('Save failed')
++    expect((internal.getByRole('textbox') as HTMLTextAreaElement).value).toBe(
++      '  new internal  ',
++    )
++    fireEvent.click(internal.getByRole('button', { name: 'Save' }))
++    await waitFor(() => expect(internal.queryByRole('textbox')).toBeNull())
++    expect(save).toHaveBeenLastCalledWith('internal', 'new internal', '1')
++    expect((external.getByRole('textbox') as HTMLTextAreaElement).value).toBe(
++      'keep external draft',
++    )
++  })
++  it('does not render withheld internal content or mutation controls for a reader', () => {
++    render(
++      <LabelsProvider>
++        <OrderDetailsNotes
++          external={{ value: '<b>plain text</b>', revision: '1' }}
++          editable={false}
++          onSave={vi.fn()}
++        />
++      </LabelsProvider>,
++    )
++    expect(screen.queryByRole('region', { name: 'Internal notes' })).toBeNull()
++    expect(screen.getByText('<b>plain text</b>').tagName).toBe('P')
++    expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.tsx
+new file mode 100644
+index 0000000..fe1f980
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-notes.tsx
+@@ -0,0 +1,202 @@
++import { useEffect, useRef, useState } from 'react'
++import { useAppForm } from '#/components/form'
++import { useLocale } from '#/app/providers/labels-provider'
++import { Card } from '#/components/ui/card'
++import { Button } from '#/components/ui/button'
++import { Textarea } from '#/components/ui/input'
++
++export type NoteValue = { value: string; revision: string }
++export type NoteKind = 'internal' | 'external'
++export type OrderDetailsNotesProps = {
++  internal?: NoteValue
++  external: NoteValue
++  editable: boolean
++  onSave: (
++    kind: NoteKind,
++    value: string,
++    reviewedRevision: string,
++  ) => Promise<NoteValue>
++  onDraftChange?: (kind: NoteKind, active: boolean) => void
++}
++
++export function OrderDetailsNotes(props: OrderDetailsNotesProps) {
++  const { locale } = useLocale()
++  return (
++    <Card className="space-y-4">
++      <h3 className="text-subheading">
++        {locale === 'el' ? 'Σημειώσεις' : 'Notes'}
++      </h3>
++      {props.internal !== undefined && (
++        <NoteEditor {...props} kind="internal" saved={props.internal} />
++      )}
++      <NoteEditor {...props} kind="external" saved={props.external} />
++    </Card>
++  )
++}
++
++function NoteEditor({
++  kind,
++  saved,
++  editable,
++  onSave,
++  onDraftChange,
++}: OrderDetailsNotesProps & { kind: NoteKind; saved: NoteValue }) {
++  const { locale } = useLocale()
++  const t = (en: string, el: string) => (locale === 'el' ? el : en)
++  const label =
++    kind === 'internal'
++      ? t('Internal notes', 'Εσωτερικές σημειώσεις')
++      : t('External notes', 'Εξωτερικές σημειώσεις')
++  const [editing, setEditing] = useState(false)
++  const [canonical, setCanonical] = useState(saved)
++  const [reviewed, setReviewed] = useState(saved.revision)
++  const [error, setError] = useState('')
++  const [pending, setPending] = useState(false)
++  const editRef = useRef<HTMLButtonElement>(null)
++  const inputRef = useRef<HTMLTextAreaElement>(null)
++  const callback = useRef(onDraftChange)
++  callback.current = onDraftChange
++  useEffect(() => setCanonical(saved), [saved])
++  useEffect(() => {
++    callback.current?.(kind, editing)
++    return () => callback.current?.(kind, false)
++  }, [editing, kind])
++  useEffect(() => {
++    if (editing) inputRef.current?.focus()
++  }, [editing])
++  const close = () => {
++    if (pending) return
++    setEditing(false)
++    setError('')
++    requestAnimationFrame(() => editRef.current?.focus())
++  }
++  const form = useAppForm({
++    defaultValues: { value: saved.value },
++    onSubmit: async ({ value }) => {
++      if (pending || !editable) return
++      if (value.value.length > 2000) {
++        setError(t('Maximum 2,000 characters.', 'Μέγιστο 2.000 χαρακτήρες.'))
++        return
++      }
++      if (canonical.revision !== reviewed) {
++        setError(
++          t(
++            'The saved note changed. Review its latest value before retrying.',
++            'Η αποθηκευμένη σημείωση άλλαξε. Ελέγξτε τη νέα τιμή πριν προσπαθήσετε ξανά.',
++          ),
++        )
++        return
++      }
++      setPending(true)
++      setError('')
++      try {
++        const result = await onSave(kind, value.value.trim(), reviewed)
++        setCanonical(result)
++        setEditing(false)
++        requestAnimationFrame(() => editRef.current?.focus())
++      } catch (e) {
++        setError(
++          e instanceof Error
++            ? e.message
++            : t(
++                'Could not save. Your draft is retained.',
++                'Η αποθήκευση απέτυχε. Το πρόχειρο διατηρείται.',
++              ),
++        )
++      } finally {
++        setPending(false)
++      }
++    },
++  })
++  return (
++    <section
++      aria-label={label}
++      className="rounded-md border border-border bg-surface-2 p-4"
++    >
++      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
++        <h4 className="text-xs font-semibold">{label}</h4>
++        {editable && !editing && (
++          <Button
++            ref={editRef}
++            variant="secondary"
++            size="sm"
++            onClick={() => {
++              form.reset({ value: canonical.value })
++              setReviewed(canonical.revision)
++              setEditing(true)
++            }}
++          >
++            {t('Edit', 'Επεξεργασία')}
++          </Button>
++        )}
++      </div>
++      {editing ? (
++        <form
++          onSubmit={(e) => {
++            e.preventDefault()
++            e.stopPropagation()
++            void form.handleSubmit()
++          }}
++          onKeyDown={(e) => {
++            if (e.key === 'Escape') {
++              e.preventDefault()
++              close()
++            }
++          }}
++        >
++          <fieldset disabled={pending || !editable} className="space-y-3">
++            <form.Field name="value">
++              {(field) => (
++                <Textarea
++                  ref={inputRef}
++                  aria-label={label}
++                  value={field.state.value}
++                  onChange={(e) => field.handleChange(e.target.value)}
++                  className="min-h-28"
++                />
++              )}
++            </form.Field>
++            {error && (
++              <p role="alert" className="text-sm text-danger-fg">
++                {error}
++              </p>
++            )}
++            {canonical.revision !== reviewed && (
++              <div className="space-y-2 rounded-md border border-warning p-3">
++                <p>{t('Latest saved value', 'Νεότερη αποθηκευμένη τιμή')}</p>
++                <p className="whitespace-pre-wrap break-words">
++                  {canonical.value || '—'}
++                </p>
++                <Button
++                  type="button"
++                  variant="secondary"
++                  onClick={() => {
++                    setReviewed(canonical.revision)
++                    setError('')
++                  }}
++                >
++                  {t(
++                    'Use this version and keep my draft',
++                    'Χρήση αυτής της έκδοσης και διατήρηση προχείρου',
++                  )}
++                </Button>
++              </div>
++            )}
++            <div className="flex justify-end gap-2">
++              <Button type="button" variant="secondary" onClick={close}>
++                {t('Cancel', 'Ακύρωση')}
++              </Button>
++              <Button type="submit" loading={pending}>
++                {t('Save', 'Αποθήκευση')}
++              </Button>
++            </div>
++          </fieldset>
++        </form>
++      ) : (
++        <p className="whitespace-pre-wrap break-words text-sm">
++          {canonical.value || '—'}
++        </p>
++      )}
++    </section>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-details-prepared-page.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-prepared-page.tsx
+new file mode 100644
+index 0000000..4fa3aaa
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-details-prepared-page.tsx
+@@ -0,0 +1,55 @@
++import type { ReactNode } from 'react'
++import { Card } from '#/components/ui/card'
++import { Tabs, TabList, Tab, TabPanel } from '#/components/ui/tabs'
++import { useOrderUiText, type UiText } from './order-ui-fields'
++
++export function OrderDetailsPreparedPage({
++  number,
++  flags,
++  panels,
++}: {
++  number: string
++  flags: ReactNode
++  panels: Record<string, ReactNode>
++}) {
++  const t = useOrderUiText()
++  const tabs: Record<string, UiText> = {
++    overview: ['Overview', 'Επισκόπηση'],
++    collis: ['Collis', 'Κόλλι'],
++    invoices: ['Invoice rows', 'Γραμμές τιμολογίου'],
++    history: ['History & activity', 'Ιστορικό & δραστηριότητα'],
++    documents: ['Documents', 'Έγγραφα'],
++    actions: ['Available actions', 'Διαθέσιμες ενέργειες'],
++  }
++  return (
++    <div className="space-y-5">
++      <h1 className="text-xl font-semibold">
++        {t(['Order details', 'Στοιχεία παραγγελίας'])}
++      </h1>
++      <Card>
++        <div className="flex flex-wrap items-center justify-between gap-4">
++          <h2 className="font-mono text-xl font-semibold">{number}</h2>
++          <div className="flex flex-wrap gap-2">{flags}</div>
++        </div>
++      </Card>
++      <Tabs defaultValue="overview">
++        <div className="overflow-x-auto">
++          <TabList>
++            {Object.entries(tabs)
++              .filter(([key]) => panels[key] != null)
++              .map(([key, label]) => (
++                <Tab key={key} value={key} className="shrink-0">
++                  {t(label)}
++                </Tab>
++              ))}
++          </TabList>
++        </div>
++        {Object.keys(tabs).map((key) => (
++          <TabPanel key={key} value={key} keepMounted>
++            <div className="space-y-5 pt-5">{panels[key]}</div>
++          </TabPanel>
++        ))}
++      </Tabs>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.test.tsx
+new file mode 100644
+index 0000000..8168e38
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.test.tsx
+@@ -0,0 +1,142 @@
++import {
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  waitFor,
++} from '@testing-library/react'
++import { afterEach, expect, it, vi } from 'vitest'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import { OrderEditableRows } from './order-editable-rows'
++afterEach(cleanup)
++it('keeps terminal-disposition selection available when stock locks ordinary colli edits', () => {
++  render(
++    <LabelsProvider>
++      <OrderEditableRows
++        kind="colli"
++        rows={[{ id: 'C1', revision: '1', values: {} }]}
++        fields={[]}
++        initialValues={{}}
++        editable={false}
++        canDispose
++        onSave={vi.fn()}
++        onRemove={vi.fn()}
++        onOperation={vi.fn()}
++      />
++    </LabelsProvider>,
++  )
++  const checkbox = screen.getByRole('checkbox', {
++    name: 'Select colli C1',
++  }) as HTMLInputElement
++  expect(checkbox.disabled).toBe(false)
++  fireEvent.click(checkbox)
++  expect(
++    (
++      screen.getByRole('button', {
++        name: 'Record terminal colli disposition',
++      }) as HTMLButtonElement
++    ).disabled,
++  ).toBe(false)
++  expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
++})
++it('saving one invoice draft excludes another unsaved row and retains it on failure', async () => {
++  const save = vi.fn().mockRejectedValue(new Error('Save failed'))
++  render(
++    <LabelsProvider>
++      <OrderEditableRows
++        kind="invoice"
++        rows={[]}
++        fields={[
++          {
++            key: 'description',
++            label: ['Description', 'Περιγραφή'],
++            required: true,
++          },
++          { key: 'quantity', label: ['Quantity', 'Ποσότητα'] },
++          { key: 'price', label: ['Unit price', 'Τιμή μονάδας'] },
++        ]}
++        initialValues={{ description: '', quantity: '1', price: '1.00' }}
++        editable
++        onSave={save}
++        onRemove={vi.fn()}
++      />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Add row' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Add row' }))
++  const descriptions = screen.getAllByRole('textbox', { name: 'Description' })
++  fireEvent.change(descriptions[0], { target: { value: 'first' } })
++  fireEvent.change(descriptions[1], { target: { value: 'second' } })
++  fireEvent.click(screen.getAllByRole('button', { name: 'Save' })[0])
++  await screen.findByText('Save failed')
++  expect(save).toHaveBeenCalledWith(
++    null,
++    { description: 'first', quantity: '1', price: '1.00' },
++    '',
++  )
++  await waitFor(() =>
++    expect((descriptions[1] as HTMLInputElement).value).toBe('second'),
++  )
++})
++it('rechecks disposition permission after the review dialog opens', async () => {
++  const operation = vi.fn()
++  const props = {
++    kind: 'colli' as const,
++    rows: [{ id: 'C1', revision: '1', values: {} }],
++    fields: [],
++    initialValues: {},
++    editable: false,
++    canDispose: true,
++    onSave: vi.fn(),
++    onRemove: vi.fn(),
++    onOperation: operation,
++  }
++  const view = render(
++    <LabelsProvider>
++      <OrderEditableRows {...props} />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('checkbox', { name: 'Select colli C1' }))
++  fireEvent.click(
++    screen.getByRole('button', { name: 'Record terminal colli disposition' }),
++  )
++  fireEvent.change(
++    screen.getByRole('textbox', { name: 'Operational reason' }),
++    { target: { value: 'test reason' } },
++  )
++  view.rerender(
++    <LabelsProvider>
++      <OrderEditableRows {...props} canDispose={false} />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  await screen.findByRole('alert')
++  expect(operation).not.toHaveBeenCalled()
++})
++it('Escape cancels only the focused invoice draft', () => {
++  render(
++    <LabelsProvider>
++      <OrderEditableRows
++        kind="invoice"
++        rows={[]}
++        fields={[{ key: 'description', label: ['Description', 'Περιγραφή'] }]}
++        initialValues={{ description: '' }}
++        editable
++        onSave={vi.fn()}
++        onRemove={vi.fn()}
++      />
++    </LabelsProvider>,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Add row' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Add row' }))
++  const fields = screen.getAllByRole('textbox', { name: 'Description' })
++  fireEvent.change(fields[1], { target: { value: 'keep' } })
++  fireEvent.keyDown(fields[0], { key: 'Escape' })
++  expect(screen.getAllByRole('textbox', { name: 'Description' })).toHaveLength(
++    1,
++  )
++  expect(
++    (screen.getByRole('textbox', { name: 'Description' }) as HTMLInputElement)
++      .value,
++  ).toBe('keep')
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.tsx
+new file mode 100644
+index 0000000..2716b71
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-editable-rows.tsx
+@@ -0,0 +1,801 @@
++import { usePurchaseOrderLabels } from '../localization/purchase-order-labels'
++import { Fragment, useEffect, useRef, useState } from 'react'
++import { useAppForm } from '#/components/form'
++import { Card } from '#/components/ui/card'
++import { Button } from '#/components/ui/button'
++import { Checkbox } from '#/components/ui/choice'
++import { Badge } from '#/components/ui/badge'
++import { Textarea } from '#/components/ui/input'
++import { Modal } from '#/components/ui/modal'
++import { Select } from '#/components/ui/select'
++import { Table, THead, TBody, TR, TH, TD } from '#/components/ui/table'
++import {
++  OrderUiControl,
++  fieldsError,
++  useOrderUiText,
++  editText,
++  saveText,
++  cancelText,
++  type OrderUiField,
++  type UiText,
++} from './order-ui-fields'
++import {
++  copyColliDraft,
++  invoiceTotal,
++  type OrderDraftValues,
++  type SavedOrderUiRow,
++} from './order-ui-values'
++
++export type EditableRowsProps = {
++  kind: 'colli' | 'invoice'
++  rows: SavedOrderUiRow[]
++  editable: boolean
++  fields: OrderUiField[]
++  initialValues: OrderDraftValues
++  onSave: (
++    id: string | null,
++    values: OrderDraftValues,
++    reviewedRevision: string,
++  ) => Promise<SavedOrderUiRow>
++  onRemove: (row: SavedOrderUiRow) => Promise<void>
++  onOperation?: (
++    kind: 'split' | 'terminal',
++    ids: string[],
++    reason: string,
++    disposition: string,
++  ) => Promise<void>
++  onTrace?: (row: SavedOrderUiRow) => void
++  canSplit?: boolean
++  canDispose?: boolean
++  onDraftChange?: (key: string, active: boolean) => void
++}
++export function OrderEditableRows(props: EditableRowsProps) {
++  const t = useOrderUiText()
++  const { enumLabel } = usePurchaseOrderLabels()
++  const [rows, setRows] = useState(props.rows)
++  const [newRows, setNewRows] = useState<SavedOrderUiRow[]>([])
++  const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
++  const [selected, setSelected] = useState<Set<string>>(() => new Set())
++  const [remove, setRemove] = useState<SavedOrderUiRow | null>(null)
++  const [operation, setOperation] = useState<'split' | 'terminal' | null>(null)
++  const [reviewedRows, setReviewedRows] = useState<SavedOrderUiRow[]>([])
++  const [reason, setReason] = useState('')
++  const [disposition, setDisposition] = useState('OTHER')
++  const [pending, setPending] = useState(false)
++  const [error, setError] = useState('')
++  const nextId = useRef(1)
++  useEffect(() => setRows(props.rows), [props.rows])
++  const active = rows.filter((r) => !r.terminal)
++  const selectedRows = active.filter((r) => selected.has(r.id))
++  const add = (values = props.initialValues) => {
++    const id = `draft-${nextId.current++}`
++    setNewRows((current) => [
++      ...current,
++      { id, revision: '', values: { ...values } },
++    ])
++    setExpanded((current) => new Set([...current, id]))
++  }
++  const discard = (id: string) => {
++    setNewRows((current) => current.filter((r) => r.id !== id))
++    props.onDraftChange?.(id, false)
++  }
++  const onSave = async (
++    row: SavedOrderUiRow,
++    values: OrderDraftValues,
++    revision: string,
++    isNew: boolean,
++  ) => {
++    const saved = await props.onSave(isNew ? null : row.id, values, revision)
++    setRows((current) =>
++      isNew
++        ? [...current, saved]
++        : current.map((r) => (r.id === row.id ? saved : r)),
++    )
++    if (isNew) discard(row.id)
++    return saved
++  }
++  const finishOperation = async () => {
++    if (pending) return
++    setPending(true)
++    setError('')
++    try {
++      if (remove) {
++        const current = rows.find((r) => r.id === remove.id)
++        if (
++          !props.editable ||
++          !current ||
++          current.terminal ||
++          current.revision !== remove.revision ||
++          (props.kind === 'colli' && active.length <= 1)
++        )
++          throw new Error(
++            t([
++              'This operation is no longer available. Cancel and review the current rows.',
++              'Η ενέργεια δεν είναι πλέον διαθέσιμη. Ακυρώστε και ελέγξτε τις τρέχουσες γραμμές.',
++            ]),
++          )
++        await props.onRemove(remove)
++        setRows((current) =>
++          props.kind === 'invoice'
++            ? current.filter((r) => r.id !== remove.id)
++            : current.map((r) =>
++                r.id === remove.id ? { ...r, terminal: 'CANCELLED' } : r,
++              ),
++        )
++        setSelected((current) => {
++          const next = new Set(current)
++          next.delete(remove.id)
++          return next
++        })
++        setRemove(null)
++      } else if (operation && props.onOperation) {
++        const stale =
++          reviewedRows.length !== selectedRows.length ||
++          reviewedRows.some(
++            (r) =>
++              !selectedRows.some(
++                (current) =>
++                  current.id === r.id && current.revision === r.revision,
++              ),
++          )
++        if (
++          stale ||
++          (operation === 'split'
++            ? !props.canSplit ||
++              selectedRows.length < 1 ||
++              selectedRows.length >= active.length
++            : !props.canDispose || selectedRows.length !== 1)
++        )
++          throw new Error(
++            t([
++              'This operation is no longer available. Cancel and review the current rows.',
++              'Η ενέργεια δεν είναι πλέον διαθέσιμη. Ακυρώστε και ελέγξτε τις τρέχουσες γραμμές.',
++            ]),
++          )
++        if (!reason.trim())
++          throw new Error(t(['Reason is required.', 'Απαιτείται αιτιολογία.']))
++        await props.onOperation(
++          operation,
++          selectedRows.map((r) => r.id),
++          reason.trim(),
++          disposition,
++        )
++        setOperation(null)
++        setReason('')
++        setSelected(new Set())
++      }
++    } catch (e) {
++      setError(
++        e instanceof Error
++          ? e.message
++          : t(['Operation failed.', 'Η ενέργεια απέτυχε.']),
++      )
++    } finally {
++      setPending(false)
++    }
++  }
++  const columns: UiText[] =
++    props.kind === 'colli'
++      ? [
++          ['Selection', 'Επιλογή'],
++          ['Colli', 'Κόλλι'],
++          ['Flags', 'Ενδείξεις'],
++          ['Dimensions (cm)', 'Διαστάσεις (cm)'],
++          ['Gross weight (kg)', 'Μικτό βάρος (kg)'],
++          ['Net weight (kg)', 'Καθαρό βάρος (kg)'],
++          ['Actions', 'Ενέργειες'],
++        ]
++      : [
++          ['Line', 'Γραμμή'],
++          ['Description', 'Περιγραφή'],
++          ['HS code', 'Κωδικός HS'],
++          ['Quantity', 'Ποσότητα'],
++          ['Unit', 'Μονάδα'],
++          ['Unit price', 'Τιμή μονάδας'],
++          ['Currency', 'Νόμισμα'],
++          ['Total value', 'Συνολική αξία'],
++          ['Actions', 'Ενέργειες'],
++        ]
++  return (
++    <Card className="space-y-4">
++      <div className="flex flex-wrap items-center justify-between gap-3">
++        <h3 className="text-subheading">
++          {t(
++            props.kind === 'colli'
++              ? ['Collis', 'Κόλλι']
++              : ['Invoice rows', 'Γραμμές τιμολογίου'],
++          )}
++        </h3>
++        {props.editable && (
++          <div className="flex flex-wrap gap-2">
++            <Button variant="secondary" onClick={() => add()}>
++              {t(
++                props.kind === 'colli'
++                  ? ['Add colli', 'Προσθήκη κόλλι']
++                  : ['Add row', 'Προσθήκη γραμμής'],
++              )}
++            </Button>
++            {props.kind === 'colli' && (
++              <Button
++                variant="secondary"
++                disabled={!selectedRows.length}
++                onClick={() =>
++                  selectedRows.forEach((r) => add(copyColliDraft(r.values)))
++                }
++              >
++                {t(['Add identical', 'Προσθήκη ίδιων'])}
++              </Button>
++            )}
++          </div>
++        )}
++      </div>
++      <div className="overflow-x-auto">
++        <Table>
++          <THead>
++            <TR>
++              {columns.map((col) => (
++                <TH key={col[0]}>{t(col)}</TH>
++              ))}
++            </TR>
++          </THead>
++          <TBody>
++            {[...rows, ...newRows].map((row, index) => (
++              <EditableRow
++                key={row.id}
++                row={row}
++                index={index}
++                isNew={newRows.includes(row)}
++                {...props}
++                expanded={expanded.has(row.id)}
++                toggle={() =>
++                  setExpanded((current) => {
++                    const next = new Set(current)
++                    next.has(row.id) ? next.delete(row.id) : next.add(row.id)
++                    return next
++                  })
++                }
++                selected={selected.has(row.id)}
++                select={(checked) =>
++                  setSelected((current) => {
++                    const next = new Set(current)
++                    checked ? next.add(row.id) : next.delete(row.id)
++                    return next
++                  })
++                }
++                save={(values, revision) =>
++                  onSave(row, values, revision, newRows.includes(row))
++                }
++                discard={() => discard(row.id)}
++                remove={() => {
++                  setError('')
++                  setRemove(row)
++                }}
++                canRemove={props.kind === 'invoice' || active.length > 1}
++              />
++            ))}
++          </TBody>
++        </Table>
++      </div>
++      {!rows.length && !newRows.length && (
++        <p className="py-4 text-sm text-fg-muted">
++          {t(['No records.', 'Δεν υπάρχουν εγγραφές.'])}
++        </p>
++      )}
++      {props.kind === 'colli' && (props.canSplit || props.canDispose) && (
++        <div className="flex flex-wrap gap-2">
++          <Button
++            variant="secondary"
++            disabled={
++              !props.canSplit ||
++              active.length < 2 ||
++              !selectedRows.length ||
++              selectedRows.length >= active.length
++            }
++            onClick={() => {
++              setError('')
++              setReviewedRows(selectedRows)
++              setOperation('split')
++            }}
++          >
++            {t(['Split collis', 'Διαχωρισμός κόλλι'])}
++          </Button>
++          <Button
++            variant="secondary"
++            disabled={!props.canDispose || selectedRows.length !== 1}
++            onClick={() => {
++              setError('')
++              setReviewedRows(selectedRows)
++              setOperation('terminal')
++            }}
++          >
++            {t([
++              'Record terminal colli disposition',
++              'Καταγραφή οριστικής διάθεσης κόλλι',
++            ])}
++          </Button>
++          <Button variant="ghost" onClick={() => setSelected(new Set())}>
++            {t(['Clear', 'Καθαρισμός'])}
++          </Button>
++        </div>
++      )}
++      <Modal
++        open={!!remove || !!operation}
++        onClose={() => {
++          if (!pending) {
++            setRemove(null)
++            setOperation(null)
++            setReason('')
++            setError('')
++          }
++        }}
++        title={t(
++          remove
++            ? ['Remove record?', 'Αφαίρεση εγγραφής;']
++            : ['Review operation', 'Έλεγχος ενέργειας'],
++        )}
++        ariaLabel={t(['Review operation', 'Έλεγχος ενέργειας'])}
++        footer={
++          <>
++            <Button
++              variant="secondary"
++              disabled={pending}
++              onClick={() => {
++                setRemove(null)
++                setOperation(null)
++                setReason('')
++              }}
++            >
++              {t(cancelText)}
++            </Button>
++            <Button loading={pending} onClick={() => void finishOperation()}>
++              {t(['Confirm', 'Επιβεβαίωση'])}
++            </Button>
++          </>
++        }
++      >
++        {remove ? (
++          <p>
++            {props.kind === 'colli'
++              ? t([
++                  'The saved colli remains in history as Cancelled.',
++                  'Το αποθηκευμένο κόλλι παραμένει στο ιστορικό ως ακυρωμένο.',
++                ])
++              : t([
++                  'Remove this invoice row?',
++                  'Να αφαιρεθεί αυτή η γραμμή τιμολογίου;',
++                ])}{' '}
++            {remove.id}
++          </p>
++        ) : (
++          <div className="space-y-3">
++            <p>{selectedRows.map((r) => r.id).join(', ')}</p>
++            {operation === 'terminal' && (
++              <Select
++                aria-label={t(['Disposition', 'Διάθεση'])}
++                value={disposition}
++                disabled={pending}
++                onChange={(e) => setDisposition(e.target.value)}
++              >
++                {[
++                  'DAMAGED',
++                  'UNCOLLECTABLE',
++                  'MISSING',
++                  'CANCELLED',
++                  'OTHER',
++                ].map((value) => (
++                  <option key={value} value={value}>
++                    {enumLabel(value)}
++                  </option>
++                ))}
++              </Select>
++            )}
++            <Textarea
++              aria-label={t(['Operational reason', 'Επιχειρησιακή αιτιολογία'])}
++              value={reason}
++              disabled={pending}
++              maxLength={1000}
++              onChange={(e) => setReason(e.target.value)}
++            />
++          </div>
++        )}
++        {error && (
++          <p role="alert" className="mt-3 text-danger-fg">
++            {error}
++          </p>
++        )}
++      </Modal>
++    </Card>
++  )
++}
++
++function EditableRow(
++  props: EditableRowsProps & {
++    row: SavedOrderUiRow
++    index: number
++    isNew: boolean
++    expanded: boolean
++    toggle: () => void
++    selected: boolean
++    select: (checked: boolean) => void
++    save: (
++      values: OrderDraftValues,
++      revision: string,
++    ) => Promise<SavedOrderUiRow>
++    discard: () => void
++    remove: () => void
++    canRemove: boolean
++  },
++) {
++  const t = useOrderUiText()
++  const { enumLabel } = usePurchaseOrderLabels()
++  const [editing, setEditing] = useState(props.isNew)
++  const [pending, setPending] = useState(false)
++  const [error, setError] = useState('')
++  const [baseline, setBaseline] = useState(props.row.revision)
++  const editRef = useRef<HTMLButtonElement>(null)
++  const callback = useRef(props.onDraftChange)
++  callback.current = props.onDraftChange
++  useEffect(() => {
++    callback.current?.(props.row.id, editing)
++    return () => callback.current?.(props.row.id, false)
++  }, [editing, props.row.id])
++  const form = useAppForm({
++    defaultValues: props.row.values,
++    onSubmit: async ({ value }) => {
++      if (pending || !props.editable || props.row.terminal) return
++      const invalid = fieldsError(props.fields, value)
++      if (invalid) {
++        setError(t(invalid))
++        return
++      }
++      if (
++        props.kind === 'invoice' &&
++        invoiceTotal(value.quantity, value.price) === null
++      ) {
++        setError(
++          t([
++            'Enter a positive integer quantity and valid price with up to two decimals, within the permitted total.',
++            'Εισαγάγετε θετική ακέραια ποσότητα και έγκυρη τιμή έως δύο δεκαδικά εντός ορίου.',
++          ]),
++        )
++        return
++      }
++      if (
++        props.kind === 'colli' &&
++        ['length', 'width', 'height', 'gross', 'net'].some(
++          (key) =>
++            value[key] !== '' &&
++            (!Number.isFinite(Number(value[key])) || Number(value[key]) <= 0),
++        )
++      ) {
++        setError(
++          t([
++            'Measurements must be positive numbers or empty.',
++            'Οι μετρήσεις πρέπει να είναι θετικές ή κενές.',
++          ]),
++        )
++        return
++      }
++      if (props.row.revision !== baseline) {
++        setError(
++          t([
++            'This record changed. Cancel and reopen to review it; your draft is retained.',
++            'Η εγγραφή άλλαξε. Ακυρώστε και ανοίξτε ξανά για έλεγχο· το πρόχειρο διατηρείται.',
++          ]),
++        )
++        return
++      }
++      setPending(true)
++      setError('')
++      try {
++        await props.save(value, baseline)
++        setEditing(false)
++        requestAnimationFrame(() => editRef.current?.focus())
++      } catch (e) {
++        setError(
++          e instanceof Error
++            ? e.message
++            : t(['Save failed.', 'Η αποθήκευση απέτυχε.']),
++        )
++      } finally {
++        setPending(false)
++      }
++    },
++  })
++  const cancel = () => {
++    if (pending) return
++    props.isNew ? props.discard() : setEditing(false)
++    setError('')
++    requestAnimationFrame(() => editRef.current?.focus())
++  }
++  const flags = ['dg', 'fragile', 'unpacked', 'damagedPacking']
++  const field = (key: string, values: OrderDraftValues) => {
++    const def = props.fields.find((f) => f.key === key)
++    if (!def) return null
++    return (
++      <OrderUiControl
++        field={def}
++        value={values[key] ?? ''}
++        disabled={pending || !props.editable}
++        onChange={(v) => {
++          form.setFieldValue(key, v)
++          if (key === 'dg' && v === 'false') {
++            form.setFieldValue('dgClass', '')
++            form.setFieldValue('dgText', '')
++          }
++        }}
++      />
++    )
++  }
++  return (
++    <form.Subscribe selector={(state) => state.values}>
++      {(draft) => {
++        const values = editing ? draft : props.row.values
++        const controls = (
++          <div className="flex flex-wrap gap-2">
++            {editing ? (
++              <>
++                <Button
++                  size="sm"
++                  variant="secondary"
++                  disabled={pending}
++                  onClick={cancel}
++                >
++                  {t(cancelText)}
++                </Button>
++                <Button
++                  size="sm"
++                  loading={pending}
++                  onClick={() => void form.handleSubmit()}
++                >
++                  {t(saveText)}
++                </Button>
++              </>
++            ) : props.editable && !props.row.terminal ? (
++              <>
++                <Button
++                  ref={editRef}
++                  size="sm"
++                  variant="secondary"
++                  onClick={() => {
++                    form.reset(props.row.values)
++                    setBaseline(props.row.revision)
++                    setEditing(true)
++                    if (!props.expanded) props.toggle()
++                  }}
++                >
++                  {t(editText)}
++                </Button>
++                <Button
++                  size="sm"
++                  variant="ghost"
++                  disabled={!props.canRemove}
++                  onClick={props.remove}
++                >
++                  {t(['Remove', 'Αφαίρεση'])}
++                </Button>
++              </>
++            ) : null}
++          </div>
++        )
++        return (
++          <Fragment>
++            <TR
++              onKeyDown={(e) => {
++                if (editing && e.key === 'Escape') {
++                  e.preventDefault()
++                  cancel()
++                }
++              }}
++            >
++              {props.kind === 'colli' ? (
++                <>
++                  <TD>
++                    <Checkbox
++                      aria-label={`${t(['Select colli', 'Επιλογή κόλλι'])} ${props.row.id}`}
++                      checked={props.selected}
++                      disabled={
++                        props.isNew ||
++                        !!props.row.terminal ||
++                        (!props.editable &&
++                          !props.canSplit &&
++                          !props.canDispose)
++                      }
++                      onChange={(e) => props.select(e.target.checked)}
++                    />
++                  </TD>
++                  <TD>
++                    <Button
++                      variant="ghost"
++                      size="sm"
++                      aria-expanded={props.expanded || editing}
++                      onClick={props.toggle}
++                    >
++                      {props.row.id}
++                    </Button>
++                    {!props.isNew && props.onTrace && (
++                      <Button
++                        variant="ghost"
++                        size="sm"
++                        onClick={() => props.onTrace?.(props.row)}
++                      >
++                        {t(['Trace', 'Ιχνηλασιμότητα'])}
++                      </Button>
++                    )}
++                    {props.row.terminal && (
++                      <Badge tone="danger">
++                        {enumLabel(props.row.terminal)}
++                      </Badge>
++                    )}
++                  </TD>
++                  <TD>
++                    <div className="flex max-w-60 flex-wrap gap-2">
++                      {flags.map((key) =>
++                        editing ? (
++                          <Fragment key={key}>{field(key, values)}</Fragment>
++                        ) : values[key] === 'true' ? (
++                          <Badge
++                            key={key}
++                            tone={key === 'dg' ? 'danger' : 'neutral'}
++                          >
++                            {t(props.fields.find((f) => f.key === key)!.label)}
++                          </Badge>
++                        ) : null,
++                      )}
++                    </div>
++                  </TD>
++                  <TD>
++                    {editing ? (
++                      <div className="flex min-w-60 gap-2">
++                        {['length', 'width', 'height'].map((key) => (
++                          <div key={key} className="w-20">
++                            {field(key, values)}
++                          </div>
++                        ))}
++                      </div>
++                    ) : (
++                      ['length', 'width', 'height']
++                        .map((k) => values[k] || '—')
++                        .join(' × ')
++                    )}
++                  </TD>
++                  <TD>
++                    {editing ? (
++                      <div className="w-28">{field('gross', values)}</div>
++                    ) : (
++                      values.gross || '—'
++                    )}
++                  </TD>
++                  <TD>
++                    {editing ? (
++                      <div className="w-28">{field('net', values)}</div>
++                    ) : (
++                      values.net || '—'
++                    )}
++                  </TD>
++                  <TD>{controls}</TD>
++                </>
++              ) : (
++                <>
++                  <TD>{props.index + 1}</TD>
++                  {[
++                    'description',
++                    'hs',
++                    'quantity',
++                    'unit',
++                    'price',
++                    'currency',
++                  ].map((key) => (
++                    <TD key={key}>
++                      {editing ? (
++                        <div
++                          className={
++                            key === 'description' ? 'min-w-48' : 'min-w-24'
++                          }
++                        >
++                          {field(key, values)}
++                        </div>
++                      ) : (
++                        values[key] || '—'
++                      )}
++                    </TD>
++                  ))}
++                  <TD>
++                    <span className="whitespace-nowrap font-mono">
++                      {invoiceTotal(values.quantity, values.price) ?? '—'}
++                    </span>
++                  </TD>
++                  <TD>{controls}</TD>
++                </>
++              )}
++            </TR>
++            {props.kind === 'colli' && (props.expanded || editing) && (
++              <TR
++                onKeyDown={(e) => {
++                  if (editing && e.key === 'Escape') {
++                    e.preventDefault()
++                    cancel()
++                  }
++                }}
++              >
++                <TD colSpan={7}>
++                  <div
++                    className="sticky left-0 w-[calc(100vw-8rem)] max-w-full space-y-4 rounded-md border border-border bg-surface-2 p-4 md:w-auto"
++                    onKeyDown={(e) => {
++                      if (e.key === 'Escape') cancel()
++                    }}
++                  >
++                    <div className="grid gap-4 md:grid-cols-2">
++                      {['description', 'packageType'].map((key) => (
++                        <Fragment key={key}>
++                          {editing ? (
++                            field(key, values)
++                          ) : (
++                            <OrderUiControl
++                              field={{
++                                ...props.fields.find((f) => f.key === key)!,
++                                readonly: true,
++                              }}
++                              value={values[key] ?? ''}
++                              onChange={() => {}}
++                            />
++                          )}
++                        </Fragment>
++                      ))}
++                    </div>
++                    {values.dg === 'true' && (
++                      <div className="space-y-3 border-t border-border pt-3">
++                        <h4 className="text-xs font-semibold">
++                          {t(['Dangerous goods', 'Επικίνδυνα εμπορεύματα'])}
++                        </h4>
++                        <div className="grid gap-4 md:grid-cols-2">
++                          {['dgClass', 'dgText'].map((key) => (
++                            <Fragment key={key}>
++                              {editing ? (
++                                field(key, values)
++                              ) : (
++                                <OrderUiControl
++                                  field={{
++                                    ...props.fields.find((f) => f.key === key)!,
++                                    readonly: true,
++                                  }}
++                                  value={values[key] ?? ''}
++                                  onChange={() => {}}
++                                />
++                              )}
++                            </Fragment>
++                          ))}
++                        </div>
++                      </div>
++                    )}
++                    {error && (
++                      <p role="alert" className="text-danger-fg">
++                        {error}
++                      </p>
++                    )}
++                  </div>
++                </TD>
++              </TR>
++            )}
++            {props.kind === 'invoice' && error && (
++              <TR
++                onKeyDown={(e) => {
++                  if (editing && e.key === 'Escape') {
++                    e.preventDefault()
++                    cancel()
++                  }
++                }}
++              >
++                <TD colSpan={9}>
++                  <p role="alert" className="text-danger-fg">
++                    {error}
++                  </p>
++                </TD>
++              </TR>
++            )}
++          </Fragment>
++        )
++      }}
++    </form.Subscribe>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.test.tsx
+new file mode 100644
+index 0000000..6de38e2
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.test.tsx
+@@ -0,0 +1,89 @@
++import {
++  act,
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  waitFor,
++} from '@testing-library/react'
++import { afterEach, expect, it, vi } from 'vitest'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import { OrderReviewedEmails } from './order-reviewed-actions'
++afterEach(cleanup)
++const availability = {
++  request: { allowed: true, reason: '' },
++  confirm: { allowed: false, reason: 'Not eligible' },
++}
++const message = {
++  reference: 'review1',
++  recipient: 'fixture@example.test',
++  subject: 'Subject',
++  body: 'Body',
++}
++it('prepares from either location but only explicit Send queues; cancel sends nothing', async () => {
++  const prepare = vi.fn().mockResolvedValue(message),
++    send = vi.fn().mockResolvedValue(undefined)
++  render(
++    <LabelsProvider>
++      <OrderReviewedEmails
++        contextKey="1"
++        visible
++        availability={availability}
++        onPrepare={prepare}
++        onSend={send}
++      >
++        {(slots) => (
++          <>
++            {slots.buttons}
++            {slots.cards}
++          </>
++        )}
++      </OrderReviewedEmails>
++    </LabelsProvider>,
++  )
++  fireEvent.click(
++    screen.getAllByRole('button', { name: 'Request readiness date' })[0],
++  )
++  await screen.findByRole('dialog')
++  expect(send).not.toHaveBeenCalled()
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++  expect(send).not.toHaveBeenCalled()
++  fireEvent.click(
++    screen.getAllByRole('button', { name: 'Request readiness date' })[1],
++  )
++  await screen.findByRole('dialog')
++  fireEvent.click(screen.getByRole('button', { name: 'Send' }))
++  await waitFor(() => expect(send).toHaveBeenCalledTimes(1))
++  expect(send).toHaveBeenCalledWith(message)
++})
++it('does not display a preparation returned after its Order context changes', async () => {
++  let resolve!: (value: typeof message) => void
++  const prepare = vi.fn(
++      () =>
++        new Promise<typeof message>((r) => {
++          resolve = r
++        }),
++    ),
++    send = vi.fn()
++  const component = (key: string) => (
++    <LabelsProvider>
++      <OrderReviewedEmails
++        contextKey={key}
++        visible
++        availability={availability}
++        onPrepare={prepare}
++        onSend={send}
++      >
++        {(slots) => slots.buttons}
++      </OrderReviewedEmails>
++    </LabelsProvider>
++  )
++  const view = render(component('old'))
++  fireEvent.click(
++    screen.getByRole('button', { name: 'Request readiness date' }),
++  )
++  view.rerender(component('new'))
++  await act(async () => resolve(message))
++  expect(screen.queryByRole('dialog')).toBeNull()
++  expect(send).not.toHaveBeenCalled()
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.tsx
+new file mode 100644
+index 0000000..9c6c3e0
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-reviewed-actions.tsx
+@@ -0,0 +1,252 @@
++import { useEffect, useRef, useState, type ReactNode } from 'react'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { Modal } from '#/components/ui/modal'
++import { PurchaseOrderActionHelp } from './purchase-order-action-help'
++import { useOrderUiText, type UiText } from './order-ui-fields'
++
++export type EmailIntent = 'request' | 'confirm'
++export type PreparedEmailView = {
++  reference: string
++  recipient: string
++  subject: string
++  body: string
++}
++export type EmailAvailability = { allowed: boolean; reason: string }
++export function OrderReviewedEmails({
++  contextKey,
++  visible,
++  availability,
++  onPrepare,
++  onSend,
++  children,
++}: {
++  contextKey: string
++  visible: boolean
++  availability: Record<EmailIntent, EmailAvailability>
++  onPrepare: (intent: EmailIntent) => Promise<PreparedEmailView>
++  onSend: (preparation: PreparedEmailView) => Promise<void>
++  children: (slots: { buttons: ReactNode; cards: ReactNode }) => ReactNode
++}) {
++  const t = useOrderUiText()
++  const [review, setReview] = useState<{
++    message: PreparedEmailView
++    intent: EmailIntent
++    context: string
++  } | null>(null)
++  const [pending, setPending] = useState(false)
++  const [error, setError] = useState('')
++  const source = useRef<HTMLElement | null>(null)
++  const context = useRef(contextKey)
++  context.current = contextKey
++  const title: Record<EmailIntent, UiText> = {
++    request: ['Request readiness date', 'Αίτημα ημερομηνίας ετοιμότητας'],
++    confirm: ['Confirm readiness date', 'Επιβεβαίωση ημερομηνίας ετοιμότητας'],
++  }
++  useEffect(() => {
++    setReview(null)
++  }, [contextKey])
++  const close = () => {
++    if (pending) return
++    setReview(null)
++    setError('')
++    requestAnimationFrame(() => source.current?.focus())
++  }
++  const prepare = async (intent: EmailIntent) => {
++    if (pending || !visible || !availability[intent].allowed) return
++    source.current = document.activeElement as HTMLElement
++    const key = contextKey
++    setPending(true)
++    setError('')
++    try {
++      const message = await onPrepare(intent)
++      if (context.current === key) setReview({ message, intent, context: key })
++      else
++        setError(
++          t([
++            'The context changed. Prepare the message again.',
++            'Τα στοιχεία άλλαξαν. Προετοιμάστε ξανά το μήνυμα.',
++          ]),
++        )
++    } catch (e) {
++      setError(
++        e instanceof Error
++          ? e.message
++          : t(['Preparation failed.', 'Η προετοιμασία απέτυχε.']),
++      )
++    } finally {
++      setPending(false)
++    }
++  }
++  const send = async () => {
++    if (
++      !review ||
++      pending ||
++      !visible ||
++      contextKey !== review.context ||
++      !availability[review.intent].allowed
++    )
++      return
++    setPending(true)
++    setError('')
++    try {
++      await onSend(review.message)
++      setReview(null)
++      requestAnimationFrame(() => source.current?.focus())
++    } catch (e) {
++      setError(
++        e instanceof Error
++          ? e.message
++          : t(['Send failed.', 'Η αποστολή απέτυχε.']),
++      )
++    } finally {
++      setPending(false)
++    }
++  }
++  const button = (intent: EmailIntent, compact: boolean) => (
++    <div className="flex items-center gap-1">
++      <Button
++        variant="secondary"
++        className="h-auto min-h-10 whitespace-normal py-2 text-left"
++        disabled={pending || !availability[intent].allowed}
++        onClick={() => void prepare(intent)}
++      >
++        {t(title[intent])}
++      </Button>
++      {compact && !availability[intent].allowed && (
++        <PurchaseOrderActionHelp reason={availability[intent].reason} />
++      )}
++    </div>
++  )
++  const buttons = visible ? (
++    <div className="flex flex-wrap gap-2">
++      {button('request', true)}
++      {button('confirm', true)}
++    </div>
++  ) : null
++  const cards = visible ? (
++    <>
++      {(['request', 'confirm'] as const).map((intent) => (
++        <Card key={intent} className="space-y-3">
++          <h3 className="text-subheading">{t(title[intent])}</h3>
++          {button(intent, false)}
++          {!availability[intent].allowed && (
++            <p className="text-sm text-fg-muted">
++              {availability[intent].reason}
++            </p>
++          )}
++        </Card>
++      ))}
++    </>
++  ) : null
++  return (
++    <>
++      {children({ buttons, cards })}
++      {error && (
++        <p role="alert" className="mt-3 text-danger-fg">
++          {error}
++        </p>
++      )}
++      <Modal
++        open={!!review}
++        onClose={close}
++        title={t(['Review supplier email', 'Έλεγχος email προμηθευτή'])}
++        ariaLabel={t(['Review supplier email', 'Έλεγχος email προμηθευτή'])}
++        size="xl"
++        footer={
++          <>
++            <Button disabled={pending} variant="secondary" onClick={close}>
++              {t(['Cancel', 'Ακύρωση'])}
++            </Button>
++            <Button
++              loading={pending}
++              disabled={
++                !review || !visible || !availability[review.intent].allowed
++              }
++              onClick={() => void send()}
++            >
++              {t(['Send', 'Αποστολή'])}
++            </Button>
++          </>
++        }
++      >
++        <dl className="max-h-[60vh] space-y-3 overflow-y-auto">
++          <dt className="font-semibold">{t(['Recipient', 'Παραλήπτης'])}</dt>
++          <dd>{review?.message.recipient}</dd>
++          <dt className="font-semibold">{t(['Subject', 'Θέμα'])}</dt>
++          <dd>{review?.message.subject}</dd>
++          <dt className="font-semibold">{t(['Message', 'Μήνυμα'])}</dt>
++          <dd className="whitespace-pre-wrap break-words">
++            {review?.message.body}
++          </dd>
++        </dl>
++        {error && (
++          <p role="alert" className="text-danger-fg">
++            {error}
++          </p>
++        )}
++      </Modal>
++    </>
++  )
++}
++
++export type DocumentActionView = {
++  state: 'loading' | 'error' | 'denied' | 'create' | 'open' | 'disabled'
++  reason?: string
++  owner?: string
++}
++export function OrderDocumentAction({
++  kind,
++  view,
++  onRetry,
++  onNavigate,
++}: {
++  kind: 'invoice' | 'entry'
++  view: DocumentActionView
++  onRetry: () => void
++  onNavigate: () => void
++}) {
++  const t = useOrderUiText()
++  if (view.state === 'denied') return null
++  const heading: UiText =
++    kind === 'invoice'
++      ? ['Create supplier invoice', 'Δημιουργία τιμολογίου προμηθευτή']
++      : ['Entry Note', 'Δελτίο Εισόδου']
++  const button: UiText =
++    kind === 'invoice'
++      ? heading
++      : view.state === 'open'
++        ? ['Open Entry Note', 'Άνοιγμα Δελτίου Εισόδου']
++        : ['Create Entry Note', 'Δημιουργία Δελτίου Εισόδου']
++  return (
++    <Card className="space-y-3">
++      <h3 className="text-subheading">{t(heading)}</h3>
++      {view.state === 'loading' ? (
++        <p role="status">{t(['Loading…', 'Φόρτωση…'])}</p>
++      ) : view.state === 'error' ? (
++        <>
++          <p role="alert">{view.reason}</p>
++          <Button variant="secondary" onClick={onRetry}>
++            {t(['Retry', 'Επανάληψη'])}
++          </Button>
++        </>
++      ) : (
++        <Button
++          variant="secondary"
++          disabled={view.state === 'disabled'}
++          onClick={onNavigate}
++        >
++          {t(button)}
++        </Button>
++      )}
++      {view.owner && (
++        <p className="text-sm">
++          {t(['Owning Order', 'Παραγγελία προέλευσης'])}: {view.owner}
++        </p>
++      )}
++      {view.reason && view.state !== 'error' && (
++        <p className="text-sm text-fg-muted">{view.reason}</p>
++      )}
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-fields.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-fields.tsx
+new file mode 100644
+index 0000000..0b461d0
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-fields.tsx
+@@ -0,0 +1,139 @@
++import { useLocale } from '#/app/providers/labels-provider'
++import { FormField, Input, Textarea } from '#/components/ui/input'
++import { Select } from '#/components/ui/select'
++import { Checkbox } from '#/components/ui/choice'
++import { Combobox } from '#/components/ui/combobox'
++import { DatePicker } from '#/components/ui/date-picker'
++import type { OrderDraftValues } from './order-ui-values'
++
++export type UiText = readonly [string, string]
++export type UiOption = { value: string; label: UiText }
++export type OrderUiField = {
++  key: string
++  label: UiText
++  type?: 'text' | 'textarea' | 'boolean' | 'select' | 'entity' | 'date'
++  options?: UiOption[]
++  required?: boolean
++  maxLength?: number
++  readonly?: boolean
++  wide?: boolean
++}
++export function useOrderUiText() {
++  const { locale } = useLocale()
++  return (text: UiText) => text[locale === 'el' ? 1 : 0]
++}
++export const editText: UiText = ['Edit', 'Επεξεργασία']
++export const cancelText: UiText = ['Cancel', 'Ακύρωση']
++export const saveText: UiText = ['Save', 'Αποθήκευση']
++export function OrderUiControl({
++  field,
++  value,
++  onChange,
++  disabled = false,
++}: {
++  field: OrderUiField
++  value: string
++  onChange: (value: string) => void
++  disabled?: boolean
++}) {
++  const t = useOrderUiText()
++  const label = t(field.label)
++  if (field.type === 'boolean')
++    return (
++      <Checkbox
++        label={label}
++        checked={value === 'true'}
++        disabled={disabled || field.readonly}
++        onChange={(e) => onChange(String(e.target.checked))}
++      />
++    )
++  return (
++    <FormField
++      label={label}
++      required={field.required}
++      className={field.wide ? 'md:col-span-2 xl:col-span-4' : undefined}
++    >
++      {field.readonly ? (
++        <p className="min-h-10 whitespace-pre-wrap break-words rounded-md bg-surface-2 px-3 py-2 text-sm">
++          {field.options?.find((o) => o.value === value)
++            ? t(field.options.find((o) => o.value === value)!.label)
++            : value || '—'}
++        </p>
++      ) : field.type === 'textarea' ? (
++        <Textarea
++          aria-label={label}
++          value={value}
++          disabled={disabled}
++          maxLength={field.maxLength}
++          onChange={(e) => onChange(e.target.value)}
++        />
++      ) : field.type === 'entity' ? (
++        <div role="group" aria-label={label}>
++          <Combobox
++            options={(field.options ?? []).map((o) => ({
++              value: o.value,
++              label: t(o.label),
++            }))}
++            value={value}
++            disabled={disabled}
++            onChange={onChange}
++            placeholder={t(['Select…', 'Επιλογή…'])}
++          />
++        </div>
++      ) : field.type === 'select' ? (
++        <Select
++          aria-label={label}
++          value={value}
++          disabled={disabled}
++          onChange={(e) => onChange(e.target.value)}
++        >
++          <option value="">—</option>
++          {field.options?.map((o) => (
++            <option key={o.value} value={o.value}>
++              {t(o.label)}
++            </option>
++          ))}
++        </Select>
++      ) : field.type === 'date' ? (
++        <div role="group" aria-label={label}>
++          <DatePicker
++            value={value ? new Date(value + 'T12:00:00') : null}
++            disabled={disabled}
++            onChange={(date) =>
++              onChange(
++                `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
++              )
++            }
++          />
++        </div>
++      ) : (
++        <Input
++          aria-label={label}
++          value={value}
++          disabled={disabled}
++          maxLength={field.maxLength}
++          onChange={(e) => onChange(e.target.value)}
++        />
++      )}
++    </FormField>
++  )
++}
++export function fieldsError(
++  fields: OrderUiField[],
++  values: OrderDraftValues,
++): UiText | undefined {
++  if (fields.some((f) => f.required && !values[f.key]?.trim()))
++    return [
++      'Complete the required fields.',
++      'Συμπληρώστε τα απαιτούμενα πεδία.',
++    ]
++  if (
++    fields.some(
++      (f) => f.maxLength && (values[f.key]?.length ?? 0) > f.maxLength,
++    )
++  )
++    return [
++      'A value exceeds its character limit.',
++      'Μια τιμή υπερβαίνει το όριο χαρακτήρων.',
++    ]
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.test.ts b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.test.ts
+new file mode 100644
+index 0000000..f23160d
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.test.ts
+@@ -0,0 +1,51 @@
++import { describe, expect, it } from 'vitest'
++import { copyColliDraft, invoiceTotal } from './order-ui-values'
++describe('Order UI drafts', () => {
++  it('calculates exact cents without floating point and checks price/product capacity', () => {
++    expect(invoiceTotal('3', '0.10')).toBe('0.30')
++    expect(invoiceTotal('1', '99999999999999999.99')).toBe(
++      '99999999999999999.99',
++    )
++    expect(invoiceTotal('2', '99999999999999999.99')).toBeNull()
++    expect(invoiceTotal('1', '0')).toBe('0.00')
++    for (const [q, p] of [
++      ['1', ''],
++      ['0', '1'],
++      ['1.5', '1'],
++      ['1', '1.001'],
++      ['2147483648', '1'],
++      ['1', '-1'],
++    ])
++      expect(invoiceTotal(q, p)).toBeNull()
++  })
++  it('copies only editable colli values and never identity, custody or retired fields', () => {
++    const source = {
++      description: 'parts',
++      packageType: 'PALLET',
++      length: '10',
++      dg: 'true',
++      dgClass: 'FLAMMABLE_LIQUIDS',
++      dgText: 'UN fixture',
++      id: '42',
++      trackingCode: 'HU42',
++      pcs: '4',
++      notes: 'private',
++      revision: '9',
++      terminal: 'DAMAGED',
++      warehouse: 'W1',
++    }
++    const copy = copyColliDraft(source)
++    expect(copy.description).toBe('parts')
++    expect(copy.dgText).toBe('UN fixture')
++    for (const key of [
++      'id',
++      'trackingCode',
++      'pcs',
++      'notes',
++      'revision',
++      'terminal',
++      'warehouse',
++    ])
++      expect(copy[key]).toBeUndefined()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.ts b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.ts
+new file mode 100644
+index 0000000..7448b93
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/order-ui-values.ts
+@@ -0,0 +1,48 @@
++// UI draft values only. These are not GraphQL inputs or transport contracts.
++export type OrderDraftValues = Record<string, string>
++export type SavedOrderUiRow = {
++  id: string
++  revision: string
++  values: OrderDraftValues
++  terminal?: string
++}
++
++export function invoiceTotal(quantity: string, price: string): string | null {
++  if (
++    !/^\d+$/.test(quantity) ||
++    !/^\d+(\.\d{1,2})?$/.test(price) ||
++    quantity.length > 10 ||
++    price.length > 20
++  )
++    return null
++  const count = BigInt(quantity)
++  if (count < 1n || count > 2147483647n) return null
++  const [whole, fraction = ''] = price.split('.')
++  const cents = BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
++  const maximum = 9999999999999999999n
++  const total = count * cents
++  if (cents > maximum || total > maximum) return null
++  return `${total / 100n}.${String(total % 100n).padStart(2, '0')}`
++}
++
++export function copyColliDraft(values: OrderDraftValues): OrderDraftValues {
++  return Object.fromEntries(
++    [
++      'description',
++      'packageType',
++      'length',
++      'width',
++      'height',
++      'gross',
++      'net',
++      'dg',
++      'fragile',
++      'unpacked',
++      'damagedPacking',
++      'dgClass',
++      'dgText',
++    ]
++      .filter((key) => key in values)
++      .map((key) => [key, values[key]]),
++  )
++}
 diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-action-help.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-action-help.tsx
 new file mode 100644
 index 0000000..221c491
