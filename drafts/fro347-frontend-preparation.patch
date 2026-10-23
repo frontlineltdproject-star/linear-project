@@ -1,0 +1,1057 @@
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/README.md b/frontline-forwarding-client/src/features/supplier-invoices/README.md
+new file mode 100644
+index 0000000..41c5c80
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/README.md
+@@ -0,0 +1,102 @@
++# Supplier Invoice Create presentation
++
++FRO-347's approved comfortable Create-page presentation is prepared here as
++controlled React components. It is **unconnected preparation**, not a working
++Supplier Invoice feature or completion of the ticket's acceptance criteria.
++There is no route, menu entry, service, authority, persistence or backend change.
++
++## Components and state ownership
++
++- `components/supplier-invoice-create-layout.tsx` composes the existing
++  `TopBar`, `Card` and `Tabs` primitives. It renders the heading, Overview /
++  Documents, staged count, relationship fields, invoice fields, read-only VAT
++  section and supplied actions. Keyboard tab activation and roving focus are
++  completed locally. Comfortable density is scoped to the layout, with four,
++  two and one columns at the approved breakpoints.
++- `components/supplier-invoice-document-queue.tsx` composes `Card`, `Button`,
++  `Alert`, `StatusPill` and paperclip/file icons using the existing attachment
++  presentation. Its rows are **UI view models**, not attachment/API DTOs.
++  Queued rows may expose Remove; failed uploads may expose Retry; unknown
++  uploads may expose Check. Download and each applicable action appear only
++  when supplied. Busy disables operations. File selection forwards the actual
++  `File` objects; this component validates, stores and uploads nothing.
++- `components/supplier-invoice-creation-result.tsx` accepts a supplied unknown
++  or confirmed outcome. Unknown offers original-attempt checking without an
++  invoice ID or new-creation action. Confirmed requires the saved invoice ID,
++  actual selected Order label and explicit next action; an originating Order
++  label remains separate. Document presentation is supplied in both cases.
++- `localization/supplier-invoice-create-labels.ts` provides EN/EL built-in
++  presentation copy through the existing `LabelsProvider` / `useLocale`.
++
++`SupplierInvoiceCreateSlots` requires complete labelled field controls, with
++their error associations. The eventual controller must use `useAppForm` from
++`#/components/form` for the nontrivial integrated form. It owns the draft and
++file bytes **above** conditionally mounted tab panels; presentation components
++do not retain a draft, validate values, calculate invoice type/status or perform
++operations. Supplied field controls must support long Greek text, authorization
++and keyboard access. Supply read-only source/status fields and exact decimal
++text; never pass amounts through `Number()` or the current PO Float serializer.
++
++The controller must render the result **instead of** an actionable Create form
++after unknown or confirmed creation. Unknown document display must not offer
++uploads while the invoice owner is unresolved. Confirmed callbacks must retain
++the returned owner and stable file keys; successful files must not upload again,
++and unknown uploads must reconcile before retry. The supplied next action must
++protect pending local bytes before starting another invoice or returning to
++FRO-349's originating Order. These are integration responsibilities, not behavior
++implemented by a `ReactNode` slot.
++
++## Dependencies blocking integration
++
++Inspected baseline: production `main` at
++`3820e89e8caa341261e2d48bcb282d93e1bb1d03`.
++
++| Capability                                               | Missing or incompatible source                                                                                                                                                 | Required owner / follow-up                                                                                                                                       |
++| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| Create/read/attempt recovery and exact decimal transport | No Supplier Invoice entity or operations in the current database/GraphQL/REST references. Existing billing invoices are fixtures.                                              | FRO-321: delivered contracts, validation, duplicates, retry/concurrency and original-attempt reconciliation.                                                     |
++| Staff-only invoice access                                | `../auth/types.ts` contains no invoice authority. Participant PO access is insufficient.                                                                                       | FRO-321: authority and record/company scope, including source/reference access.                                                                                  |
++| Explicit regime/type eligibility                         | No explicit customs regime or Entry Note model at this baseline; existing PO Greece/ΚΤΑ/ΑΛΚ values cannot substitute.                                                          | FRO-356 / FRO-321: authoritative source and type computation.                                                                                                    |
++| Order search                                             | Backend `PurchaseOrderRepository.searchCondition` does not search Supplier/Client names. Existing list is paginated with a size cap of 100.                                    | Delivered authorized search must implement the approved semantics across pages. No first-100 local filtering.                                                    |
++| Currency and Client vessel sources                       | Countries supply currencies; `CompanyService.getCompany` supplies company vessels under COMPANY_VIEW.                                                                          | Confirm invoice-compatible reference access and complete authorized options.                                                                                     |
++| Invoice-owned documents                                  | `../attachments/types.ts` supports only PO/Shipment ownership; the existing panel immediately queries/uploads against a saved numeric owner and selects PO_EDIT/SHIPMENT_EDIT. | FRO-321: invoice ownership, authority, upload and reconciliation contracts. Do not reuse the persisted panel as a pre-create queue.                              |
++| Entry Note lookup                                        | No lookup at this baseline.                                                                                                                                                    | FRO-319 / FRO-321: later direct/inherited lookup. Basic capture must distinguish unavailable from confirmed absence without depending on that later integration. |
++
++The remaining frontend controller must implement source loading/error/denied
++states and stale-result handling, remote Order search, focusable unavailable-type
++reason, conditional confirmation, exact validation, dirty Cancel/new-draft guards,
++in-app draft/file lifetime and unload warning, submission and upload recovery,
++authority guards, selected-Order consumer refresh and actual navigation. No
++durable/reload-resilient storage is implied. These components must remain
++unconnected until the relevant contracts exist and are verified.
++
++## Verification
++
++Run from `frontline-forwarding-client/` with Node 22.13.0:
++
++```sh
++npm run test -- src/features/supplier-invoices --maxWorkers=2
++npm run test -- --maxWorkers=2
++npm run build
++npm run format:check
++npx prettier --check src/features/supplier-invoices
++npx tsc --noEmit
++```
++
++Tests exercise controlled exact-text and selected-file retention through tabs
++and locale changes, field order, local keyboard tab activation, applicable row
++callbacks, busy/action omission, and distinct unknown/confirmed result rendering.
++They do not establish server validation, permission or recovery correctness.
++Browser fixtures and screenshots are review evidence outside the delivered app;
++no fixture service or normal application route is included here.
++
++The unmodified baseline fails `npm ci` because `package.json` and
++`package-lock.json` differ. Verification uses a local-only
++`npm install --package-lock=false` without modifying either file; exact locked
++reproducibility remains unresolved. Baseline type checking reports two TS2352
++casts in `delivery-note-service.test.ts` (lines 77 and 81), and baseline formatting
++reports 270 files at the unchanged committed base. Keep those pre-existing findings separate from this feature's
++focused checks. No GraphQL documents changed, so codegen is not applicable.
++
++Design authority: [DESIGN.md](../../../DESIGN.md),
++[theme.css](../../styles/theme.css) and the current shared component source.
++The private Site is a design reference, not a runtime dependency.
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-layout.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-layout.tsx
+new file mode 100644
+index 0000000..2fa331e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-layout.tsx
+@@ -0,0 +1,172 @@
++import {
++  useEffect,
++  useId,
++  useRef,
++  type KeyboardEvent,
++  type ReactNode,
++} from 'react'
++import { TopBar } from '#/components/layout/top-bar'
++import { Card } from '#/components/ui/card'
++import { Tab, TabList, TabPanel, Tabs } from '#/components/ui/tabs'
++import { useSupplierInvoiceCreateLabels } from '../localization/supplier-invoice-create-labels'
++
++export type SupplierInvoiceCreateTab = 'overview' | 'documents'
++
++/** Complete labelled fields; the controller owns values, errors and operations. */
++export interface SupplierInvoiceCreateSlots {
++  orderSearch: ReactNode
++  stockId: ReactNode
++  client: ReactNode
++  invoiceCompany: ReactNode
++  supplier: ReactNode
++  entryNote: ReactNode
++  invoiceNumber: ReactNode
++  invoiceDate: ReactNode
++  expirationDate: ReactNode
++  currency: ReactNode
++  invoiceType: ReactNode
++  invoiceVessel: ReactNode
++  netValue: ReactNode
++  vatValue: ReactNode
++  vatStatus: ReactNode
++  documents: ReactNode
++  actions: ReactNode
++  feedback?: ReactNode
++}
++
++export interface SupplierInvoiceCreateLayoutProps {
++  slots: SupplierInvoiceCreateSlots
++  activeTab: SupplierInvoiceCreateTab
++  onTabChange: (tab: SupplierInvoiceCreateTab) => void
++  documentCount: number
++}
++
++const grid =
++  'grid grid-cols-1 gap-x-7 gap-y-[18px] min-[701px]:grid-cols-2 min-[1101px]:grid-cols-4 [&>*]:min-w-0'
++const card = 'p-4 min-[701px]:p-5'
++const tabValues: SupplierInvoiceCreateTab[] = ['overview', 'documents']
++
++export function SupplierInvoiceCreateLayout({
++  slots,
++  activeTab,
++  onTabChange,
++  documentCount,
++}: SupplierInvoiceCreateLayoutProps) {
++  const text = useSupplierInvoiceCreateLabels()
++  const id = useId()
++  const tabList = useRef<HTMLDivElement>(null)
++
++  // Complete roving focus locally without changing the shared Tabs primitive.
++  useEffect(() => {
++    tabList.current
++      ?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
++      .forEach((tab, index) => {
++        tab.tabIndex = tabValues[index] === activeTab ? 0 : -1
++      })
++  }, [activeTab])
++
++  function onTabKeyDown(event: KeyboardEvent<HTMLDivElement>) {
++    const tabs = Array.from(
++      event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
++    )
++    const current = tabs.indexOf(event.target as HTMLButtonElement)
++    if (
++      current < 0 ||
++      !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
++    )
++      return
++    event.preventDefault()
++    const next =
++      event.key === 'Home'
++        ? 0
++        : event.key === 'End'
++          ? tabs.length - 1
++          : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) %
++            tabs.length
++    onTabChange(tabValues[next])
++    tabs[next].focus()
++  }
++
++  return (
++    <div data-density="comfortable" className="min-w-0 space-y-5">
++      <Card className={`${card} [&>div]:mb-0`}>
++        <TopBar title={text.title} />
++      </Card>
++      {slots.feedback}
++      <Card className={card}>
++        <Tabs
++          defaultValue="overview"
++          value={activeTab}
++          onValueChange={(value) => {
++            if (value === 'overview' || value === 'documents')
++              onTabChange(value)
++          }}
++        >
++          <div ref={tabList} onKeyDown={onTabKeyDown}>
++            <TabList>
++              <Tab value="overview">{text.overview}</Tab>
++              <Tab value="documents">
++                {text.documents} ({documentCount})
++              </Tab>
++            </TabList>
++          </div>
++          <TabPanel value="overview" className="space-y-5 pt-5">
++            <Card
++              className={card}
++              role="region"
++              aria-labelledby={`${id}-relationship`}
++            >
++              <h2
++                id={`${id}-relationship`}
++                className="mb-5 text-heading text-fg"
++              >
++                {text.relationship}
++              </h2>
++              <div className="mb-[18px] max-w-[480px]">{slots.orderSearch}</div>
++              <div className={grid}>
++                {slots.stockId}
++                {slots.client}
++                {slots.invoiceCompany}
++                {slots.supplier}
++                {slots.entryNote}
++              </div>
++            </Card>
++            <Card
++              className={card}
++              role="region"
++              aria-labelledby={`${id}-details`}
++            >
++              <h2 id={`${id}-details`} className="mb-5 text-heading text-fg">
++                {text.details}
++              </h2>
++              <div className={grid}>
++                {slots.invoiceNumber}
++                {slots.invoiceDate}
++                {slots.expirationDate}
++                {slots.currency}
++                {slots.invoiceType}
++                {slots.invoiceVessel}
++                {slots.netValue}
++                {slots.vatValue}
++              </div>
++            </Card>
++            <Card
++              className={card}
++              role="region"
++              aria-labelledby={`${id}-exemption`}
++            >
++              <h2 id={`${id}-exemption`} className="mb-5 text-heading text-fg">
++                {text.exemption}
++              </h2>
++              <div className="max-w-[400px]">{slots.vatStatus}</div>
++            </Card>
++          </TabPanel>
++          <TabPanel value="documents" className="pt-5">
++            {slots.documents}
++          </TabPanel>
++        </Tabs>
++      </Card>
++      <div className="flex flex-wrap justify-end gap-3">{slots.actions}</div>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-ui.test.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-ui.test.tsx
+new file mode 100644
+index 0000000..ff8fc33
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-create-ui.test.tsx
+@@ -0,0 +1,370 @@
++import { useState } from 'react'
++import {
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  within,
++} from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { LabelsProvider, useLocale } from '#/app/providers/labels-provider'
++import { FormField, Input } from '#/components/ui/input'
++import {
++  SupplierInvoiceCreateLayout,
++  type SupplierInvoiceCreateSlots,
++  type SupplierInvoiceCreateTab,
++} from './supplier-invoice-create-layout'
++import { SupplierInvoiceDocumentQueue } from './supplier-invoice-document-queue'
++import { SupplierInvoiceCreationResult } from './supplier-invoice-creation-result'
++
++afterEach(() => {
++  cleanup()
++  localStorage.clear()
++})
++
++function Draft() {
++  const [tab, setTab] = useState<SupplierInvoiceCreateTab>('overview')
++  const [number, setNumber] = useState('0007/a')
++  const [amount, setAmount] = useState('99999999999999999.99')
++  const [files, setFiles] = useState<File[]>([])
++  const { locale, setLocale } = useLocale()
++  const field = (name: string) => (
++    <FormField label={name} htmlFor={name}>
++      <Input id={name} readOnly value="" />
++    </FormField>
++  )
++  const slots: SupplierInvoiceCreateSlots = {
++    orderSearch: field('Search Order'),
++    stockId: field('Stock ID'),
++    client: field('Client'),
++    invoiceCompany: field('Invoice company'),
++    supplier: field('Supplier'),
++    entryNote: field('Entry Note'),
++    invoiceNumber: (
++      <FormField label="Invoice number" htmlFor="number">
++        <Input
++          id="number"
++          value={number}
++          onChange={(e) => setNumber(e.target.value)}
++        />
++      </FormField>
++    ),
++    invoiceDate: field('Invoice date'),
++    expirationDate: field('Invoice expiration date'),
++    currency: field('Currency'),
++    invoiceType: field('Invoice type'),
++    invoiceVessel: field('Invoice vessel'),
++    netValue: (
++      <FormField label="Invoice net value" htmlFor="amount">
++        <Input
++          id="amount"
++          value={amount}
++          onChange={(e) => setAmount(e.target.value)}
++        />
++      </FormField>
++    ),
++    vatValue: field('Invoice VAT value'),
++    vatStatus: (
++      <FormField label="VAT exemption status" htmlFor="status">
++        <Input id="status" readOnly value="Not started" />
++      </FormField>
++    ),
++    documents: (
++      <SupplierInvoiceDocumentQueue
++        rows={files.map((file, index) => ({
++          key: String(index),
++          filename: file.name,
++          metadata: String(file.size),
++          outcome: 'queued',
++        }))}
++        errors={[]}
++        busy={false}
++        onChoose={(chosen) => setFiles([...files, ...chosen])}
++        onDownload={() => {}}
++        onRemove={() => {}}
++      />
++    ),
++    actions: <button type="button">Create supplier invoice</button>,
++  }
++  return (
++    <>
++      <button onClick={() => setLocale(locale === 'en' ? 'el' : 'en')}>
++        Language
++      </button>
++      <SupplierInvoiceCreateLayout
++        slots={slots}
++        activeTab={tab}
++        onTabChange={setTab}
++        documentCount={files.length}
++      />
++    </>
++  )
++}
++
++describe('Create layout', () => {
++  it('preserves caller-controlled exact text and file bytes across tabs and locale changes', () => {
++    render(
++      <LabelsProvider>
++        <Draft />
++      </LabelsProvider>,
++    )
++    fireEvent.change(screen.getByLabelText('Invoice number'), {
++      target: { value: '0010/B' },
++    })
++    fireEvent.click(screen.getByRole('tab', { name: /Documents/ }))
++    const file = new File(['retained bytes'], 'invoice.pdf', {
++      type: 'application/pdf',
++    })
++    fireEvent.change(screen.getByLabelText('Choose files'), {
++      target: { files: [file] },
++    })
++    expect(screen.getByText('invoice.pdf')).toBeTruthy()
++    fireEvent.click(screen.getByRole('tab', { name: 'Overview' }))
++    fireEvent.click(screen.getByText('Language'))
++    expect(
++      (screen.getByLabelText('Invoice number') as HTMLInputElement).value,
++    ).toBe('0010/B')
++    expect(
++      (screen.getByLabelText('Invoice net value') as HTMLInputElement).value,
++    ).toBe('99999999999999999.99')
++    fireEvent.click(screen.getByRole('tab', { name: /Έγγραφα/ }))
++    expect(screen.getByText('invoice.pdf')).toBeTruthy()
++    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
++      'Δημιουργία τιμολογίου προμηθευτή',
++    )
++  })
++
++  it('keeps relationship, detail and read-only status fields in the agreed reading order', () => {
++    render(
++      <LabelsProvider>
++        <Draft />
++      </LabelsProvider>,
++    )
++    expect(screen.getAllByRole('textbox').map((input) => input.id)).toEqual([
++      'Search Order',
++      'Stock ID',
++      'Client',
++      'Invoice company',
++      'Supplier',
++      'Entry Note',
++      'number',
++      'Invoice date',
++      'Invoice expiration date',
++      'Currency',
++      'Invoice type',
++      'Invoice vessel',
++      'amount',
++      'Invoice VAT value',
++      'status',
++    ])
++    expect(
++      (screen.getByLabelText('VAT exemption status') as HTMLInputElement)
++        .readOnly,
++    ).toBe(true)
++    expect(screen.queryByRole('progressbar')).toBeNull()
++    expect(
++      screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent),
++    ).toEqual([
++      'Order relationship',
++      'Supplier invoice details',
++      'VAT exemption',
++    ])
++  })
++
++  it('supports arrow/Home/End activation with one focusable tab and one callback per key', () => {
++    const change = vi.fn()
++    render(
++      <LabelsProvider>
++        <Draft />
++      </LabelsProvider>,
++    )
++    const overview = screen.getByRole('tab', { name: 'Overview' })
++    overview.focus()
++    fireEvent.keyDown(overview, { key: 'ArrowRight' })
++    const documents = screen.getByRole('tab', { name: /Documents/ })
++    expect(document.activeElement).toBe(documents)
++    expect(documents.getAttribute('aria-selected')).toBe('true')
++    expect(overview.tabIndex).toBe(-1)
++    fireEvent.keyDown(documents, { key: 'Home' })
++    expect(document.activeElement).toBe(overview)
++    fireEvent.keyDown(overview, { key: 'End' })
++    expect(document.activeElement).toBe(documents)
++    fireEvent.keyDown(documents, { key: 'ArrowLeft' })
++    expect(document.activeElement).toBe(overview)
++    cleanup()
++    const empty = {} as SupplierInvoiceCreateSlots
++    render(
++      <SupplierInvoiceCreateLayout
++        slots={empty}
++        activeTab="overview"
++        onTabChange={change}
++        documentCount={0}
++      />,
++    )
++    fireEvent.keyDown(screen.getByRole('tab', { name: 'Overview' }), {
++      key: 'ArrowRight',
++    })
++    expect(change.mock.calls).toEqual([['documents']])
++  })
++})
++
++describe('Document queue', () => {
++  const rows = [
++    {
++      key: 'q',
++      filename: 'queued.pdf',
++      metadata: 'PDF · 10 B',
++      outcome: 'queued' as const,
++    },
++    {
++      key: 's',
++      filename: 'saved.pdf',
++      metadata: 'PDF · 20 B',
++      outcome: 'uploaded' as const,
++    },
++    {
++      key: 'f',
++      filename: 'failed.pdf',
++      metadata: 'PDF · 30 B',
++      outcome: 'failed' as const,
++      message: 'Access changed. Review before retry.',
++    },
++    {
++      key: 'u',
++      filename: 'unknown.pdf',
++      metadata: 'PDF · 40 B',
++      outcome: 'unknown' as const,
++    },
++  ]
++
++  it('forwards chosen bytes and row keys while separating failed retry from unknown checking', () => {
++    const choose = vi.fn(),
++      download = vi.fn(),
++      remove = vi.fn(),
++      retry = vi.fn(),
++      check = vi.fn()
++    render(
++      <SupplierInvoiceDocumentQueue
++        rows={rows}
++        errors={['empty.txt: File is empty']}
++        busy={false}
++        onChoose={choose}
++        onDownload={download}
++        onRemove={remove}
++        onRetry={retry}
++        onCheck={check}
++      />,
++    )
++    expect(screen.getByText('empty.txt: File is empty')).toBeTruthy()
++    const file = new File(['bytes'], 'new.pdf')
++    const input = screen.getByLabelText('Choose files')
++    fireEvent.change(input, { target: { files: [file] } })
++    expect(choose.mock.calls[0][0][0]).toBe(file)
++    const row = (name: string) => within(screen.getByRole('group', { name }))
++    fireEvent.click(row('queued.pdf').getByRole('button', { name: 'Download' }))
++    fireEvent.click(row('queued.pdf').getByRole('button', { name: 'Remove' }))
++    fireEvent.click(
++      row('failed.pdf').getByRole('button', { name: 'Retry upload' }),
++    )
++    fireEvent.click(
++      row('unknown.pdf').getByRole('button', { name: 'Check upload' }),
++    )
++    expect(download.mock.calls).toEqual([['q']])
++    expect(remove.mock.calls).toEqual([['q']])
++    expect(retry.mock.calls).toEqual([['f']])
++    expect(check.mock.calls).toEqual([['u']])
++    expect(
++      row('unknown.pdf').queryByRole('button', { name: 'Retry upload' }),
++    ).toBeNull()
++    expect(
++      row('saved.pdf').queryByRole('button', { name: 'Remove' }),
++    ).toBeNull()
++    expect(
++      row('failed.pdf').queryByRole('button', { name: 'Remove' }),
++    ).toBeNull()
++  })
++
++  it('blocks operation callbacks while busy and hides actions the caller has not supplied', () => {
++    const action = vi.fn()
++    const { rerender } = render(
++      <SupplierInvoiceDocumentQueue
++        rows={rows}
++        errors={[]}
++        busy
++        onChoose={action}
++        onDownload={action}
++        onRemove={action}
++        onRetry={action}
++        onCheck={action}
++      />,
++    )
++    for (const button of screen.getAllByRole('button'))
++      expect((button as HTMLButtonElement).disabled).toBe(true)
++    fireEvent.change(screen.getByLabelText('Choose files'), {
++      target: { files: [new File(['x'], 'x.pdf')] },
++    })
++    expect(action).not.toHaveBeenCalled()
++    rerender(
++      <SupplierInvoiceDocumentQueue rows={rows} errors={[]} busy={false} />,
++    )
++    expect(screen.queryAllByRole('button')).toHaveLength(0)
++  })
++})
++
++describe('Creation result', () => {
++  it('shows only original-attempt checking for an unknown creation, without claiming a saved ID', () => {
++    const check = vi.fn()
++    const { rerender } = render(
++      <SupplierInvoiceCreationResult
++        outcome="unknown"
++        busy={false}
++        onCheckAttempt={check}
++        documents={<p>Pending local files</p>}
++      />,
++    )
++    expect(
++      screen.getByRole('heading', { name: 'Creation outcome unknown' }),
++    ).toBeTruthy()
++    expect(screen.queryByText('Supplier Invoice ID')).toBeNull()
++    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
++      'Check original attempt',
++    ])
++    fireEvent.click(
++      screen.getByRole('button', { name: 'Check original attempt' }),
++    )
++    expect(check).toHaveBeenCalledTimes(1)
++    rerender(
++      <SupplierInvoiceCreationResult
++        outcome="unknown"
++        busy
++        onCheckAttempt={check}
++        documents={<p>Pending local files</p>}
++      />,
++    )
++    expect((screen.getByRole('button') as HTMLButtonElement).disabled).toBe(
++      true,
++    )
++    expect(screen.getByText('Pending local files')).toBeTruthy()
++  })
++
++  it('keeps the saved invoice, selected Order and different originating Order distinct beside file recovery', () => {
++    render(
++      <SupplierInvoiceCreationResult
++        outcome="saved"
++        invoiceId="42"
++        selectedOrderLabel="FL-002"
++        originatingOrderLabel="FL-001"
++        documents={<p>Unknown upload retained</p>}
++        nextAction={<button>Return to FL-001</button>}
++      />,
++    )
++    expect(screen.getByText('42')).toBeTruthy()
++    expect(screen.getByText('FL-002')).toBeTruthy()
++    expect(screen.getByText('FL-001')).toBeTruthy()
++    expect(screen.getByText('Unknown upload retained')).toBeTruthy()
++    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
++      'Return to FL-001',
++    ])
++    expect(screen.queryByRole('textbox')).toBeNull()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-creation-result.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-creation-result.tsx
+new file mode 100644
+index 0000000..6d461f6
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-creation-result.tsx
+@@ -0,0 +1,85 @@
++import type { ReactNode } from 'react'
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { useSupplierInvoiceCreateLabels } from '../localization/supplier-invoice-create-labels'
++
++export type SupplierInvoiceCreationResultProps =
++  | {
++      outcome: 'unknown'
++      busy: boolean
++      onCheckAttempt: () => void
++      documents: ReactNode
++    }
++  | {
++      outcome: 'saved'
++      invoiceId: string
++      selectedOrderLabel: string
++      originatingOrderLabel?: string
++      documents: ReactNode
++      nextAction: ReactNode
++    }
++
++/** The caller supplies the authoritative outcome and retains draft/file state. */
++export function SupplierInvoiceCreationResult(
++  props: SupplierInvoiceCreationResultProps,
++) {
++  const text = useSupplierInvoiceCreateLabels()
++  const unknown = props.outcome === 'unknown'
++  return (
++    <div data-density="comfortable" className="min-w-0 space-y-5">
++      <Card className="space-y-5 p-4 min-[701px]:p-5">
++        <h1 className="text-title text-fg">
++          {unknown ? text.unknownTitle : text.savedTitle}
++        </h1>
++        <Alert tone={unknown ? 'warning' : 'success'}>
++          {unknown ? text.unknownDescription : text.savedDescription}
++        </Alert>
++        {props.outcome === 'saved' && (
++          <dl className="grid gap-5 [overflow-wrap:anywhere] min-[701px]:grid-cols-3">
++            <div>
++              <dt className="text-caption font-semibold text-fg-muted">
++                {text.invoiceId}
++              </dt>
++              <dd className="mt-1 font-mono text-body-sm">{props.invoiceId}</dd>
++            </div>
++            <div>
++              <dt className="text-caption font-semibold text-fg-muted">
++                {text.selectedOrder}
++              </dt>
++              <dd className="mt-1 font-mono text-body-sm">
++                {props.selectedOrderLabel}
++              </dd>
++            </div>
++            {props.originatingOrderLabel && (
++              <div>
++                <dt className="text-caption font-semibold text-fg-muted">
++                  {text.originatingOrder}
++                </dt>
++                <dd className="mt-1 font-mono text-body-sm">
++                  {props.originatingOrderLabel}
++                </dd>
++              </div>
++            )}
++          </dl>
++        )}
++        {props.outcome === 'unknown' && (
++          <Button
++            type="button"
++            loading={props.busy}
++            onClick={props.onCheckAttempt}
++            className="h-auto min-h-10 whitespace-normal py-2 text-left"
++          >
++            {text.checkAttempt}
++          </Button>
++        )}
++      </Card>
++      {props.documents}
++      {props.outcome === 'saved' && (
++        <div className="flex flex-wrap justify-end gap-3">
++          {props.nextAction}
++        </div>
++      )}
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-document-queue.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-document-queue.tsx
+new file mode 100644
+index 0000000..252b8cd
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-document-queue.tsx
+@@ -0,0 +1,192 @@
++import { useId, useRef } from 'react'
++import { FileText, Paperclip } from 'lucide-react'
++import { Alert } from '#/components/ui/alert'
++import { StatusPill, type StatusTone } from '#/components/ui/badge'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { useSupplierInvoiceCreateLabels } from '../localization/supplier-invoice-create-labels'
++
++/** UI display state only, not an attachment DTO or ownership/access contract. */
++export interface SupplierInvoiceDocumentRow {
++  key: string
++  filename: string
++  metadata: string
++  outcome: 'queued' | 'uploaded' | 'failed' | 'unknown'
++  message?: string
++}
++
++export interface SupplierInvoiceDocumentQueueProps {
++  rows: SupplierInvoiceDocumentRow[]
++  errors: string[]
++  busy: boolean
++  onChoose?: (files: File[]) => void
++  onDownload?: (key: string) => void
++  onRemove?: (key: string) => void
++  onRetry?: (key: string) => void
++  onCheck?: (key: string) => void
++}
++
++const tones: Record<SupplierInvoiceDocumentRow['outcome'], StatusTone> = {
++  queued: 'neutral',
++  uploaded: 'success',
++  failed: 'danger',
++  unknown: 'warning',
++}
++
++export function SupplierInvoiceDocumentQueue({
++  rows,
++  errors,
++  busy,
++  onChoose,
++  onDownload,
++  onRemove,
++  onRetry,
++  onCheck,
++}: SupplierInvoiceDocumentQueueProps) {
++  const text = useSupplierInvoiceCreateLabels()
++  const input = useRef<HTMLInputElement>(null)
++  const id = useId()
++  return (
++    <Card
++      className="p-4 min-[701px]:p-5"
++      role="region"
++      aria-labelledby={`${id}-title`}
++      aria-busy={busy}
++    >
++      <div className="flex flex-wrap items-start justify-between gap-4">
++        <div className="min-w-0">
++          <h2
++            id={`${id}-title`}
++            className="flex items-center gap-2 text-heading text-fg"
++          >
++            <Paperclip className="size-4 shrink-0 text-accent" aria-hidden />
++            {text.documents}
++          </h2>
++          <p className="mt-1 text-body-sm text-fg-muted">
++            {text.documentDescription}
++          </p>
++        </div>
++        {onChoose && (
++          <>
++            <input
++              ref={input}
++              type="file"
++              className="sr-only"
++              aria-label={text.chooseFiles}
++              aria-describedby={`${id}-hint`}
++              multiple
++              disabled={busy}
++              accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx,.csv,.txt"
++              onChange={(event) => {
++                const files = Array.from(event.currentTarget.files ?? [])
++                event.currentTarget.value = ''
++                if (!busy && files.length) onChoose(files)
++              }}
++            />
++            <Button
++              type="button"
++              variant="secondary"
++              disabled={busy}
++              onClick={() => input.current?.click()}
++            >
++              {text.chooseFiles}
++            </Button>
++          </>
++        )}
++      </div>
++      <p id={`${id}-hint`} className="mt-2 text-caption text-fg-subtle">
++        {text.documentHint}
++      </p>
++      {errors.length > 0 && (
++        <Alert tone="danger" className="mt-3 break-words">
++          <ul className="list-inside list-disc">
++            {errors.map((error, index) => (
++              <li key={index}>{error}</li>
++            ))}
++          </ul>
++        </Alert>
++      )}
++      <div className="mt-4 grid gap-2">
++        {rows.length === 0 ? (
++          <p className="rounded-md border border-dashed border-border p-4 text-body-sm text-fg-muted">
++            {text.documentEmpty}
++          </p>
++        ) : (
++          rows.map((row) => (
++            <div
++              key={row.key}
++              role="group"
++              aria-label={row.filename}
++              className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-surface-2 p-3"
++            >
++              <div className="flex min-w-0 flex-1 basis-48 items-start gap-3">
++                <span className="rounded-md bg-surface p-2 text-accent">
++                  <FileText className="size-5 shrink-0" aria-hidden />
++                </span>
++                <div className="min-w-0 space-y-1 [overflow-wrap:anywhere]">
++                  <p className="text-body-sm font-semibold">{row.filename}</p>
++                  <p className="text-caption text-fg-muted">{row.metadata}</p>
++                  <StatusPill
++                    tone={tones[row.outcome]}
++                    className="whitespace-normal"
++                  >
++                    {text[row.outcome]}
++                  </StatusPill>
++                  {row.message && (
++                    <p className="text-caption text-fg-muted">{row.message}</p>
++                  )}
++                </div>
++              </div>
++              <div className="flex max-w-full flex-wrap gap-1">
++                {onDownload && (
++                  <Button
++                    type="button"
++                    size="sm"
++                    variant="ghost"
++                    disabled={busy}
++                    onClick={() => onDownload(row.key)}
++                  >
++                    {text.download}
++                  </Button>
++                )}
++                {row.outcome === 'queued' && onRemove && (
++                  <Button
++                    type="button"
++                    size="sm"
++                    variant="ghost"
++                    disabled={busy}
++                    onClick={() => onRemove(row.key)}
++                  >
++                    {text.remove}
++                  </Button>
++                )}
++                {row.outcome === 'failed' && onRetry && (
++                  <Button
++                    type="button"
++                    size="sm"
++                    variant="secondary"
++                    disabled={busy}
++                    onClick={() => onRetry(row.key)}
++                  >
++                    {text.retryUpload}
++                  </Button>
++                )}
++                {row.outcome === 'unknown' && onCheck && (
++                  <Button
++                    type="button"
++                    size="sm"
++                    variant="secondary"
++                    disabled={busy}
++                    onClick={() => onCheck(row.key)}
++                  >
++                    {text.checkUpload}
++                  </Button>
++                )}
++              </div>
++            </div>
++          ))
++        )}
++      </div>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.test.ts b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.test.ts
+new file mode 100644
+index 0000000..b079503
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.test.ts
+@@ -0,0 +1,16 @@
++import { describe, expect, it } from 'vitest'
++import { supplierInvoiceCreateLabelsFor } from './supplier-invoice-create-labels'
++
++describe('Supplier invoice create localization', () => {
++  it('provides complete nonempty Greek copy for the same presentation states and actions', () => {
++    const en = supplierInvoiceCreateLabelsFor('en')
++    const el = supplierInvoiceCreateLabelsFor('el')
++    expect(Object.keys(el).sort()).toEqual(Object.keys(en).sort())
++    expect(Object.values(el).every((value) => value.trim().length > 0)).toBe(
++      true,
++    )
++    expect(el.title).toBe('Δημιουργία τιμολογίου προμηθευτή')
++    expect(el.unknownTitle).not.toBe(en.unknownTitle)
++    expect(el.checkUpload).not.toBe(en.checkUpload)
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.ts b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.ts
+new file mode 100644
+index 0000000..0ed08eb
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-create-labels.ts
+@@ -0,0 +1,78 @@
++import { useLocale, type Locale } from '#/app/providers/labels-provider'
++
++const en = {
++  title: 'Create supplier invoice',
++  overview: 'Overview',
++  documents: 'Documents',
++  relationship: 'Order relationship',
++  details: 'Supplier invoice details',
++  exemption: 'VAT exemption',
++  chooseFiles: 'Choose files',
++  documentDescription: 'Documents for this supplier invoice.',
++  documentHint:
++    'PDF, JPG, JPEG, PNG, WebP, GIF, DOC, DOCX, XLS, XLSX, CSV or TXT · up to 25 MB per file · nonempty files · filename 1–255 characters.',
++  documentEmpty: 'No documents selected.',
++  queued: 'Staged file',
++  uploaded: 'Uploaded',
++  failed: 'Upload failed',
++  unknown: 'Upload outcome unknown',
++  download: 'Download',
++  remove: 'Remove',
++  retryUpload: 'Retry upload',
++  checkUpload: 'Check upload',
++  unknownTitle: 'Creation outcome unknown',
++  unknownDescription:
++    'Check the original attempt before creating another invoice. Your draft and local files must be retained while this is resolved.',
++  checkAttempt: 'Check original attempt',
++  savedTitle: 'Supplier invoice created',
++  savedDescription:
++    'The invoice is saved. Review the document outcomes below before continuing.',
++  invoiceId: 'Supplier Invoice ID',
++  selectedOrder: 'Invoiced Order',
++  originatingOrder: 'Originating Order',
++}
++
++type CreateLabels = { [Key in keyof typeof en]: string }
++
++const labels: Record<Locale, CreateLabels> = {
++  en,
++  el: {
++    title: 'Δημιουργία τιμολογίου προμηθευτή',
++    overview: 'Επισκόπηση',
++    documents: 'Έγγραφα',
++    relationship: 'Σύνδεση με παραγγελία',
++    details: 'Στοιχεία τιμολογίου προμηθευτή',
++    exemption: 'Απαλλαγή ΦΠΑ',
++    chooseFiles: 'Επιλογή αρχείων',
++    documentDescription: 'Έγγραφα για αυτό το τιμολόγιο προμηθευτή.',
++    documentHint:
++      'PDF, JPG, JPEG, PNG, WebP, GIF, DOC, DOCX, XLS, XLSX, CSV ή TXT · έως 25 MB ανά αρχείο · μη κενά αρχεία · όνομα 1–255 χαρακτήρες.',
++    documentEmpty: 'Δεν έχουν επιλεγεί έγγραφα.',
++    queued: 'Αρχείο σε αναμονή',
++    uploaded: 'Μεταφορτώθηκε',
++    failed: 'Αποτυχία μεταφόρτωσης',
++    unknown: 'Άγνωστο αποτέλεσμα μεταφόρτωσης',
++    download: 'Λήψη',
++    remove: 'Αφαίρεση',
++    retryUpload: 'Επανάληψη μεταφόρτωσης',
++    checkUpload: 'Έλεγχος μεταφόρτωσης',
++    unknownTitle: 'Άγνωστο αποτέλεσμα δημιουργίας',
++    unknownDescription:
++      'Ελέγξτε την αρχική προσπάθεια πριν δημιουργήσετε άλλο τιμολόγιο. Το προσχέδιο και τα τοπικά αρχεία πρέπει να διατηρηθούν μέχρι να διευκρινιστεί το αποτέλεσμα.',
++    checkAttempt: 'Έλεγχος αρχικής προσπάθειας',
++    savedTitle: 'Το τιμολόγιο προμηθευτή δημιουργήθηκε',
++    savedDescription:
++      'Το τιμολόγιο αποθηκεύτηκε. Ελέγξτε τα αποτελέσματα των εγγράφων παρακάτω πριν συνεχίσετε.',
++    invoiceId: 'ID τιμολογίου προμηθευτή',
++    selectedOrder: 'Τιμολογημένη παραγγελία',
++    originatingOrder: 'Αρχική παραγγελία',
++  },
++}
++
++export function supplierInvoiceCreateLabelsFor(locale: Locale): CreateLabels {
++  return labels[locale]
++}
++
++export function useSupplierInvoiceCreateLabels(): CreateLabels {
++  return supplierInvoiceCreateLabelsFor(useLocale().locale)
++}

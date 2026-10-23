@@ -1,6 +1,6 @@
 # FRO-347 frontend presentation preparation
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans for the recommended native execution, or superpowers:subagent-driven-development if the user chooses delegation. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans for the recommended native execution, or superpowers:subagent-driven-development if the user chooses delegation. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Prepare and verify the approved comfortable Create-page presentation with actual production components, and return its complete uncommitted diff plus the integration/publication blockers.
 
@@ -76,11 +76,11 @@ The Order/type/currency/vessel/date/amount controls are supplied slots, not spec
 - `SupplierInvoiceCreateLayout({ slots, activeTab, onTabChange, documentCount })`; activeTab and callback use SupplierInvoiceCreateTab, count is a supplied number. It renders no form controller, source derivation or operation.
 - `supplierInvoiceCreateLabelsFor(locale: 'en' | 'el')` and `useSupplierInvoiceCreateLabels()` return the same typed copy dictionary selected via existing useLocale.
 
-- [ ] Write failing behavior tests: supplied controlled Invoice number and amount `99999999999999999.99` survive Overview→Documents→Overview; selected tab and field order are correct; fixed supplied status has no editable status/date/progress controls; callback fires once; English/Greek strings switch without resetting supplied data. ArrowLeft/Right/Home/End navigation and tab focus are covered locally.
-- [ ] Run focused Vitest against minimal compiling component shells and confirm failed behavioral assertions. Missing modules, compilation errors and missing installation are not Red.
-- [ ] Implement with Card/TopBar/Tabs, a local tab keyboard wrapper, semantic spacing and controlled slots. Keep draft state in the test/controller parent above unmounting TabPanels. Set comfortable density within the component wrapper, not globally.
-- [ ] Run focused tests and changed-file format/type checks. Verify field/card order against the selected design.
-- [ ] Present the partial slice diff; retain it uncommitted. No branch or commit under this plan without later explicit approval.
+- [x] Write failing behavior tests: supplied controlled Invoice number and amount `99999999999999999.99` survive Overview→Documents→Overview; selected tab and field order are correct; fixed supplied status has no editable status/date/progress controls; callback fires once; English/Greek strings switch without resetting supplied data. ArrowLeft/Right/Home/End navigation and tab focus are covered locally.
+- [x] Run focused Vitest against minimal compiling component shells and confirm failed behavioral assertions. Missing modules, compilation errors and missing installation are not Red.
+- [x] Implement with Card/TopBar/Tabs, a local tab keyboard wrapper, semantic spacing and controlled slots. Keep draft state in the test/controller parent above unmounting TabPanels. Set comfortable density within the component wrapper, not globally.
+- [x] Run focused tests and changed-file format/type checks. Verify field/card order against the selected design.
+- [x] Present the partial slice diff; retain it uncommitted. No branch or commit under this plan without later explicit approval.
 
 ## Task 2: Controlled staged-document presentation
 
@@ -90,11 +90,11 @@ The Order/type/currency/vessel/date/amount controls are supplied slots, not spec
 - Colocated UI-only `SupplierInvoiceDocumentRow` contains `key: string`, `filename: string`, `metadata: string`, `outcome: 'queued' | 'uploaded' | 'failed' | 'unknown'`, and optional `message: string`. It is not Attachment, an API DTO or an ownership claim.
 - `SupplierInvoiceDocumentQueue({ rows, errors, busy, onChoose, onDownload, onRemove, onRetry, onCheck })`; row actions accept the stable row key; chooser accepts selected `File[]`. The caller owns bytes, validation, outcomes and authorization. Render only explicitly supplied applicable actions; no fetch/storage/request here.
 
-- [ ] Write failing behavior tests: valid supplied rows remain beside supplied file errors; chooser forwards selected File objects without upload; Download/Remove target the correct key; failed and unknown rows expose different callbacks; busy state blocks appropriate actions. Render long Greek/file/error text.
-- [ ] Run focused tests against a minimal compiling queue shell to establish missing-behavior assertion failures; module/compilation failures are not Red.
-- [ ] Compose Card/Button/Alert and the real AttachmentPanel presentation pattern with the paperclip, guidance, empty state, metadata and textual outcome pill. Keep the specified file constraints in copy; do not invent MIME/permission/owner logic.
-- [ ] Re-run focused tests and check the full Documents tab at desktop/400px, EN/EL. Verify no HTTP create/upload request is introduced.
-- [ ] Present the partial slice diff; retain it uncommitted.
+- [x] Write failing behavior tests: valid supplied rows remain beside supplied file errors; chooser forwards selected File objects without upload; Download/Remove target the correct key; failed and unknown rows expose different callbacks; busy state blocks appropriate actions. Render long Greek/file/error text.
+- [x] Run focused tests against a minimal compiling queue shell to establish missing-behavior assertion failures; module/compilation failures are not Red.
+- [x] Compose Card/Button/Alert and the real AttachmentPanel presentation pattern with the paperclip, guidance, empty state, metadata and textual outcome pill. Keep the specified file constraints in copy; do not invent MIME/permission/owner logic.
+- [x] Re-run focused tests and check the full Documents tab at desktop/400px, EN/EL. Verify no HTTP create/upload request is introduced.
+- [x] Present the partial slice diff; retain it uncommitted.
 
 ## Task 3: Controlled creation-result presentation and handoff
 
@@ -104,20 +104,20 @@ The Order/type/currency/vessel/date/amount controls are supplied slots, not spec
 - Discriminated presentation props: unknown result accepts `onCheckAttempt`, `busy`, and pending document display; it has no invoice ID or Create/new-invoice callback. Confirmed result requires `invoiceId: string`, `selectedOrderLabel: string`, optional `originatingOrderLabel: string`, document display and explicit supplied `nextAction` ReactNode. Values are supplied, not derived.
 - `SupplierInvoiceCreationResult(props)` renders the correct Card/Alert and callbacks. It does not decide the operation outcome, reset files, resolve attempts or navigate to invented routes.
 
-- [ ] Write failing tests: unknown view exposes checking only; confirmed view shows invoice and actual Order labels; differing origin stays distinct; no Create form/action persists; next action is supplied; busy/check callback behavior is correct; failed/unknown file presentation remains available.
-- [ ] Run focused tests against a minimal compiling result shell to establish failed behavior assertions, implement minimal presentation, then verify tests pass.
-- [ ] Document the implemented limits and precise missing contracts from the dependency table. Make clear that draft controller, TanStack form validation, file-byte lifetime, dirty/unload guards, source lookup, tooltip composition, submit/attempt/upload recovery, authorization and actual return navigation are still unimplemented. Do not claim FRO-347 acceptance complete.
-- [ ] Run applicable package checks: `npm run test`, `npm run build`, `npm run format:check`, and local TypeScript `npx tsc --noEmit`. No lint script exists. Establish any baseline failures before changing application files and distinguish pre-existing findings; do not fix unrelated files.
-- [ ] Render actual components in a temporary browser harness outside the checkout, using sanitized UI fixtures and supplied callbacks. Verify EN/EL at desktop/~400px, default/loading/error feedback, unknown result, confirmed result, partial/unknown rows, tabs and exact-text retention. No real API connection or fixture service in normal app routes. Keep evidence in the planning workspace.
-- [ ] Audit `git diff --name-status <base>` and complete `git diff <base>` plus every intended untracked file. Verify only the seven frontend files and no generated/manifests/backend/route/authority changes. Run `git diff --check`.
-- [ ] Refresh github/main. If SHA advanced, review/rebase preparation on the new detached base, rerun affected checks and repeat the diff audit before presenting it.
-- [ ] Request a fresh code review, resolve valid findings and reverify affected scenarios. Show the complete patch, files, commands/results, screenshots, base SHA, proposed future branch and all unverified/backend/publication blockers. Keep everything uncommitted and branchless pending approval; do not solicit publication while required blockers remain.
+- [x] Write failing tests: unknown view exposes checking only; confirmed view shows invoice and actual Order labels; differing origin stays distinct; no Create form/action persists; next action is supplied; busy/check callback behavior is correct; failed/unknown file presentation remains available.
+- [x] Run focused tests against a minimal compiling result shell to establish failed behavior assertions, implement minimal presentation, then verify tests pass.
+- [x] Document the implemented limits and precise missing contracts from the dependency table. Make clear that draft controller, TanStack form validation, file-byte lifetime, dirty/unload guards, source lookup, tooltip composition, submit/attempt/upload recovery, authorization and actual return navigation are still unimplemented. Do not claim FRO-347 acceptance complete.
+- [x] Run applicable package checks: `npm run test`, `npm run build`, `npm run format:check`, and local TypeScript `npx tsc --noEmit`. No lint script exists. Establish any baseline failures before changing application files and distinguish pre-existing findings; do not fix unrelated files.
+- [x] Render actual components in a temporary browser harness outside the checkout, using sanitized UI fixtures and supplied callbacks. Verify EN/EL at desktop/~400px, default/loading/error feedback, unknown result, confirmed result, partial/unknown rows, tabs and exact-text retention. No real API connection or fixture service in normal app routes. Keep evidence in the planning workspace.
+- [x] Audit `git diff --name-status <base>` and complete `git diff <base>` plus every intended untracked file. Verify only the seven frontend files and no generated/manifests/backend/route/authority changes. Run `git diff --check`.
+- [x] Refresh github/main. If SHA advanced, review/rebase preparation on the new detached base, rerun affected checks and repeat the diff audit before presenting it.
+- [x] Request a fresh code review, resolve valid findings and reverify affected scenarios. Show the complete patch, files, commands/results, screenshots, base SHA, proposed future branch and all unverified/backend/publication blockers. Keep everything uncommitted and branchless pending approval; do not solicit publication while required blockers remain.
 
 ## Setup and validation sequence
 
 After plan agreement and explicit implementation-model Continue: resume the existing policy snapshot; verify Node >=22.13 (repository standard 22.13.0), npm and lockfile; run documented dependency preparation with the existing lockfile without dependency changes; re-run Intent inventory and load applicable installed instructions; establish baseline tests/build/type/format results. Application edits begin only after that checkpoint. Do not run backend services or dev-reset scripts.
 
-No frontend source changes or test/build executions have occurred yet. No verified implementation diff exists at this planning checkpoint.
+Implementation checkpoint completed explicitly; the seven-file partial presentation is prepared and verified. See the completion record below for limits and evidence.
 
 ## Self-review
 
@@ -126,3 +126,10 @@ No frontend source changes or test/build executions have occurred yet. No verifi
 - Each component is independently testable without fabricating a backend contract. UI-only props stay colocated with their component; no API DTO is inferred from fixtures.
 - Documentation stays inside the client; planning evidence stays here. No glossary/ADR change is warranted.
 - Recommended execution: native in this session, followed by fresh independent review. The three components share labels/composition and need one coherent final audit; parallel implementation adds little value.
+
+
+## Execution completion record — 23 October 2026
+
+The user approved native execution and explicitly completed the implementation-model checkpoint. All three presentation tasks are prepared uncommitted in the isolated detached checkout. The complete seven-file patch, 171-test/build evidence, screenshots, independent review, rulings and all remaining integration/publication blockers are recorded in [the frontend handoff](../../../drafts/fro347-frontend-handoff.md). No working route, entity/service/authority, backend operation, production branch, production commit, push or Linear mutation is delivered.
+
+The checklist records the approved partial presentation work and its verification; it does not assert FRO-347 acceptance complete. One minor composed regression-coverage improvement remains deferred: actual File identity at selection and filename retention after tab/locale are tested separately, as are saved result and row callbacks. Browser fixtures corroborate callback presentation, not live owner binding or file persistence. All blocked controller/contract work remains explicit.
