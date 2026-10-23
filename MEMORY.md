@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-342 / FRO-335 decisions accepted; complete drafts prepared
+
+- User accepted Q2 historical ARRIVED creation uploads excluded, Q3 prepare targeted335 reconciliation, Q4 stable upload retry and creation-attempt/context recovery guarantees. Earlier Q1 makes342 a backend implementation specification. These decisions do not authorize Linear writes or production implementation.
+- Mandatory pull succeeded; fresh342/335/341 unchanged, source main5c51030680c9d45b3827a7e19b8320c19aa5ed9a unchanged. Drafts: drafts/fro342-reviewed-spec.md and drafts/fro335-upload-reconciled-spec.md. Review/before-after/preservation receipt in drafts/fro342-review.md.
+- FRO-342 covers atomic association, corrected versus unknown/replayed attempts, one record per context including no-file creation, lost upload recovery, expiry-independent result recovery, compatible legacy callers and GraphQL/REST/MCP integration. FRO-335 consumes those contracts and reconciles cancellation/acceptance/verification and existing preview simulation requirements; all unrelated main business sections verified unchanged after mention normalization.
+- No Linear mutation; preserve full metadata/relations/attachments on eventual approved writes.341 historical wording requires targeted reconciliation; only proposed follow-up wording recorded, no full341 replacement prepared. No new UI/preview/production branch; no glossary/ADR. Complete drafts awaiting review and explicit write approval.
+- Commit/push only these draft/review files and this memory entry; preserve unrelated326/330 changes.
+
 ### 2026-10-23 — FRO-324 evidence review; first interview round pending
 
 - Mandatory planning pull succeeded; live gh authentication/source and Linear reads verified. Current324 updated2026-10-23T13:06:53.395Z, Todo, Pending_Review/Backend/Story/Shipment, milestone0.0.8, blocks316/341 and related320/323/343/339/325; four attachments preserved. No Linear write. Read current linked contracts, comments (none), labels/statuses; production consumer checks pinned5c51030680c9d45b3827a7e19b8320c19aa5ed9a.

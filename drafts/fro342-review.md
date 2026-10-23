@@ -44,11 +44,19 @@ Read live repository via gh on23 October2026; creation trace revision5c51030680c
 - frontline-forwarding-client/src/features/attachments/services/attachment-service.ts: current multipart file upload without operation identity.
 - frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/PurchaseOrdersApiService.java and web/shipments/service/ShipmentsApiService.java: creation boundaries and split effects.
 
-## Pending decisions
+## Accepted decisions and complete drafts
 
 - Q1 accepted: backend implementation specification.
-- Q2: retain historical-creation exclusion (recommended), or include historical ARRIVED association.
-- Q3: also prepare narrowly scoped335 correction draft (recommended), or342 only.
-- Q4: accept explicit file/creation recovery guarantees above (recommended), or revise them.
+- Q2 accepted: retain historical-creation exclusion; reconcile341 wording, ordinary post-creation uploads remain available.
+- Q3 accepted: prepare narrowly scoped335 correction draft.
+- Q4 accepted: explicit upload/creation recovery guarantees above.
 
-No complete replacement drafted or approved yet. No glossary change or ADR earned. Keep before/after review outside final descriptions. Re-read342 and consumers before eventual write; preserve metadata, labels and attachments. All writes require full-text approval under AGENTS.md.
+Complete replacement descriptions: fro342-reviewed-spec.md and fro335-upload-reconciled-spec.md. Fresh342/335/341 unchanged from review baselines; live main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. No Linear changes or full-text approval yet. No glossary/ADR. Canvas/preview/production branch excluded.
+
+Before/after:342 design-only becomes backend implementation specification; implicit upload retry becomes stable file-operation recovery; context/draft ambiguity becomes explicit corrected/replayed/completed attempt rules; historical exclusion retained.335 create-first/upload-after becomes pending staging and atomic association; partial saved-Order results become per-file staging errors before creation; frontend-only uncertain recovery becomes backend attempt recovery; Cancel without writes becomes pending-context abandonment without creating an Order. Preview simulation requirements follow the same contract; no preview was changed here.
+
+Preservation verification:335 page structure/retained inputs, initial readiness, Customs, Collis and Invoice rows sections match the fresh issue after mention-link normalization. All original section headings and archived preview reference retained. All metadata remains unchanged:342 Todo, five labels, milestone0.0.8, blocks335/341, related325/316, no attachments;335 Todo, Order/Pending_Review/Frontend/Story, milestone0.0.5, twelve blockers and five related issues, one existing preview attachment. No relation/status/milestone additions requested.
+
+341 follow-up wording for review only: Historical ARRIVED creation does not support pending uploads under FRO-342. Preserve the historical draft when switching modes and resolve any existing pending-file selection explicitly rather than silently omitting it; attach files after successful historical creation through ordinary authorized Shipment attachment operations. Full341 replacement is not prepared or approved; do not treat its complete reconciliation as done.
+
+Re-read342/335 and consumers before eventual write; preserve metadata, labels and attachments. All writes require full-text approval under AGENTS.md. Source/mutation tests not run: this is specification work; production remains read-only.
