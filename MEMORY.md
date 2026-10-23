@@ -1,5 +1,15 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-321 review; first decision round in progress
+
+- Planning pull succeeded; live production gh access verified at 3820e89e8caa341261e2d48bcb282d93e1bb1d03. Applied embedded workflow with grilling/domain-modeling; fact-lookup subagent inspected backend read-only. Read current FRO-321/347/348/317/319/356/248/318/303/337, target comments (none), team labels/statuses. Shared Linear context tool unavailable; direct issue reads succeeded.
+- FRO-321 currently Todo, supplier invoice/Pending_Review, milestone 0.0.6, three historical attachments. No Linear mutations. UI remains FRO-347/348; canvas/preview skipped and production branch explicitly excluded.
+- Confirmed gaps: advanced creation needs completed Export membership but FRO-317 locks ordinary additions at Completed; 0.0.6 invoice delivery depends on Export 0.0.10 and Entry Note 0.0.11; FRO-317 retains obsolete non-UD Exempted status; FRO-321 register ownership references cancelled FRO-248 although FRO-319 now owns data contract. FRO-318 consumes cancellation/reassignment but invoice cancellation/reactivation rules are absent.
+- User accepted Q1: ordinary creation starts Not started; advanced historical entry belongs to a separate audited reconciliation flow. FRO-347 requires separately reviewed alignment; no linked edit authorized. Q2 staged delivery versus integrated release, Q3 fixture-only versus real migration, and Q4 guarded cancellation versus deferred/broader lifecycle remain unanswered.
+- Additional review work: required invoice date/vessel and eligibility, money precision/sign/bounds, event-date chronology, exact duplicate normalization, safe retries and separate attachment outcomes, explicit stale-save checks, staff-only access across reverse references/downloads, ordinary type-change guards versus recorded history. Do not present proposals as decisions.
+- Live Order header edits stop at IN_STOCK and Client is preserved by update validator. Reuse FRO-303 for later Invoice company corrections; no generic Client correction exists. Attachment uploads are separate and require saved owners. Existing Order invoice rows/customs values and split-copy semantics are independent and must be preserved. FRO-348 removed Shipment/split presentation; FRO-317 owns Delivered vessel (FRO-321 still calls it Shipment-owned).
+- Review/interview remains open. No complete replacement draft or write approval yet. No glossary change or ADR warranted. Preserve unrelated existing FRO-326/FRO-330 memory and draft changes; commit only this session's memory addition.
+
 ### 2026-10-23 — FRO-349 review decisions settled; revision awaiting approval
 
 - Planning pull succeeded. Reviewed live FRO-349, FRO-326/335/347/321/318, target comments (none), and current team statuses/labels. FRO-349 remains Todo, milestone 0.0.6, supplier invoice/Order/Pending_Review/Frontend/Story, no attachments. Blocks FRO-326; blocked by FRO-321/FRO-347. No Linear write.
