@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-342 / FRO-335 approved descriptions saved and verified
+
+- User approved both complete displayed descriptions with "ok". Mandatory pull succeeded; fresh target baselines unchanged. Saved exact drafts/fro342-reviewed-spec.md and drafts/fro335-upload-reconciled-spec.md with their complete existing label sets.
+- Independent re-read matched both complete descriptions after Linear mention/link/list normalization.342 save auto-added related326; removed only that automatic addition under approved metadata preservation and re-read. Final metadata comparison: no differences except updatedAt, including labels/status/milestones/relations/attachments/documents and all other returned fields.342 updated14:14:28.671Z,335 updated14:14:09.889Z;335 retains its one preview attachment.
+- No Ready promotion,341 edit, preview change, production branch/code/database/deployment action. Planning receipt updated. New shared324 planning note proposes historical integration under324; do not silently change these approved342/335 descriptions. Historical ownership and341 wording remain cross-ticket reconciliation before implementation.
+- Commit/push only this memory entry and342 review receipt; preserve unrelated local work.
+
 ### 2026-10-23 — FRO-324 first five decisions accepted; date calendar pending
 
 - User accepted Q1–Q5: allow stock confirmation with unknown historical arrival date; reuse matching opening EXPECTED stay and reject mismatched warehouse; reject conflicting known matched-arrival dates;324 integrates342 pending uploads atomically; no retroactive fiscal preparation/issuance under this feature. No Linear-write or linked-ticket-edit approval inferred.

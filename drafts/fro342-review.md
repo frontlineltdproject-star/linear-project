@@ -60,3 +60,9 @@ Preservation verification:335 page structure/retained inputs, initial readiness,
 341 follow-up wording for review only: Historical ARRIVED creation does not support pending uploads under FRO-342. Preserve the historical draft when switching modes and resolve any existing pending-file selection explicitly rather than silently omitting it; attach files after successful historical creation through ordinary authorized Shipment attachment operations. Full341 replacement is not prepared or approved; do not treat its complete reconciliation as done.
 
 Re-read342/335 and consumers before eventual write; preserve metadata, labels and attachments. All writes require full-text approval under AGENTS.md. Source/mutation tests not run: this is specification work; production remains read-only.
+
+## Save receipt
+
+User approved both complete descriptions with "ok". Planning pull and fresh baseline checks passed. Saved approved342/335 files with full original labels. Independent final reads match descriptions after Linear mention/link/list normalization.342 auto-added related326; removed only that addition and verified original relations restored. All returned metadata except updatedAt matches baseline;335 preview attachment preserved. Final updatedAt:342 2026-10-23T14:14:28.671Z;335 2026-10-23T14:14:09.889Z.
+
+341 unchanged. New shared324 planning note proposes historical pending-upload integration owned by324; this remains coordination work, not authority to alter the approved342 exclusion. No UI/preview/production branch/code/database writes or deployment verification. Ticket write and verification complete; implementation and cross-ticket historical reconciliation remain future work.
