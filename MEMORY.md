@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 isolated preparation authorized; plan awaiting agreement
+
+- User explicitly authorized frontend preparation in an isolated local checkout and a verified diff/dependency report before production branch creation, commits or pushes. Mandatory planning pull succeeded. Created clean detached checkout at C:/Users/Giorgos/.codex/visualizations/2026/10/23/01a1683e-7796-7b71-a01e-27e0158a7080/fro348-frontend, verified github remote and main3820e89e8caa341261e2d48bcb282d93e1bb1d03. No production branch, commit, push, source edit or dependency installation.
+- Initial playbook output failed Windows encoding; reported and recovered with UTF-8 resume of the existing FRO-348 snapshot. Policy committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Preserve this snapshot/checkpoints on continuation. User explicitly completed planning-model checkpoint; implementation-model checkpoint remains pending.
+- Refreshed FRO348/321/356/347 and current FRO348 comments (none). FRO348 unchanged at2026-10-23T11:23:44.164Z, Todo/full labels/relations/attachment retained; no Linear write. Shared field-notes endpoint unavailable (tool-not-found). Current production code confirms no new invoice entity/API/authority/regime/attempt/file owner; existing PO invoice rows and Order/Shipment AttachmentPanel cannot substitute.
+- Plan docs/superpowers/plans/2026-10-23-fro348-frontend-preparation.md proposes three partial presentation slices with actual Card/TopBar/Tabs/Modal/feedback/token mapping, controlled editor/confirmation/outcome slots, supplied relationship and saved-file states, EN/EL/browser checks, full diff and dependency handoff. Full form/controller, type picker extension, navigation/unload and real recovery/integration remain explicit obligations. Nine new frontend files proposed, no shared primitive/API/backend changes. No new glossary/ADR.
+- Await plan agreement (including partial preparation boundary), execution choice and separate implementation-model checkpoint before product-code changes. Recommend native execution with a fresh final review. No prior FRO347/326 checkpoint or publication exception transfers to348. Preserve unrelated planning modifications; synchronize only this plan and memory entry.
+
 ### 2026-10-23 — FRO-347 conditional push not executed; other checks still fail
 
 - User authorized pushing only if protections are the sole issue. Rechecked local mock/fro-347-supplier-invoice-create at ac539a93f3e3884b70de5e57dfc83563aa2346db: clean tree, main3820e89 unchanged, target branch still absent remotely; rulesets still403. Planning pull succeeded.
