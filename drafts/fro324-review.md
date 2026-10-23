@@ -5,10 +5,10 @@ Review checkpoint, not an approved replacement specification. Linear remains unc
 ## Workflow
 
 - 0 Preflight complete: planning git pull --ff-only succeeded; gh account frontlineltdproject-star and live production contents verified; full Linear issue, comments (none), labels and statuses read.
-- 1 Grill: first five decisions accepted; date-comparison details pending. Focused read-only research delegated per grilling.
+- 1 Grill complete: all six decisions accepted. Focused read-only research delegated per grilling.
 - 2 Canvas / 2b Preview skipped: FRO-341 creation and FRO-316 Details already own presentation. No additional UI identified.
-- 3 Spec check: impact trace below; open outcomes must be resolved before final specification.
-- 4 Ticket: pending decisions, complete draft display and explicit approval. No Linear writes.
+- 3 Spec check complete for the proposed scope: consumer outcomes and owners incorporated into the draft. Cross-ticket upload reconciliation is an explicit activation prerequisite, not an unauthorized linked-ticket edit.
+- 4 Ticket: complete replacement in fro324-reviewed-spec.md; pending full-text approval. No Linear writes.
 - 4e UI branch skipped by explicit user instruction; no production changes.
 - 5 Memory: checkpoint recorded. No new resolved vocabulary or qualifying ADR.
 - 6 Verify: source/board review only; no implementation/deployment verification claimed.
@@ -54,10 +54,33 @@ User answered Q1 yes and Q2–Q5 ok. All five recommendations are accepted. This
 
 Fresh planning pull succeeded; full324 and342 refetched and unchanged (324 updated13:06:53.395Z,342 updated13:51:31.724Z). Live main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Remaining dependent decision: calendar/timezone and precision comparison when date-only historical evidence meets existing timestamps. After resolving it, draft standalone final ticket, show before/after outside its body and obtain full-text Linear approval. No new vocabulary or qualifying ADR.
 
-## Date comparison follow-up — pending Q6
+## Date comparison follow-up — accepted Q6
 
 Read-only follow-up found ApplicationTimeConfig uses Clock.systemUTC(), but ShipmentsApiService uses OffsetDateTime.now() directly; frontend details use browser-local toLocaleString(). Client lib/date.ts preserves date-only calendar values. FreightWarehouse has no timezone field. These sources establish no consistent business calendar for comparing historical date-only evidence to existing timestamps.
 
 Proposed Q6: use an explicitly agreed Europe/Athens office calendar for future-date checks and comparison with existing arrival timestamps, independent of browser/server timezone. Keep date-only input as a date; preserve original exact timestamps; different times on the same calendar day are compatible with date-only evidence but do not establish one exact Shipment arrival time. Ask whether the business instead requires receiving-warehouse local dates. Europe/Athens is a proposal, not an existing product rule or an inference from the user's computer settings. Exact contradictory occurrence instants must not be silently reconciled.
 
 The concurrent local342 draft still excludes historical uploads; it is neither changed nor treated as overriding the user's explicit Q4 acceptance here. Record the coordination conflict for later reviewed reconciliation, not an automatic linked-ticket edit.
+
+User accepted Q6 with "ok": Europe/Athens comparison/future-date calendar, native date-only facts and preserved exact timestamp evidence. All six interview decisions are now settled. No vocabulary change or qualifying ADR.
+
+## Complete replacement — awaiting approval
+
+Planning pull succeeded; full324/342 and board statuses/labels refreshed.324 unchanged at2026-10-23T13:06:53.395Z;342 unchanged at2026-10-23T13:51:31.724Z. Production main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Applied frontline-linear-issues for the standalone Story specification; project workflow overrides its sibling-read restriction because linked ownership must be reconciled.
+
+Draft: drafts/fro324-reviewed-spec.md. Description-only proposal, preserving title, Todo, Pending_Review/Backend/Story/Shipment, project/milestone0.0.8, priority, all assignment/other metadata, original relations and all four attachment identities/URLs. No Ready promotion or new relation proposed. On eventual save preserve the reviewed relation set, including removal only of save-induced additions under that approved preservation scope.
+
+### Before / after (outside proposed ticket)
+
+| Before | Proposed after |
+| -- | -- |
+| Unknown arrival allowed, stock confirmation left to existing validation | Explicit compatibility permits stock confirmation while preserving unknown arrival and known location. |
+| New-arrival stay establishment lacks opening expectation rule | Reuse matching EXPECTED stay; reject different opening warehouse without fake movement. |
+| Existing arrival link described broadly | Exact stay/colli provenance; immutable-fact preservation and duplicate ownership rejection. |
+| Chronology lacks date/timestamp comparison calendar | Europe/Athens checks, preserved precision, reject conflicting known arrival days. |
+| UI mentions pending files, structural historical integration excluded elsewhere |324 explicitly owns atomic historical integration of342 contracts; reconcile consumers before activation. |
+| Fiscal aftermath undefined | No automatic or later retroactive preparation/issuance for historical records under this feature. |
+| Generic atomicity/duplicate-submit wording | Stable request/result recovery and cross-command/movement duplicate protection; complete rollback. |
+| Prescriptive A/B layout text alongside341 ownership | Single authoritative316/341 presentation; old attachments retained as nonbinding references. |
+
+Coverage checked against original: historical NETWORK_TRANSFER scope; optional facts/document uniqueness; all geography cases and resets; complete nonterminal sets and split restrictions; new/existing-arrival/stock preservation; reservation/dispatched/later-movement/ambiguity exclusions; chronology; completed participation; authority/atomicity; separate stock; historical provenance; read adapters and date filters; no inline orchestration or source shortcut; UI accessibility/draft integration; attached references and metadata. Added consumer-specific migration, rollout and AC-mapped read-only checks. No implementation or deployment testing claimed.

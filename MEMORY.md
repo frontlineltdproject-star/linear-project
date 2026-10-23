@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-324 interview complete; full replacement awaiting approval
+
+- User accepted Q6: Europe/Athens calendar for comparison/future dates; preserve native date-only values and original timestamp precision. All six decisions settled. Mandatory planning pull succeeded; full324/342 and current labels/statuses refreshed, target unchanged at13:06:53.395Z. Live main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a.
+- Applied frontline-linear-issues. Complete standalone draft drafts/fro324-reviewed-spec.md covers accepted stock/expectation/matching/date/upload/fiscal decisions, exact provenance/completion, shared adapters/readers, stable retry/result recovery, migration and compatible-consumer activation, AC-mapped read-only verification. Before/after comparison stays in drafts/fro324-review.md and chat, outside description.
+- Description-only proposal preserves title, Todo, Pending_Review/Backend/Story/Shipment, project/milestone0.0.8, priority/assignment/other metadata, original relations and four attachments. No Ready promotion; no linked-ticket changes.342 current exclusion/concurrent draft must be reconciled before activating324 historical upload integration; Q4 here is explicit but not permission to edit342.
+- Pending approval of full displayed replacement before any Linear write. No new glossary/ADR; no UI/preview/production branch/code/database action or deployment verification. Synchronize only324 draft/review/checkpoint, preserving unrelated local changes.
+
 ### 2026-10-23 — FRO-342 / FRO-335 approved descriptions saved and verified
 
 - User approved both complete displayed descriptions with "ok". Mandatory pull succeeded; fresh target baselines unchanged. Saved exact drafts/fro342-reviewed-spec.md and drafts/fro335-upload-reconciled-spec.md with their complete existing label sets.
