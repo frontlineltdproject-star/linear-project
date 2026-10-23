@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-324 first five decisions accepted; date calendar pending
+
+- User accepted Q1–Q5: allow stock confirmation with unknown historical arrival date; reuse matching opening EXPECTED stay and reject mismatched warehouse; reject conflicting known matched-arrival dates;324 integrates342 pending uploads atomically; no retroactive fiscal preparation/issuance under this feature. No Linear-write or linked-ticket-edit approval inferred.
+- Planning pull succeeded; current324 and342 unchanged at13:06:53.395Z/13:51:31.724Z; live main5c51030680c9d45b3827a7e19b8320c19aa5ed9a unchanged. Updated drafts/fro324-review.md.342 current description and concurrent draft exclude historical uploads; preserve explicit324 decision and reconcile ownership before integration, without changing the other task's files.
+- Pending Q6: explicit calendar/timezone for date-only versus exact timestamp comparison and future-date checks. Source shows UTC Clock bean, direct OffsetDateTime.now in Shipment service, browser-local detail formatting, native date-only helper and no warehouse timezone; no authoritative business timezone established. Propose Europe/Athens office calendar with original timestamps preserved and no invented exact time; user must choose against warehouse-local semantics.
+- No Linear/UI/preview/production branch/code/database changes or new glossary/ADR. Full replacement awaits remaining date decision and full-text approval. Synchronize only324 review and this entry; preserve unrelated working changes.
+
 ### 2026-10-23 — FRO-342 / FRO-335 decisions accepted; complete drafts prepared
 
 - User accepted Q2 historical ARRIVED creation uploads excluded, Q3 prepare targeted335 reconciliation, Q4 stable upload retry and creation-attempt/context recovery guarantees. Earlier Q1 makes342 a backend implementation specification. These decisions do not authorize Linear writes or production implementation.

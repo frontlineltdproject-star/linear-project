@@ -5,7 +5,7 @@ Review checkpoint, not an approved replacement specification. Linear remains unc
 ## Workflow
 
 - 0 Preflight complete: planning git pull --ff-only succeeded; gh account frontlineltdproject-star and live production contents verified; full Linear issue, comments (none), labels and statuses read.
-- 1 Grill: evidence gathered using grilling/domain-modeling; first decision round pending. Focused read-only research delegated per grilling.
+- 1 Grill: first five decisions accepted; date-comparison details pending. Focused read-only research delegated per grilling.
 - 2 Canvas / 2b Preview skipped: FRO-341 creation and FRO-316 Details already own presentation. No additional UI identified.
 - 3 Spec check: impact trace below; open outcomes must be resolved before final specification.
 - 4 Ticket: pending decisions, complete draft display and explicit approval. No Linear writes.
@@ -42,12 +42,22 @@ Source paths below are relative to Frontline-Forwarding/frontline-forwarding; Ja
 | Existing data / activation |345 confirms current data mock-only;324 older context predates live source. | Preserve known facts; no guessed data backfill/reset or classification of ordinary arrivals as historical. Add fixtures for all affected consumers; coordinate activation across milestone gap. |324 and linked contract owners |
 | UI text |324 says341 supersedes old A/B references but still commands header dropdown/conditional date card;341 uses approach B with always-visible disabled Preparing dates. | Replace stale prescriptive UI text with one authoritative316/341 reference; preserve attached historical references as nonbinding. No new UI. |324 text cleanup |
 
-## First decision round — recommendations only
+## First decision round — accepted 23 October 2026
 
 1. Unknown arrival date and stock confirmation: allow normal authorized stock confirmation of a proven historical arrival while arrival date remains unknown; record only actual stock-confirmation facts. No invented arrival time.
 2. Initial EXPECTED stay: reuse it when it matches destination; for a different opening warehouse reject with an actionable explanation in this version. Do not silently move/cancel the expectation or fabricate physical history. A more permissive audited reassignment would need explicit scope.
 3. Multiple matched arrivals: reject a combined Shipment if known matched arrival dates contradict one shared arrival; preserve exact existing timestamps and compare date-only evidence using an explicitly defined calendar/timezone rule. Never silently choose a date or erase known precision. Exact comparison/timezone details remain to resolve.
 4. Optional files: extend the historical command to consume342 pending-upload contracts atomically, with324 owning historical integration and342 owning generic upload lifecycle. This reconciles341's existing promise; no new UI.
-5. Delivery notes: historical entry creates no fiscal note and does not offer later retroactive preparation/issuance under this feature. Preserve independent attachments/history; any historical fiscal operation needs its own explicit contract. Subject to decision and fiscal-owner reconciliation.
+5. Delivery notes: historical entry creates no fiscal note and does not offer later retroactive preparation/issuance under this feature. Preserve independent attachments/history; any historical fiscal operation needs its own explicit contract.
 
-Do not treat these recommendations as accepted. After answers, resolve remaining dependent date/matching/eligibility questions, draft a standalone final ticket with complete metadata and acceptance-mapped read-only verification, show before/after outside its body, and request explicit Linear approval.
+User answered Q1 yes and Q2–Q5 ok. All five recommendations are accepted. This authorizes specification preparation, not a Linear write or changes to linked tickets. Historical file integration is now explicitly specified under324; reconcile342's generic contract at integration without silently editing342 or its other review's decisions.
+
+Fresh planning pull succeeded; full324 and342 refetched and unchanged (324 updated13:06:53.395Z,342 updated13:51:31.724Z). Live main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Remaining dependent decision: calendar/timezone and precision comparison when date-only historical evidence meets existing timestamps. After resolving it, draft standalone final ticket, show before/after outside its body and obtain full-text Linear approval. No new vocabulary or qualifying ADR.
+
+## Date comparison follow-up — pending Q6
+
+Read-only follow-up found ApplicationTimeConfig uses Clock.systemUTC(), but ShipmentsApiService uses OffsetDateTime.now() directly; frontend details use browser-local toLocaleString(). Client lib/date.ts preserves date-only calendar values. FreightWarehouse has no timezone field. These sources establish no consistent business calendar for comparing historical date-only evidence to existing timestamps.
+
+Proposed Q6: use an explicitly agreed Europe/Athens office calendar for future-date checks and comparison with existing arrival timestamps, independent of browser/server timezone. Keep date-only input as a date; preserve original exact timestamps; different times on the same calendar day are compatible with date-only evidence but do not establish one exact Shipment arrival time. Ask whether the business instead requires receiving-warehouse local dates. Europe/Athens is a proposal, not an existing product rule or an inference from the user's computer settings. Exact contradictory occurrence instants must not be silently reconciled.
+
+The concurrent local342 draft still excludes historical uploads; it is neither changed nor treated as overriding the user's explicit Q4 acceptance here. Record the coordination conflict for later reviewed reconciliation, not an automatic linked-ticket edit.
