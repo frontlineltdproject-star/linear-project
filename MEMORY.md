@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 review; editing accepted, remaining decisions pending
+
+- Planning pull succeeded; fetched full current FRO-348, empty comments, FRO labels/statuses and live FRO-321/347/326/317/352/356/319. FRO-348 remains Todo, supplier invoice/Pending_Review/Frontend/Story, milestone 0.0.6, original attachment/relations; no Linear mutation.
+- User explicitly substitutes ChatGPT Sites for Cloudflare Pages. Existing private owner-only Site appgprj_6ad0ae445fdc81919d8996215708f533, version 20, source b6311c73de903f4666a99672391ee00e20b41f17 retrieved in this chat's visualization workspace; original URL/audience preserved. Local baseline inspected; no Site edit/publication. No credentials persisted.
+- Authenticated gh source reads confirm production main 3820e89e8caa341261e2d48bcb282d93e1bb1d03 and missing Supplier Invoice entity/API/route/attachment owner. Current Order invoice rows, partner access and Order/Shipment files are distinct. FRO-321 supplies proposed contracts and staged 0.0.6 basic / later Export and Entry Note delivery.
+- User accepted Q1: full guarded card editing of Order and applicable invoice facts, one active editor, atomic dependent Order/type/value/vessel correction. Q2 guarded cancellation UI ownership and Q3 draft/navigation/unknown-save recovery presentation remain unanswered. Recommendations are not decisions.
+- Review and component map: drafts/fro348-review-findings.md. Gaps include scope/edit contradiction, missing staged integration states, event date boundaries, prototype view-only/cancelled action holes, Number precision/duplicate normalization/vessel validation, retry/concurrency, unsupported note replacement simulation and stale styling/revision narration. Live design requires sentence-case labels/20px title/shared controls/AppShell; saved-value/progress/type-tooltip compositions must be marked honestly.
+- Interactive step 1 remains open; no canvas alternatives built, selected design, full replacement ticket, Linear approval/write, production branch/code/database changes or deployment verification. Preserve unrelated local FRO-326/FRO-330 changes; synchronize only this review's notes.
+
 ### 2026-10-23 — FRO-347 workflow review; first UI decisions pending
 
 - Mandatory planning pull succeeded. Read current FRO-347 (2026-10-20T11:09:39.558Z), empty comments, current FRO labels/statuses and linked FRO-321/335/348/349 contracts. Preserve Todo, supplier invoice/Pending_Review/Frontend/Story, milestone 0.0.6, attachment and relations; no Linear changes.
