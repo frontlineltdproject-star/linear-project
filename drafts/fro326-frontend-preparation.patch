@@ -1,0 +1,2370 @@
+diff --git a/frontline-forwarding-client/src/components/ui/modal.tsx b/frontline-forwarding-client/src/components/ui/modal.tsx
+index 867c388..c42c180 100644
+--- a/frontline-forwarding-client/src/components/ui/modal.tsx
++++ b/frontline-forwarding-client/src/components/ui/modal.tsx
+@@ -8,6 +8,7 @@ import { useLabels } from '#/app/providers/labels-provider'
+ export interface ModalProps {
+   open: boolean
+   onClose: () => void
++  ariaLabel?: string
+   title?: ReactNode
+   children: ReactNode
+   /** Footer node, typically action buttons. */
+@@ -30,6 +31,7 @@ export function Modal({
+   open,
+   onClose,
+   title,
++  ariaLabel,
+   children,
+   footer,
+   size = 'md',
+@@ -73,6 +75,7 @@ export function Modal({
+       <div
+         ref={panelRef}
+         role="dialog"
++        aria-label={ariaLabel}
+         aria-modal="true"
+         tabIndex={-1}
+         className={cn(
+diff --git a/frontline-forwarding-client/src/components/ui/tabs.tsx b/frontline-forwarding-client/src/components/ui/tabs.tsx
+index da40512..440fd3d 100644
+--- a/frontline-forwarding-client/src/components/ui/tabs.tsx
++++ b/frontline-forwarding-client/src/components/ui/tabs.tsx
+@@ -106,18 +106,22 @@ export function TabPanel({
+   value,
+   className,
+   id,
++  keepMounted = false,
+   children,
+ }: {
+   value: string
+   className?: string
+   id?: string
++  /** Preserve local state while hiding an inactive panel. */
++  keepMounted?: boolean
+   children: ReactNode
+ }) {
+   const { value: active, baseId } = useTabs()
+-  if (active !== value) return null
++  if (active !== value && !keepMounted) return null
+   return (
+     <div
+       role="tabpanel"
++      hidden={active !== value}
+       id={id ?? `${baseId}-panel-${value}`}
+       aria-labelledby={`${baseId}-tab-${value}`}
+       className={cn('pt-4', className)}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.test.tsx
+index 01e1470..226bdb4 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.test.tsx
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.test.tsx
+@@ -26,7 +26,7 @@ vi.mock('@tanstack/react-router', () => ({
+ }))
+ 
+ vi.mock('#/features/auth/components/can', () => ({
+-  Can: () => null,
++  Can: ({ fallback }: { fallback?: ReactNode }) => fallback ?? null,
+ }))
+ 
+ vi.mock('#/features/attachments/components/attachment-panel', () => ({
+@@ -192,3 +192,68 @@ describe('PurchaseOrderDetail tabs', () => {
+     expect(screen.getByText(/Root split created/)).toBeTruthy()
+   })
+ })
++
++describe('colli inspection', () => {
++  it('retains independent expansion across tabs and resets it for another Order', () => {
++    window.localStorage.setItem('frontline.locale', 'en')
++    const record = {
++      ...purchaseOrder,
++      handlingUnits: [
++        {
++          id: 101,
++          trackingCode: 'HU-101',
++          setDescription: 'Engine spare',
++          packageType: 'CARDBOARD_BOX',
++          dangerousGoods: true,
++          dangerousGoodsClass: 'FLAMMABLE_LIQUIDS',
++          bonded: false,
++          declaredLengthCm: null,
++          declaredWidthCm: 30,
++          declaredHeightCm: 20,
++          declaredGrossWeightKg: 12,
++          declaredNetWeightKg: null,
++          terminalDisposition: null,
++        },
++        {
++          id: 102,
++          trackingCode: 'HU-102',
++          setDescription: 'Terminal spare',
++          packageType: 'PALLET',
++          dangerousGoods: false,
++          bonded: true,
++          terminalDisposition: { disposition: 'DAMAGED' },
++        },
++      ],
++    } as unknown as PurchaseOrder
++    const view = render(
++      <LabelsProvider>
++        <PurchaseOrderDetail purchaseOrder={record} />
++      </LabelsProvider>,
++    )
++    fireEvent.click(screen.getByRole('tab', { name: /Collis/ }))
++    fireEvent.click(screen.getByRole('button', { name: 'Expand HU-101' }))
++    fireEvent.click(screen.getByRole('button', { name: 'Expand HU-102' }))
++    expect(screen.getByText('Engine spare')).toBeTruthy()
++    expect(screen.getByText('Terminal spare')).toBeTruthy()
++    expect(
++      screen.getByRole('link', { name: 'HU-101' }).getAttribute('href'),
++    ).toBe('/secured/handling-units/101')
++    expect(screen.getByText('Damaged')).toBeTruthy()
++    fireEvent.click(screen.getByRole('tab', { name: 'Overview' }))
++    fireEvent.click(screen.getByRole('tab', { name: /Collis/ }))
++    expect(
++      screen
++        .getByRole('button', { name: 'Collapse HU-101' })
++        .getAttribute('aria-expanded'),
++    ).toBe('true')
++    expect(screen.getByText('Terminal spare')).toBeTruthy()
++    view.rerender(
++      <LabelsProvider>
++        <PurchaseOrderDetail purchaseOrder={{ ...record, id: 43 }} />
++      </LabelsProvider>,
++    )
++    fireEvent.click(screen.getByRole('tab', { name: /Collis/ }))
++    expect(screen.queryByText('Engine spare')).toBeNull()
++    expect(screen.getByRole('button', { name: 'Expand HU-101' })).toBeTruthy()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
+index 04502c9..c6b2128 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail.tsx
+@@ -1,9 +1,10 @@
+ import { useRef, useState, type ReactNode } from 'react'
+ import type { RequestDocument, Variables } from 'graphql-request'
+-import { Link } from '@tanstack/react-router'
++import { Link, useBlocker } from '@tanstack/react-router'
+ import { Can } from '#/features/auth/components/can'
+ import { UserAuthority } from '#/features/auth/types'
+ import { Button } from '#/components/ui/button'
++import { Card, CardHeader, CardBody, CardTitle } from '#/components/ui/card'
+ import { Badge } from '#/components/ui/badge'
+ import { FormField, Input, Textarea } from '#/components/ui/input'
+ import { Select } from '#/components/ui/select'
+@@ -21,6 +22,7 @@ import { PurchaseOrderStatusPill } from './purchase-order-status-pill'
+ import { PurchaseOrderSplitLineageBadge } from './purchase-order-split-lineage-badge'
+ import { usePurchaseOrderLabels } from '../localization/purchase-order-labels'
+ import { AttachmentPanel } from '#/features/attachments/components/attachment-panel'
++import { PurchaseOrderCollis } from './purchase-order-collis'
+ import { ReadinessReminderAction } from './readiness-reminder-action'
+ 
+ export function PurchaseOrderDetail({
+@@ -28,6 +30,98 @@ export function PurchaseOrderDetail({
+ }: {
+   purchaseOrder: PurchaseOrder
+ }) {
++  return (
++    <Can
++      authority={UserAuthority.PURCHASE_ORDER_EDIT}
++      fallback={
++        <PurchaseOrderDetailLayout
++          key={String(purchaseOrder.id)}
++          purchaseOrder={purchaseOrder}
++        />
++      }
++    >
++      <PurchaseOrderActions
++        key={String(purchaseOrder.id)}
++        purchaseOrder={purchaseOrder}
++      >
++        {(slots) => (
++          <>
++            <PurchaseOrderDraftGuard
++              dirty={slots.dirty}
++              pending={slots.pending}
++            />
++            <PurchaseOrderDetailLayout
++              key={String(purchaseOrder.id)}
++              purchaseOrder={purchaseOrder}
++              slots={slots}
++            />
++          </>
++        )}
++      </PurchaseOrderActions>
++    </Can>
++  )
++}
++
++type ActionSlots = {
++  lifecycle: ReactNode
++  actions: ReactNode
++  comments: ReactNode
++  dialogs: ReactNode
++  error: ReactNode
++  dirty: boolean
++  pending: boolean
++}
++
++function PurchaseOrderDraftGuard({
++  dirty,
++  pending,
++}: {
++  dirty: boolean
++  pending: boolean
++}) {
++  const { text } = usePurchaseOrderLabels()
++  const blocker = useBlocker({
++    shouldBlockFn: ({ current, next }) =>
++      (dirty || pending) && current.pathname !== next.pathname,
++    enableBeforeUnload: dirty || pending,
++    withResolver: true,
++  })
++  return (
++    <Modal
++      open={blocker.status === 'blocked'}
++      onClose={() => blocker.reset?.()}
++      title={text.leaveDetailsTitle}
++      ariaLabel={text.leaveDetailsTitle}
++      size="sm"
++      footer={
++        <>
++          <Button variant="secondary" onClick={() => blocker.reset?.()}>
++            {text.stayOnDetails}
++          </Button>
++          <Button
++            variant="danger"
++            disabled={pending}
++            onClick={() => blocker.proceed?.()}
++          >
++            {text.discardAndLeave}
++          </Button>
++        </>
++      }
++    >
++      <p>{text.leaveDetailsMessage}</p>
++    </Modal>
++  )
++}
++
++function PurchaseOrderDetailLayout({
++  purchaseOrder,
++  slots,
++}: {
++  purchaseOrder: PurchaseOrder
++  slots?: ActionSlots
++}) {
++  const [tab, setTab] = useState('overview')
++  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
+   const { text, enumLabel } = usePurchaseOrderLabels()
+   const rootPurchaseOrder = purchaseOrder.rootPurchaseOrderId
+     ? purchaseOrder.lineagePurchaseOrders.find(
+@@ -41,14 +135,13 @@ export function PurchaseOrderDetail({
+   )
+   return (
+     <div className="space-y-5">
+-      <section className="rounded-lg border border-border bg-surface p-5 shadow-card">
++      <Card>
+         <div className="flex flex-wrap items-start justify-between gap-4">
+           <div>
+             <div className="flex items-center gap-3">
+               <h2 className="text-xl font-semibold">
+                 {purchaseOrder.internalNumber}
+               </h2>
+-              <PurchaseOrderStatusPill status={purchaseOrder.status} />
+               {purchaseOrder.hasDangerousGoods ? (
+                 <Badge tone="danger">DG</Badge>
+               ) : null}
+@@ -122,262 +215,246 @@ export function PurchaseOrderDetail({
+             ) : null}
+           </div>
+         </div>
+-      </section>
+-
+-      <section className="rounded-lg border border-border bg-surface p-5 shadow-card">
+-        <Tabs defaultValue="overview">
+-          <div className="overflow-x-auto">
+-            <TabList className="min-w-max">
+-              <Tab value="overview">{text.detailOverviewTab}</Tab>
+-              <Tab value="documents">{text.documentsTab}</Tab>
+-              <Tab value="collis">
+-                {text.collisTab} · {purchaseOrder.handlingUnits.length}
+-              </Tab>
+-              <Tab value="invoiceRows">
+-                {text.invoiceRowsTab} · {purchaseOrder.invoiceRows.length}
+-              </Tab>
+-              <Tab value="history">{text.historyTab}</Tab>
+-            </TabList>
+-          </div>
++      </Card>
++      {slots?.error}
++      <Tabs defaultValue="overview" value={tab} onValueChange={setTab}>
++        <div className="overflow-x-auto">
++          <TabList className="min-w-max">
++            <Tab value="overview">{text.detailOverviewTab}</Tab>
++            <Tab value="documents">{text.documentsTab}</Tab>
++            <Tab value="collis">
++              {text.collisTab} · {purchaseOrder.handlingUnits.length}
++            </Tab>
++            <Tab value="invoiceRows">
++              {text.invoiceRowsTab} · {purchaseOrder.invoiceRows.length}
++            </Tab>
++            <Tab value="history">{text.historyTab}</Tab>
++            {slots && <Tab value="actions">{text.availableActions}</Tab>}
++          </TabList>
++        </div>
+ 
+-          <TabPanel value="overview">
+-            <div className="grid gap-5 lg:grid-cols-2">
+-              <Section title={text.overview}>
+-                <Facts
+-                  items={[
+-                    [text.client, purchaseOrder.clientCompany.name],
+-                    [text.supplier, purchaseOrder.supplierCompany?.name],
+-                    [text.invoiceCompany, purchaseOrder.invoiceCompany?.name],
+-                    [
+-                      text.collectionAgent,
+-                      purchaseOrder.collectionAgentCompany?.name,
+-                    ],
+-                    [text.ownerReference, purchaseOrder.ownerReference],
+-                    [text.supplierReference, purchaseOrder.supplierReference],
+-                    [text.messageNumber, purchaseOrder.messageNumber],
+-                    [
+-                      text.readiness,
+-                      purchaseOrder.readinessDate
+-                        ? String(purchaseOrder.readinessDate)
+-                        : undefined,
+-                    ],
+-                    [
+-                      text.route,
+-                      [
+-                        purchaseOrder.originCity?.name ??
+-                          purchaseOrder.originCountry?.name,
+-                        purchaseOrder.destinationCity?.name ??
+-                          purchaseOrder.destinationCountry?.name,
+-                      ]
+-                        .filter(Boolean)
+-                        .join(' → '),
+-                    ],
+-                    [text.notes, purchaseOrder.notes],
+-                  ]}
++        <TabPanel value="overview">
++          <div className="space-y-5">
++            <Card className="bg-surface-2">
++              <div className="flex flex-wrap items-center gap-4">
++                <span className="text-xs font-medium text-fg-muted">
++                  {text.status}
++                </span>
++                <PurchaseOrderStatusPill
++                  status={purchaseOrder.status}
++                  className="px-3 py-2 text-sm leading-normal"
+                 />
+-              </Section>
+-              <Section title={text.splitLineage}>
+-                <Facts
+-                  items={[
+-                    [
+-                      text.rootPo,
+-                      rootPurchaseOrder ? (
+-                        <Link
+-                          to="/secured/purchase-orders/$purchaseOrderId"
+-                          params={{
+-                            purchaseOrderId: String(rootPurchaseOrder.id),
+-                          }}
+-                          className="font-semibold text-accent hover:text-accent-hover"
+-                        >
+-                          {rootPurchaseOrder.internalNumber}
+-                        </Link>
+-                      ) : null,
+-                    ],
+-                    [
+-                      text.parentPo,
+-                      parentPurchaseOrder ? (
+-                        <Link
+-                          to="/secured/purchase-orders/$purchaseOrderId"
+-                          params={{
+-                            purchaseOrderId: String(parentPurchaseOrder.id),
+-                          }}
+-                          className="font-semibold text-accent hover:text-accent-hover"
+-                        >
+-                          {parentPurchaseOrder.internalNumber}
+-                        </Link>
+-                      ) : null,
+-                    ],
++              </div>
++              {slots?.lifecycle && (
++                <div className="mt-4">{slots.lifecycle}</div>
++              )}
++            </Card>
++            <Section title={text.overview}>
++              <Facts
++                items={[
++                  [text.client, purchaseOrder.clientCompany.name],
++                  [text.supplier, purchaseOrder.supplierCompany?.name],
++                  [text.invoiceCompany, purchaseOrder.invoiceCompany?.name],
++                  [
++                    text.collectionAgent,
++                    purchaseOrder.collectionAgentCompany?.name,
++                  ],
++                  [text.ownerReference, purchaseOrder.ownerReference],
++                  [text.supplierReference, purchaseOrder.supplierReference],
++                  [text.messageNumber, purchaseOrder.messageNumber],
++                  [
++                    text.readiness,
++                    purchaseOrder.readinessDate
++                      ? String(purchaseOrder.readinessDate)
++                      : undefined,
++                  ],
++                  [
++                    text.route,
+                     [
+-                      text.childPurchaseOrders,
+-                      purchaseOrder.childPurchaseOrderIds.length
+-                        ? purchaseOrder.childPurchaseOrderIds.map(
+-                            (childPurchaseOrderId) => {
+-                              const child =
+-                                purchaseOrder.lineagePurchaseOrders.find(
+-                                  (candidate) =>
+-                                    String(candidate.id) ===
+-                                    String(childPurchaseOrderId),
+-                                )
+-                              return (
+-                                <Link
+-                                  key={String(childPurchaseOrderId)}
+-                                  to="/secured/purchase-orders/$purchaseOrderId"
+-                                  params={{
+-                                    purchaseOrderId:
+-                                      String(childPurchaseOrderId),
+-                                  }}
+-                                  className="mr-3 inline-flex font-semibold text-accent hover:text-accent-hover"
+-                                >
+-                                  {child?.internalNumber ??
+-                                    `#${String(childPurchaseOrderId)}`}
+-                                </Link>
++                      purchaseOrder.originCity?.name ??
++                        purchaseOrder.originCountry?.name,
++                      purchaseOrder.destinationCity?.name ??
++                        purchaseOrder.destinationCountry?.name,
++                    ]
++                      .filter(Boolean)
++                      .join(' → '),
++                  ],
++                  [text.notes, purchaseOrder.notes],
++                ]}
++              />
++            </Section>
++            <Section title={text.splitLineage}>
++              <Facts
++                items={[
++                  [
++                    text.rootPo,
++                    rootPurchaseOrder ? (
++                      <Link
++                        to="/secured/purchase-orders/$purchaseOrderId"
++                        params={{
++                          purchaseOrderId: String(rootPurchaseOrder.id),
++                        }}
++                        className="font-semibold text-accent hover:text-accent-hover"
++                      >
++                        {rootPurchaseOrder.internalNumber}
++                      </Link>
++                    ) : null,
++                  ],
++                  [
++                    text.parentPo,
++                    parentPurchaseOrder ? (
++                      <Link
++                        to="/secured/purchase-orders/$purchaseOrderId"
++                        params={{
++                          purchaseOrderId: String(parentPurchaseOrder.id),
++                        }}
++                        className="font-semibold text-accent hover:text-accent-hover"
++                      >
++                        {parentPurchaseOrder.internalNumber}
++                      </Link>
++                    ) : null,
++                  ],
++                  [
++                    text.childPurchaseOrders,
++                    purchaseOrder.childPurchaseOrderIds.length
++                      ? purchaseOrder.childPurchaseOrderIds.map(
++                          (childPurchaseOrderId) => {
++                            const child =
++                              purchaseOrder.lineagePurchaseOrders.find(
++                                (candidate) =>
++                                  String(candidate.id) ===
++                                  String(childPurchaseOrderId),
+                               )
+-                            },
+-                          )
+-                        : null,
+-                    ],
+-                    [
+-                      text.purchaseOrderFamily,
+-                      purchaseOrder.lineagePurchaseOrders.map((member) => (
+-                        <Link
+-                          key={String(member.id)}
+-                          to="/secured/purchase-orders/$purchaseOrderId"
+-                          params={{ purchaseOrderId: String(member.id) }}
+-                          className="mr-3 inline-flex font-semibold text-accent hover:text-accent-hover"
+-                        >
+-                          {member.internalNumber}
+-                        </Link>
+-                      )),
+-                    ],
+-                  ]}
+-                />
+-              </Section>
+-            </div>
+-          </TabPanel>
+-
+-          <TabPanel value="documents">
+-            <AttachmentPanel
+-              referenceType="purchase-orders"
+-              referenceId={Number(purchaseOrder.id)}
+-            />
+-          </TabPanel>
+-
+-          <TabPanel value="collis">
+-            <Section title={text.handlingUnits}>
+-              <div className="grid gap-3">
+-                {purchaseOrder.handlingUnits.map((unit) => (
+-                  <div
+-                    key={String(unit.id)}
+-                    className="flex flex-wrap items-start justify-between gap-3 rounded-md border border-border p-4"
+-                  >
+-                    <div>
++                            return (
++                              <Link
++                                key={String(childPurchaseOrderId)}
++                                to="/secured/purchase-orders/$purchaseOrderId"
++                                params={{
++                                  purchaseOrderId: String(childPurchaseOrderId),
++                                }}
++                                className="mr-3 inline-flex font-semibold text-accent hover:text-accent-hover"
++                              >
++                                {child?.internalNumber ??
++                                  `#${String(childPurchaseOrderId)}`}
++                              </Link>
++                            )
++                          },
++                        )
++                      : null,
++                  ],
++                  [
++                    text.purchaseOrderFamily,
++                    purchaseOrder.lineagePurchaseOrders.map((member) => (
+                       <Link
+-                        to="/secured/handling-units/$handlingUnitId"
+-                        params={{ handlingUnitId: String(unit.id) }}
+-                        className="font-semibold text-accent"
++                        key={String(member.id)}
++                        to="/secured/purchase-orders/$purchaseOrderId"
++                        params={{ purchaseOrderId: String(member.id) }}
++                        className="mr-3 inline-flex font-semibold text-accent hover:text-accent-hover"
+                       >
+-                        {unit.trackingCode}
++                        {member.internalNumber}
+                       </Link>
+-                      <p className="mt-1 text-sm text-fg-muted">
+-                        {unit.setDescription ?? text.noDescription} ·{' '}
+-                        {enumLabel(unit.packageType)}
+-                      </p>
+-                      <div className="mt-2 flex flex-wrap gap-1">
+-                        {unit.dangerousGoods ? (
+-                          <Badge tone="danger">DG</Badge>
+-                        ) : null}
+-                        {unit.bonded ? (
+-                          <Badge tone="warning">{text.bondedShort}</Badge>
+-                        ) : null}
+-                      </div>
+-                    </div>
+-                    <div className="text-right text-sm">
+-                      <p>
+-                        {unit.declaredLengthCm ?? '—'} ×{' '}
+-                        {unit.declaredWidthCm ?? '—'} ×{' '}
+-                        {unit.declaredHeightCm ?? '—'} cm
+-                      </p>
+-                      <p className="text-fg-muted">
+-                        {unit.declaredGrossWeightKg ?? '—'} kg
+-                      </p>
+-                      {unit.terminalDisposition ? (
+-                        <p className="font-semibold text-danger-fg">
+-                          {enumLabel(unit.terminalDisposition.disposition)}
+-                        </p>
+-                      ) : null}
+-                    </div>
+-                  </div>
+-                ))}
+-              </div>
++                    )),
++                  ],
++                ]}
++              />
+             </Section>
+-          </TabPanel>
++          </div>
++        </TabPanel>
+ 
+-          <TabPanel value="invoiceRows">
+-            <Section title={text.invoiceRows}>
+-              <InvoiceRowsTable purchaseOrder={purchaseOrder} />
+-            </Section>
+-          </TabPanel>
++        <TabPanel value="documents">
++          <AttachmentPanel
++            referenceType="purchase-orders"
++            referenceId={Number(purchaseOrder.id)}
++          />
++        </TabPanel>
++
++        <TabPanel value="collis">
++          <Section title={text.handlingUnits}>
++            <PurchaseOrderCollis
++              units={purchaseOrder.handlingUnits}
++              expandedIds={expandedIds}
++              onToggle={(id) =>
++                setExpandedIds((current) => {
++                  const next = new Set(current)
++                  if (next.has(id)) next.delete(id)
++                  else next.add(id)
++                  return next
++                })
++              }
++            />
++          </Section>
++        </TabPanel>
+ 
+-          <TabPanel value="history">
+-            <div className="space-y-5">
+-              <Section title={text.warehouseStays}>
++        <TabPanel value="invoiceRows">
++          <Section title={text.invoiceRows}>
++            <InvoiceRowsTable purchaseOrder={purchaseOrder} />
++          </Section>
++        </TabPanel>
++
++        <TabPanel value="history">
++          <div className="space-y-5">
++            {slots?.comments}
++            <Section title={text.warehouseStays}>
++              <Timeline
++                rows={purchaseOrder.warehouseStays.map((stay) => ({
++                  id: String(stay.id),
++                  title: `${stay.warehouse.code} · ${enumLabel(stay.state)}`,
++                  detail: [
++                    stay.storagePosition,
++                    stay.arrivedAt
++                      ? `${text.arrived} ${dateTime(String(stay.arrivedAt))}`
++                      : null,
++                    stay.stockedAt
++                      ? `${text.stocked} ${dateTime(String(stay.stockedAt))}`
++                      : null,
++                    stay.departedAt
++                      ? `${text.departed} ${dateTime(String(stay.departedAt))}`
++                      : null,
++                  ]
++                    .filter(Boolean)
++                    .join(' · '),
++                }))}
++              />
++            </Section>
++            <div className="grid gap-5 lg:grid-cols-2">
++              <Section title={text.statusHistory}>
+                 <Timeline
+-                  rows={purchaseOrder.warehouseStays.map((stay) => ({
+-                    id: String(stay.id),
+-                    title: `${stay.warehouse.code} · ${enumLabel(stay.state)}`,
+-                    detail: [
+-                      stay.storagePosition,
+-                      stay.arrivedAt
+-                        ? `${text.arrived} ${dateTime(String(stay.arrivedAt))}`
+-                        : null,
+-                      stay.stockedAt
+-                        ? `${text.stocked} ${dateTime(String(stay.stockedAt))}`
+-                        : null,
+-                      stay.departedAt
+-                        ? `${text.departed} ${dateTime(String(stay.departedAt))}`
+-                        : null,
+-                    ]
+-                      .filter(Boolean)
+-                      .join(' · '),
++                  rows={purchaseOrder.statusTransitions.map((transition) => ({
++                    id: String(transition.id),
++                    title: `${enumLabel(transition.fromStatus)} → ${enumLabel(transition.toStatus)}`,
++                    detail: `${dateTime(String(transition.occurredAt))}${transition.reason ? ` · ${transition.reason}` : ''}`,
++                  }))}
++                />
++              </Section>
++              <Section title={text.lineageActivity}>
++                <Timeline
++                  rows={purchaseOrder.lineageActivities.map((activity) => ({
++                    id: `${String(activity.purchaseOrderId)}-${String(activity.activityId)}`,
++                    title: `${activity.purchaseOrderInternalNumber} · ${enumLabel(activity.activityType)}`,
++                    detail: `${dateTime(String(activity.createdAt))}${activity.message ? ` · ${activity.message}` : ''}`,
+                   }))}
+                 />
+               </Section>
+-              <div className="grid gap-5 lg:grid-cols-2">
+-                <Section title={text.statusHistory}>
+-                  <Timeline
+-                    rows={purchaseOrder.statusTransitions.map((transition) => ({
+-                      id: String(transition.id),
+-                      title: `${enumLabel(transition.fromStatus)} → ${enumLabel(transition.toStatus)}`,
+-                      detail: `${dateTime(String(transition.occurredAt))}${transition.reason ? ` · ${transition.reason}` : ''}`,
+-                    }))}
+-                  />
+-                </Section>
+-                <Section title={text.lineageActivity}>
+-                  <Timeline
+-                    rows={purchaseOrder.lineageActivities.map((activity) => ({
+-                      id: `${String(activity.purchaseOrderId)}-${String(activity.activityId)}`,
+-                      title: `${activity.purchaseOrderInternalNumber} · ${enumLabel(activity.activityType)}`,
+-                      detail: `${dateTime(String(activity.createdAt))}${activity.message ? ` · ${activity.message}` : ''}`,
+-                    }))}
+-                  />
+-                </Section>
+-              </div>
+             </div>
++          </div>
++        </TabPanel>
++        {slots && (
++          <TabPanel value="actions" keepMounted>
++            <Section title={text.availableActions}>{slots.actions}</Section>
+           </TabPanel>
+-        </Tabs>
+-      </section>
+-
+-      <Can authority={UserAuthority.PURCHASE_ORDER_EDIT}>
+-        <PurchaseOrderActions purchaseOrder={purchaseOrder} />
+-      </Can>
++        )}
++      </Tabs>
++      {slots?.dialogs}
+     </div>
+   )
+ }
+ 
+ export function PurchaseOrderActions({
+   purchaseOrder,
++  children,
+ }: {
+   purchaseOrder: PurchaseOrder
++  children?: (slots: ActionSlots) => ReactNode
+ }) {
+   const { text, enumLabel } = usePurchaseOrderLabels()
+   const movable = purchaseOrder.handlingUnits.filter(
+@@ -396,6 +473,7 @@ export function PurchaseOrderActions({
+   const stockConfirmationSubmitting = useRef(false)
+   const [splitIds, setSplitIds] = useState<Array<string>>([])
+   const [reason, setReason] = useState('')
++  const [terminalReason, setTerminalReason] = useState('')
+   const [terminalId, setTerminalId] = useState('')
+   const [disposition, setDisposition] = useState('DAMAGED')
+   const [message, setMessage] = useState('')
+@@ -413,6 +491,7 @@ export function PurchaseOrderActions({
+       ]),
+     ),
+   )
++  const initialMeasurements = useRef(JSON.stringify(measurements))
+   type CommandDocument = { name: string; gql: RequestDocument }
+   type CommandPayload = {
+     document: CommandDocument
+@@ -431,6 +510,26 @@ export function PurchaseOrderActions({
+     setError('')
+     try {
+       await mutation.mutateAsync({ document, variables })
++      if (document === purchaseOrderDocuments.correctStatus) {
++        setCorrectedStatus('')
++        setCorrectionReadinessDate('')
++        setCorrectionReason('')
++      } else if (document === purchaseOrderDocuments.readiness) {
++        setReadinessDate('')
++        setRemark('')
++      } else if (document === purchaseOrderDocuments.ready) setReadyRemark('')
++      else if (document === purchaseOrderDocuments.message) setMessage('')
++      else if (document === purchaseOrderDocuments.split) {
++        setSplitIds([])
++        setReason('')
++      } else if (document === purchaseOrderDocuments.disposition) {
++        setTerminalId('')
++        setDisposition('DAMAGED')
++        setTerminalReason('')
++      } else if (document === purchaseOrderDocuments.confirmStock) {
++        setStoragePosition('')
++        initialMeasurements.current = JSON.stringify(measurements)
++      }
+       toast({ title: success, tone: 'success' })
+       return true
+     } catch (caught) {
+@@ -477,397 +576,425 @@ export function PurchaseOrderActions({
+     }
+   }
+ 
+-  return (
+-    <Section title={text.availableActions}>
+-      {error ? <ErrorMessage message={error} /> : null}
+-      <div className="grid gap-4 lg:grid-cols-2">
+-        <ReadinessReminderAction
+-          purchaseOrderId={String(purchaseOrder.id)}
+-          status={purchaseOrder.status}
+-        />
+-        {['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
+-          purchaseOrder.status,
+-        ) && !purchaseOrder.activeShipment ? (
+-          <ActionCard title={text.correctPoStatus}>
++  const dirty = Boolean(
++    readinessDate ||
++    remark ||
++    readyRemark ||
++    correctedStatus ||
++    correctionReadinessDate ||
++    correctionReason ||
++    storagePosition ||
++    splitIds.length ||
++    reason ||
++    terminalReason ||
++    terminalId ||
++    disposition !== 'DAMAGED' ||
++    message ||
++    JSON.stringify(measurements) !== initialMeasurements.current,
++  )
++  const lifecycle = (
++    <fieldset
++      disabled={mutation.isPending}
++      className="grid min-w-0 gap-4 lg:grid-cols-2"
++    >
++      {purchaseOrder.status === 'PENDING' ? (
++        <ActionCard title={text.setReadiness}>
++          <DatePicker
++            value={parseIsoDate(readinessDate)}
++            onChange={(date) => setReadinessDate(formatIsoDate(date))}
++          />
++          <Input
++            placeholder={text.remark}
++            value={remark}
++            onChange={(event) => setRemark(event.target.value)}
++          />
++          <Button
++            type="button"
++            disabled={!readinessDate}
++            onClick={() =>
++              run(
++                purchaseOrderDocuments.readiness,
++                {
++                  id: Number(purchaseOrder.id),
++                  input: { readinessDate, remark: remark || null },
++                },
++                text.readinessRecorded,
++              )
++            }
++          >
++            {text.setReadiness}
++          </Button>
++        </ActionCard>
++      ) : null}
++      {purchaseOrder.status === 'EXPECTED_READINESS' ? (
++        <ActionCard title={text.markReady}>
++          <p className="text-sm text-fg-muted">{text.readyDescription}</p>
++          <Input
++            placeholder={text.remark}
++            value={readyRemark}
++            onChange={(event) => setReadyRemark(event.target.value)}
++          />
++          <Button
++            type="button"
++            onClick={() =>
++              run(
++                purchaseOrderDocuments.ready,
++                {
++                  id: Number(purchaseOrder.id),
++                  input: { remark: readyRemark || null },
++                },
++                text.readyRecorded,
++              )
++            }
++          >
++            {text.markReady}
++          </Button>
++        </ActionCard>
++      ) : null}
++      {(purchaseOrder.status === 'READY' ||
++        purchaseOrder.status === 'AWAITING_IMPORT') &&
++      purchaseOrder.currentWarehouseStay ? (
++        <div className="lg:col-span-2">
++          <ActionCard
++            title={
++              purchaseOrder.status === 'READY'
++                ? text.recordArrivalAndSetInStock
++                : text.confirmStock
++            }
++          >
+             <p className="text-sm text-fg-muted">
+-              {text.correctPoStatusDescription}
++              {purchaseOrder.currentWarehouseStay.warehouse.name}
+             </p>
+-            <FormField
+-              label={text.correctedStatus}
+-              htmlFor="corrected-po-status"
+-              required
+-            >
+-              <Select
+-                id="corrected-po-status"
+-                value={correctedStatus}
+-                onChange={(event) => {
+-                  setCorrectedStatus(event.target.value)
+-                  if (event.target.value !== 'EXPECTED_READINESS') {
+-                    setCorrectionReadinessDate('')
+-                  }
+-                }}
+-              >
+-                <option value="">{text.selectCorrectedStatus}</option>
+-                {['PENDING', 'EXPECTED_READINESS', 'READY']
+-                  .filter((status) => status !== purchaseOrder.status)
+-                  .map((status) => (
+-                    <option key={status} value={status}>
+-                      {enumLabel(status)}
+-                    </option>
+-                  ))}
+-              </Select>
+-            </FormField>
+-            {correctedStatus === 'EXPECTED_READINESS' ? (
++
++            <div className="border-t border-border pt-4">
++              <h5 className="mb-3 text-sm font-semibold text-fg-muted">
++                {text.finalColliMeasurements}
++              </h5>
+               <FormField
+-                label={text.readinessDate}
+-                htmlFor="correction-readiness-date"
++                label={text.storagePosition}
++                htmlFor="stock-storage-position"
+                 required
++                className="mb-4 max-w-xl"
+               >
+                 <Input
+-                  id="correction-readiness-date"
+-                  type="date"
+-                  value={correctionReadinessDate}
+-                  onChange={(event) =>
+-                    setCorrectionReadinessDate(event.target.value)
+-                  }
++                  id="stock-storage-position"
++                  value={storagePosition}
++                  onChange={(event) => setStoragePosition(event.target.value)}
+                 />
+               </FormField>
++              <div className="space-y-3">
++                {movable.map((unit) => {
++                  const values = measurements[String(unit.id)]
++                  return (
++                    <div
++                      key={String(unit.id)}
++                      className="rounded-md bg-surface-2 p-4"
++                    >
++                      <p className="mb-3 text-sm font-semibold">
++                        {unit.trackingCode}
++                      </p>
++                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
++                        {(
++                          [
++                            ['lengthCm', text.lengthCm, true],
++                            ['widthCm', text.widthCm, true],
++                            ['heightCm', text.heightCm, true],
++                            ['grossWeightKg', text.grossKg, true],
++                            ['netWeightKg', text.netKg, false],
++                          ] as const
++                        ).map(([field, label, required]) => {
++                          const inputId = `measurement-${String(unit.id)}-${field}`
++                          return (
++                            <FormField
++                              key={field}
++                              label={label}
++                              htmlFor={inputId}
++                              required={required}
++                            >
++                              <Input
++                                id={inputId}
++                                type="number"
++                                min="0"
++                                step="any"
++                                value={values?.[field] ?? ''}
++                                onChange={(event) =>
++                                  setMeasurements((current) => ({
++                                    ...current,
++                                    [String(unit.id)]: {
++                                      ...current[String(unit.id)],
++                                      [field]: event.target.value,
++                                    },
++                                  }))
++                                }
++                              />
++                            </FormField>
++                          )
++                        })}
++                      </div>
++                    </div>
++                  )
++                })}
++              </div>
++            </div>
++
++            {purchaseOrder.currentWarehouseStay.state === 'EXPECTED' ||
++            purchaseOrder.currentWarehouseStay.state === 'AT_WAREHOUSE' ? (
++              <Button
++                type="button"
++                disabled={
++                  movable.length === 0 ||
++                  !storagePosition ||
++                  movable.some((unit) => {
++                    const values = measurements[String(unit.id)]
++                    return (
++                      !values?.lengthCm ||
++                      !values.widthCm ||
++                      !values.heightCm ||
++                      !values.grossWeightKg
++                    )
++                  })
++                }
++                onClick={() => setStockConfirmationOpen(true)}
++              >
++                {purchaseOrder.status === 'READY'
++                  ? text.recordArrivalAndSetInStock
++                  : text.confirmStock}
++              </Button>
+             ) : null}
++          </ActionCard>
++        </div>
++      ) : null}
++    </fieldset>
++  )
++  const actions = (
++    <fieldset
++      disabled={mutation.isPending}
++      className="grid min-w-0 gap-4 lg:grid-cols-2"
++    >
++      <ReadinessReminderAction
++        purchaseOrderId={String(purchaseOrder.id)}
++        status={purchaseOrder.status}
++      />
++      {['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
++        purchaseOrder.status,
++      ) && !purchaseOrder.activeShipment ? (
++        <ActionCard title={text.correctPoStatus}>
++          <p className="text-sm text-fg-muted">
++            {text.correctPoStatusDescription}
++          </p>
++          <FormField
++            label={text.correctedStatus}
++            htmlFor="corrected-po-status"
++            required
++          >
++            <Select
++              id="corrected-po-status"
++              value={correctedStatus}
++              onChange={(event) => {
++                setCorrectedStatus(event.target.value)
++                if (event.target.value !== 'EXPECTED_READINESS') {
++                  setCorrectionReadinessDate('')
++                }
++              }}
++            >
++              <option value="">{text.selectCorrectedStatus}</option>
++              {['PENDING', 'EXPECTED_READINESS', 'READY']
++                .filter((status) => status !== purchaseOrder.status)
++                .map((status) => (
++                  <option key={status} value={status}>
++                    {enumLabel(status)}
++                  </option>
++                ))}
++            </Select>
++          </FormField>
++          {correctedStatus === 'EXPECTED_READINESS' ? (
+             <FormField
+-              label={text.correctionReason}
+-              htmlFor="status-correction-reason"
++              label={text.readinessDate}
++              htmlFor="correction-readiness-date"
+               required
+             >
+-              <Textarea
+-                id="status-correction-reason"
+-                value={correctionReason}
+-                onChange={(event) => setCorrectionReason(event.target.value)}
++              <Input
++                id="correction-readiness-date"
++                type="date"
++                value={correctionReadinessDate}
++                onChange={(event) =>
++                  setCorrectionReadinessDate(event.target.value)
++                }
+               />
+             </FormField>
+-            <Button
+-              type="button"
+-              loading={mutation.isPending}
+-              disabled={
+-                !correctedStatus ||
+-                !correctionReason.trim() ||
+-                (correctedStatus === 'EXPECTED_READINESS' &&
+-                  !correctionReadinessDate)
+-              }
+-              onClick={() =>
+-                run(
+-                  purchaseOrderDocuments.correctStatus,
+-                  {
+-                    id: Number(purchaseOrder.id),
+-                    input: {
+-                      status: correctedStatus,
+-                      readinessDate:
+-                        correctedStatus === 'EXPECTED_READINESS'
+-                          ? correctionReadinessDate
+-                          : null,
+-                      reason: correctionReason.trim(),
+-                    },
+-                  },
+-                  text.statusCorrected,
+-                )
+-              }
+-            >
+-              {text.correctPoStatus}
+-            </Button>
+-          </ActionCard>
+-        ) : null}
+-        {purchaseOrder.status === 'PENDING' ? (
+-          <ActionCard title={text.setReadiness}>
+-            <DatePicker
+-              value={parseIsoDate(readinessDate)}
+-              onChange={(date) => setReadinessDate(formatIsoDate(date))}
+-            />
+-            <Input
+-              placeholder={text.remark}
+-              value={remark}
+-              onChange={(event) => setRemark(event.target.value)}
++          ) : null}
++          <FormField
++            label={text.correctionReason}
++            htmlFor="status-correction-reason"
++            required
++          >
++            <Textarea
++              id="status-correction-reason"
++              value={correctionReason}
++              onChange={(event) => setCorrectionReason(event.target.value)}
+             />
+-            <Button
+-              type="button"
+-              disabled={!readinessDate}
+-              onClick={() =>
+-                run(
+-                  purchaseOrderDocuments.readiness,
+-                  {
+-                    id: Number(purchaseOrder.id),
+-                    input: { readinessDate, remark: remark || null },
++          </FormField>
++          <Button
++            type="button"
++            loading={mutation.isPending}
++            disabled={
++              !correctedStatus ||
++              !correctionReason.trim() ||
++              (correctedStatus === 'EXPECTED_READINESS' &&
++                !correctionReadinessDate)
++            }
++            onClick={() =>
++              run(
++                purchaseOrderDocuments.correctStatus,
++                {
++                  id: Number(purchaseOrder.id),
++                  input: {
++                    status: correctedStatus,
++                    readinessDate:
++                      correctedStatus === 'EXPECTED_READINESS'
++                        ? correctionReadinessDate
++                        : null,
++                    reason: correctionReason.trim(),
+                   },
+-                  text.readinessRecorded,
+-                )
+-              }
+-            >
+-              {text.setReadiness}
+-            </Button>
+-          </ActionCard>
+-        ) : null}
+-        {purchaseOrder.status === 'EXPECTED_READINESS' ? (
+-          <ActionCard title={text.markReady}>
+-            <p className="text-sm text-fg-muted">{text.readyDescription}</p>
+-            <Input
+-              placeholder={text.remark}
+-              value={readyRemark}
+-              onChange={(event) => setReadyRemark(event.target.value)}
+-            />
+-            <Button
+-              type="button"
+-              onClick={() =>
+-                run(
+-                  purchaseOrderDocuments.ready,
+-                  {
+-                    id: Number(purchaseOrder.id),
+-                    input: { remark: readyRemark || null },
++                },
++                text.statusCorrected,
++              )
++            }
++          >
++            {text.correctPoStatus}
++          </Button>
++        </ActionCard>
++      ) : null}
++      {['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
++        purchaseOrder.status,
++      ) &&
++      !purchaseOrder.activeShipment &&
++      movable.length > 1 ? (
++        <ActionCard title={text.splitSelected}>
++          {movable.map((unit) => (
++            <label key={String(unit.id)} className="flex gap-2 text-sm">
++              <input
++                type="checkbox"
++                checked={splitIds.includes(String(unit.id))}
++                onChange={(event) =>
++                  setSplitIds((current) =>
++                    event.target.checked
++                      ? [...current, String(unit.id)]
++                      : current.filter((id) => id !== String(unit.id)),
++                  )
++                }
++              />
++              {unit.trackingCode}
++            </label>
++          ))}
++          <Input
++            placeholder={text.operationalReason}
++            value={reason}
++            onChange={(event) => setReason(event.target.value)}
++          />
++          <Button
++            type="button"
++            disabled={!reason || splitIds.length === 0}
++            onClick={() =>
++              run(
++                purchaseOrderDocuments.split,
++                {
++                  id: Number(purchaseOrder.id),
++                  input: {
++                    handlingUnitIds: splitIds.map(Number),
++                    reason: 'OTHER',
++                    remark: reason,
+                   },
+-                  text.readyRecorded,
+-                )
+-              }
+-            >
+-              {text.markReady}
+-            </Button>
+-          </ActionCard>
+-        ) : null}
+-        {(purchaseOrder.status === 'READY' ||
+-          purchaseOrder.status === 'AWAITING_IMPORT') &&
+-        purchaseOrder.currentWarehouseStay ? (
+-          <div className="lg:col-span-2">
+-            <ActionCard
+-              title={
+-                purchaseOrder.status === 'READY'
+-                  ? text.recordArrivalAndSetInStock
+-                  : text.confirmStock
+-              }
+-            >
+-              <p className="text-sm text-fg-muted">
+-                {purchaseOrder.currentWarehouseStay.warehouse.name}
+-              </p>
+-
+-              <div className="border-t border-border pt-4">
+-                <h5 className="mb-3 text-sm font-semibold text-fg-muted">
+-                  {text.finalColliMeasurements}
+-                </h5>
+-                <FormField
+-                  label={text.storagePosition}
+-                  htmlFor="stock-storage-position"
+-                  required
+-                  className="mb-4 max-w-xl"
+-                >
+-                  <Input
+-                    id="stock-storage-position"
+-                    value={storagePosition}
+-                    onChange={(event) => setStoragePosition(event.target.value)}
+-                  />
+-                </FormField>
+-                <div className="space-y-3">
+-                  {movable.map((unit) => {
+-                    const values = measurements[String(unit.id)]
+-                    return (
+-                      <div
+-                        key={String(unit.id)}
+-                        className="rounded-md bg-surface-2 p-4"
+-                      >
+-                        <p className="mb-3 text-sm font-semibold">
+-                          {unit.trackingCode}
+-                        </p>
+-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+-                          {(
+-                            [
+-                              ['lengthCm', text.lengthCm, true],
+-                              ['widthCm', text.widthCm, true],
+-                              ['heightCm', text.heightCm, true],
+-                              ['grossWeightKg', text.grossKg, true],
+-                              ['netWeightKg', text.netKg, false],
+-                            ] as const
+-                          ).map(([field, label, required]) => {
+-                            const inputId = `measurement-${String(unit.id)}-${field}`
+-                            return (
+-                              <FormField
+-                                key={field}
+-                                label={label}
+-                                htmlFor={inputId}
+-                                required={required}
+-                              >
+-                                <Input
+-                                  id={inputId}
+-                                  type="number"
+-                                  min="0"
+-                                  step="any"
+-                                  value={values?.[field] ?? ''}
+-                                  onChange={(event) =>
+-                                    setMeasurements((current) => ({
+-                                      ...current,
+-                                      [String(unit.id)]: {
+-                                        ...current[String(unit.id)],
+-                                        [field]: event.target.value,
+-                                      },
+-                                    }))
+-                                  }
+-                                />
+-                              </FormField>
+-                            )
+-                          })}
+-                        </div>
+-                      </div>
+-                    )
+-                  })}
+-                </div>
+-              </div>
+-
+-              {purchaseOrder.currentWarehouseStay.state === 'EXPECTED' ||
+-              purchaseOrder.currentWarehouseStay.state === 'AT_WAREHOUSE' ? (
+-                <Button
+-                  type="button"
+-                  disabled={
+-                    movable.length === 0 ||
+-                    !storagePosition ||
+-                    movable.some((unit) => {
+-                      const values = measurements[String(unit.id)]
+-                      return (
+-                        !values?.lengthCm ||
+-                        !values.widthCm ||
+-                        !values.heightCm ||
+-                        !values.grossWeightKg
+-                      )
+-                    })
+-                  }
+-                  onClick={() => setStockConfirmationOpen(true)}
+-                >
+-                  {purchaseOrder.status === 'READY'
+-                    ? text.recordArrivalAndSetInStock
+-                    : text.confirmStock}
+-                </Button>
+-              ) : null}
+-            </ActionCard>
+-          </div>
+-        ) : null}
+-        {['PENDING', 'EXPECTED_READINESS', 'READY'].includes(
+-          purchaseOrder.status,
+-        ) &&
+-        !purchaseOrder.activeShipment &&
+-        movable.length > 1 ? (
+-          <ActionCard title={text.splitSelected}>
++                },
++                text.childPoCreated,
++              )
++            }
++          >
++            {text.splitCollis}
++          </Button>
++        </ActionCard>
++      ) : null}
++      {['PENDING', 'EXPECTED_READINESS', 'READY', 'IN_STOCK'].includes(
++        purchaseOrder.status,
++      ) &&
++      !purchaseOrder.activeShipment &&
++      movable.length ? (
++        <ActionCard title={text.terminalDisposition}>
++          <Select
++            value={terminalId}
++            onChange={(event) => setTerminalId(event.target.value)}
++          >
++            <option value="">{text.selectColli}</option>
+             {movable.map((unit) => (
+-              <label key={String(unit.id)} className="flex gap-2 text-sm">
+-                <input
+-                  type="checkbox"
+-                  checked={splitIds.includes(String(unit.id))}
+-                  onChange={(event) =>
+-                    setSplitIds((current) =>
+-                      event.target.checked
+-                        ? [...current, String(unit.id)]
+-                        : current.filter((id) => id !== String(unit.id)),
+-                    )
+-                  }
+-                />
++              <option key={String(unit.id)} value={String(unit.id)}>
+                 {unit.trackingCode}
+-              </label>
++              </option>
+             ))}
+-            <Input
+-              placeholder={text.operationalReason}
+-              value={reason}
+-              onChange={(event) => setReason(event.target.value)}
+-            />
+-            <Button
+-              type="button"
+-              disabled={!reason || splitIds.length === 0}
+-              onClick={() =>
+-                run(
+-                  purchaseOrderDocuments.split,
+-                  {
+-                    id: Number(purchaseOrder.id),
+-                    input: {
+-                      handlingUnitIds: splitIds.map(Number),
+-                      reason: 'OTHER',
+-                      remark: reason,
+-                    },
+-                  },
+-                  text.childPoCreated,
+-                )
+-              }
+-            >
+-              {text.splitCollis}
+-            </Button>
+-          </ActionCard>
+-        ) : null}
+-        {['PENDING', 'EXPECTED_READINESS', 'READY', 'IN_STOCK'].includes(
+-          purchaseOrder.status,
+-        ) &&
+-        !purchaseOrder.activeShipment &&
+-        movable.length ? (
+-          <ActionCard title={text.terminalDisposition}>
+-            <Select
+-              value={terminalId}
+-              onChange={(event) => setTerminalId(event.target.value)}
+-            >
+-              <option value="">{text.selectColli}</option>
+-              {movable.map((unit) => (
+-                <option key={String(unit.id)} value={String(unit.id)}>
+-                  {unit.trackingCode}
+-                </option>
+-              ))}
+-            </Select>
+-            <Select
+-              value={disposition}
+-              onChange={(event) => setDisposition(event.target.value)}
+-            >
+-              {[
+-                'DAMAGED',
+-                'UNCOLLECTABLE',
+-                'MISSING',
+-                'CANCELLED',
+-                'OTHER',
+-              ].map((value) => (
++          </Select>
++          <Select
++            value={disposition}
++            onChange={(event) => setDisposition(event.target.value)}
++          >
++            {['DAMAGED', 'UNCOLLECTABLE', 'MISSING', 'CANCELLED', 'OTHER'].map(
++              (value) => (
+                 <option key={value} value={value}>
+                   {enumLabel(value)}
+                 </option>
+-              ))}
+-            </Select>
+-            <Input
+-              placeholder={text.reason}
+-              value={reason}
+-              onChange={(event) => setReason(event.target.value)}
+-            />
+-            <Button
+-              type="button"
+-              disabled={!terminalId || !reason}
+-              onClick={() =>
+-                run(
+-                  purchaseOrderDocuments.disposition,
+-                  {
+-                    purchaseOrderId: Number(purchaseOrder.id),
+-                    handlingUnitId: Number(terminalId),
+-                    input: { disposition, reason },
+-                  },
+-                  text.dispositionRecorded,
+-                )
+-              }
+-            >
+-              {text.recordDisposition}
+-            </Button>
+-          </ActionCard>
+-        ) : null}
+-        <ActionCard title={text.addActivityMessage}>
+-          <Textarea
+-            value={message}
+-            onChange={(event) => setMessage(event.target.value)}
++              ),
++            )}
++          </Select>
++          <Input
++            placeholder={text.reason}
++            value={terminalReason}
++            onChange={(event) => setTerminalReason(event.target.value)}
+           />
+           <Button
+             type="button"
+-            disabled={!message.trim()}
++            disabled={!terminalId || !terminalReason}
+             onClick={() =>
+               run(
+-                purchaseOrderDocuments.message,
+-                { id: Number(purchaseOrder.id), message },
+-                text.messageAdded,
++                purchaseOrderDocuments.disposition,
++                {
++                  purchaseOrderId: Number(purchaseOrder.id),
++                  handlingUnitId: Number(terminalId),
++                  input: { disposition, reason: terminalReason },
++                },
++                text.dispositionRecorded,
+               )
+             }
+           >
+-            {text.addMessage}
++            {text.recordDisposition}
+           </Button>
+         </ActionCard>
+-      </div>
++      ) : null}
++    </fieldset>
++  )
++  const comments = (
++    <fieldset disabled={mutation.isPending} className="min-w-0">
++      <ActionCard title={text.addActivityMessage}>
++        <Textarea
++          aria-label={text.addActivityMessage}
++          value={message}
++          onChange={(event) => setMessage(event.target.value)}
++        />
++        <Button
++          type="button"
++          disabled={!message.trim()}
++          onClick={() =>
++            run(
++              purchaseOrderDocuments.message,
++              { id: Number(purchaseOrder.id), message },
++              text.messageAdded,
++            )
++          }
++        >
++          {text.addMessage}
++        </Button>
++      </ActionCard>
++    </fieldset>
++  )
++  const dialogs = (
++    <>
+       <Modal
+         open={stockConfirmationOpen}
+         onClose={closeStockConfirmation}
+@@ -901,6 +1028,26 @@ export function PurchaseOrderActions({
+           {text.confirmInStockWarning}
+         </p>
+       </Modal>
++    </>
++  )
++  const errorMessage = error ? <ErrorMessage message={error} /> : null
++  if (children)
++    return children({
++      lifecycle,
++      actions,
++      comments,
++      dialogs,
++      error: errorMessage,
++      dirty,
++      pending: mutation.isPending,
++    })
++  return (
++    <Section title={text.availableActions}>
++      {errorMessage}
++      {lifecycle}
++      {actions}
++      {comments}
++      {dialogs}
+     </Section>
+   )
+ }
+@@ -947,10 +1094,12 @@ function InvoiceRowsTable({ purchaseOrder }: { purchaseOrder: PurchaseOrder }) {
+ 
+ function Section({ title, children }: { title: string; children: ReactNode }) {
+   return (
+-    <section className="rounded-lg border border-border bg-surface p-5 shadow-card">
+-      <h3 className="mb-4 text-base font-semibold">{title}</h3>
+-      {children}
+-    </section>
++    <Card flush>
++      <CardHeader>
++        <CardTitle>{title}</CardTitle>
++      </CardHeader>
++      <CardBody>{children}</CardBody>
++    </Card>
+   )
+ }
+ 
+@@ -971,13 +1120,13 @@ function ActionCard({
+ 
+ function Facts({ items }: { items: Array<[string, ReactNode]> }) {
+   return (
+-    <dl className="grid gap-4 sm:grid-cols-2">
++    <dl className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+       {items.map(([label, value]) => (
+-        <div key={label}>
+-          <dt className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">
+-            {label}
+-          </dt>
+-          <dd className="mt-1 text-sm">{value || '—'}</dd>
++        <div key={label} className="min-w-0">
++          <dt className="text-xs font-medium text-fg-muted">{label}</dt>
++          <dd className="mt-1 break-words whitespace-pre-wrap text-sm">
++            {value || '—'}
++          </dd>
+         </div>
+       ))}
+     </dl>
+@@ -989,7 +1138,9 @@ function Timeline({
+ }: {
+   rows: Array<{ id: string; title: string; detail: string }>
+ }) {
+-  if (!rows.length) return <p className="text-sm text-fg-muted">No records.</p>
++  const { text } = usePurchaseOrderLabels()
++  if (!rows.length)
++    return <p className="text-sm text-fg-muted">{text.noRecords}</p>
+   return (
+     <ol className="space-y-3">
+       {rows.map((row) => (
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-status-pill.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-status-pill.tsx
+index ebfad0c..ed89a0a 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-status-pill.tsx
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-status-pill.tsx
+@@ -19,10 +19,16 @@ export function purchaseOrderStatusTone(status: string): StatusTone {
+   return purchaseOrderStatusTones[status] ?? 'neutral'
+ }
+ 
+-export function PurchaseOrderStatusPill({ status }: { status: string }) {
++export function PurchaseOrderStatusPill({
++  status,
++  className,
++}: {
++  status: string
++  className?: string
++}) {
+   const { enumLabel } = usePurchaseOrderLabels()
+   return (
+-    <StatusPill tone={purchaseOrderStatusTone(status)}>
++    <StatusPill tone={purchaseOrderStatusTone(status)} className={className}>
+       {enumLabel(status)}
+     </StatusPill>
+   )
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.test.tsx
+index 44ed3ab..a169644 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.test.tsx
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.test.tsx
+@@ -137,6 +137,17 @@ describe('ReadinessReminderAction', () => {
+ 
+     renderAction()
+ 
++    expect(
++      screen.queryByText('You can send this reminder from 8/2/2026'),
++    ).toBeNull()
++    const help = await screen.findByRole('button', {
++      name: 'Why is this unavailable?',
++    })
++    fireEvent.mouseEnter(help)
++    fireEvent.pointerDown(help)
++    help.focus()
++    fireEvent.click(help)
++
+     expect(
+       await screen.findByText('You can send this reminder from 8/2/2026'),
+     ).toBeTruthy()
+@@ -164,6 +175,10 @@ describe('ReadinessReminderAction', () => {
+ 
+     renderAction()
+ 
++    fireEvent.click(
++      await screen.findByRole('button', { name: 'Why is this unavailable?' }),
++    )
++
+     expect(
+       await screen.findByText(
+         'Reminder emails are sent Monday to Friday. You can try again on the next business day.',
+@@ -198,6 +213,10 @@ describe('ReadinessReminderAction', () => {
+       </QueryClientProvider>,
+     )
+ 
++    fireEvent.click(
++      await screen.findByRole('button', { name: 'Why is this unavailable?' }),
++    )
++
+     expect(
+       await screen.findByText(
+         'The first request will be sent automatically. You can send another after it has been sent.',
+@@ -239,6 +258,10 @@ describe('ReadinessReminderAction', () => {
+       </QueryClientProvider>,
+     )
+ 
++    fireEvent.click(
++      await screen.findByRole('button', { name: 'Why is this unavailable?' }),
++    )
++
+     expect(
+       await screen.findByText(
+         'A reminder email is already waiting to be sent.',
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.tsx
+index 67b959d..cce683d 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.tsx
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/readiness-reminder-action.tsx
+@@ -1,3 +1,4 @@
++import { PurchaseOrderActionHelp } from './purchase-order-action-help'
+ import { Button } from '#/components/ui/button'
+ import { ErrorMessage } from '#/components/feedback/error-message'
+ import { StatusPill } from '#/components/ui/badge'
+@@ -93,19 +94,21 @@ export function ReadinessReminderAction({ purchaseOrderId, status }: Props) {
+       {sendMutation.error ? (
+         <ErrorMessage message={sendMutation.error.message} />
+       ) : null}
+-      {relevantStatus && eligibility && !eligibility.available ? (
+-        <p className="text-sm text-fg-muted">{availabilityMessage}</p>
+-      ) : null}
+-      {relevantStatus && type ? (
+-        <Button
+-          type="button"
+-          loading={sendMutation.isPending}
+-          disabled={!eligibility?.available}
+-          onClick={sendReminder}
+-        >
+-          {buttonLabel}
+-        </Button>
+-      ) : null}
++      <div className="flex flex-wrap items-center gap-2">
++        {relevantStatus && type ? (
++          <Button
++            type="button"
++            loading={sendMutation.isPending}
++            disabled={!eligibility?.available}
++            onClick={sendReminder}
++          >
++            {buttonLabel}
++          </Button>
++        ) : null}
++        {relevantStatus && eligibility && !eligibility.available ? (
++          <PurchaseOrderActionHelp reason={availabilityMessage} />
++        ) : null}
++      </div>
+       <div className="space-y-2 pt-2">
+         <div>
+           <h5 className="text-sm font-semibold">{text.reminderHistory}</h5>
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/localization/purchase-order-labels.ts b/frontline-forwarding-client/src/features/purchase-orders/localization/purchase-order-labels.ts
+index d1ba505..8806604 100644
+--- a/frontline-forwarding-client/src/features/purchase-orders/localization/purchase-order-labels.ts
++++ b/frontline-forwarding-client/src/features/purchase-orders/localization/purchase-order-labels.ts
+@@ -15,7 +15,9 @@ export function enumLabel(value?: string | null) {
+ }
+ 
+ export function purchaseOrderLabelsFor(locale: 'en' | 'el') {
+-  return locale === 'el' ? purchaseOrderGreekText : purchaseOrderEnglishText
++  return locale === 'el'
++    ? { ...purchaseOrderGreekText, ...detailText.el }
++    : { ...purchaseOrderEnglishText, ...detailText.en }
+ }
+ 
+ export function purchaseOrderEnumLabel(
+@@ -23,6 +25,7 @@ export function purchaseOrderEnumLabel(
+   value?: string | null,
+ ) {
+   return (
++    (value && locale === 'el' ? dangerousGoodsGreekLabels[value] : undefined) ??
+     (value ? purchaseOrderEnumLabels[locale][value] : undefined) ??
+     enumLabel(value)
+   )
+@@ -35,3 +38,47 @@ export function usePurchaseOrderLabels() {
+     enumLabel: (value?: string | null) => purchaseOrderEnumLabel(locale, value),
+   }
+ }
++
++const detailText = {
++  en: {
++    noCollis: 'No collis have been recorded.',
++    colliDetails: 'Colli details',
++    expandColli: 'Expand',
++    collapseColli: 'Collapse',
++    dgClass: 'DG class',
++    actionUnavailableHelp: 'Why is this unavailable?',
++    noRecords: 'No records.',
++    leaveDetailsTitle: 'Discard unsaved changes?',
++    leaveDetailsMessage: 'Your unsaved changes to this Order will be lost.',
++    stayOnDetails: 'Keep editing',
++    discardAndLeave: 'Discard and leave',
++  },
++  el: {
++    noCollis: 'Δεν έχουν καταχωρηθεί κόλι.',
++    colliDetails: 'Στοιχεία κόλι',
++    expandColli: 'Ανάπτυξη',
++    collapseColli: 'Σύμπτυξη',
++    dgClass: 'Κλάση DG',
++    actionUnavailableHelp: 'Γιατί δεν είναι διαθέσιμο;',
++    noRecords: 'Δεν υπάρχουν εγγραφές.',
++    leaveDetailsTitle: 'Απόρριψη μη αποθηκευμένων αλλαγών;',
++    leaveDetailsMessage:
++      'Οι μη αποθηκευμένες αλλαγές σε αυτή την εντολή θα χαθούν.',
++    stayOnDetails: 'Συνέχεια επεξεργασίας',
++    discardAndLeave: 'Απόρριψη και έξοδος',
++  },
++} as const
++
++const dangerousGoodsGreekLabels: Record<string, string> = {
++  EXPLOSIVES: 'Εκρηκτικά',
++  GASES_COMPRESSED_LIQUEFIED_OR_DISSOLVED_UNDER_PRESSURE:
++    'Αέρια συμπιεσμένα, υγροποιημένα ή διαλυμένα υπό πίεση',
++  FLAMMABLE_LIQUIDS: 'Εύφλεκτα υγρά',
++  FLAMMABLE_SOLIDS: 'Εύφλεκτα στερεά',
++  OXIDIZING_SUBSTANCES_AND_ORGANIC_PEROXIDES:
++    'Οξειδωτικές ουσίες και οργανικά υπεροξείδια',
++  TOXIC_AND_INFECTIOUS_SUBSTANCES: 'Τοξικές και μολυσματικές ουσίες',
++  RADIOACTIVE_MATERIALS: 'Ραδιενεργά υλικά',
++  CORROSIVES: 'Διαβρωτικές ουσίες',
++  MISCELLANEOUS_DANGEROUS_SUBSTANCES: 'Διάφορες επικίνδυνες ουσίες',
++}
+diff --git a/frontline-forwarding-client/docs/fro-326-ui-preparation.md b/frontline-forwarding-client/docs/fro-326-ui-preparation.md
+new file mode 100644
+index 0000000..0b6e48d
+--- /dev/null
++++ b/frontline-forwarding-client/docs/fro-326-ui-preparation.md
+@@ -0,0 +1,28 @@
++# FRO-326 supported frontend preparation
++
++This change prepares supported Order Details presentation against the current API. It does not complete FRO-326 or activate unavailable contracts. An Order is the backend purchase order; a colli is a permanent handling unit.
++
++## Implemented and preserved
++
++- Existing route query/loading/error/not-found handling and standalone Edit access are retained. Creation and API contracts are unchanged.
++- Overview uses production Card components and a four/two/one-column fact grid. The existing status badge keeps its tone and dot, with larger page-local emphasis and supported lifecycle forms in the status card.
++- One mounted action controller owns command drafts across tabs and language changes. Its lifetime is keyed to Order ID. Successful commands clear only their own draft; failed commands retain it. Command inputs are disabled during submission to prevent newer edits being cleared by the response.
++- Leaving for a different pathname asks before discarding drafts; Stay/Escape retains them. Browser unload protection is enabled while dirty or submitting. Discard is disabled during command submission.
++- Available actions retains the existing reminder command, audited status correction, split and terminal disposition. Split and disposition have independent reasons. The panel stays mounted while hidden so pending reminder state survives tab switches. Comments remain the existing activity-message command in History.
++- Collis use a compact read-only table, stable trace links, separate expansion buttons, terminal badges, existing measurements including net weight, and independent two-column expansions (one column on small screens). Missing measurements remain missing. DG class appears only for DG collis. Existing bonded data is retained without interpreting it as a customs regime.
++- Reminder unavailability uses the existing server reason mapping in a focus/click/hover information popover. The current direct-send behavior remains until FRO-328 supplies reviewed email preparation.
++- AttachmentPanel is unchanged, including authority gates and inherited read-only provenance.
++
++Shared UI additions are opt-in: `TabPanel.keepMounted` and `Modal.ariaLabel`. Other callers preserve their prior behavior.
++
++## Remaining integration owners
++
++FRO-346: atomic/versioned Details and readiness save; FRO-303/356: restricted Invoice company and ALK correction; FRO-333/334/356: explicit Pickup/customs; FRO-292: independently scoped Notes; FRO-337: exact unit-price invoice editor; FRO-294/295/297/332: final colli fields and inline mutations; FRO-328: prepared/idempotent email review; FRO-349/355 with FRO-353/354: Supplier Invoice and Entry Note routes. Retire the old Edit route only after capability parity. Do not emulate these contracts through broad updates or invented fields.
++
++## Validation
++
++Run `npm run test`, `npm run build`, `npm run format:check`, and `npx tsc --noEmit` in this client. Consequential regression tests cover tab/language draft retention, Order-identity reset, discard/Stay, beforeunload, failed correction retry/payload, independent operational reasons, pending input locking, and pending reminder retention. Existing stock, form, route and attachment tests remain in the suite.
++
++Browser validation uses the actual Vite application with a temporary fixture API at localhost, a fixture-only session, and both API environment URLs explicitly pointing to that server. The fixture launcher/configuration and data live outside the production checkout and are not part of application delivery. No live portal request or business-data mutation is needed. Exercise desktop/400px EN/EL, loading/error/not-found/empty, editor/view-only, terminal colli inspection, stock cancellation, failed/pending command behavior and inherited files. Fixtures demonstrate frontend behavior only; they cannot verify backend permissions, concurrency, idempotency or transactionality.
++
++Baseline limitations on the preparation machine: checked-in package manifest and lockfile are inconsistent (`npm ci` fails). Local verification uses `npm install --package-lock=false`, leaving both files unchanged. Node24.13.0/npm11.6.2 were available (repository guidance prefers Node22.13.0). Existing delivery-note test casts prevent a clean typecheck, and existing repository-wide formatting drift prevents a clean format check. These unrelated files are outside this UI change.
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-action-help.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-action-help.tsx
+new file mode 100644
+index 0000000..221c491
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-action-help.tsx
+@@ -0,0 +1,64 @@
++import { useEffect, useRef, useState } from 'react'
++import { Info } from 'lucide-react'
++import { Button } from '#/components/ui/button'
++import {
++  Popover,
++  PopoverContent,
++  PopoverTrigger,
++} from '#/components/ui/popover'
++import { usePurchaseOrderLabels } from '../localization/purchase-order-labels'
++
++export function PurchaseOrderActionHelp({ reason }: { reason: string }) {
++  const { text } = usePurchaseOrderLabels()
++  const [open, setOpen] = useState(false)
++  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
++    undefined,
++  )
++  const pointerFocus = useRef(false)
++  const clearClose = () => clearTimeout(closeTimer.current)
++  const show = () => {
++    clearClose()
++    setOpen(true)
++  }
++  const hideLater = () => {
++    clearClose()
++    closeTimer.current = setTimeout(() => setOpen(false), 200)
++  }
++  useEffect(() => () => clearTimeout(closeTimer.current), [])
++  return (
++    <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
++      <PopoverTrigger>
++        <Button
++          type="button"
++          variant="ghost"
++          className="w-10 shrink-0 px-0"
++          aria-label={text.actionUnavailableHelp}
++          onClick={show}
++          onMouseEnter={show}
++          onMouseLeave={hideLater}
++          onPointerDown={() => {
++            pointerFocus.current = true
++          }}
++          onFocus={() => {
++            if (!pointerFocus.current) show()
++          }}
++          onBlur={() => {
++            pointerFocus.current = false
++            hideLater()
++          }}
++        >
++          <Info className="size-4" aria-hidden />
++        </Button>
++      </PopoverTrigger>
++      <PopoverContent className="max-w-[min(22rem,calc(100vw-2rem))]">
++        <p
++          className="p-2 text-sm"
++          onMouseEnter={clearClose}
++          onMouseLeave={hideLater}
++        >
++          {reason}
++        </p>
++      </PopoverContent>
++    </Popover>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-collis.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-collis.tsx
+new file mode 100644
+index 0000000..8ec7b1c
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-collis.tsx
+@@ -0,0 +1,138 @@
++import { Fragment } from 'react'
++import { Link } from '@tanstack/react-router'
++import { ChevronDown, ChevronRight } from 'lucide-react'
++import { Button } from '#/components/ui/button'
++import { Badge } from '#/components/ui/badge'
++import { Table, TBody, TD, TH, THead, TR } from '#/components/ui/table'
++import type { PurchaseOrder } from '../types'
++import { usePurchaseOrderLabels } from '../localization/purchase-order-labels'
++
++type Props = {
++  units: PurchaseOrder['handlingUnits']
++  expandedIds: ReadonlySet<string>
++  onToggle: (id: string) => void
++}
++
++export function PurchaseOrderCollis({ units, expandedIds, onToggle }: Props) {
++  const { text, enumLabel } = usePurchaseOrderLabels()
++  if (!units.length)
++    return <p className="text-sm text-fg-muted">{text.noCollis}</p>
++  return (
++    <div className="overflow-x-auto rounded-md border border-border">
++      <Table className="min-w-[660px]">
++        <THead>
++          <TR>
++            <TH>
++              <span className="sr-only">{text.colliDetails}</span>
++            </TH>
++            <TH>{text.trackingCode}</TH>
++            <TH>{text.measurements}</TH>
++            <TH>{text.grossKg}</TH>
++            <TH>{text.netKg}</TH>
++            <TH>{text.flags}</TH>
++          </TR>
++        </THead>
++        <TBody>
++          {units.map((unit) => {
++            const id = String(unit.id)
++            const expanded = expandedIds.has(id)
++            const Icon = expanded ? ChevronDown : ChevronRight
++            return (
++              <Fragment key={id}>
++                <TR>
++                  <TD className="w-12">
++                    <Button
++                      variant="ghost"
++                      type="button"
++                      className="w-10 shrink-0 px-0"
++                      aria-label={`${expanded ? text.collapseColli : text.expandColli} ${unit.trackingCode}`}
++                      aria-expanded={expanded}
++                      aria-controls={`colli-details-${id}`}
++                      onClick={() => onToggle(id)}
++                    >
++                      <Icon className="size-4" aria-hidden />
++                    </Button>
++                  </TD>
++                  <TD>
++                    <Link
++                      to="/secured/handling-units/$handlingUnitId"
++                      params={{ handlingUnitId: id }}
++                      className="font-semibold text-accent hover:text-accent-hover"
++                    >
++                      {unit.trackingCode}
++                    </Link>
++                  </TD>
++                  <TD className="whitespace-nowrap tabular-nums">
++                    {unit.declaredLengthCm ?? '—'} ×{' '}
++                    {unit.declaredWidthCm ?? '—'} ×{' '}
++                    {unit.declaredHeightCm ?? '—'} cm
++                  </TD>
++                  <TD className="tabular-nums">
++                    {unit.declaredGrossWeightKg ?? '—'}
++                  </TD>
++                  <TD className="tabular-nums">
++                    {unit.declaredNetWeightKg ?? '—'}
++                  </TD>
++                  <TD>
++                    <div className="flex flex-wrap gap-1">
++                      {unit.dangerousGoods && <Badge tone="danger">DG</Badge>}
++                      {unit.bonded && (
++                        <Badge tone="warning">{text.bondedShort}</Badge>
++                      )}
++                      {unit.terminalDisposition && (
++                        <Badge tone="danger">
++                          {enumLabel(unit.terminalDisposition.disposition)}
++                        </Badge>
++                      )}
++                    </div>
++                  </TD>
++                </TR>
++                {expanded && (
++                  <TR>
++                    <TD colSpan={6} className="!p-0">
++                      <div
++                        id={`colli-details-${id}`}
++                        role="region"
++                        aria-label={`${text.colliDetails} ${unit.trackingCode}`}
++                        className="sticky left-0 w-[calc(100vw-5rem)] max-w-full space-y-4 bg-surface-2 p-4 sm:static sm:w-auto"
++                      >
++                        <dl className="grid gap-4 sm:grid-cols-2">
++                          <div>
++                            <dt className="text-xs font-medium text-fg-muted">
++                              {text.description}
++                            </dt>
++                            <dd className="mt-1 whitespace-pre-wrap break-words text-sm">
++                              {unit.setDescription || text.noDescription}
++                            </dd>
++                          </div>
++                          <div>
++                            <dt className="text-xs font-medium text-fg-muted">
++                              {text.packageType}
++                            </dt>
++                            <dd className="mt-1 text-sm">
++                              {enumLabel(unit.packageType)}
++                            </dd>
++                          </div>
++                        </dl>
++                        {unit.dangerousGoods && (
++                          <dl className="border-t border-border pt-4">
++                            <dt className="text-xs font-medium text-fg-muted">
++                              {text.dgClass}
++                            </dt>
++                            <dd className="mt-1 text-sm">
++                              {enumLabel(unit.dangerousGoodsClass)}
++                            </dd>
++                          </dl>
++                        )}
++                      </div>
++                    </TD>
++                  </TR>
++                )}
++              </Fragment>
++            )
++          })}
++        </TBody>
++      </Table>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail-interactions.test.tsx b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail-interactions.test.tsx
+new file mode 100644
+index 0000000..45394c0
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/purchase-orders/components/purchase-order-detail-interactions.test.tsx
+@@ -0,0 +1,265 @@
++import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
++import {
++  createBrowserHistory,
++  createRootRoute,
++  createRoute,
++  createRouter,
++  RouterProvider,
++  Link,
++} from '@tanstack/react-router'
++import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
++import { beforeEach, describe, expect, it, vi } from 'vitest'
++import { LabelsProvider, useLocale } from '#/app/providers/labels-provider'
++import { ToastProvider } from '#/components/ui/toast'
++import { PurchaseOrderDetail } from './purchase-order-detail'
++import { PurchaseOrderService } from '../services/purchase-order-service'
++import { GraphQLExecutor } from '#/lib/graphql'
++import type { PurchaseOrder } from '../types'
++
++vi.mock('#/features/auth/hooks/use-current-user-profile', () => ({
++  useCurrentUserProfile: () => ({
++    data: {
++      authorities: ['PURCHASE_ORDER_EDIT', 'SHIPMENT_VIEW', 'SHIPMENT_CREATE'],
++    },
++  }),
++}))
++const record = {
++  id: 42,
++  internalNumber: 'PO-0042',
++  status: 'PENDING',
++  clientCompany: { id: 2, name: 'Demo client' },
++  rootPurchaseOrderId: 42,
++  lineagePurchaseOrders: [],
++  childPurchaseOrderIds: [],
++  lineageActivities: [],
++  handlingUnits: [
++    { id: 101, trackingCode: 'HU-101' },
++    { id: 102, trackingCode: 'HU-102' },
++  ],
++  invoiceRows: [],
++  warehouseStays: [],
++  statusTransitions: [],
++  activities: [],
++  activeShipment: null,
++  currentWarehouseStay: null,
++} as unknown as PurchaseOrder
++function Screen() {
++  const { setLocale } = useLocale()
++  return (
++    <>
++      <button onClick={() => setLocale('el')}>EL</button>
++      <button onClick={() => setLocale('en')}>EN</button>
++      <Link to="/">Leave Order</Link>
++      <PurchaseOrderDetail purchaseOrder={record} />
++    </>
++  )
++}
++async function setup() {
++  const root = createRootRoute()
++  const detail = createRoute({
++    getParentRoute: () => root,
++    path: '/secured/purchase-orders/$purchaseOrderId',
++    component: Screen,
++  })
++  const home = createRoute({
++    getParentRoute: () => root,
++    path: '/',
++    component: () => <div>Destination</div>,
++  })
++  window.history.replaceState(null, '', '/secured/purchase-orders/42')
++  const router = createRouter({
++    routeTree: root.addChildren([detail, home]),
++    history: createBrowserHistory(),
++  })
++  const client = new QueryClient({
++    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
++  })
++  render(
++    <QueryClientProvider client={client}>
++      <LabelsProvider>
++        <ToastProvider>
++          <RouterProvider router={router} />
++        </ToastProvider>
++      </LabelsProvider>
++    </QueryClientProvider>,
++  )
++  await screen.findByRole('tab', { name: 'Overview' })
++  return router
++}
++beforeEach(() => {
++  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
++  window.localStorage.setItem('frontline.locale', 'en')
++  vi.spyOn(PurchaseOrderService, 'listReadinessReminders').mockResolvedValue([])
++  vi.spyOn(
++    PurchaseOrderService,
++    'getReadinessReminderEligibility',
++  ).mockResolvedValue({
++    available: false,
++    type: null,
++    availableFrom: null,
++    unavailableReasonCode: null,
++    unavailableReason: null,
++  })
++})
++describe('Order draft lifetime', () => {
++  it('retains a correction across tabs and languages, confirms leaving, and leaves only on discard', async () => {
++    const execute = vi.spyOn(GraphQLExecutor, 'execute')
++    await setup()
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    fireEvent.change(screen.getByLabelText(/Correction reason/), {
++      target: { value: 'Supplier revised estimate' },
++    })
++    fireEvent.click(screen.getByRole('tab', { name: 'Overview' }))
++    fireEvent.click(screen.getByRole('button', { name: 'EL' }))
++    fireEvent.click(screen.getByRole('button', { name: 'EN' }))
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    expect(
++      (screen.getByLabelText(/Correction reason/) as HTMLTextAreaElement).value,
++    ).toBe('Supplier revised estimate')
++    fireEvent.click(screen.getByRole('link', { name: 'Leave Order' }))
++    await screen.findByRole('dialog', { name: 'Discard unsaved changes?' })
++    fireEvent.click(screen.getByRole('button', { name: 'Keep editing' }))
++    expect(
++      (screen.getByLabelText(/Correction reason/) as HTMLTextAreaElement).value,
++    ).toBe('Supplier revised estimate')
++    expect(execute).not.toHaveBeenCalled()
++    const unload = new Event('beforeunload', { cancelable: true })
++    window.dispatchEvent(unload)
++    expect(unload.defaultPrevented).toBe(true)
++    fireEvent.click(screen.getByRole('link', { name: 'Leave Order' }))
++    fireEvent.click(
++      await screen.findByRole('button', { name: 'Discard and leave' }),
++    )
++    await screen.findByText('Destination')
++  })
++  it('retains failed correction input and clears only the successful correction draft', async () => {
++    const execute = vi
++      .spyOn(GraphQLExecutor, 'execute')
++      .mockRejectedValueOnce(new Error('Correction failed'))
++      .mockResolvedValueOnce({ id: 42 })
++    await setup()
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    fireEvent.change(screen.getByLabelText(/Corrected status/), {
++      target: { value: 'READY' },
++    })
++    fireEvent.change(screen.getByLabelText(/Correction reason/), {
++      target: { value: 'Reviewed with supplier' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Correct PO status' }))
++    await screen.findByText('Correction failed')
++    expect(
++      (screen.getByLabelText(/Correction reason/) as HTMLTextAreaElement).value,
++    ).toBe('Reviewed with supplier')
++    fireEvent.click(screen.getByRole('button', { name: 'Correct PO status' }))
++    await waitFor(() =>
++      expect(
++        (screen.getByLabelText(/Correction reason/) as HTMLTextAreaElement)
++          .value,
++      ).toBe(''),
++    )
++    expect(execute).toHaveBeenLastCalledWith(
++      expect.objectContaining({ name: 'correctPurchaseOrderStatus' }),
++      {
++        id: 42,
++        input: {
++          status: 'READY',
++          readinessDate: null,
++          reason: 'Reviewed with supplier',
++        },
++      },
++    )
++    fireEvent.click(screen.getByRole('link', { name: 'Leave Order' }))
++    await screen.findByText('Destination')
++  })
++  it('keeps a pending reminder disabled after leaving and returning to its tab', async () => {
++    vi.mocked(
++      PurchaseOrderService.getReadinessReminderEligibility,
++    ).mockResolvedValue({
++      available: true,
++      type: 'ASK_READINESS_DATE' as never,
++      availableFrom: null,
++      unavailableReasonCode: null,
++      unavailableReason: null,
++    })
++    const send = vi
++      .spyOn(PurchaseOrderService, 'sendReadinessReminder')
++      .mockImplementation(() => new Promise(() => {}))
++    await setup()
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    fireEvent.click(
++      await screen.findByRole('button', {
++        name: 'Send request for readiness date',
++      }),
++    )
++    fireEvent.click(screen.getByRole('tab', { name: 'Overview' }))
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    const button = await screen.findByRole('button', {
++      name: 'Send request for readiness date',
++    })
++    expect((button as HTMLButtonElement).disabled).toBe(true)
++    fireEvent.click(button)
++    expect(send).toHaveBeenCalledTimes(1)
++  })
++
++  it('does not replace or clear a split draft when saving a terminal correction', async () => {
++    vi.spyOn(GraphQLExecutor, 'execute').mockResolvedValue({ id: 42 })
++    await setup()
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    fireEvent.change(screen.getByPlaceholderText('Operational reason'), {
++      target: { value: 'Split draft' },
++    })
++    fireEvent.change(screen.getByPlaceholderText('Reason'), {
++      target: { value: 'Damaged at origin' },
++    })
++    fireEvent.change(
++      screen.getByRole('option', { name: 'Select colli' }).parentElement!,
++      { target: { value: '101' } },
++    )
++    expect(
++      (screen.getByPlaceholderText('Operational reason') as HTMLInputElement)
++        .value,
++    ).toBe('Split draft')
++    fireEvent.click(screen.getByRole('button', { name: 'Record disposition' }))
++    await waitFor(() =>
++      expect(
++        (screen.getByPlaceholderText('Reason') as HTMLInputElement).value,
++      ).toBe(''),
++    )
++    expect(
++      (screen.getByPlaceholderText('Operational reason') as HTMLInputElement)
++        .value,
++    ).toBe('Split draft')
++  })
++  it('locks the submitted draft until its request finishes', async () => {
++    let resolve: (value: unknown) => void = () => {}
++    vi.spyOn(GraphQLExecutor, 'execute').mockImplementation(
++      () =>
++        new Promise((done) => {
++          resolve = done
++        }),
++    )
++    await setup()
++    fireEvent.click(screen.getByRole('tab', { name: 'Available actions' }))
++    fireEvent.change(screen.getByLabelText(/Corrected status/), {
++      target: { value: 'READY' },
++    })
++    fireEvent.change(screen.getByLabelText(/Correction reason/), {
++      target: { value: 'Submitted reason' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Correct PO status' }))
++    await waitFor(() =>
++      expect(
++        screen.getByLabelText(/Correction reason/).matches(':disabled'),
++      ).toBe(true),
++    )
++    await act(async () => resolve({ id: 42 }))
++    await waitFor(() =>
++      expect(
++        screen.getByLabelText(/Correction reason/).matches(':disabled'),
++      ).toBe(false),
++    )
++    expect(
++      (screen.getByLabelText(/Correction reason/) as HTMLTextAreaElement).value,
++    ).toBe('')
++  })
++})
