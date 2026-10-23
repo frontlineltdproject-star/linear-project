@@ -1,11 +1,11 @@
 # FRO-344 review — 23 October 2026
 
-Status: evidence review and first interview round; proposals below are not approved requirements. Linear has not been changed.
+Status: first interview round accepted; second-round fiscal decisions pending. Linear has not been changed. Initial findings below retain the review context; the accepted-decisions section supersedes their open-question status.
 
 ## Workflow
 
 - 0 Preflight: planning fast-forward pull succeeded; gh authenticated as frontlineltdproject-star and live production reads succeeded; Linear issue/comments/board reads succeeded. Optional get_agent_context endpoint is unavailable.
-- 1 Grill: grilling and domain-modeling loaded; focused read-only research delegated under grilling. First decision round pending.
+- 1 Grill: grilling and domain-modeling loaded; focused read-only research delegated under grilling. First round accepted; dependent fiscal round pending.
 - 2 Canvas / 2b Preview: skipped; FRO-316/FRO-341 own existing presentation. FRO-165 is archived email tagging, not Shipment UI.
 - 3 Spec check: initial consumer trace below; revisit after decisions.
 - 4 Ticket: no replacement draft or write yet; full draft and explicit approval required.
@@ -48,4 +48,23 @@ Additional verified authorization detail: `ShipmentAuthorizationService` require
 
 ## Next steps
 
-Wait for first-round answers, resolve dependent draft/fiscal and split semantics, finish consumer outcomes/owners, then load frontline-linear-issues and show the complete standalone replacement with before/after comparisons outside it. Preserve all existing issue metadata and attachments. No Linear mutation until explicit approval of the shown text. No production branch, code/database write or preview deployment.
+Resolve dependent fiscal semantics, finish consumer outcomes/owners, then apply frontline-linear-issues (read) and show the complete standalone replacement with before/after comparisons outside it. Preserve all existing issue metadata and attachments. No Linear mutation until explicit approval of the shown text. No production branch, code/database write or preview deployment.
+
+## Accepted decisions — first round
+
+User accepted Q1–Q4 on 23 October 2026:
+
+1. Atomically reconcile affected unsubmitted draft goods, company groups and totals on membership edits; preserve unaffected snapshots/operator values and reject unresolved conflicts. Never automatically issue/cancel fiscal documents.
+2. Permit explicit reviewed partial reduction of stocked reserved Orders. The retained selected collis become the participating child and the remainder is released; preserve permanent identities, valid packing and lineage. No publicly observable release-before-split intermediate state.
+3. Keep separate route and membership editors. Reject an origin/cargo replacement with no valid intermediate save; resolve through existing cancellation/creation workflows rather than expanding this ticket to a combined plan editor.
+4. A passed expected-readiness date alone does not evict retained upcoming cargo or block unrelated valid edits. New additions retain current eligibility; readiness still requires stock confirmation.
+
+Reasons: allow practical correction without stale documents, preserve exact child participation, avoid expanding UI scope, and distinguish existing reservations from new availability.
+
+Fresh target read is unchanged at 2026-10-20T11:09:54.879Z; main remains 38edae8e3cf92b9c6f8b4b9b53febcd96ce5c03e. Mandatory planning pull succeeded. No new term or qualifying architectural decision was resolved.
+
+## Second decision round — proposals only
+
+Q5. Route changes can affect operator-entered loading/destination addresses or other movement details on existing drafts. Recommend explicit review/confirmation or correction of the affected draft values, saved atomically with the route edit, retaining unaffected values. Do not guess addresses from geography or silently overwrite snapshots. FRO-316 owns any required integration into its existing edit/review flow; no separate UI is built here. Until an adapter can supply the explicit resolution, reject the affected route edit with actionable feedback.
+
+Q6. If an otherwise valid origin edit makes the Shipment ineligible for Front Line delivery notes, recommend allowing explicit removal of existing wholly unsubmitted DRAFT notes in the same authorized transaction, retaining audit evidence and creating no replacements. Issued, submitted, failed-with-fiscal-identity and uncertain documents remain protected until their existing reconciliation workflow resolves them. This is a proposal for future application behavior, not authorization to delete current records.
