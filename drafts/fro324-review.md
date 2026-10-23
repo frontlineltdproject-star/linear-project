@@ -1,6 +1,6 @@
 # FRO-324 review — 23 October 2026
 
-Review checkpoint, not an approved replacement specification. Linear remains unchanged.
+Approved replacement saved and verified in Linear on 23 October 2026. The review below retains its investigation and decision record.
 
 ## Workflow
 
@@ -8,7 +8,7 @@ Review checkpoint, not an approved replacement specification. Linear remains unc
 - 1 Grill complete: all six decisions accepted. Focused read-only research delegated per grilling.
 - 2 Canvas / 2b Preview skipped: FRO-341 creation and FRO-316 Details already own presentation. No additional UI identified.
 - 3 Spec check complete for the proposed scope: consumer outcomes and owners incorporated into the draft. Cross-ticket upload reconciliation is an explicit activation prerequisite, not an unauthorized linked-ticket edit.
-- 4 Ticket: complete replacement in fro324-reviewed-spec.md; pending full-text approval. No Linear writes.
+- 4 Ticket complete: user approved the full replacement with "ok"; saved fro324-reviewed-spec.md and independently verified the result.
 - 4e UI branch skipped by explicit user instruction; no production changes.
 - 5 Memory: checkpoint recorded. No new resolved vocabulary or qualifying ADR.
 - 6 Verify: source/board review only; no implementation/deployment verification claimed.
@@ -84,3 +84,11 @@ Draft: drafts/fro324-reviewed-spec.md. Description-only proposal, preserving tit
 | Prescriptive A/B layout text alongside341 ownership | Single authoritative316/341 presentation; old attachments retained as nonbinding references. |
 
 Coverage checked against original: historical NETWORK_TRANSFER scope; optional facts/document uniqueness; all geography cases and resets; complete nonterminal sets and split restrictions; new/existing-arrival/stock preservation; reservation/dispatched/later-movement/ambiguity exclusions; chronology; completed participation; authority/atomicity; separate stock; historical provenance; read adapters and date filters; no inline orchestration or source shortcut; UI accessibility/draft integration; attached references and metadata. Added consumer-specific migration, rollout and AC-mapped read-only checks. No implementation or deployment testing claimed.
+
+## Save verification receipt
+
+- User approved the complete displayed replacement with "ok". Mandatory pull succeeded; fresh full324 remained at2026-10-23T13:06:53.395Z before write.
+- Saved exact approved draft and re-passed all four labels. Independent re-read matches complete approved description after Linear issue-mention, link-angle and numbered-list formatting normalization.
+- Linear automatically added related342/345. Removed only those save-induced relations under the approved preservation scope; second independent re-read confirms the original relations exactly.
+- Final updatedAt2026-10-23T14:20:09.829Z. All other returned metadata matches baseline, including title, Todo, four labels, project/milestone0.0.8, priority, assignments, four attachment identities/titles/URLs (apart from refreshed signatures), documents and relations. No Ready promotion or linked-ticket description edit.
+- Upload contract reconciliation remains an implementation activation requirement in the approved text. No UI/preview/production branch/code/database action or deployment verification. Planning records synchronized separately, preserving unrelated local work.

@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-324 approved replacement saved and verified
+
+- User approved the complete displayed draft with "ok". Mandatory planning pull succeeded; fresh324 baseline unchanged at13:06:53.395Z. Saved exact drafts/fro324-reviewed-spec.md and re-passed Pending_Review/Backend/Story/Shipment.
+- Independent read matched approved text after Linear mention/link/list normalization. Removed only auto-added related342/345 to preserve the explicitly approved relation set, then independently re-read again.
+- Final updatedAt2026-10-23T14:20:09.829Z. Verified all other returned metadata unchanged: title, Todo, labels, priority, assignments, project/milestone0.0.8, original blocks316/341 and related320/323/343/339/325, no blockers, four attachments and no documents. No Ready promotion or linked-ticket description changes.
+- Verification receipt in drafts/fro324-review.md. Historical-upload contract reconciliation remains an activation prerequisite. No UI/preview/production branch/code/database action or deployment verification; no new glossary/ADR. Synchronize only324 receipt/checkpoint and preserve unrelated local work.
+
 ### 2026-10-23 — FRO-324 interview complete; full replacement awaiting approval
 
 - User accepted Q6: Europe/Athens calendar for comparison/future dates; preserve native date-only values and original timestamp precision. All six decisions settled. Mandatory planning pull succeeded; full324/342 and current labels/statuses refreshed, target unchanged at13:06:53.395Z. Live main remains5c51030680c9d45b3827a7e19b8320c19aa5ed9a.
