@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 workflow review; first UI decisions pending
+
+- Mandatory planning pull succeeded. Read current FRO-347 (2026-10-20T11:09:39.558Z), empty comments, current FRO labels/statuses and linked FRO-321/335/348/349 contracts. Preserve Todo, supplier invoice/Pending_Review/Frontend/Story, milestone 0.0.6, attachment and relations; no Linear changes.
+- Live production authenticated gh reads confirm main 3820e89e8caa341261e2d48bcb282d93e1bb1d03. New Supplier Invoice has no implemented entity/route/API/attachment owner. Existing Order invoice rows and Order/Shipment attachments are separate; consume FRO-321 dependency contracts rather than fabricate integration.
+- Current FRO-321 fixes ordinary UD creation at Not started with no event dates, staged basic capture before Export/Entry Note integrations, exact decimals/date/duplicate/vessel validation and original-attempt/upload recovery. FRO-349 now consumes these and assigns shared recovery presentation to FRO-347. FRO-347 still contradicts these rules and cites older styling/revision history.
+- User explicitly selected existing private ChatGPT Site instead of Cloudflare Pages, overriding the Pages requirement for this task after whoami showed broad OAuth rather than required Pages-only credentials. Reuse appgprj_6ad097ec3e688191b589d484c63f22dc, version 28, owner-only custom audience, existing URL. Source opened in this chat's visualization workspace at 3655072f6c26ae5c1de4d95223c9638021a710cb; no Site edits/publication. Do not persist credentials.
+- User accepted Q2: retain VAT exemption card with read-only initial status; remove progress and all event-date controls. Q3 standalone result/dirty Cancel and Q4 in-app draft retention/unload warning remain pending. Earlier entity and FRO-349 decisions are not reopened. Next: complete interactive decisions, component mapping/current plus 2 alternatives, selected prototype/QA, complete standalone ticket draft and exact-text approval before Linear write.
+- Preview source confirms automatic Order vessel copying, untrimmed duplicate comparison and Number conversion of money; these require alignment with FRO-321. Native Select cannot supply focusable disabled-option tooltip; identify a composed/extended existing combobox/tooltip. Pre-create file staging and recovery are new compositions. Local browser preview server not yet operational; no visual QA claimed. Production remains read-only; no branch or deployment verification. Preserve unrelated FRO-326/FRO-330 working changes.
+
 ### 2026-10-23 — FRO-349 approved revision saved and verified
 
 - User approved the complete renewed draft with "ok". Mandatory planning pull succeeded; refreshed target remained unchanged before writing. Saved exactly the approved description and re-passed all five labels.
