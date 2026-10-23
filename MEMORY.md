@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 full grill reopened; two concrete decisions pending
+
+- User requested full grill, narrowed it to concrete omissions only, and resumed with Astra. Planning pull succeeded; refreshed full325/comments and316/344/345; live gh main remains3820e89e8caa341261e2d48bcb282d93e1bb1d03. Saved325 remains unchanged at2026-10-23T12:30:06.313Z. Same task playbook provenance retained; no new production snapshot/source/branch changes.
+- Coverage/checklist and pending questions in drafts/fro325-full-grill.md. Q1 asks whether Ready attests physically completed packing or only an approved plan; recommend completed arrangement. Q2 asks whether explicit reviewed confirmation of changed packing can atomically retain Ready; recommend yes, while ordinary Save invalidates. Both await answers; preserve earlier accepted stock/document/activation decisions.
+- Found factual ownership error in saved325:345 is structural history persistence/APIs, not presentation;316 owns UI. Other checked branches already covered, including optional weights, global document uniqueness including cancelled Shipments, cancellation rollback, no-op/concurrency/permissions, geography/PCS/DG. Do not reopen them without a new contradiction.
+- No Linear or approved-draft edits; any revision requires fresh full-text approval. UI/canvas/preview/production branch excluded. No new resolved vocabulary/ADR. Synchronize only this entry and grill record; preserve unrelated326/330 local work.
+
 ### 2026-10-23 — FRO-325 approved revision saved and verified
 
 - User approved the complete displayed draft with ok. Mandatory planning pull succeeded; fresh full issue remained unchanged at2026-10-20T11:09:51.244Z. Saved exact drafts/fro325-reviewed-spec.md and re-passed all four existing labels.
