@@ -2,8 +2,8 @@
 
 Prepared the approved **partial, unconnected React presentation**. FRO-347 is
 not fully implemented, routed or ready for production. The reviewed diff is now
-committed locally on the approved branch; no push, PR, deployment or Linear
-mutation occurred.
+committed and pushed on the approved branch after explicit authorization; no PR,
+deployment or Linear mutation occurred.
 
 ## Complete diff
 
@@ -20,7 +20,7 @@ mutation occurred.
   `mock/fro-347-supplier-invoice-create`.
 - Local commit: `ac539a93f3e3884b70de5e57dfc83563aa2346db` —
   `feat(FRO-347): prepare supplier invoice create UI`.
-- No upstream or push; further publication remains deferred.
+- Published branch: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-347-supplier-invoice-create . No PR or deployment.
 
 All paths below are under
 `frontline-forwarding-client/src/features/supplier-invoices/`.
@@ -114,9 +114,10 @@ width by approximately 15px; content scroll width equals its viewport width.
 Do not expose these components through a normal route or claim the ticket's
 acceptance criteria complete until dependent contracts/controller work are
 implemented and verified. Local branch creation and committing this exact reviewed diff were explicitly
-approved on 23 October 2026 and are complete. No further commit or push is
-authorized. Publication blockers and a separate explicit push approval remain
-required before a remote handoff.
+approved on 23 October 2026. The user subsequently authorized pushing this commit
+despite existing main-branch check failures and protection limitations. That
+scoped push is complete and verified; no further code commit, PR or deployment
+is authorized. The exception does not resolve the documented integration gaps.
 
 ## Independent review, rulings and deferred item
 
@@ -163,3 +164,24 @@ upstream returned 1 as expected; the commit itself succeeded. No source changes
 or repeated test/build runs occurred; the existing 171-test/build evidence applies
 to identical content. All integration, baseline-check and publication limitations
 remain as documented above. No push to any repository was made in this checkpoint.
+
+
+## Remote branch checkpoint — 23 October 2026
+
+The user explicitly authorized pushing FRO-347 despite existing main-branch
+issues and protection limitations, with no unrelated fixes or PR. Verified the
+clean local branch, exact commit/base/remote, absent destination branch, no active
+hooks and byte-for-byte equality with the approved seven-file patch. Executed:
+
+```sh
+git push github mock/fro-347-supplier-invoice-create:mock/fro-347-supplier-invoice-create
+```
+
+The push succeeded. Fetched the published branch and independently checked remote
+refs: head `ac539a93f3e3884b70de5e57dfc83563aa2346db`, main unchanged at
+`3820e89e8caa341261e2d48bcb282d93e1bb1d03`. Complete remote diff equals the
+approved patch: seven frontend files, 1,015 insertions; whitespace check passes
+and local tree remains clean. No source changes or new tests were introduced;
+the prior 171-test/build evidence and disclosed baseline failures remain as
+reviewed. No PR, merge, deployment, backend fix, Linear mutation or protection
+change occurred. This exception covers this exact branch push only.

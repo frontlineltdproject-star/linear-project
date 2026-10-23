@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-347 reviewed frontend branch pushed by explicit exception
+
+- User explicitly authorized pushing the reviewed FRO-347 branch despite existing main-branch issues and protection limitations, with no unrelated fixes or PR. This overrides those publication gates for this exact push only; no permissions/protections changed. Prior conditional authorization is superseded for this scoped push.
+- Planning pull succeeded. Prepush verified clean local mock/fro-347-supplier-invoice-create at ac539a93f3e3884b70de5e57dfc83563aa2346db, parent/main3820e89e8caa341261e2d48bcb282d93e1bb1d03 unchanged, verified github remote, destination branch absent, no active hooks, and exact approved patch match. No source changes or repeat tests/build; existing171-test/build evidence and disclosed baseline/integration limits remain.
+- Executed git push github mock/fro-347-supplier-invoice-create:mock/fro-347-supplier-invoice-create successfully. Fetched published branch; remote head equals approved localcommit, remote main unchanged, full remote diff exactly matches reviewed seven-file/1015insertions patch; whitespace and clean-tree checks pass.
+- Branch URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-347-supplier-invoice-create . Updated drafts/fro347-frontend-handoff.md. No PR/merge/deployment/Linear/backend/unrelated-code changes. Working integration remains incomplete; exception does not authorize additional commits or future pushes. Preserve unrelated326/330 planning changes; synchronize only FRO347 records under the planning-repository rule.
+
 ### 2026-10-23 — FRO-348 isolated preparation authorized; plan awaiting agreement
 
 - User explicitly authorized frontend preparation in an isolated local checkout and a verified diff/dependency report before production branch creation, commits or pushes. Mandatory planning pull succeeded. Created clean detached checkout at C:/Users/Giorgos/.codex/visualizations/2026/10/23/01a1683e-7796-7b71-a01e-27e0158a7080/fro348-frontend, verified github remote and main3820e89e8caa341261e2d48bcb282d93e1bb1d03. No production branch, commit, push, source edit or dependency installation.
