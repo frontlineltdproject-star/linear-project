@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 full grill resolved; revised description awaiting approval
+
+- User accepted Q3: explicit confirmation establishes attested physical packing in affected colli journeys; creation-time/ordinary saved plans do not assert physical work. Q1/Q2 remain accepted: physically completed Ready and direct atomic changed reconfirmation. No further business-decision frontier found.
+- Revised complete drafts/fro325-reviewed-spec.md reconciles commands, lifecycle, physical history and legacy provenance, AC/read-only verification, plus factual FRO-345 structural-history ownership. drafts/fro325-full-grill.md records coverage/consumer outcomes. Existing labels/status/relations/attachments and other metadata must remain unchanged; no Linear write before fresh full-text approval.
+- Planning pull succeeded; fresh FRO-325 remains at 2026-10-23T12:30:06.313Z. Production main advanced to 38edae8e3cf92b9c6f8b4b9b53febcd96ce5c03e (FRO-307 address sources); inspected relevant delta from prior reviewed commit, with no change to packing/readiness rules. Source reference refreshed. No production writes, UI, preview or branch. No new glossary/ADR; preserve unrelated local changes.
+
 ### 2026-10-23 — FRO-325 grill round 1 accepted; physical history question pending
 
 - User accepted Ready as attestation of completed physical packing and atomic explicit reconfirmation of a changed arrangement; ordinary changed Save still invalidates readiness. Recorded vocabulary in CONTEXT.md and decisions in drafts/fro325-full-grill.md.

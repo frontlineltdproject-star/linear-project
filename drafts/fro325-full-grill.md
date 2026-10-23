@@ -5,10 +5,10 @@ User requested a full interview after the approved revision was saved, then inst
 ## Workflow checklist
 
 - [x] 0 Preflight: planning pull succeeded; refreshed full FRO-325/comments, live gh access/main and relevant linked contracts.
-- [ ] 1 Grill: first remaining-decision round pending below.
+- [x] 1 Grill: Q1/Q2/Q3 recommendations accepted; no remaining business-decision frontier found.
 - [x] 2 Canvas: skipped; FRO-316/FRO-341 own presentation.
 - [x] 2b Preview: skipped; no new UI required.
-- [ ] 3 Spec check: evidence/coverage below; finish after decisions.
+- [x] 3 Spec check: accepted rules reconciled across commands, lifecycle, physical history, legacy records, consumers and verification.
 - [ ] 4 Ticket: only propose a revision if findings justify it; show full draft and obtain fresh approval.
 - [x] 4e UI branch: excluded by user instruction.
 - [x] 5 Memory: reopened scope and unresolved questions recorded; update as decisions resolve.
@@ -59,4 +59,19 @@ Q3: Should explicit readiness confirmation also establish the confirmed physical
 
 Evidence: current FRO-345 (updated 2026-10-20) distinguishes packing save/change, readiness confirmation and one logical operation with linked effects. Journey documentation defines immutable physical trace with load-unit references; HandlingUnitJourneyEventType currently has LOADED but no unpack/unload/repack equivalent. Existing creation emits LOADED for initial assignments; this must be reconciled with the accepted planning-versus-physical distinction. FRO-325 owns command effects, FRO-345 owns history persistence/read contracts, FRO-316 remains presentation owner.
 
-Await Q3 answer before final reconciliation/draft. Current Linear FRO-325 re-read unchanged at 2026-10-23T12:30:06.313Z.
+User accepted Q3 and requested the revised ticket if no further gap remained. No further business decision emerged. Current Linear FRO-325 re-read unchanged at 2026-10-23T12:30:06.313Z. Complete revised description is in drafts/fro325-reviewed-spec.md, pending fresh full-text approval; no Linear write.
+
+## Final consumer reconciliation
+
+| Area | Current evidence | Agreed outcome | Owner |
+| -- | -- | -- | -- |
+| Creation and ordinary packing saves | Creation currently emits LOADED for assignments; API service and lifecycle docs | Save plans without asserting physical work | FRO-325 |
+| Confirmation and status history | Saved325 ambiguous about changed Ready arrangement; FRO-316 separates Save/review/confirm | Physical attestation; direct atomic reconfirmation; no artificial state cycle | FRO-325; FRO-345 history; FRO-316 UI |
+| Colli journey/load-unit references | Immutable physical journeys, existing LOADED, no unpack/repack equivalent | Trace confirmed first packing and actual arrangement changes; preserve historical references, avoid duplicate physical effects | FRO-325 command/physical effects; FRO-345 history contracts |
+| Legacy arrangements/timestamps | Existing preserved journeys, uncertain older provenance | Retain explicit facts; first attestation where baseline unknown; no invented physical occurrence time | FRO-325 |
+| UI and rollout | FRO-316/FRO-341 presentation; coordinated activation already accepted | Consume clarified contracts using existing owned flows; no new UI/preview/branch | Linked UI owners; FRO-325 activation |
+| Documents, stock, geography, DG, PCS, fiscal, cancellation, permissions/concurrency | Existing source trace and prior accepted spec | Preserve agreed requirements and ownership | Existing owners |
+
+Revision changes only those accepted clarifications and the factual FRO-345 ownership correction, plus corresponding acceptance criteria, implementation context and read-only verification. All existing metadata, relations and attachments are to remain unchanged. No new glossary term beyond readiness, and no ADR warranted.
+
+Final source check: main advanced to 38edae8e3cf92b9c6f8b4b9b53febcd96ce5c03e (FRO-307 delivery-note addresses). Inspected changed-file inventory and relevant service/workflow/authorization/migration/types patches. Shipment lifecycle, packing service/repository and journey definitions are unchanged. New address-source behavior preserves note snapshots, consistent with this ticket's preservation requirements. No additional product decision or scope expansion required; source reference refreshed. No production writes.
