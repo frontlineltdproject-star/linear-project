@@ -1,0 +1,1293 @@
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/README.md b/frontline-forwarding-client/src/features/supplier-invoices/README.md
+new file mode 100644
+index 0000000..ccd1cfc
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/README.md
+@@ -0,0 +1,29 @@
++# Supplier Invoice Details presentation — FRO-348
++
++Controlled, unconnected React presentation for the approved comfortable Details design. This is partial preparation: no invoice route, service, wire model, authority, persistence, source picker, form controller or live operation is delivered. Existing Order invoice rows are unrelated.
++
++## Composition and data ownership
++
++- `SupplierInvoiceDetailLayout` uses existing Card, TopBar, Badge and Tabs with a local keyboard wrapper, saved-value grids and one controlled editor surface. `fields.saved` contains authorized, already formatted values. `fields.editor` contains the actual labelled controls supplied by the eventual TanStack Form controller; the layout does not coerce or format them. The parent owns the active card, all draft values and saved snapshots outside conditionally mounted panels. Refs restore focus to Edit when the parent resolves the active editor. Null document count means unknown, not zero.
++- `SupplierInvoiceVatSummary` displays supplied saved status and dates. Its stage is a presentation discriminant, not an API enum or a calculation from type/VAT/events. Historical saved wording remains unchanged. Only the three qualifying stages show the noninteractive progression and dates. No fourth progress step is introduced. Action slots must already be authorized and disabled/omitted by the caller when prerequisites or other work block them.
++- `SupplierInvoiceConfirmation` uses the real Modal/Button/Alert primitives. It adds an accessible modal name locally, preserves focus trap/restoration, and forwards Confirm only for supplied idle/eligible state. Pending blocks dismissal and submission; rejected, stale and unknown do not imply success. Unknown optionally exposes a supplied original-attempt check. The parent retains dates/action/payload/precondition/attempt context even after dismissal and resets rejection to idle only after required review/correction. Nested calendars/dropdowns must consume their Escape before the outer modal. Callbacks do not implement server idempotency.
++- `SupplierInvoiceRelationship` renders supplied Entry Note/Export states separately: unavailable, loading, error, denied, conflict, confirmed absence and ready content. Only ready receives authorized links and metadata. Caller owns cancellation/invalidation and ignores stale results for previous Orders; this component never fetches or infers relationships.
++- `SupplierInvoiceSavedDocuments` mirrors shared saved-attachment presentation with Card/Button/feedback. It consumes invoice-owned metadata and supplied row-specific download callbacks; it does not use the existing PO/Shipment AttachmentPanel ownership, services, permissions, upload or removal actions. Only a ready empty collection means no saved documents. Download absence does not imply absence of the saved file.
++
++All imports use the actual `#/` alias and current `src/components/ui/` files. New compositions are saved-value cards, VAT progression, confirmations/outcomes and relationship/file state presentation. Existing AppShell is unchanged. Component-local EN/EL copy uses the current labels provider. Caller-supplied content, saved status, dates, errors and metadata must also be localized and accessible. Controls must use real FormField/Input/DatePicker/Combobox/Select or the existing TanStack Form field components; no native fixture control substitutes for production behavior.
++
++## Required controller and contract work
++
++FRO-321 must deliver invoice identity, staff/record/action access, reads, exact-decimal/date/duplicate validation, atomic Order/dependent correction, cancellation/events, concurrency/read preconditions, audit, original-attempt reconciliation and invoice-owned list/download contracts. No authority name or endpoint is assumed here. Current GraphQL Float amounts cannot establish lossless invoice money transport.
++
++FRO-356 supplies explicit Order regime; do not infer it from warehouse, VAT or Entry Note. The complete form/controller must supply authorized searchable Order/currency/vessel options, protected type corrections and the focusable unavailable storage-option reason extension. The extension and source picker are not implemented by this presentation.
++
++FRO-317/FRO-321 supply explicit Export membership, positive IE599 and shared invoice events; FRO-319 supplies admission-aware direct/inherited Entry Note lookup. Their later integrations remain explicitly unavailable until delivered and do not become confirmed absence. FRO-347 terminology is shared, but its unmerged presentation branch is not a dependency of this change.
++
++Full invoice retrieval, route access/cache clearing, guarded in-app navigation, reload/unload warning, retained invoice controller, server validation, successful-operation invalidation (including old/new Order presence), original-attempt recovery and source/permission guarantees remain unimplemented. No data is stored durably by these components. Hidden UI is not authorization. Supply capabilities from the future authoritative controller; never expose a production route with fixtures or default-allowed actions.
++
++## Verification scope
++
++Retained tests cover exact caller-owned text across tabs/locale, keyboard tabs, editor/control gating, supplied saved VAT stages, confirmation cancellation/uncertainty and callbacks, relationship distinctions and saved-file download rows. Browser fixtures render these actual components and mapped primitives at desktop and narrow widths. They prove controlled presentation only, not backend persistence, fiscal eligibility, staff scope or successful business operations.
++
++Run existing client test/build/format/type checks; see the planning handoff for exact results, inherited failures, browser evidence and complete patch. No GraphQL source changes or generated-reference work are introduced. No migration, backend, dependency, shared primitive, route/navigation, infrastructure or deployment change belongs to this preparation.
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-confirmation.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-confirmation.tsx
+new file mode 100644
+index 0000000..bc24a23
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-confirmation.tsx
+@@ -0,0 +1,109 @@
++import { useEffect, useId, useRef, type ReactNode } from 'react'
++import { Modal } from '#/components/ui/modal'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { useSupplierInvoiceDetailLabels } from '../localization/supplier-invoice-detail-labels'
++
++export interface SupplierInvoiceConfirmationProps {
++  open: boolean
++  kind: 'cancel' | 'dispatch' | 'return' | 'send'
++  identity: string
++  body: ReactNode
++  fields?: ReactNode
++  eligible: boolean
++  disabledReason?: ReactNode
++  outcome: 'idle' | 'pending' | 'rejected' | 'stale' | 'unknown'
++  feedback?: ReactNode
++  onClose: () => void
++  onConfirm: () => void
++  onCheckAttempt?: () => void
++}
++export function SupplierInvoiceConfirmation(
++  p: SupplierInvoiceConfirmationProps,
++) {
++  const text = useSupplierInvoiceDetailLabels()
++  const titleId = useId()
++  const titleRef = useRef<HTMLSpanElement>(null)
++  useEffect(() => {
++    if (!p.open) return
++    const dialog = titleRef.current?.closest('[role=dialog]')
++    dialog?.setAttribute('aria-labelledby', titleId)
++    return () => {
++      if (dialog?.getAttribute('aria-labelledby') === titleId)
++        dialog.removeAttribute('aria-labelledby')
++    }
++  }, [p.open, titleId])
++  const titles = {
++    cancel: text.cancelInvoice,
++    dispatch: text.dispatch,
++    return: text.return,
++    send: text.send,
++  }
++  const blocked = p.outcome !== 'idle' || !p.eligible
++  const close = () => {
++    if (p.outcome !== 'pending') p.onClose()
++  }
++  return (
++    <Modal
++      open={p.open}
++      className="max-h-[calc(100dvh-2rem)] overflow-y-auto"
++      onClose={close}
++      hideClose={p.outcome === 'pending'}
++      title={
++        <span ref={titleRef} id={titleId}>
++          {titles[p.kind]} · {p.identity}
++        </span>
++      }
++      footer={
++        <div className="flex w-full flex-wrap justify-end gap-2">
++          <Button
++            type="button"
++            variant="secondary"
++            disabled={p.outcome === 'pending'}
++            onClick={close}
++            className="h-auto min-h-10 whitespace-normal py-2"
++          >
++            {text.cancel}
++          </Button>
++          {p.outcome === 'unknown' ? (
++            p.onCheckAttempt && (
++              <Button
++                type="button"
++                onClick={p.onCheckAttempt}
++                className="h-auto min-h-10 whitespace-normal py-2"
++              >
++                {text.check}
++              </Button>
++            )
++          ) : (
++            <Button
++              type="button"
++              variant={p.kind === 'cancel' ? 'danger' : 'primary'}
++              loading={p.outcome === 'pending'}
++              disabled={blocked}
++              onClick={() => {
++                if (!blocked) p.onConfirm()
++              }}
++              className="h-auto min-h-10 whitespace-normal py-2"
++            >
++              {text.confirm}
++            </Button>
++          )}
++        </div>
++      }
++    >
++      <div className="min-w-0 space-y-4 break-words [overflow-wrap:anywhere]">
++        {p.body}
++        {p.kind === 'cancel' && <p>{text.retention}</p>}
++        {p.fields}
++        {p.disabledReason && <Alert tone="info">{p.disabledReason}</Alert>}
++        {p.outcome !== 'idle' && (
++          <Alert tone={p.outcome === 'rejected' ? 'danger' : 'warning'}>
++            {text[p.outcome]}
++          </Alert>
++        )}
++        {p.feedback && <div>{p.feedback}</div>}
++      </div>
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-layout.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-layout.tsx
+new file mode 100644
+index 0000000..cb09059
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-layout.tsx
+@@ -0,0 +1,254 @@
++import { useEffect, useRef, type ReactNode, type KeyboardEvent } from 'react'
++import { Card } from '#/components/ui/card'
++import { TopBar } from '#/components/layout/top-bar'
++import { Badge } from '#/components/ui/badge'
++import { Button } from '#/components/ui/button'
++import { Tab, TabList, TabPanel, Tabs } from '#/components/ui/tabs'
++import { useSupplierInvoiceDetailLabels } from '../localization/supplier-invoice-detail-labels'
++
++export type DetailTab = 'overview' | 'export' | 'documents'
++export type DetailCard = 'order' | 'invoice'
++const orderKeys = ['stockId', 'client', 'invoiceCompany', 'supplier'] as const
++const invoiceKeys = [
++  'invoiceNumber',
++  'invoiceDate',
++  'expirationDate',
++  'currency',
++  'invoiceType',
++  'invoiceVessel',
++  'netValue',
++  'vatValue',
++] as const
++type FieldKey = (typeof orderKeys)[number] | (typeof invoiceKeys)[number]
++export type DetailField = { saved: ReactNode; editor?: ReactNode }
++export interface SupplierInvoiceDetailLayoutProps {
++  identity: string
++  cancelled: boolean
++  documentCount: number | null
++  tab: DetailTab
++  onTabChange: (tab: DetailTab) => void
++  fields: Record<FieldKey, DetailField>
++  entryNote: ReactNode
++  vat: ReactNode
++  recordManagement: ReactNode
++  relatedExport: ReactNode
++  documents: ReactNode
++  activeCard: DetailCard | null
++  canEditOrder: boolean
++  canEditInvoice: boolean
++  busy: boolean
++  unresolved: boolean
++  feedback?: ReactNode
++  onBeginEdit: (card: DetailCard) => void
++  onCancelEdit: () => void
++  onSaveEdit: () => void
++}
++const grid =
++  'grid grid-cols-1 gap-x-7 gap-y-[18px] min-[701px]:grid-cols-2 min-[1101px]:grid-cols-4'
++const padding = 'min-w-0 p-4 min-[701px]:p-5'
++const wrappingButton = 'h-auto min-h-10 whitespace-normal py-2 text-left'
++export function SupplierInvoiceDetailLayout(
++  p: SupplierInvoiceDetailLayoutProps,
++) {
++  const text = useSupplierInvoiceDetailLabels()
++  const tabsRef = useRef<HTMLDivElement>(null)
++  const orderEdit = useRef<HTMLButtonElement>(null)
++  const invoiceEdit = useRef<HTMLButtonElement>(null)
++  const previousCard = useRef(p.activeCard)
++  useEffect(() => {
++    tabsRef.current
++      ?.querySelectorAll<HTMLButtonElement>('[role=tab]')
++      .forEach((tab) => {
++        tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1
++      })
++  }, [p.tab])
++  useEffect(() => {
++    if (previousCard.current && !p.activeCard) {
++      ;(previousCard.current === 'order'
++        ? orderEdit
++        : invoiceEdit
++      ).current?.focus()
++    }
++    previousCard.current = p.activeCard
++  }, [p.activeCard])
++  function keyboardTabs(e: KeyboardEvent<HTMLDivElement>) {
++    if (
++      !(e.target instanceof HTMLElement) ||
++      e.target.getAttribute('role') !== 'tab'
++    )
++      return
++    const tabs = Array.from(
++      tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role=tab]') ?? [],
++    )
++    const index = tabs.indexOf(e.target as HTMLButtonElement)
++    const next =
++      e.key === 'Home'
++        ? 0
++        : e.key === 'End'
++          ? tabs.length - 1
++          : e.key === 'ArrowRight'
++            ? (index + 1) % tabs.length
++            : e.key === 'ArrowLeft'
++              ? (index + tabs.length - 1) % tabs.length
++              : null
++    if (next === null) return
++    e.preventDefault()
++    tabs[next]?.click()
++    tabs[next]?.focus()
++  }
++  function card(card: DetailCard, keys: readonly FieldKey[]) {
++    const allowed = card === 'order' ? p.canEditOrder : p.canEditInvoice
++    const editing = p.activeCard === card && allowed && !p.cancelled
++    const locked = p.busy || p.unresolved || p.cancelled
++    return (
++      <Card flush className={padding}>
++        <section
++          aria-label={text[card]}
++          onKeyDown={(e) => {
++            if (
++              e.key === 'Escape' &&
++              !e.defaultPrevented &&
++              editing &&
++              !locked
++            ) {
++              e.stopPropagation()
++              p.onCancelEdit()
++            }
++          }}
++        >
++          <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
++            <h2 className="text-subheading text-fg">{text[card]}</h2>
++            {allowed && !p.cancelled && !editing && (
++              <Button
++                type="button"
++                variant="ghost"
++                ref={card === 'order' ? orderEdit : invoiceEdit}
++                className={wrappingButton}
++                aria-label={
++                  card === 'order' ? text.editOrder : text.editInvoice
++                }
++                disabled={locked || p.activeCard !== null}
++                onClick={() => p.onBeginEdit(card)}
++              >
++                {text.edit}
++              </Button>
++            )}
++          </div>
++          <dl className={grid}>
++            {keys.map((key) => (
++              <div key={key} className="min-w-0">
++                <dt className="mb-1.5 text-xs text-fg-muted">{text[key]}</dt>
++                <dd className="min-w-0">
++                  {editing && p.fields[key].editor !== undefined ? (
++                    p.fields[key].editor
++                  ) : (
++                    <div
++                      className={
++                        'min-h-10 break-words rounded-md border border-border bg-canvas px-3 py-2 text-sm text-fg [overflow-wrap:anywhere]' +
++                        ([
++                          'stockId',
++                          'invoiceNumber',
++                          'invoiceDate',
++                          'expirationDate',
++                          'netValue',
++                          'vatValue',
++                        ].includes(key)
++                          ? ' font-mono'
++                          : '')
++                      }
++                    >
++                      {p.fields[key].saved}
++                    </div>
++                  )}
++                </dd>
++              </div>
++            ))}
++            {card === 'order' && (
++              <div className="min-w-0 min-[701px]:col-start-1">
++                <dt className="mb-1.5 text-xs text-fg-muted">
++                  {text.entryNote}
++                </dt>
++                <dd className="min-w-0 break-words">{p.entryNote}</dd>
++              </div>
++            )}
++          </dl>
++          {editing && (
++            <div className="mt-5 space-y-3">
++              {p.feedback}
++              <div className="flex flex-wrap justify-end gap-2">
++                <Button
++                  type="button"
++                  variant="secondary"
++                  className={wrappingButton}
++                  disabled={locked}
++                  onClick={p.onCancelEdit}
++                >
++                  {text.cancel}
++                </Button>
++                <Button
++                  type="button"
++                  className={wrappingButton}
++                  loading={p.busy}
++                  disabled={locked || !allowed}
++                  onClick={p.onSaveEdit}
++                >
++                  {text.save}
++                </Button>
++              </div>
++            </div>
++          )}
++        </section>
++      </Card>
++    )
++  }
++  return (
++    <div data-density="comfortable" className="space-y-5">
++      <Card flush className={padding + ' [&>div]:mb-0'}>
++        <TopBar
++          title={text.title + ' · ' + p.identity}
++          actions={
++            p.cancelled ? (
++              <Badge tone="danger">{text.cancelled}</Badge>
++            ) : undefined
++          }
++        />
++      </Card>
++      <Card flush className={padding}>
++        <div
++          ref={tabsRef}
++          onKeyDown={keyboardTabs}
++          className="min-w-0 overflow-x-auto"
++        >
++          <Tabs
++            defaultValue="overview"
++            value={p.tab}
++            onValueChange={(value) => p.onTabChange(value as DetailTab)}
++          >
++            <TabList className="min-w-max">
++              <Tab value="overview">{text.overview}</Tab>
++              <Tab value="export">{text.exportTab}</Tab>
++              <Tab value="documents">
++                {text.documents}
++                {p.documentCount !== null ? ' (' + p.documentCount + ')' : ''}
++              </Tab>
++            </TabList>
++            <TabPanel value="overview" className="space-y-5 pt-5">
++              {card('order', orderKeys)}
++              {card('invoice', invoiceKeys)}
++              {p.vat}
++              <section aria-label={text.management} className="min-w-0">
++                {p.recordManagement}
++              </section>
++            </TabPanel>
++            <TabPanel value="export" className="pt-5">
++              {p.relatedExport}
++            </TabPanel>
++            <TabPanel value="documents" className="pt-5">
++              {p.documents}
++            </TabPanel>
++          </Tabs>
++        </div>
++      </Card>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-ui.test.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-ui.test.tsx
+new file mode 100644
+index 0000000..975e800
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-detail-ui.test.tsx
+@@ -0,0 +1,442 @@
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import {
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  within,
++} from '@testing-library/react'
++import { useState } from 'react'
++import { LabelsProvider, useLocale } from '#/app/providers/labels-provider'
++import { Input } from '#/components/ui/input'
++import { SupplierInvoiceDetailLayout } from './supplier-invoice-detail-layout'
++import { SupplierInvoiceVatSummary } from './supplier-invoice-vat-summary'
++import { SupplierInvoiceConfirmation } from './supplier-invoice-confirmation'
++import { SupplierInvoiceRelationship } from './supplier-invoice-relationship'
++import { SupplierInvoiceSavedDocuments } from './supplier-invoice-saved-documents'
++
++afterEach(() => {
++  cleanup()
++  localStorage.clear()
++})
++const fieldNames = [
++  'stockId',
++  'client',
++  'invoiceCompany',
++  'supplier',
++  'invoiceNumber',
++  'invoiceDate',
++  'expirationDate',
++  'currency',
++  'invoiceType',
++  'invoiceVessel',
++  'netValue',
++  'vatValue',
++] as const
++const fields = Object.fromEntries(
++  fieldNames.map((key) => [key, { saved: key }]),
++) as Record<(typeof fieldNames)[number], { saved: string }>
++function baseProps() {
++  return {
++    identity: '42',
++    cancelled: false,
++    documentCount: null,
++    tab: 'overview' as const,
++    onTabChange: vi.fn(),
++    fields,
++    entryNote: 'Note context',
++    vat: 'Saved VAT',
++    recordManagement: 'Management',
++    relatedExport: 'Export context',
++    documents: 'Document context',
++    activeCard: null as 'invoice' | 'order' | null,
++    canEditOrder: true,
++    canEditInvoice: true,
++    busy: false,
++    unresolved: false,
++    onBeginEdit: vi.fn(),
++    onSaveEdit: vi.fn(),
++    onCancelEdit: vi.fn(),
++  }
++}
++function LocaleSwitch() {
++  const { setLocale } = useLocale()
++  return <button onClick={() => setLocale('el')}>EL</button>
++}
++describe('layout', () => {
++  it('retains exact caller-owned draft through tab and locale changes without saving', () => {
++    const save = vi.fn()
++    function Harness() {
++      const [tab, setTab] = useState<'overview' | 'export' | 'documents'>(
++        'overview',
++      )
++      const [number, setNumber] = useState('00042')
++      const [amount, setAmount] = useState('99999999999999999.99')
++      return (
++        <>
++          <LocaleSwitch />
++          <SupplierInvoiceDetailLayout
++            {...baseProps()}
++            tab={tab}
++            onTabChange={setTab}
++            activeCard="invoice"
++            onSaveEdit={save}
++            fields={{
++              ...fields,
++              invoiceNumber: {
++                saved: 'Saved 1',
++                editor: (
++                  <Input
++                    aria-label="Number"
++                    value={number}
++                    onChange={(e) => setNumber(e.target.value)}
++                  />
++                ),
++              },
++              netValue: {
++                saved: 'Saved 2',
++                editor: (
++                  <Input
++                    aria-label="Amount"
++                    value={amount}
++                    onChange={(e) => setAmount(e.target.value)}
++                  />
++                ),
++              },
++            }}
++          />
++        </>
++      )
++    }
++    render(
++      <LabelsProvider>
++        <Harness />
++      </LabelsProvider>,
++    )
++    fireEvent.change(screen.getByLabelText('Number'), {
++      target: { value: '00043' },
++    })
++    fireEvent.click(screen.getByRole('tab', { name: /Documents/ }))
++    expect(screen.queryByLabelText('Number')).toBeNull()
++    fireEvent.click(screen.getByRole('tab', { name: 'Overview' }))
++    fireEvent.click(screen.getByText('EL'))
++    expect((screen.getByLabelText('Number') as HTMLInputElement).value).toBe(
++      '00043',
++    )
++    expect((screen.getByLabelText('Amount') as HTMLInputElement).value).toBe(
++      '99999999999999999.99',
++    )
++    expect(screen.getByText('Saved VAT')).toBeTruthy()
++    expect(save).not.toHaveBeenCalled()
++    expect(
++      screen.getByRole('tab', { name: /Έγγραφα/ }).textContent,
++    ).not.toContain('0')
++  })
++  it('locks competing editor and busy/unresolved/cancelled mutations', () => {
++    const props = baseProps()
++    const view = render(
++      <SupplierInvoiceDetailLayout {...props} activeCard="invoice" />,
++    )
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Edit Order relationship',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(true)
++    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++    expect(props.onCancelEdit).toHaveBeenCalledTimes(1)
++    expect(props.onSaveEdit).not.toHaveBeenCalled()
++    for (const extra of [
++      { busy: true },
++      { unresolved: true },
++      { cancelled: true },
++    ]) {
++      view.rerender(
++        <SupplierInvoiceDetailLayout
++          {...props}
++          activeCard="invoice"
++          {...extra}
++        />,
++      )
++      const save = screen.queryByRole('button', { name: 'Save' })
++      if (save) fireEvent.click(save)
++      for (const edit of screen.queryAllByRole('button', { name: /^Edit / }))
++        fireEvent.click(edit)
++    }
++    expect(props.onSaveEdit).not.toHaveBeenCalled()
++    expect(props.onBeginEdit).not.toHaveBeenCalled()
++    view.rerender(
++      <SupplierInvoiceDetailLayout
++        {...props}
++        activeCard="invoice"
++        canEditInvoice={false}
++      />,
++    )
++    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
++  })
++  it('supports keyboard tabs with selection and focus', () => {
++    function Harness() {
++      const [tab, setTab] = useState<'overview' | 'export' | 'documents'>(
++        'overview',
++      )
++      return (
++        <SupplierInvoiceDetailLayout
++          {...baseProps()}
++          tab={tab}
++          onTabChange={setTab}
++        />
++      )
++    }
++    render(<Harness />)
++    const overview = screen.getByRole('tab', { name: 'Overview' })
++    overview.focus()
++    fireEvent.keyDown(overview, { key: 'ArrowRight' })
++    expect(document.activeElement).toBe(
++      screen.getByRole('tab', { name: 'Related Export' }),
++    )
++    expect(document.activeElement?.getAttribute('aria-selected')).toBe('true')
++    fireEvent.keyDown(document.activeElement!, { key: 'End' })
++    expect(document.activeElement).toBe(
++      screen.getByRole('tab', { name: /Documents/ }),
++    )
++    fireEvent.keyDown(document.activeElement!, { key: 'Home' })
++    expect(document.activeElement).toBe(overview)
++    fireEvent.keyDown(overview, { key: 'ArrowLeft' })
++    expect(document.activeElement).toBe(
++      screen.getByRole('tab', { name: /Documents/ }),
++    )
++  })
++  it('preserves saved VAT and only renders applicable progression', () => {
++    const props = {
++      savedStatus: 'Exempted',
++      dispatchDate: '10/10/2026',
++      returnDate: '11/10/2026',
++      sentDate: '—',
++    }
++    const view = render(
++      <SupplierInvoiceVatSummary {...props} stage="exempted" />,
++    )
++    expect(screen.getByLabelText('VAT exemption progress')).toBeTruthy()
++    expect(screen.queryByRole('button')).toBeNull()
++    expect(screen.getAllByText('Exempted').length).toBe(2)
++    view.rerender(
++      <SupplierInvoiceVatSummary
++        {...props}
++        stage="not-required"
++        savedStatus="Not required"
++      />,
++    )
++    expect(screen.queryByLabelText('VAT exemption progress')).toBeNull()
++    expect(screen.queryByText('10/10/2026')).toBeNull()
++    view.rerender(
++      <SupplierInvoiceVatSummary
++        {...props}
++        stage="historical"
++        savedStatus="Historical retained status"
++      />,
++    )
++    expect(screen.getByText('Historical retained status')).toBeTruthy()
++    expect(screen.queryByLabelText('VAT exemption progress')).toBeNull()
++  })
++})
++
++describe('confirmation', () => {
++  function props() {
++    return {
++      open: true,
++      kind: 'cancel' as const,
++      identity: '42',
++      body: 'Original context',
++      eligible: true,
++      outcome: 'idle' as const,
++      onClose: vi.fn(),
++      onConfirm: vi.fn(),
++      onCheckAttempt: vi.fn(),
++    }
++  }
++  it('opening/cancel/Escape never confirms and exposes accessible identity and retention', () => {
++    const p = props()
++    render(<SupplierInvoiceConfirmation {...p} />)
++    expect(screen.getByRole('dialog', { name: /Cancel invoice/ })).toBeTruthy()
++    expect(screen.getByText(/number reservation/)).toBeTruthy()
++    expect(p.onConfirm).not.toHaveBeenCalled()
++    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++    fireEvent.keyDown(document, { key: 'Escape' })
++    expect(p.onClose).toHaveBeenCalled()
++    expect(p.onConfirm).not.toHaveBeenCalled()
++  })
++  it('gates ineligible/pending/stale/unknown and checks only original attempt', () => {
++    const p = props()
++    const view = render(<SupplierInvoiceConfirmation {...p} eligible={false} />)
++    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++    for (const outcome of ['pending', 'stale', 'unknown'] as const) {
++      view.rerender(<SupplierInvoiceConfirmation {...p} outcome={outcome} />)
++      const confirm = screen.queryByRole('button', { name: 'Confirm' })
++      if (confirm) fireEvent.click(confirm)
++    }
++    expect(p.onConfirm).not.toHaveBeenCalled()
++    fireEvent.click(
++      screen.getByRole('button', { name: 'Check original attempt' }),
++    )
++    expect(p.onCheckAttempt).toHaveBeenCalledTimes(1)
++    expect(p.onConfirm).not.toHaveBeenCalled()
++    expect(screen.getByText('Original context')).toBeTruthy()
++  })
++  it('retains supplied text on rejection and only confirms explicit eligible idle state', () => {
++    const p = props()
++    const view = render(
++      <SupplierInvoiceConfirmation
++        {...p}
++        kind="dispatch"
++        fields={
++          <Input aria-label="Physical date" value="2026-10-10" readOnly />
++        }
++      />,
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++    expect(p.onConfirm).toHaveBeenCalledTimes(1)
++    view.rerender(
++      <SupplierInvoiceConfirmation
++        {...p}
++        kind="dispatch"
++        outcome="rejected"
++        feedback="Correct date"
++        fields={
++          <Input aria-label="Physical date" value="2026-10-10" readOnly />
++        }
++      />,
++    )
++    expect(
++      (screen.getByLabelText('Physical date') as HTMLInputElement).value,
++    ).toBe('2026-10-10')
++    expect(screen.getByText('Correct date')).toBeTruthy()
++    expect(screen.queryByText(/successfully/)).toBeNull()
++    view.rerender(<SupplierInvoiceConfirmation {...p} outcome="pending" />)
++    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++    expect(p.onConfirm).toHaveBeenCalledTimes(1)
++  })
++  it('consumes nested Escape before outer dismissal', () => {
++    const p = props()
++    render(
++      <SupplierInvoiceConfirmation
++        {...p}
++        fields={
++          <div
++            onKeyDown={(e) => {
++              if (e.key === 'Escape') {
++                e.preventDefault()
++                e.stopPropagation()
++              }
++            }}
++          >
++            <Input aria-label="Nested calendar" />
++          </div>
++        }
++      />,
++    )
++    fireEvent.keyDown(screen.getByLabelText('Nested calendar'), {
++      key: 'Escape',
++    })
++    expect(p.onClose).not.toHaveBeenCalled()
++  })
++})
++
++describe('related records and documents', () => {
++  it('keeps lookup states distinct and removes previous authorized links', () => {
++    const view = render(
++      <SupplierInvoiceRelationship
++        kind="export"
++        state={{
++          status: 'ready',
++          content: <a href="/fixture-export">Export 7</a>,
++        }}
++      />,
++    )
++    expect(screen.getByRole('link')).toBeTruthy()
++    const messages: string[] = []
++    for (const status of [
++      'unavailable',
++      'loading',
++      'denied',
++      'conflict',
++      'absent',
++    ] as const) {
++      view.rerender(
++        <SupplierInvoiceRelationship kind="export" state={{ status }} />,
++      )
++      expect(screen.queryByRole('link')).toBeNull()
++      messages.push(view.container.textContent!)
++      if (status !== 'absent')
++        expect(screen.queryByText('No linked Export yet')).toBeNull()
++    }
++    expect(new Set(messages).size).toBe(5)
++    view.rerender(
++      <SupplierInvoiceRelationship
++        kind="entry-note"
++        state={{ status: 'absent' }}
++      />,
++    )
++    expect(screen.getByText('No current Entry Note')).toBeTruthy()
++  })
++  it('retry performs only the supplied read callback', () => {
++    const retry = vi.fn()
++    render(
++      <SupplierInvoiceRelationship
++        kind="entry-note"
++        state={{ status: 'error', onRetry: retry }}
++      />,
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++    expect(retry).toHaveBeenCalledTimes(1)
++  })
++  it('shows only saved files and row-specific downloads; unresolved is not empty', () => {
++    const first = vi.fn(),
++      second = vi.fn()
++    const documents = [
++      {
++        key: 'a',
++        filename: 'invoice.pdf',
++        metadata: 'Office · 10/10/2026',
++        onDownload: first,
++      },
++      {
++        key: 'b',
++        filename: 'papers.pdf',
++        metadata: 'Office · 11/10/2026',
++        onDownload: second,
++        downloading: true,
++      },
++    ]
++    const view = render(
++      <SupplierInvoiceSavedDocuments state={{ status: 'ready', documents }} />,
++    )
++    const rows = screen.getAllByRole('listitem')
++    fireEvent.click(
++      within(rows[0]).getByRole('button', { name: 'Download invoice.pdf' }),
++    )
++    fireEvent.click(
++      within(rows[1]).getByRole('button', { name: 'Download papers.pdf' }),
++    )
++    expect(first).toHaveBeenCalledTimes(1)
++    expect(second).not.toHaveBeenCalled()
++    expect(view.container.querySelector('input[type=file]')).toBeNull()
++    expect(screen.queryByRole('button', { name: /Remove/ })).toBeNull()
++    for (const status of [
++      'loading',
++      'error',
++      'denied',
++      'unavailable',
++    ] as const) {
++      view.rerender(<SupplierInvoiceSavedDocuments state={{ status }} />)
++      expect(screen.queryByText('No saved documents')).toBeNull()
++      expect(screen.queryByText('invoice.pdf')).toBeNull()
++    }
++    view.rerender(
++      <SupplierInvoiceSavedDocuments
++        state={{ status: 'ready', documents: [] }}
++      />,
++    )
++    expect(screen.getByText('No saved documents')).toBeTruthy()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-relationship.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-relationship.tsx
+new file mode 100644
+index 0000000..75b8cdc
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-relationship.tsx
+@@ -0,0 +1,59 @@
++import { type ReactNode } from 'react'
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Spinner, EmptyState } from '#/components/ui/feedback'
++import { useSupplierInvoiceDetailLabels } from '../localization/supplier-invoice-detail-labels'
++
++export type SupplierInvoiceRelationshipState =
++  | { status: 'unavailable' | 'loading' | 'denied' | 'conflict' | 'absent' }
++  | { status: 'error'; onRetry?: () => void }
++  | { status: 'ready'; content: ReactNode }
++export interface SupplierInvoiceRelationshipProps {
++  kind: 'entry-note' | 'export'
++  state: SupplierInvoiceRelationshipState
++}
++export function SupplierInvoiceRelationship({
++  kind,
++  state,
++}: SupplierInvoiceRelationshipProps) {
++  const text = useSupplierInvoiceDetailLabels()
++  if (state.status === 'ready')
++    return (
++      <div className="min-w-0 break-words [overflow-wrap:anywhere]">
++        {state.content}
++      </div>
++    )
++  if (state.status === 'loading')
++    return (
++      <div className="flex items-center gap-2 text-sm text-fg-muted">
++        <Spinner label={text.loading} />
++        <span>{text.loading}</span>
++      </div>
++    )
++  if (state.status === 'absent')
++    return (
++      <EmptyState
++        title={kind === 'export' ? text.noExport : text.noEntryNote}
++      />
++    )
++  return (
++    <Alert
++      tone={
++        state.status === 'error'
++          ? 'danger'
++          : state.status === 'conflict'
++            ? 'warning'
++            : 'info'
++      }
++    >
++      <div className="space-y-3">
++        <p>{state.status === 'error' ? text.error : text[state.status]}</p>
++        {state.status === 'error' && state.onRetry && (
++          <Button type="button" variant="secondary" onClick={state.onRetry}>
++            {text.retry}
++          </Button>
++        )}
++      </div>
++    </Alert>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-saved-documents.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-saved-documents.tsx
+new file mode 100644
+index 0000000..6d749c8
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-saved-documents.tsx
+@@ -0,0 +1,87 @@
++import { type ReactNode } from 'react'
++import { Download } from 'lucide-react'
++import { Card } from '#/components/ui/card'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { Spinner, EmptyState } from '#/components/ui/feedback'
++import { useSupplierInvoiceDetailLabels } from '../localization/supplier-invoice-detail-labels'
++
++export interface SavedInvoiceDocument {
++  key: string
++  filename: string
++  metadata: ReactNode
++  onDownload?: () => void
++  downloading?: boolean
++}
++export type SupplierInvoiceSavedDocumentsState =
++  | { status: 'loading' | 'denied' | 'unavailable' }
++  | { status: 'error'; onRetry?: () => void }
++  | { status: 'ready'; documents: SavedInvoiceDocument[] }
++export function SupplierInvoiceSavedDocuments({
++  state,
++}: {
++  state: SupplierInvoiceSavedDocumentsState
++}) {
++  const text = useSupplierInvoiceDetailLabels()
++  if (state.status === 'loading')
++    return (
++      <div className="flex items-center gap-2 text-sm text-fg-muted">
++        <Spinner label={text.loading} />
++        <span>{text.loading}</span>
++      </div>
++    )
++  if (state.status !== 'ready')
++    return (
++      <Alert tone={state.status === 'error' ? 'danger' : 'info'}>
++        <div className="space-y-3">
++          <p>{state.status === 'error' ? text.error : text[state.status]}</p>
++          {state.status === 'error' && state.onRetry && (
++            <Button type="button" variant="secondary" onClick={state.onRetry}>
++              {text.retry}
++            </Button>
++          )}
++        </div>
++      </Alert>
++    )
++  if (!state.documents.length) return <EmptyState title={text.noDocuments} />
++  return (
++    <Card flush>
++      <ul className="divide-y divide-border">
++        {state.documents.map((file) => (
++          <li
++            key={file.key}
++            className="flex min-w-0 flex-wrap items-start justify-between gap-4 p-4 min-[701px]:p-5"
++          >
++            <div className="min-w-0 flex-1 basis-48">
++              <p className="break-words text-sm font-semibold text-fg [overflow-wrap:anywhere]">
++                {file.filename}
++              </p>
++              <div className="mt-1 break-words text-xs text-fg-muted [overflow-wrap:anywhere]">
++                {file.metadata}
++              </div>
++            </div>
++            {file.onDownload ? (
++              <Button
++                type="button"
++                variant="secondary"
++                leadingIcon={
++                  <Download className="size-4 shrink-0" aria-hidden />
++                }
++                aria-label={text.download + ' ' + file.filename}
++                loading={file.downloading}
++                onClick={file.onDownload}
++                className="h-auto min-h-10 whitespace-normal py-2"
++              >
++                {text.download}
++              </Button>
++            ) : (
++              <span className="text-xs text-fg-muted">
++                {text.downloadUnavailable}
++              </span>
++            )}
++          </li>
++        ))}
++      </ul>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-vat-summary.tsx b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-vat-summary.tsx
+new file mode 100644
+index 0000000..b2e9bf0
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/components/supplier-invoice-vat-summary.tsx
+@@ -0,0 +1,106 @@
++import { type ReactNode } from 'react'
++import { Card } from '#/components/ui/card'
++import { useSupplierInvoiceDetailLabels } from '../localization/supplier-invoice-detail-labels'
++
++export interface SupplierInvoiceVatSummaryProps {
++  stage:
++    'not-started' | 'in-progress' | 'exempted' | 'not-required' | 'historical'
++  savedStatus: string
++  dispatchDate: ReactNode
++  returnDate: ReactNode
++  sentDate: ReactNode
++  currentAction?: ReactNode
++  onwardAction?: ReactNode
++}
++export function SupplierInvoiceVatSummary(p: SupplierInvoiceVatSummaryProps) {
++  const text = useSupplierInvoiceDetailLabels()
++  const progress =
++    p.stage === 'not-started' ||
++    p.stage === 'in-progress' ||
++    p.stage === 'exempted'
++  const index = p.stage === 'exempted' ? 2 : p.stage === 'in-progress' ? 1 : 0
++  return (
++    <Card flush className="min-w-0 p-4 min-[701px]:p-5">
++      <section aria-label={text.vat}>
++        <h2 className="mb-5 text-subheading text-fg">{text.vat}</h2>
++        <div className="flex flex-wrap items-end justify-between gap-4">
++          <dl className="w-full min-w-0 max-w-[400px]">
++            <dt className="mb-1.5 text-xs text-fg-muted">{text.status}</dt>
++            <dd
++              className={
++                'min-h-10 break-words rounded-md border border-border px-3 py-2 text-sm font-semibold ' +
++                (p.stage === 'exempted'
++                  ? 'bg-success-subtle text-success-fg'
++                  : 'bg-canvas text-fg')
++              }
++            >
++              {p.savedStatus}
++            </dd>
++          </dl>
++          {progress && p.currentAction}
++        </div>
++        {progress && (
++          <>
++            <ol
++              aria-label={text.progress}
++              className="my-5 grid grid-cols-3 gap-3"
++            >
++              {[text.notStarted, text.inProgress, text.exempted].map(
++                (label, i) => (
++                  <li
++                    key={i}
++                    aria-current={i === index ? 'step' : undefined}
++                    className="min-w-0"
++                  >
++                    <span
++                      aria-hidden
++                      className={
++                        'mb-2 block h-1 rounded-full ' +
++                        (i <= index
++                          ? index === 2
++                            ? 'bg-success'
++                            : 'bg-accent'
++                          : 'bg-border')
++                      }
++                    />
++                    <span
++                      className={
++                        'block break-words text-xs ' +
++                        (i === index
++                          ? 'font-semibold text-fg'
++                          : 'text-fg-muted')
++                      }
++                    >
++                      {label}
++                    </span>
++                  </li>
++                ),
++              )}
++            </ol>
++            <dl className="grid grid-cols-1 items-stretch gap-x-7 gap-y-[18px] min-[701px]:grid-cols-2 min-[1101px]:grid-cols-3">
++              {[
++                [text.dispatchDate, p.dispatchDate],
++                [text.returnDate, p.returnDate],
++                [text.sentDate, p.sentDate],
++              ].map(([label, value], i) => (
++                <div key={i} className="flex min-w-0 flex-col">
++                  <dt className="mb-1.5 flex-1 text-xs text-fg-muted">
++                    {label}
++                  </dt>
++                  <dd className="min-h-10 break-words rounded-md border border-border bg-canvas px-3 py-2 font-mono text-sm text-fg">
++                    {value}
++                  </dd>
++                </div>
++              ))}
++            </dl>
++            {p.onwardAction && (
++              <div className="mt-5 flex justify-end max-[700px]:[&>*]:w-full">
++                {p.onwardAction}
++              </div>
++            )}
++          </>
++        )}
++      </section>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.test.ts b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.test.ts
+new file mode 100644
+index 0000000..2157d7d
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.test.ts
+@@ -0,0 +1,24 @@
++import { expect, it } from 'vitest'
++import { supplierInvoiceDetailText } from './supplier-invoice-detail-labels'
++it('provides complete nonempty EN/EL keys and distinct unresolved versus absent copy', () => {
++  expect(Object.keys(supplierInvoiceDetailText.el).sort()).toEqual(
++    Object.keys(supplierInvoiceDetailText.en).sort(),
++  )
++  for (const text of Object.values(supplierInvoiceDetailText)) {
++    expect(
++      Object.values(text).every(
++        (value) => typeof value === 'string' && value.trim().length > 0,
++      ),
++    ).toBe(true)
++    expect(
++      new Set([
++        text.unavailable,
++        text.denied,
++        text.conflict,
++        text.noExport,
++        text.noEntryNote,
++      ]).size,
++    ).toBe(5)
++    expect(text.cancelInvoice).not.toBe(text.cancel)
++  }
++})
+diff --git a/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.ts b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.ts
+new file mode 100644
+index 0000000..94fd7c9
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/supplier-invoices/localization/supplier-invoice-detail-labels.ts
+@@ -0,0 +1,129 @@
++import { useLocale } from '#/app/providers/labels-provider'
++
++const en = {
++  title: 'Supplier invoice',
++  cancelled: 'Cancelled',
++  overview: 'Overview',
++  exportTab: 'Related Export',
++  documents: 'Documents',
++  order: 'Order relationship',
++  invoice: 'Supplier invoice details',
++  vat: 'VAT exemption',
++  entryNote: 'Entry Note',
++  stockId: 'Stock ID',
++  client: 'Client',
++  invoiceCompany: 'Invoice company',
++  supplier: 'Supplier',
++  invoiceNumber: 'Invoice number',
++  invoiceDate: 'Invoice date',
++  expirationDate: 'Invoice expiration date',
++  currency: 'Currency',
++  invoiceType: 'Invoice type',
++  invoiceVessel: 'Invoice vessel',
++  netValue: 'Invoice net value',
++  vatValue: 'Invoice VAT value',
++  editOrder: 'Edit Order relationship',
++  editInvoice: 'Edit Supplier invoice details',
++  edit: 'Edit',
++  save: 'Save',
++  cancel: 'Cancel',
++  confirm: 'Confirm',
++  status: 'VAT exemption status',
++  progress: 'VAT exemption progress',
++  notStarted: 'Not started',
++  inProgress: 'In progress',
++  exempted: 'Exempted',
++  dispatchDate: 'Stamping dispatch date',
++  returnDate: 'Stamping return date',
++  sentDate: 'Stamped paperwork sent to recipient date',
++  management: 'Record management',
++  cancelInvoice: 'Cancel invoice',
++  dispatch: 'Record dispatch for stamping',
++  return: 'Record stamped papers returned',
++  send: 'Record paperwork sent to recipient',
++  retention:
++    'ID, invoice number reservation, Order link, values, files and history are retained.',
++  pending: 'Confirmation is pending.',
++  rejected: 'The operation was rejected. Review the entered values.',
++  stale: 'The record changed. Review current values before submitting again.',
++  unknown:
++    'The outcome is unresolved. Check the original attempt before submitting again.',
++  check: 'Check original attempt',
++  unavailable: 'Integration unavailable',
++  loading: 'Loading…',
++  denied: 'Access denied',
++  conflict: 'Conflicting relationships require review',
++  error: 'Could not load this information.',
++  retry: 'Retry',
++  noExport: 'No linked Export yet',
++  noEntryNote: 'No current Entry Note',
++  noDocuments: 'No saved documents',
++  download: 'Download',
++  downloadUnavailable: 'Download unavailable',
++}
++const el: Record<keyof typeof en, string> = {
++  title: 'Τιμολόγιο προμηθευτή',
++  cancelled: 'Ακυρωμένο',
++  overview: 'Επισκόπηση',
++  exportTab: 'Σχετική εξαγωγή',
++  documents: 'Έγγραφα',
++  order: 'Σύνδεση παραγγελίας',
++  invoice: 'Στοιχεία τιμολογίου προμηθευτή',
++  vat: 'Απαλλαγή ΦΠΑ',
++  entryNote: 'Δελτίο εισόδου',
++  stockId: 'Stock ID',
++  client: 'Πελάτης',
++  invoiceCompany: 'Εταιρεία τιμολόγησης',
++  supplier: 'Προμηθευτής',
++  invoiceNumber: 'Αριθμός τιμολογίου',
++  invoiceDate: 'Ημερομηνία τιμολογίου',
++  expirationDate: 'Ημερομηνία λήξης τιμολογίου',
++  currency: 'Νόμισμα',
++  invoiceType: 'Τύπος τιμολογίου',
++  invoiceVessel: 'Πλοίο τιμολογίου',
++  netValue: 'Καθαρή αξία τιμολογίου',
++  vatValue: 'Αξία ΦΠΑ τιμολογίου',
++  editOrder: 'Επεξεργασία σύνδεσης παραγγελίας',
++  editInvoice: 'Επεξεργασία στοιχείων τιμολογίου προμηθευτή',
++  edit: 'Επεξεργασία',
++  save: 'Αποθήκευση',
++  cancel: 'Άκυρο',
++  confirm: 'Επιβεβαίωση',
++  status: 'Κατάσταση απαλλαγής ΦΠΑ',
++  progress: 'Πρόοδος απαλλαγής ΦΠΑ',
++  notStarted: 'Δεν ξεκίνησε',
++  inProgress: 'Σε εξέλιξη',
++  exempted: 'Απαλλάχθηκε',
++  dispatchDate: 'Ημερομηνία αποστολής για σφράγιση',
++  returnDate: 'Ημερομηνία επιστροφής από σφράγιση',
++  sentDate: 'Ημερομηνία αποστολής σφραγισμένων εγγράφων στον παραλήπτη',
++  management: 'Διαχείριση εγγραφής',
++  cancelInvoice: 'Ακύρωση τιμολογίου',
++  dispatch: 'Καταχώριση αποστολής για σφράγιση',
++  return: 'Καταχώριση επιστροφής σφραγισμένων εγγράφων',
++  send: 'Καταχώριση αποστολής εγγράφων στον παραλήπτη',
++  retention:
++    'Διατηρούνται το ID, η δέσμευση αριθμού τιμολογίου, η σύνδεση παραγγελίας, οι αξίες, τα αρχεία και το ιστορικό.',
++  pending: 'Η επιβεβαίωση εκκρεμεί.',
++  rejected: 'Η ενέργεια απορρίφθηκε. Ελέγξτε τις καταχωρισμένες τιμές.',
++  stale: 'Η εγγραφή άλλαξε. Ελέγξτε τις τρέχουσες τιμές πριν από νέα υποβολή.',
++  unknown:
++    'Το αποτέλεσμα παραμένει άγνωστο. Ελέγξτε την αρχική προσπάθεια πριν από νέα υποβολή.',
++  check: 'Έλεγχος αρχικής προσπάθειας',
++  unavailable: 'Η διασύνδεση δεν είναι διαθέσιμη',
++  loading: 'Φόρτωση…',
++  denied: 'Δεν επιτρέπεται η πρόσβαση',
++  conflict: 'Απαιτείται έλεγχος αντικρουόμενων συνδέσεων',
++  error: 'Δεν ήταν δυνατή η φόρτωση των πληροφοριών.',
++  retry: 'Επανάληψη',
++  noExport: 'Δεν υπάρχει ακόμη συνδεδεμένη εξαγωγή',
++  noEntryNote: 'Δεν υπάρχει τρέχον δελτίο εισόδου',
++  noDocuments: 'Δεν υπάρχουν αποθηκευμένα έγγραφα',
++  download: 'Λήψη',
++  downloadUnavailable: 'Η λήψη δεν είναι διαθέσιμη',
++}
++export const supplierInvoiceDetailText = { en, el }
++export function useSupplierInvoiceDetailLabels() {
++  const { locale } = useLocale()
++  return supplierInvoiceDetailText[locale]
++}

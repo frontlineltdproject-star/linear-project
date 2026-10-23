@@ -1,0 +1,68 @@
+{
+  "exportStates": [
+    {
+      "state": "unavailable",
+      "text": "Integration unavailable"
+    },
+    {
+      "state": "loading",
+      "text": "Loading…"
+    },
+    {
+      "state": "error",
+      "text": "Could not load this information.\n\nRetry"
+    },
+    {
+      "state": "denied",
+      "text": "Access denied"
+    },
+    {
+      "state": "conflict",
+      "text": "Conflicting relationships require review"
+    },
+    {
+      "state": "absent",
+      "text": "No linked Export yet"
+    },
+    {
+      "state": "ready",
+      "text": "DEMO-EXP-7"
+    }
+  ],
+  "documentStates": [
+    {
+      "state": "unavailable",
+      "text": "Integration unavailable"
+    },
+    {
+      "state": "loading",
+      "text": "Loading…"
+    },
+    {
+      "state": "error",
+      "text": "Could not load this information.\n\nRetry"
+    },
+    {
+      "state": "denied",
+      "text": "Access denied"
+    },
+    {
+      "state": "ready",
+      "text": "fictional-invoice-document-with-long-filename.pdf\n\nExample operator · 10/10/2026 · 25 KB\nDownload"
+    },
+    {
+      "state": "absent",
+      "text": "No saved documents"
+    }
+  ],
+  "console": [],
+  "verified": [
+    "draft00043 and exact maximum amount retained through tabs/locale; no callback",
+    "1440 four columns,1100 two,400 one with no page overflow",
+    "calendar Escape preserves modal and restores Choose date focus",
+    "rejected and unknown keep10/10/2026; Check forwards separately",
+    "cancelled and view-only omit mutation actions",
+    "saved-document callback and error Retry each increment once",
+    "keyboard tabs move selection/focus"
+  ]
+}

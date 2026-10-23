@@ -1,0 +1,75 @@
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 2181 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  2.07 kB │ gzip:   0.68 kB
+dist/assets/index-6nAdQCaq.css                  56.32 kB │ gzip:  11.06 kB
+dist/assets/access-denied-Bvu94D5c.js            0.07 kB │ gzip:   0.08 kB
+dist/assets/route-C0B6X0BW.js                    0.08 kB │ gzip:   0.09 kB
+dist/assets/types-LLDPHG65.js                    0.12 kB │ gzip:   0.11 kB
+dist/assets/route-2A4kLrFn.js                    0.14 kB │ gzip:   0.13 kB
+dist/assets/route-D5l6iB-B.js                    0.14 kB │ gzip:   0.13 kB
+dist/assets/route-K3KXTjQA.js                    0.14 kB │ gzip:   0.13 kB
+dist/assets/route-wAEEE6t2.js                    0.14 kB │ gzip:   0.13 kB
+dist/assets/route-DEXn16Xt.js                    0.15 kB │ gzip:   0.14 kB
+dist/assets/route-MNuUq1fX.js                    0.15 kB │ gzip:   0.14 kB
+dist/assets/loading-state-CxTRq6uj.js            0.16 kB │ gzip:   0.16 kB
+dist/assets/use-user-DHSEHJM8.js                 0.17 kB │ gzip:   0.16 kB
+dist/assets/search-BNDpcBab.js                   0.17 kB │ gzip:   0.17 kB
+dist/assets/use-users-vASKQs_n.js                0.17 kB │ gzip:   0.16 kB
+dist/assets/useRouter-CkuY-HCQ.js                0.17 kB │ gzip:   0.15 kB
+dist/assets/use-company-C4ktO4YS.js              0.18 kB │ gzip:   0.16 kB
+dist/assets/use-companies-BisvcGmz.js            0.18 kB │ gzip:   0.16 kB
+dist/assets/secured-B-CbjGo5.js                  0.19 kB │ gzip:   0.16 kB
+dist/assets/routes-DHsp2DH8.js                   0.33 kB │ gzip:   0.18 kB
+dist/assets/use-handling-unit-gesgPitf.js        0.35 kB │ gzip:   0.25 kB
+dist/assets/useNavigate-BrVhjG3n.js              0.41 kB │ gzip:   0.28 kB
+dist/assets/types-B_r2YuR0.js                    0.42 kB │ gzip:   0.22 kB
+dist/assets/validators-BKctx6Co.js               0.44 kB │ gzip:   0.25 kB
+dist/assets/security-BaQYfLYU.js                 0.59 kB │ gzip:   0.34 kB
+dist/assets/language-selector-hbIkvlH7.js        0.75 kB │ gzip:   0.40 kB
+dist/assets/new-D2gxDU9h.js                      0.80 kB │ gzip:   0.49 kB
+dist/assets/jsx-runtime-BX5dh3L7.js              0.97 kB │ gzip:   0.55 kB
+dist/assets/new-DYdetAHB.js                      1.01 kB │ gzip:   0.59 kB
+dist/assets/_userId.edit-Ds6F2vH-.js             1.07 kB │ gzip:   0.61 kB
+dist/assets/dashboard-DfpXpFp0.js                1.08 kB │ gzip:   0.60 kB
+dist/assets/new-CtqCTF0-.js                      1.10 kB │ gzip:   0.65 kB
+dist/assets/_purchaseOrderId.edit-g-4ecl65.js    1.16 kB │ gzip:   0.64 kB
+dist/assets/createLucideIcon-CDhGlTby.js         1.21 kB │ gzip:   0.70 kB
+dist/assets/_companyId.edit-BzAlge4A.js          1.28 kB │ gzip:   0.71 kB
+dist/assets/shipment-table-0e2j6va2.js           1.50 kB │ gzip:   0.70 kB
+dist/assets/company-service-CISk1nlQ.js          1.58 kB │ gzip:   0.68 kB
+dist/assets/navigation-COQsCBg5.js               1.60 kB │ gzip:   0.71 kB
+dist/assets/user-service-CjZbc8jr.js             1.80 kB │ gzip:   0.76 kB
+dist/assets/useSelector-CcW_cZCs.js              1.92 kB │ gzip:   0.84 kB
+dist/assets/warehouses-BJTzx6_b.js               2.05 kB │ gzip:   0.94 kB
+dist/assets/companies-mLiN-Qo0.js                2.22 kB │ gzip:   0.96 kB
+dist/assets/users-DWOsdxyD.js                    2.42 kB │ gzip:   1.00 kB
+dist/assets/shipments-DnMdI9tX.js                2.68 kB │ gzip:   1.17 kB
+dist/assets/_userId-DII_wz5m.js                  3.01 kB │ gzip:   0.95 kB
+dist/assets/use-shipments-C8ROQzIG.js            3.24 kB │ gzip:   1.27 kB
+dist/assets/_warehouseId-BuvKBJKC.js             3.41 kB │ gzip:   1.29 kB
+dist/assets/_handlingUnitId-C4JGpKuN.js          3.80 kB │ gzip:   1.35 kB
+dist/assets/link-BJS26hZR.js                     4.19 kB │ gzip:   2.15 kB
+dist/assets/use-warehouses-DcgXPwSI.js           4.23 kB │ gzip:   1.87 kB
+dist/assets/_warehouseId.edit-BBIpIY7R.js        4.41 kB │ gzip:   1.70 kB
+dist/assets/sign-in-OryzFK1O.js                  4.56 kB │ gzip:   1.59 kB
+dist/assets/readiness-Bxme7XuX.js                6.12 kB │ gzip:   2.38 kB
+dist/assets/use-user-mutations-DivqpSn_.js       6.67 kB │ gzip:   2.23 kB
+dist/assets/combobox-2bsL4QG1.js                 6.70 kB │ gzip:   2.38 kB
+dist/assets/_companyId-DKNrTT38.js               7.70 kB │ gzip:   1.94 kB
+dist/assets/react-DpvdKi1d.js                    7.87 kB │ gzip:   3.00 kB
+dist/assets/use-company-mutations-SQiyTiOb.js    8.08 kB │ gzip:   2.48 kB
+dist/assets/route-Br5-EBIM.js                   11.67 kB │ gzip:   3.78 kB
+dist/assets/purchase-order-form-B45w4zkU.js     21.94 kB │ gzip:   5.03 kB
+dist/assets/_shipmentId-Dcnwfu9p.js             27.56 kB │ gzip:   7.18 kB
+dist/assets/purchase-orders-Btc0TKdy.js         30.50 kB │ gzip:   9.45 kB
+dist/assets/new-CtHegSF0.js                     41.09 kB │ gzip:  10.48 kB
+dist/assets/matchContext-Djp0EmaI.js            55.37 kB │ gzip:  19.68 kB
+dist/assets/form-CuNrKUTf.js                    71.25 kB │ gzip:  17.19 kB
+dist/assets/env-20haFmEj.js                    111.39 kB │ gzip:  32.31 kB
+dist/assets/graphql-BMAB4DRO.js                202.88 kB │ gzip:  27.10 kB
+dist/assets/index-BCOmmLM-.js                  380.56 kB │ gzip: 118.33 kB
+
+✓ built in 1.94s

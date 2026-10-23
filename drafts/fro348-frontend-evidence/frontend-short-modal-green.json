@@ -1,0 +1,18 @@
+{
+  "bounded": {
+    "bottom": 384,
+    "clientHeight": 368,
+    "height": 368,
+    "overflow": "auto",
+    "scrollHeight": 532,
+    "top": 16,
+    "viewport": 400
+  },
+  "footer": {
+    "focus": "Άκυρο",
+    "footerBottom": 370.0874938964844,
+    "footerTop": 330.0874938964844,
+    "height": 400,
+    "scrollTop": 164
+  }
+}

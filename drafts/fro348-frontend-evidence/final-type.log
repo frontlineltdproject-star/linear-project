@@ -1,0 +1,4 @@
+src/features/shipments/services/delivery-note-service.test.ts(77,24): error TS2352: Conversion of type '{ location: { href: string; }; close: Mock<Procedure>; }' to type 'Window' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ location: { href: string; }; close: Mock<Procedure>; }' is missing the following properties from type 'Window': clientInformation, closed, cookieStore, customElements, and 210 more.
+src/features/shipments/services/delivery-note-service.test.ts(81,53): error TS2352: Conversion of type '{ ok: true; blob: Mock<Procedure>; }' to type 'Response' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ ok: true; blob: Mock<Procedure>; }' is missing the following properties from type 'Response': headers, redirected, status, statusText, and 10 more.
