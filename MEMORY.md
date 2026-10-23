@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-349 renewed review after approved FRO-321 update
+
+- Mandatory pull succeeded. Refetched full FRO-349/321/347/326/335, FRO-349 comments (none), current team statuses/labels. FRO-349 remains unchanged at 2026-10-20T11:09:46.986Z, Todo, milestone 0.0.6, five existing labels, no Linear mutation. FRO-321 now updated 2026-10-23T09:48:14.353Z; FRO-347 remains its older 20 October specification. Live production main reverified via authenticated gh at 3820e89e8caa341261e2d48bcb282d93e1bb1d03; prior inspected source evidence still applies.
+- New material gaps: FRO-349 delegates status/date validation to FRO-347, whose editable advanced initial statuses and event dates contradict FRO-321 ordinary Not started/no-event creation. Consume staged basic 0.0.6 capture without waiting for later Export/Entry Note integration; distinguish integration unavailable from confirmed note absence. Consume FRO-321's original-attempt recovery/concurrency contract, trimmed case-sensitive duplicate key and staff-only indirect access; preserve optional Invoice company and no automatic Invoice vessel copying.
+- Earlier five user decisions remain applicable: resume draft/files on return; explicit post-result return to origin; optional Invoice company; preserve blocking graph while flagging 0.0.6 -> 0.0.5 mismatch; shared recovery presentation owned by FRO-347. Do not repeat those questions or treat the previous unapproved draft as saved. Existing standalone-card, dirty Order draft, origin-versus-selected ID, exact presence refresh and verification gaps remain.
+- User accepted scope: finish FRO-349 against approved FRO-321 and track FRO-347 alignment separately. Complete revised description prepared in chat for exact-text approval; no write yet. Require aligned shared form before functional handoff, ordinary initial statuses/blank event dates, phased integration states, full selection/vessel revalidation, FRO-321-backed recovery, prior navigation decisions and read-only acceptance checks. No linked-ticket edits authorized. No new glossary/ADR, UI, preview, production branch/code/database writes. Preserve unrelated FRO-326 working changes; sync only this review entry.
+
 ### 2026-10-23 — FRO-321 approved description saved and verified
 
 - User approved the complete displayed draft with "ok". Planning pull succeeded; re-read target unchanged before saving drafts/fro321-supplier-invoice-rules.md. Re-passed full supplier invoice/Pending_Review labels.
