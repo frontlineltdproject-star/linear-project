@@ -1,6 +1,6 @@
 # FRO-348 — verified frontend preparation
 
-Prepared the approved **partial, unconnected Details presentation** using production components. FRO-348 is not fully integrated, routed or ready to publish. The exact reviewed diff is committed on its approved isolated local branch; no push, PR, deployment or Linear mutation occurred.
+Prepared the approved **partial, unconnected Details presentation** using production components. FRO-348 is not fully integrated or routed. The exact reviewed branch was pushed under the user's explicit exception for the known protection, integration and baseline-check limitations. No PR, deployment or Linear mutation occurred.
 
 ## Complete diff
 
@@ -11,7 +11,8 @@ Prepared the approved **partial, unconnected Details presentation** using produc
 - Checkout: `C:/Users/Giorgos/.codex/visualizations/2026/10/23/01a1683e-7796-7b71-a01e-27e0158a7080/fro348-frontend`.
 - Local branch: `mock/fro-348-supplier-invoice-details`, created under explicit user approval.
 - Local commit: `68d19009dd21c188449412bff7e7eaf44cf9b2d1` — `feat(FRO-348): prepare supplier invoice details UI`.
-- Verified clean working tree, empty index, no upstream, correct parent/base and byte-for-byte committed diff match to the reviewed patch. No push. Generated route ordering and checkout line endings restored to baseline; manifest/lock unchanged.
+- [Published branch](https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-348-supplier-invoice-details); fetched remote head verified as the same commit above, with the entire remote diff matching the approved patch. Remote main remains the recorded base.
+- Verified clean working tree, empty index, no upstream, correct parent/base and byte-for-byte committed diff match to the reviewed patch. Generated route ordering and checkout line endings restored to baseline; manifest/lock unchanged.
 - Verified patch applicability against an empty base for these new paths, reverse applicability against prepared contents and patch whitespace.
 
 All files are under `frontline-forwarding-client/src/features/supplier-invoices/`:
@@ -77,7 +78,7 @@ The plan's acceptance table maps every complete-ticket criterion to prepared pre
 
 Verified local commit and reviewed patch unchanged, clean checkout and remote branch absent. Current GitHub identity has maintain/push, not admin. `main` reports protected=false, protection.enabled=false and enforcement off. Listing repository/parent rulesets and effective rules for the mock branch both return403 with a plan-upgrade message. The restricted write enforcement required by AGENTS.md cannot be verified; no protection/permission changes made. Publication stays blocked under the current instruction, in addition to the disclosed integration/check limitations. Other tickets' exceptions do not transfer.
 
-Deferred command, **not executed**: `git push github mock/fro-348-supplier-invoice-details:mock/fro-348-supplier-invoice-details`. Proceed only after the required protection gate is resolved or the user explicitly revises it for this exact push and acknowledges the existing integration/check limitations. No PR, merge or deployment is included.
+The user subsequently explicitly authorized this exact push despite the known protection, integration and baseline-check limitations, with no PR or deployment. Executed `git push github mock/fro-348-supplier-invoice-details:mock/fro-348-supplier-invoice-details` successfully. Fetched and independently verified the remote head and full diff against the approved patch; main unchanged. No permission/protection change, PR, merge, deployment or new source change. The exception applies to this push only and does not establish working integration or clean baseline checks.
 
 ## Review, rulings and deferred minor
 
@@ -93,4 +94,4 @@ Rulings made during execution:
 4. Deliver the agreed nine-file presentation without inventing a route/controller/API; cost: working integration remains later work.
 5. Keep the reviewer's deferred domain, authorization, navigation and publication areas unverified and blocked under that scope; cost: later integration and verification gates remain.
 
-Playbook provenance: committed policy at `3820e89e8caa341261e2d48bcb282d93e1bb1d03`, SHA-256 `b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc`. Both model checkpoints and native plan approval are complete; preserve on continuation. User separately approved the local branch and commit after reviewing this exact diff; both are now verified. Prior tests/build apply to identical committed contents; no source changes or repeated application checks in the local-commit step. Only planning records/evidence are synchronized. Production push remains deferred, with integration/check/publication restrictions unchanged.
+Playbook provenance: committed policy at `3820e89e8caa341261e2d48bcb282d93e1bb1d03`, SHA-256 `b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc`. Both model checkpoints and native plan approval are complete; preserve on continuation. User separately approved the local branch/commit and later this reviewed push with the scoped exception above. Prior tests/build apply to identical committed contents; no source changes or repeated application checks in these delivery steps. Planning records/evidence are synchronized separately. Integration/check limitations remain; PR and deployment are excluded.

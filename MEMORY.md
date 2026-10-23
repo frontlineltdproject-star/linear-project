@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-348 reviewed partial UI branch pushed by explicit exception
+
+- User explicitly authorized pushing the reviewed FRO348 partial UI branch despite known protection, integration and baseline-check limitations, with no PR or deployment. This overrides those publication gates for this exact push only; no protection/permission changes. Prior conditional request superseded by this clear scoped authorization.
+- Mandatory planning pull succeeded. Resumed same committed3820e89 playbook fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Before push verified clean local mock/fro-348-supplier-invoice-details at68d19009dd21c188449412bff7e7eaf44cf9b2d1, correct github remote, parent/main3820e89e8caa341261e2d48bcb282d93e1bb1d03 unchanged, exact approved patch match, no active hooks and remote branch absent.
+- Executed exact same-name refspec: git push github mock/fro-348-supplier-invoice-details:mock/fro-348-supplier-invoice-details. Push succeeded. Fetched branch and independently confirmed remote head68d19009dd21c188449412bff7e7eaf44cf9b2d1 and complete remote diff exactly equals approved9file1239insertion patch. Whitespace PASS; local tree clean and main unchanged. No source changes or repeated app checks; existing175-test/build evidence and inherited limitations remain as reviewed.
+- Branch https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-348-supplier-invoice-details . Updated handoff with remote verification and scoped exception. No PR/merge/deployment/Cloudflare/Linear mutation. Working invoice integration/controller/access/recovery/files remain incomplete; initial-focus documentation minor retained. Planning records synchronized separately; preserve unrelated326/330 work.
+
 ### 2026-10-23 — FRO-348 push prerequisite check blocked
 
 - User requested the next step after approved local commit. Mandatory planning pull succeeded. Resumed same committed3820e89 policy/fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Local mock/fro-348-supplier-invoice-details clean at68d19009dd21c188449412bff7e7eaf44cf9b2d1; exact reviewed patch match; remote branch absent; main remains3820e89e8caa341261e2d48bcb282d93e1bb1d03.
