@@ -2,6 +2,9 @@
 
 Shared vocabulary for Order and colli ticket planning.
 
+**Shipment readiness**:
+Confirmation that the participating goods are stock-confirmed at the origin and their physical packing is complete and matches the confirmed arrangement, including goods travelling individually. It is distinct from a saved packing plan and from permission to depart, which also requires a transport-document number.
+
 **Pickup responsibility**:
 Whether Front Line is responsible for collecting an Order's goods from the supplier. Yes records that responsibility; No records that Front Line is not responsible; unset means it has not been recorded. It does not record completed collection and is independent of Greece, warehouse location and Shipment route.
 

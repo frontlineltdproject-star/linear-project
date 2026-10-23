@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-23 — FRO-325 grill round 1 accepted; physical history question pending
+
+- User accepted Ready as attestation of completed physical packing and atomic explicit reconfirmation of a changed arrangement; ordinary changed Save still invalidates readiness. Recorded vocabulary in CONTEXT.md and decisions in drafts/fro325-full-grill.md.
+- Round 2 asks whether confirmation establishes physical colli arrangement/history while creation/ordinary saves remain plans; recommend yes, preserving previous physical facts and linking effects without duplicates. Exact event design remains implementation work. FRO-345 history contract and live journey semantics ground the question; do not invent physical occurrence times from confirmation time.
+- Planning pull succeeded. Fresh FRO-325 remains unchanged at 2026-10-23T12:30:06.313Z; FRO-345 read current. No Linear/approved-draft/UI/production changes. Full revised text still requires approval. No ADR warranted. Preserve unrelated working changes.
+
 ### 2026-10-23 — FRO-325 full grill reopened; two concrete decisions pending
 
 - User requested full grill, narrowed it to concrete omissions only, and resumed with Astra. Planning pull succeeded; refreshed full325/comments and316/344/345; live gh main remains3820e89e8caa341261e2d48bcb282d93e1bb1d03. Saved325 remains unchanged at2026-10-23T12:30:06.313Z. Same task playbook provenance retained; no new production snapshot/source/branch changes.

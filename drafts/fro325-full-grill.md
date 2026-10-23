@@ -49,4 +49,14 @@ Evidence: `docs/workflows/shipment-lifecycle.md` says LOADED means physically pl
 
 Evidence: saved325 Confirm readiness row allows submitted arrangement in an eligible pre-dispatch state -> Ready, whereas lifecycle and AC5 say changed saved packing invalidates readiness without distinguishing the explicit confirmation operation. FRO-316 has separate ordinary Save and review/confirmation controls; no requirement for a mandatory intermediate persistence step is explicit.
 
-No answers yet. No glossary change or qualifying ADR at this stage. Keep the approved saved ticket and draft unchanged until the interview resolves these branches and any resulting full revision receives fresh approval.
+User accepted both recommendations on 23 October 2026. Ready attests completed physical packing, including all-individual arrangements; an explicit reviewed confirmation may save a changed arrangement and retain Ready atomically, while ordinary changed Save invalidates it. Preserve earlier confirmations and reject stale input. The reason is to distinguish planning from completed preparation without forcing an artificial intermediate save/state transition.
+
+Shipment readiness vocabulary recorded in CONTEXT.md immediately. No qualifying architectural decision warrants an ADR. Keep the approved saved ticket and draft unchanged until downstream physical-history implications are resolved and any resulting full revision receives fresh approval.
+
+## Round 2 — physical history
+
+Q3: Should explicit readiness confirmation also establish the confirmed physical arrangement in each affected colli's journey, including movement between overpacks or back to individual transport? Recommend yes: creation-time packing and ordinary Save are plans/activity only; explicit confirmation records the attested physical arrangement and changes from the last confirmed physical arrangement. Intermediate saved plans are not physical events. Preserve prior facts, link effects to one confirmation operation, and avoid duplicate effects when the arrangement is unchanged. Confirmation time is the attestation time, not an invented exact time of warehouse handling. Exact event/schema design remains implementation work, with no new UI implied.
+
+Evidence: current FRO-345 (updated 2026-10-20) distinguishes packing save/change, readiness confirmation and one logical operation with linked effects. Journey documentation defines immutable physical trace with load-unit references; HandlingUnitJourneyEventType currently has LOADED but no unpack/unload/repack equivalent. Existing creation emits LOADED for initial assignments; this must be reconciled with the accepted planning-versus-physical distinction. FRO-325 owns command effects, FRO-345 owns history persistence/read contracts, FRO-316 remains presentation owner.
+
+Await Q3 answer before final reconciliation/draft. Current Linear FRO-325 re-read unchanged at 2026-10-23T12:30:06.313Z.
