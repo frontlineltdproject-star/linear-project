@@ -1291,3 +1291,11 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - Mandatory planning pull succeeded. Refetched full344 and current FRO statuses/labels; target unchanged at2026-10-20T11:09:54.879Z. Live main remains38edae8e3cf92b9c6f8b4b9b53febcd96ce5c03e. Applied frontline-linear-issues.
 - Complete standalone draft: drafts/fro344-reviewed-spec.md. Reviewed all original boundaries/ownership and six decisions; covers exact partial/release semantics, fiscal reconciliation, source/packing/history consumers, version/retry integration, release timing and AC-mapped read-only verification. Before/after comparisons remain outside ticket text in drafts/fro344-review.md and chat.
 - Description-only proposal preserves title, Todo, Pending_Review/Shipment, all other metadata/relations and empty attachments/documents; no Ready promotion. Await approval of complete displayed text before any Linear write. No UI/preview, production branch/code/database change or deployment verification; no new glossary/ADR. Synchronize only344 draft/review/checkpoint, preserving unrelated326/330 work.
+
+
+### 2026-10-23 — FRO-344 approved replacement saved and verified
+
+- User approved the complete displayed draft with "ok". Mandatory planning pull succeeded; full fresh344 remained unchanged at2026-10-20T11:09:54.879Z. Saved exact drafts/fro344-reviewed-spec.md content and re-passed Shipment/Pending_Review.
+- Independent re-read matched the full description after Linear mention/link/list normalization. Save auto-added related297/303/295/357/323; removed only those additions under approved metadata preservation, then independently re-read again.
+- Final metadata comparison has no changes: title, Todo, both labels, null assignment/delegate/estimate/parent/cycle/due date, No priority, project/milestone0.0.7, blocks316, related343/341/292/339/326/325/345, no blockers, empty attachments/documents. Final updatedAt2026-10-23T13:30:52.704Z. No Ready promotion or linked-ticket changes.
+- Review receipt saved in drafts/fro344-review.md. No UI/preview, production branch/code/database write or deployment verification. No new glossary/ADR. Synchronize only344 receipt/checkpoint; preserve unrelated planning changes.

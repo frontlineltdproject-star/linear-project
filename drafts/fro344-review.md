@@ -1,6 +1,6 @@
 # FRO-344 review — 23 October 2026
 
-Status: all six interview decisions accepted; complete replacement draft prepared for approval. Linear has not been changed. Initial findings below retain review context; accepted decisions and the final draft supersede their open-question status.
+Status: approved replacement saved to Linear and independently verified. Initial findings below retain review context; accepted decisions and the final specification supersede their open-question status.
 
 ## Workflow
 
@@ -8,7 +8,7 @@ Status: all six interview decisions accepted; complete replacement draft prepare
 - 1 Grill: complete; Q1–Q6 accepted. No newly resolved vocabulary or qualifying ADR.
 - 2 Canvas / 2b Preview: skipped; FRO-316/FRO-341 own existing presentation. FRO-165 is archived email tagging, not Shipment UI.
 - 3 Spec check: final draft covers consumer outcomes/owners below, all six decisions and preservation requirements.
-- 4 Ticket: complete replacement in fro344-reviewed-spec.md; full text and explicit approval required before writing.
+- 4 Ticket: complete replacement in fro344-reviewed-spec.md approved with "ok", saved and verified.
 - 4e UI branch: skipped, expressly prohibited by user.
 - 5 Memory: review checkpoint recorded; no newly resolved vocabulary or ADR.
 - 6 Verify: review evidence only; no implementation/deployment verification.
@@ -87,3 +87,11 @@ Before / after summary for chat (outside final ticket):
 | Old evidence and broad verification | Current source paths, affected consumer ownership, release coordination and AC-mapped read-only checks. |
 
 All existing field/state boundaries, no-op/cancel/error behavior, full-child preservation, arrival-source deduplication, no inline Order creation, fiscal/history protection and ownership retained. No UI/preview/branch or production mutation. No new glossary/ADR.
+
+## Save and verification receipt
+
+User approved the complete displayed draft with "ok". Mandatory pull succeeded; fresh full target remained unchanged at 2026-10-20T11:09:54.879Z. Saved the exact reviewed specification, re-passing both labels. Re-read matched the complete description after Linear issue-mention, link and list normalization.
+
+Linear automatically added related FRO-297/303/295/357/323 from mentions. Removed only those additions under the approved preservation scope and independently re-read again. Final description matches; metadata comparison reports no changes: title, Todo, Shipment/Pending_Review, null assignee/delegate/estimate/parent/cycle/due date, No priority, Pre-releases 0.0.x / 0.0.7, blocks316, related343/341/292/339/326/325/345, no blockers, empty attachments/documents. Final updatedAt: 2026-10-23T13:30:52.704Z.
+
+No Ready promotion, linked-ticket edit, production branch/code/database write, preview or deployment action. Synchronize only this receipt and memory entry; preserve unrelated planning work.
