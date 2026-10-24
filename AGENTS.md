@@ -97,7 +97,7 @@ Verify each access with a real operation, not with an assumption.
 
 **Repository access method is `gh`, never the GitHub connector.** The connector's GitHub App installation is scoped to repositories owned by `frontlineltdproject-star` and cannot read the collaborator-owned private repository. Use the locally authenticated GitHub CLI (`gh auth status`, then `gh api` or `gh repo view`) for every read from `Frontline-Forwarding/frontline-forwarding`. The CLI account now has branch write access to that repository (user update, 2026-10-21); verify it in preflight. Use `gh` and authenticated Git for the isolated implementation and branch push in step 4e.
 
-- **Linear MCP needs OAuth** and cannot be authorised from a non-interactive session. If the read call fails, say so and ask the user to connect it (`/mcp` in an interactive terminal, or their Codex.ai connector settings), then continue offline: the draft still gets written in chat.
+- **Linear MCP needs OAuth** and cannot be authorised from a non-interactive session. If the read call fails, say so and ask the user to connect it (`/mcp` in an interactive terminal, or their Claude connector settings), then continue offline: the draft still gets written in chat.
 - **There is no Sentry MCP on this machine.** When a ticket comes from a Sentry issue, ask the user to paste the issue (title, culprit, stack frame, event count). The Sentry↔Linear integration is connected for filing, not for reading from here.
 - **Never ground facts in `FrontLine/Production Portal Files/frontline-forwarding-main.zip`** — it is a stale snapshot. GitHub is the live copy.
 
@@ -129,8 +129,8 @@ The **purchase order ≙ Order ≙ stock list item** mapping below is exactly wh
 When the plugin is not installed, fall back to `superpowers:brainstorming`, keep the Decisions record by hand, and **say that the grill was a fallback** — do not claim a grilling session that did not happen. Install with:
 
 ```
-Codex plugin marketplace add mattpocock/skills
-Codex plugins install mattpocock-skills@mattpocock
+/plugin marketplace add mattpocock/skills
+/plugin install mattpocock-skills@mattpocock
 ```
 
 Two standing rules on top of the interview:
