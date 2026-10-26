@@ -66,3 +66,43 @@ Status: agreed 2026-10-26. The developer accepted the four slices and the recomm
 - **D4 purpose label:** keep "Frontline network transfer" until FRO-320 lands, or rename now.
 - **D5 branch name:** `mock/fro-341-create-shipment-layout`; no Linear In Progress change.
 - **D6 enforcement gap:** branch restriction rules are unavailable on this plan (rulesets 403, no `main` protection). Written acceptance is needed before a push.
+
+---
+
+# Revision 2 — rebuild from `main` as unconnected UI preparation (proposed 2026-10-26)
+
+The user chose option 1 and asked that AGENTS.md be followed again. Step 4e builds from `main`, so the `release/0.0.2` base (D1 above) is withdrawn. Revision 1 work is retained locally as `backup/fro-341-release-0.0.2` and in Generated files/FRO-341/fro-341-create-shipment-layout.bundle. The remote branch `mock/fro-341-create-shipment-layout` must be deleted by the user before reuse; the agent may not delete remote branches.
+
+- Base: `main` 5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Playbook resumed with the same committed policy, b1a66b22…7dc.
+- Pattern, as in mock/fro-335 and mock/fro-347: new components under `frontline-forwarding-client/src/features/shipments/components/creation/` that are **not mounted**. `routes/secured/shipments/new.tsx` and the existing composer stay unchanged and working. Types are UI drafts and view models, not API inputs. Data and operations are supplied through props/callbacks, with no fixtures, casts or new services. A README states the activation boundary and its dependency owners.
+- Scope: the complete approved FRO-341 UI, including the parts the backend cannot support yet:
+  - Status Preparing/Arrived with the indicator, and dispatch/arrival dates
+  - the four geography selectors with city-filtered warehouses and deep-link prefill
+  - mode, Document type and Document number
+  - Purpose and destination
+  - Notes
+  - By purchase order (collapsible) and From arrived shipments
+  - Create new order (entry plus modal slot)
+  - Partial selections
+  - Documents (pending files)
+  - Creation review (counters, route, checks, allocation, child effect)
+- No changes to shared `components/ui/*`; tab keyboard handling stays local to the feature, as in FRO-347. Only client files.
+
+## Slices
+
+1. Foundation: README (activation boundary), UI draft/view-model types, EN/EL labels, layout shell (TopBar, Card, three tabs with local keyboard navigation, page-level Create shipment, review modal shell), pure validation helper.
+2. Overview: Shipment details (status subcard and indicator, geography, origin warehouse, mode, document, dates), Shipment purpose, Notes.
+3. Orders and Collis: By purchase order (collapsible), From arrived shipments, Create new order entry/slot, Partial selections.
+4. Documents and Creation review content.
+
+Per slice: component tests, `npm run test`, `npm run build`, `npm run format:check`, `npx tsc --noEmit`, `git diff --check`; local-only browser harness outside the checkout mounting the components with fictional props (not committed); diff approval before commit.
+
+## Decisions proposed
+
+- R1 base `main`.
+- R2 unmounted preparation; live page unchanged.
+- R3 full scope including blocked areas.
+- R4 labels follow the approved ticket text ("Warehouse transfer"; "Preparing" pending the FRO-316 follow-up).
+- R5 Create new order is a modal host slot; the FRO-335 card is not on `main`.
+- R6 no shared-primitive changes.
+- R7 same branch name after the user deletes the old one.
