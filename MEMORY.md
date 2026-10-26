@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 slice 2 prepared, uncommitted
+
+- User approved slice 1 (keep uncommitted). Slice 2 (Overview) added 4 components (shipment card, identity card with Edit/Save/Cancel, customs block, customs dialog), one test file and labels/README updates. Red: 14/14 component tests failed on render-nothing stubs; Green: 44/44 focused tests. Prettier, diff --check pass; tsc only the 2 baseline TS2352. Cumulative slices 1–2: 14 new files, 2724 insertions, diff at C:/ffx/fro352-slices-1-2.patch (kept out of the planning repo).
+- Planning-repo pushes were blocked by the permission classifier (data exfiltration) after slice 1; drafts/fro352-slice1.patch stays untracked; memory commits are local until the user pushes or allows it.
+
 ### 2026-10-26 — FRO-352 slice 1 prepared, uncommitted
 
 - User agreed the plan and confirmed the implementation-model checkpoint; asked for slice-by-slice review. Deps: npm install --package-lock=false (lockfile untouched), Node 24.13.
