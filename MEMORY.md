@@ -1,5 +1,9 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 slice 3 prepared, uncommitted
+
+- User approved slice 2 (keep uncommitted). Slice 3 (invoices tab): invoices card (Edit add/remove at EAD, Add invoice add-only after, locked saved rows, New/Paperwork only badges, picker reasons, Escape order, focus moves), Connected Orders card, local SearchPicker in ui-parts, InvoiceUnavailableReason/InvoiceSearchResult types, labels, README. Red: 9/9 failed on stubs; Green: 53/53 focused tests (one test assertion corrected: it queried the still-open picker list, not the table). Prettier, diff --check pass; tsc only the 2 baseline TS2352. Cumulative slices 1–3: 17 new files, 3792 insertions; diff at C:/ffx/fro352-slices-1-3.patch.
+
 ### 2026-10-26 — FRO-352 slice 2 prepared, uncommitted
 
 - User approved slice 1 (keep uncommitted). Slice 2 (Overview) added 4 components (shipment card, identity card with Edit/Save/Cancel, customs block, customs dialog), one test file and labels/README updates. Red: 14/14 component tests failed on render-nothing stubs; Green: 44/44 focused tests. Prettier, diff --check pass; tsc only the 2 baseline TS2352. Cumulative slices 1–2: 14 new files, 2724 insertions, diff at C:/ffx/fro352-slices-1-2.patch (kept out of the planning repo).
