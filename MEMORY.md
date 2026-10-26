@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 review started; round 1 pending
+
+- User: FRO-350 (Export creation page) was not created through the workflow; review gaps, rebuild the UI from the production design system, and follow the other mock branches (client UI folder only). Planning pull succeeded. Baseline: Todo, Pending_Review/Frontend/Story/export, 0.0.10, updatedAt 2026-10-20T11:10:38.464Z, blockedBy FRO-317, related 348/347/353/352/341/316, 7 attachments, no comments. Live main 5c51030.
+- Findings in drafts/fro350-review.md: patch-stack text; agreed chatgpt.site preview returns 401; misaligned with saved FRO-317 (MRN rules, EAD >= MRN date, Greek >=1 invoice, type matrix, Entry Note shared Export, full blocking list, Company-record grouping); "Free Zone" fixture; production identifier is shipmentNumber and search is number/transport doc; entry points unowned; post-create, duplicate, cancel, invoice-table columns, picker eligibility and access undefined.
+- Read-only production clone at C:/ffx/fro350 (short path; scratchpad path too long for git on Windows). Cloudflare token not set.
+- Round 1 (Q1-Q12) asked; recommendations are not decisions. No Linear writes, no preview, no branch.
+
 ### 2026-10-26 — FRO-317 marked Ready; EAD/MRN rule pending text approval
 
 - User instructed the status/label change: removed Pending_Review, added Ready; status stays Todo (the Ready target). Re-read: labels entry note/export/Integration/Story/Ready, relations unchanged, updatedAt 2026-10-26T13:04:08.805Z.
