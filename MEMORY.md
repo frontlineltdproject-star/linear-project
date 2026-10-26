@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-316 branch and previous-UI links added
+
+- User approved four edits. Context for agents: the stale Cloudflare line replaced with the prepared branch (mock/fro-316-shipment-details-ui, 2078b6e) and local review instructions; new "Previous UI" line linking the hosted chatgpt.site preview as historical reference only. Bold around "Measurement rule (FRO-299)" restored.
+- Link attachments added: "Prepared frontend branch — mock/fro-316-shipment-details-ui" and "Previous FRO-316 UI (historical reference)"; the 22 Sep screenshot kept. Auto-added related FRO-297 removed. Ready, Todo, Chris, 0.0.9 unchanged; updatedAt 11:53:30Z.
+
 ### 2026-10-26 — FRO-316 mock branch published
 
 - User approved branch, commit and push, and reconfirmed the protection gap. mock/fro-316-shipment-details-ui created from 5c51030; commit 2078b6e (27 added client files, byte-identical to the reviewed patch); pushed with the explicit same-name refspec.
