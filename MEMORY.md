@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-341 review started; round 1 pending
+
+- User: FRO-341 was not created through the workflow; review gaps and rebuild the UI from the production design system. Planning pull succeeded. Read the full FRO-341 description (318 lines; updatedAt 08:15:29.875Z; Todo, Shipment/Pending_Review/Frontend/Story, 0.0.9, 8 blockers, 8 related, one chatgpt.site attachment, no comments). Live main is 5c51030; the ticket cites the stale 3820e89.
+- Facts: FRO-339 is Done but exists only on release/0.0.2 (09394e5218), which already has the composer geography selectors and the city-based warehouse policy. PCS is retired (FRO-295), so the "Declared pcs" counter is invalid. Production creation still supports optional repacking. The shipment status enum has no READY_FOR_DISPATCH. The preview link returns 401 behind a ChatGPT sign-in.
+- Findings are in drafts/fro341-review.md. Round 1 asked: rewrite scope, PCS counter, deep-link origin, repacking timing/blocker, Notes interaction, warehouses without a city, heading/annotations under DESIGN.md, Pages preview token. No Linear writes, no preview deploy (wrangler unauthenticated), no production branch.
+
 ### 2026-10-26 — FRO-300 reviewed, rewritten and verified
 
 - Mandatory planning pull succeeded. Read full FRO-300 (updatedAt 2026-10-20T11:10:31.791Z; Todo, Ready/Shipment, Chris, No priority, 0.0.9, blocks 316, related 325/299, no attachments/comments), FRO-316, FRO-341, FRO-325, FRO-299. Live source main 5c51030680c9d45b3827a7e19b8320c19aa5ed9a via gh.
