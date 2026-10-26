@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-341 branch link and workflow lesson added
+
+- User approved the drafted edits. FRO-341: one Context for agents bullet appended (prepared branch mock/fro-341-create-shipment-layout, base 5c51030, head 1093f0f, unmounted creation components, README activation boundary); link attachment "Prepared frontend branch — mock/fro-341-create-shipment-layout" added. FRO-339 bullet kept (release/0.0.2 still 2 ahead of main).
+- Re-read verified: Todo, labels Shipment/Edited/Pending_Review/Frontend/Story, 0.0.9, attachments = branch link + historical preview, blockedBy 9 and related 7 as before. The save re-added related FRO-295 from the existing mention; removed that addition only. Linear's round-trip unbolded the "):" after three heading mentions (Geography rules, From arrived shipments, Create new order); a restore patch was normalized back, cosmetic only. updatedAt 2026-10-26T12:22:19.456Z.
+- WORKFLOW_LEARNINGS: added "Build the UI branch from main even when its backend sits on a release branch".
+
 ### 2026-10-26 — FRO-341 revision 2 mock branch published from main
 
 - Revision 2 (R1–R7) followed AGENTS.md step 4e: base main 5c51030, unmounted preparation components only, live page unchanged. All four slices approved after review; slice 4 browser check fixed a long-file-name overflow in Documents.

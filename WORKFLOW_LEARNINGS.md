@@ -179,3 +179,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-299 review](MEMORY.md#2026-10-26--fro-299-reviewed-rewritten-and-verified).
 - Action next time: When a UI requirement moves to a redesigned screen, check that screen's actual read contract for every displayed value and assign an owner for missing fields.
 - Status: Active.
+
+### 2026-10-26 — Build the UI branch from main even when its backend sits on a release branch
+
+- Problem: FRO-341's first mock branch was based on `release/0.0.2` because FRO-339's geography existed only there. Compared with `main`, the branch then showed FRO-329/FRO-339 backend files, although the user wanted UI-only branches. The deviation from step 4e was not raised before the push.
+- Evidence: [FRO-341 revision 2 mock branch](MEMORY.md#2026-10-26--fro-341-revision-2-mock-branch-published-from-main).
+- Action next time: Base every mock branch on `main`. When a contract is missing there, build unmounted components on UI view models and record the dependency in the folder README's activation boundary, as FRO-316/335/341 do. Ask the user before implementing on any other base. Before the push gate, run `gh api .../compare/main...<branch>` and show the file list.
+- Status: Active; reinforces [step 4e](AGENTS.md#4e-verified-frontendui-mock-branch--ask-before-creating-it).
