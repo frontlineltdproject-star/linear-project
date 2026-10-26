@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-317 EAD "not later than today" patch saved
+
+- User approved the drafted patch (drafts/fro317-ead-today-patch.md). Baseline unchanged (13:06:28.810Z). Applied 4 replacements (fields row, Confirm EAD receipt, initial status, AC 11) and the new Decisions row; saved 13:37:38Z.
+- Save auto-added related FRO-303/FRO-356/FRO-347; removed only those (13:37:49Z). Final: Todo, labels entry note/export/Integration/Story/Ready, blocks 350/352, blockedBy 321, original 13 related, 8 attachments, all unchanged.
+- Cosmetic Linear normalization: two FRO-321 mentions (Decisions "Matches FRO-321's rollout" and AC 16) now render as Markdown links instead of issue chips. Text unchanged; not fixed.
+- FRO-350 and FRO-317 now agree on the EAD date window (MRN date to today). Remaining: step 4e mock/fro-350-export-create.
+
 ### 2026-10-26 — FRO-350 approved rewrite saved; FRO-317 EAD patch drafted
 
 - User approved writing drafts/fro350-reviewed-spec.md with the listed metadata and cleanup. Baseline unchanged (2026-10-20T11:10:38.464Z) before saving. Saved 13:35:49Z: labels Pending_Review/Frontend/Story/export re-passed, Todo, 0.0.10, Pre-releases 0.0.x, all 7 attachments unchanged.

@@ -65,6 +65,10 @@ AGENTS.md remains the authoritative workflow.
   including small patches.
   FRO-317 (2026-10-26): mentions added related FRO-303/FRO-347/FRO-356;
   removing them was included in the write approval and succeeded.
+  FRO-317 EAD patch (2026-10-26): a five-edit patch re-added FRO-303/356/347
+  and turned two FRO-321 issue chips into plain Markdown links. Expect
+  mention rendering changes anywhere in the description, not only near
+  the edited lines.
 - Status: Active.
 
 ### 2026-10-26 — Parallel sessions share one planning checkout
