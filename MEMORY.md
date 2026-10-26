@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 step 4e plan drafted
+
+- Isolated clone C:/ffx/fro352 detached at main 5c51030. Playbook loaded for FRO-352: HEAD 5c51030, policy committed, SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. User confirmed the planning-model checkpoint.
+- mock/fro-350-export-create is now published (16 files under src/features/exports/, incl. components/export-details-card.tsx). FRO-352 plan keeps every file under src/features/exports/details/ (no shared paths) with local copies of FRO-350's ReadOnlyField/SearchPicker/CardHeading/RecordLink, flagged in the README for de-duplication.
+- Plan in drafts/fro352-frontend-plan.md: 4 slices (shell/rules/labels; Overview; Invoices; VAT/Documents/Cancellation), TDD for pure rules, temporary uncommitted browser harness. TopBar title is a plain string, so the Customs/Cancelled pills go in its actions slot. Local Node 24.13 (22.13 not installed). Awaiting plan agreement, then the implementation-model checkpoint. No code, branch or commit yet.
+
 ### 2026-10-26 — FRO-352 reviewed, rewritten and saved; FRO-317 IE599 patch saved
 
 - User: FRO-352 (Export details page UI) was not created through the workflow; review gaps, rebuild the UI from the production design system, and follow the other mock branches (client UI folder only). Pull succeeded. Baseline: Todo, Pending_Review/Frontend/Story/export, 0.0.10, updatedAt 2026-10-20T11:10:41.828Z, blockedBy FRO-317, related 350/348/354/353/347/321, 1 attachment (ChatGPT-hosted preview, 401 signed out), no comments. Main 5c51030. Parallel FRO-350 session active.
