@@ -8,6 +8,12 @@
       "port": 8350
     },
     {
+      "name": "fro352-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-I", "-m", "http.server", "8360", "--bind", "127.0.0.1", "--directory", "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/102251e4-9dec-41da-aaec-19a444e8141a/scratchpad/preview352"],
+      "port": 8360
+    },
+    {
       "name": "fro350-client-review",
       "url": "http://127.0.0.1:8352",
       "port": 8352

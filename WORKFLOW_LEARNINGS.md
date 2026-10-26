@@ -205,6 +205,7 @@ AGENTS.md remains the authoritative workflow.
 - Problem: In FRO-350, the plain text "chatgpt.site" was saved as a link to http://chatgpt.site, which points readers to an unrelated site.
 - Evidence: [FRO-350 saved rewrite](MEMORY.md#2026-10-26--fro-350-approved-rewrite-saved-fro-317-ead-patch-drafted).
 - Action next time: Before showing a draft for approval, replace bare domain names with plain words (for example "the ChatGPT-hosted preview") or a full URL in backticks.
+  FRO-352 (2026-10-26): the shorthand "FRO-347/350" became a FRO-347 chip followed by plain "/350". Write every issue ID in full.
 - Status: Active.
 
 ### 2026-10-26 — Stopping a dev-server task can leave Vite running on Windows

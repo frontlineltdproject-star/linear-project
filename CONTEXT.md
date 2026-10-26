@@ -84,3 +84,9 @@ The Export's procedure, set by the Invoicing company's tax registration: Greek i
 
 **Shipper (Αποστολέας)**:
 The company shown as sender on an Export: the Invoicing company for a Greek invoicing company Export, the Supplier for a Foreign invoicing company Export. It is distinct from the Order's Client.
+
+**Informative List**:
+The Supplier Invoices an Export declares: its saved, explicitly selected invoices. It is not the Shipment's Orders, not the creation suggestions and not a stamping or ΥΔ print selection.
+
+**Paperwork only invoice**:
+An invoice in an Export's Informative List whose linked Order has no collis in that Export's Shipment. It adds its Order to Connected Orders but no physical goods to the Shipment.
