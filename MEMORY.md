@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 approved rewrite saved; FRO-317 EAD patch drafted
+
+- User approved writing drafts/fro350-reviewed-spec.md with the listed metadata and cleanup. Baseline unchanged (2026-10-20T11:10:38.464Z) before saving. Saved 13:35:49Z: labels Pending_Review/Frontend/Story/export re-passed, Todo, 0.0.10, Pre-releases 0.0.x, all 7 attachments unchanged.
+- Save auto-added related FRO-319/FRO-321; removed only those (13:36:02Z). Final relations: blockedBy FRO-317; related 348/347/353/352/341/316 (original set).
+- Linear normalization: the bare text "chatgpt.site" in Context for agents became a link to http://chatgpt.site (cosmetic; meaning unchanged). Not fixed.
+- FRO-317 EAD "not later than today" patch drafted in drafts/fro317-ead-today-patch.md (4 replacements + one Decisions row); FRO-317 baseline 13:06:28.810Z. Awaiting approval; no FRO-317 write.
+- Next: step 4e mock/fro-350-export-create (client-only, unmounted, from main 5c51030) needs preparation, verification and a separate push approval.
+
 ### 2026-10-26 — FRO-350 review started; round 1 pending
 
 - User: FRO-350 (Export creation page) was not created through the workflow; review gaps, rebuild the UI from the production design system, and follow the other mock branches (client UI folder only). Planning pull succeeded. Baseline: Todo, Pending_Review/Frontend/Story/export, 0.0.10, updatedAt 2026-10-20T11:10:38.464Z, blockedBy FRO-317, related 348/347/353/352/341/316, 7 attachments, no comments. Live main 5c51030.
