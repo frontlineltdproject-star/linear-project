@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-316 frontend preparation verified; push gate pending
+
+- User authorized step 4e (Q1–Q4): mock/ pattern, live page unchanged, base main 5c51030, branch mock/fro-316-shipment-details-ui, protection gap accepted; P1 one commit. Planning and implementation model checkpoints confirmed.
+- Six slices implemented in an isolated clone: 27 new client files (details components, labels, DEV-only review page). 257 tests pass (55 new, Red first), build passes, typecheck only the 2 pre-existing errors, Prettier/diff-check clean. Browser: 200 sweep checks plus flows clean; fixes for focus return, 400px Greek footers and geography labels.
+- Handoff drafts/fro316-frontend-handoff.md; full patch drafts/fro316-frontend-preparation.patch. No branch, commit or push yet; awaiting explicit approval.
+
 ### 2026-10-26 — FRO-316 set Ready; FRO-325 consumer additions saved
 
 - User approved FRO-316 → Ready: labels Shipment/Edited/Frontend/Story/Ready, Todo; description unchanged at that step.
