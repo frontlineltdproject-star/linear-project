@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 mock branch pushed and verified
+
+- User approved creating mock/fro-352-export-details from 5c51030 with one commit per slice and pushing with the explicit refspec, and accepted the branch-protection gap for this branch.
+- Commits rebuilt from the approved slice snapshots: 3fac97b shell/rules/labels, 82dda0c Overview, 46ac13a invoices, dc8d3a9 VAT/documents/cancel. Committed diff byte-identical to the reviewed patch (SHA-256 2be5a20d…); 72/72 focused tests at the head; no hooks; identity giwrgoskakepakis.
+- Pushed with git push github mock/fro-352-export-details:mock/fro-352-export-details. Remote head dc8d3a9 = local; 4 ahead / 0 behind main 5c51030; 24 files, none outside exports/details/; remote diff byte-identical to the reviewed patch; no PR. Handoff: drafts/fro352-frontend-handoff.md. URL https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-352-export-details
+- Next (needs approval): add a branch link/Context line to FRO-352 in Linear. Planning-repo pushes still blocked; the user pushes them.
+
 ### 2026-10-26 — FRO-352 all four slices verified; branch approval pending
 
 - User approved slice 3 (keep uncommitted). Slice 4: protocol card + Print ΥΔ dialog, stamping (3 stages, per-stage selection, arrows), stamping dialog, documents card + remove dialog, cancel dialog; YdTemplate/YdDocument/PendingUpload types; labels; README controller duties. Red: 18/18 failed on stubs; Green 71/71, plus a stampingMinimumDate rule test added after the code (72 focused).
