@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-317 marked Ready; EAD/MRN rule pending text approval
+
+- User instructed the status/label change: removed Pending_Review, added Ready; status stays Todo (the Ready target). Re-read: labels entry note/export/Integration/Story/Ready, relations unchanged, updatedAt 2026-10-26T13:04:08.805Z.
+- User decisions: starting protocol number will be specified later (the ticket already says it is supplied before release). EAD receipt confirmation date cannot be earlier than the MRN date; a four-place description patch was proposed in chat, not yet approved or saved.
+- User asked what storage invoices are; explained (Αποθήκη Αποθήκευσης type for Τελωνειακή Αποθήκευση Orders). Whether they are allowed in Foreign invoicing company Exports is still to be confirmed.
+
 ### 2026-10-26 — FRO-317 approved description saved and verified
 
 - User approved the exact draft (drafts/fro317-reviewed-spec.md) with the listed metadata. Target re-read unchanged (2026-10-23T09:57:41.333Z) before saving. Full description replaced; labels re-passed (entry note/export/Pending_Review/Integration/Story); blockedBy FRO-321 added (replaces the former related FRO-321 link).
