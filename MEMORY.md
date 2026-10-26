@@ -3,7 +3,7 @@
 ### 2026-10-26 — FRO-317 marked Ready; EAD/MRN rule pending text approval
 
 - User instructed the status/label change: removed Pending_Review, added Ready; status stays Todo (the Ready target). Re-read: labels entry note/export/Integration/Story/Ready, relations unchanged, updatedAt 2026-10-26T13:04:08.805Z.
-- User decisions: starting protocol number will be specified later (the ticket already says it is supplied before release). EAD receipt confirmation date cannot be earlier than the MRN date; a four-place description patch was proposed in chat, not yet approved or saved.
+- User decisions: starting protocol number will be specified later (the ticket already says it is supplied before release). EAD receipt confirmation date cannot be earlier than the MRN date; the user approved the four-place patch and it is saved (fields row, Confirm EAD receipt, initial Awaiting IE599 creation, AC 11). The patch re-added related FRO-303/FRO-347/FRO-356; removed again. Re-read: Ready/Todo, relations as approved, updatedAt 2026-10-26T13:06:28.810Z. Linear dropped the closing bold after the FRO-319 mention (cosmetic). FRO-350/352 should show the MRN date as the EAD minimum in the alignment edits.
 - User asked what storage invoices are; explained (Αποθήκη Αποθήκευσης type for Τελωνειακή Αποθήκευση Orders). Whether they are allowed in Foreign invoicing company Exports is still to be confirmed.
 
 ### 2026-10-26 — FRO-317 approved description saved and verified

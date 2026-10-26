@@ -20,7 +20,7 @@ Each Export has an **Export ID**: a server-generated positive integer, unique, i
 | **Selected invoices (Informative List)** | Supplier Invoice references | The Export's saved invoice scope. Each invoice can belong to only one non-cancelled Export. |
 | **Connected Orders** | Derived list of Order references | The actual Orders referenced by the selected invoices, each shown once. No separate saved Order or colli selection. |
 | **Customs status** | Derived — **Awaiting EAD** / **Awaiting IE599** / **Completed** | Advances only through the confirmation events below. |
-| **EAD receipt confirmation date** | date | Recorded by the EAD confirmation event, with actor and recording time. Distinct from MRN date. |
+| **EAD receipt confirmation date** | date | Recorded by the EAD confirmation event, with actor and recording time. Distinct from MRN date and not earlier than it. |
 | **Positive IE599 confirmation date** | date | Recorded by the positive-IE599 confirmation event, with actor and recording time. Not earlier than the EAD receipt confirmation date. |
 | **Protocol number / date** | System-assigned unique ascending number / date (Europe/Athens) | Allocated only when a VAT Exemption Procedure is first required. Read-only. |
 | **Record cancellation** | **Active** / **Cancelled**, with reason, actor and time | Independent of Customs status. See Cancellation. |
@@ -120,10 +120,10 @@ The operator's final selection may differ from the suggestions, subject to eligi
 | **Awaiting IE599** | Recorded | Blank | **Confirm positive IE599** → Completed |
 | **Completed** | Recorded | Recorded | None |
 
-* **Confirm EAD receipt:** the staff member enters the EAD receipt confirmation date and submits. Record the date, authenticated actor and recording time atomically with the transition.
+* **Confirm EAD receipt:** the staff member enters the EAD receipt confirmation date and submits. Reject a date earlier than the MRN date. Record the date, authenticated actor and recording time atomically with the transition.
 * **Confirm positive IE599:** only from Awaiting IE599. The staff member enters the Positive IE599 confirmation date and submits, which explicitly confirms a positive / confirmed-exit result. Reject a date earlier than the EAD receipt confirmation date. A non-positive or unverified IE599 cannot use this action.
 * Neither event requires a reference field, checkbox or attachment.
-* **Initial status at creation:** **Awaiting EAD** (default; both dates blank) or **Awaiting IE599** (EAD receipt confirmation date required). Creating at Awaiting IE599 is one create-and-confirm operation that records the EAD event. Creation at Completed is rejected. Creation, initial state, EAD event and conditional protocol allocation commit together; a failed save records nothing.
+* **Initial status at creation:** **Awaiting EAD** (default; both dates blank) or **Awaiting IE599** (EAD receipt confirmation date required, not earlier than the MRN date). Creating at Awaiting IE599 is one create-and-confirm operation that records the EAD event. Creation at Completed is rejected. Creation, initial state, EAD event and conditional protocol allocation commit together; a failed save records nothing.
 * Reject missing dates, skipped or reversed transitions, duplicate confirmations and stale concurrent updates. Opening or cancelling a confirmation records nothing. Ordinary editing never changes status or confirmed dates.
 * Customs transitions never change invoice VAT exemption status.
 
@@ -234,7 +234,7 @@ Page layouts (FRO-350 / FRO-352); the Exports list page and the **Create Export*
  8. Repeat or concurrent creation for a group returns the existing non-cancelled Export.
  9. Split-child suggestions: Order 1.1.1 in the Shipment finds direct invoices and invoices on 1.1 and 1, not on sibling 1.2; results are deduplicated with source paths. Selecting ancestor Invoice A keeps its Order 1 reference.
 10. MRN validation: trimmed, upper case, 18 alphanumeric characters, unique including cancelled Exports; MRN date required and not in the future.
-11. Customs: creation at Awaiting EAD (both dates blank) or Awaiting IE599 (EAD date required, event recorded); Completed rejected. EAD and positive IE599 events record date, actor and time atomically; positive IE599 not before EAD; invalid, duplicate and stale events rejected; Customs changes never change invoice status.
+11. Customs: creation at Awaiting EAD (both dates blank) or Awaiting IE599 (EAD date required, event recorded); Completed rejected. EAD and positive IE599 events record date, actor and time atomically; EAD not before MRN date; positive IE599 not before EAD; invalid, duplicate and stale events rejected; Customs changes never change invoice status.
 12. The editing matrix is enforced on the server, including Add-only at Awaiting IE599 and Completed, locked MRN/Delivered vessel after EAD, and stale-edit rejection with the draft kept.
 13. Cancellation at Awaiting EAD by a manager records reason/actor/time, frees invoices and the group, keeps the MRN reserved and any protocol unreused; it is rejected for operators and at later stages. A Shipment with a non-cancelled Export cannot be cancelled.
 14. Protocol: never-required Exports get none; the first required state at creation or on a later save allocates once with its Athens date; retries/failures do not allocate; lapsed eligibility keeps and later reuses the number.
