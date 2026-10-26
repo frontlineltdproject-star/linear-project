@@ -152,6 +152,20 @@ AGENTS.md remains the authoritative workflow.
 - Status: Incorporated into [Mandatory Linear workflow](AGENTS.md#mandatory-linear-workflow)
   and [step 1: Grill the request](AGENTS.md#1-grill-the-request).
 
+### 2026-10-26 — A preview link must open for the people who build from it
+
+- Problem: FRO-341's only UI reference was a chatgpt.site preview that returns 401 behind a ChatGPT sign-in, so the developer and co-author could not open it.
+- Evidence: [FRO-341 review](MEMORY.md#2026-10-26--fro-341-review-started-round-1-pending).
+- Action next time: Open every preview link signed out before relying on it. When it is not publicly reachable, make the description and component map the contract and label the link as historical.
+- Status: Active.
+
+### 2026-10-26 — "Done" in Linear does not mean the code is on main
+
+- Problem: FRO-339 was Done, but its geography contract existed only on `release/0.0.2`; `main` had no shipment country/city.
+- Evidence: [FRO-341 review](MEMORY.md#2026-10-26--fro-341-review-started-round-1-pending).
+- Action next time: For each dependency marked Done, check `main` and the release branches with `gh api .../compare` and cite the branch and commit that carry the contract.
+- Status: Active.
+
 ### 2026-10-26 — A display requirement moved to a new screen may lose its data source
 
 - Problem: FRO-299 asked to show colli measurements in the wizard, which received them from the creation candidate read. Its replacement screen (FRO-316 Shipment Details) reads `ShipmentContent`, which has no measurements; FRO-300 had the same unowned gap.
