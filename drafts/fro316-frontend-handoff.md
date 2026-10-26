@@ -1,6 +1,6 @@
 # FRO-316 frontend preparation — handoff (step 4e)
 
-Status 2026-10-26: all six slices implemented and verified locally. No branch, commit or push yet; awaiting explicit approval.
+Status 2026-10-26: implemented, verified and published after explicit approval. Branch `mock/fro-316-shipment-details-ui`, commit `2078b6e4f627ae9b051ddce95bea79b0799f502b`, base `5c51030680c9d45b3827a7e19b8320c19aa5ed9a`.
 
 ## Setup
 
@@ -36,3 +36,12 @@ FRO-325 (status, packing, readiness, document, dispatch, cancellation, Order dis
 ## Known limitations
 
 `Modal` has no accessible-name prop (dialogs are titled visually only); country/city/warehouse use `Select`; historical-arrival event titles are generic unless the controller supplies a summary.
+
+## Published
+
+- User approved creating, committing and pushing, and reconfirmed the protection gap.
+- Branch created from 5c51030; exactly the 27 audited files staged; staged diff byte-identical to the reviewed patch. Commit 2078b6e "feat(FRO-316): prepare Shipment Details frontend and local review".
+- Pushed with `git push github mock/fro-316-shipment-details-ui:mock/fro-316-shipment-details-ui`.
+- Remote check: head 2078b6e matches local; compare vs base: ahead 1, behind 0, 27 files added, 7,270 additions, 0 deletions, nothing outside `frontline-forwarding-client/`. `main` still 5c51030.
+- URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-316-shipment-details-ui
+- No PR, merge, deployment or Linear change.

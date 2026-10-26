@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-316 mock branch published
+
+- User approved branch, commit and push, and reconfirmed the protection gap. mock/fro-316-shipment-details-ui created from 5c51030; commit 2078b6e (27 added client files, byte-identical to the reviewed patch); pushed with the explicit same-name refspec.
+- Remote verified: head 2078b6e, ahead 1 / behind 0, 27 files, 7,270 additions, 0 deletions, all under frontline-forwarding-client/. No PR, merge, deployment or Linear change.
+
 ### 2026-10-26 — FRO-316 frontend preparation verified; push gate pending
 
 - User authorized step 4e (Q1–Q4): mock/ pattern, live page unchanged, base main 5c51030, branch mock/fro-316-shipment-details-ui, protection gap accepted; P1 one commit. Planning and implementation model checkpoints confirmed.
