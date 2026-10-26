@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-341 round 1 settled; preview rebuilt locally
+
+- User accepted all eight round-1 recommendations: full standalone rewrite; drop Declared pcs; deep-link origin prefill; blockedBy FRO-316; plain Notes textareas; warehouses with no city never offered; production components/TopBar with preview-only annotations; Cloudflare Pages preview.
+- Asked whether the canvas-design skill was used: it was skipped at first, then tried; it only makes abstract art, so the canvas was hand-written from the live tokens/components. Component map and verification are in drafts/fro341-review.md; source is previews/fro341/.
+- Preview verified locally (desktop, 400px, EN/EL, all states and key flows). Cloudflare deploy is blocked: no CLOUDFLARE_API_TOKEN. Push of the preview source (production-derived labels/tokens) was refused by the auto-mode check; committed locally only. The ticket draft, spec check and Linear write are still pending; no Linear changes yet.
+
 ### 2026-10-26 — FRO-341 review started; round 1 pending
 
 - User: FRO-341 was not created through the workflow; review gaps and rebuild the UI from the production design system. Planning pull succeeded. Read the full FRO-341 description (318 lines; updatedAt 08:15:29.875Z; Todo, Shipment/Pending_Review/Frontend/Story, 0.0.9, 8 blockers, 8 related, one chatgpt.site attachment, no comments). Live main is 5c51030; the ticket cites the stale 3820e89.

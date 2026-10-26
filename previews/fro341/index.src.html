@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FRO-341 · Create shipment preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Tokens copied from frontline-forwarding-client/src/styles/theme.css (main 5c51030). */
+:root{
+  --navy-200:#9db6d4;--navy-600:#16365f;--navy-700:#0f2c52;--navy-800:#0a1f3d;--navy-900:#061425;
+  --teal-50:#e1f5ee;--teal-100:#b8e8d8;--teal-500:#1b9e8a;--teal-600:#127a6b;--teal-700:#0e6557;--teal-800:#0b5346;
+  --neutral-50:#f7f8fa;--neutral-100:#edeff3;--neutral-200:#e3e6eb;--neutral-300:#d7dce3;--neutral-500:#9aa3b0;--neutral-600:#5c6573;
+  --canvas:var(--neutral-50);--surface:#fff;--surface-2:var(--neutral-100);
+  --chrome:var(--navy-800);--chrome-hover:var(--navy-700);--chrome-active:var(--navy-600);
+  --fg:var(--navy-800);--fg-muted:var(--neutral-600);--fg-subtle:var(--neutral-500);--fg-on-chrome:#fff;--fg-on-chrome-muted:var(--navy-200);--fg-on-accent:#fff;
+  --accent:var(--teal-500);--accent-hover:var(--teal-600);--accent-active:var(--teal-700);--accent-subtle:var(--teal-50);--accent-strong:var(--teal-800);
+  --border:var(--neutral-200);--border-strong:var(--neutral-300);
+  --success:#1f9d55;--success-subtle:#e9f6ee;--success-fg:#14532d;
+  --warning:#d98a0b;--warning-subtle:#fef6e7;--warning-fg:#633806;
+  --danger:#d33c3c;--danger-subtle:#fcebeb;--danger-fg:#501313;
+  --info:#2b7fd4;--info-subtle:#e9f1fb;--info-fg:#042c53;
+  --violet-subtle:#f3e8ff;--violet-fg:#5b21b6;--cyan-subtle:#cffafe;--cyan-fg:#155e75;--lime-subtle:#ecfccb;--lime-fg:#3f6212;--indigo-subtle:#eef2ff;--indigo-fg:#3730a3;
+  --radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;
+  --shadow-card:0 1px 2px 0 rgb(10 31 61/.04),0 1px 3px 0 rgb(10 31 61/.06);
+  --shadow-popover:0 4px 12px -2px rgb(10 31 61/.1),0 2px 6px -2px rgb(10 31 61/.08);
+  --shadow-modal:0 24px 48px -12px rgb(6 20 37/.28);
+  /* Density: compact (internal ops platform). */
+  --row-py:.5rem;--card-p:1rem;--stack-gap:.75rem;--section-gap:1rem;
+  --z-sticky:10;--z-modal:50;--z-popover:60;--z-toast:70;
+  --font-sans:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;font-feature-settings:'cv11','ss01'}
+body{margin:0;background:var(--canvas);color:var(--fg);font-family:var(--font-sans);font-size:.875rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:enabled{cursor:pointer}button:disabled{cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+/* Type scale */
+.text-title{font-size:1.25rem;line-height:1.75rem;font-weight:600;letter-spacing:-.01em}
+.text-heading{font-size:1rem;line-height:1.5rem;font-weight:600}
+.text-subheading{font-size:.9375rem;line-height:1.375rem;font-weight:600}
+.text-body-sm{font-size:.8125rem;line-height:1.5}
+.text-caption{font-size:.75rem;line-height:1.4}
+.text-overline{font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.muted{color:var(--fg-muted)}.subtle{color:var(--fg-subtle)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+/* AppShell header (components/layout/app-shell.tsx) */
+.shell-header{background:var(--chrome);border-bottom:1px solid var(--chrome-hover)}
+.shell-inner{max-width:100rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1.5rem}
+.brand{font-size:.8125rem;font-weight:600;color:var(--fg-on-chrome);white-space:nowrap}
+.nav{display:flex;gap:.25rem;margin-left:.5rem}
+.nav a{display:inline-flex;align-items:center;gap:.5rem;border-radius:var(--radius-md);padding:.5rem .75rem;font-size:.8125rem;font-weight:500;color:var(--fg-on-chrome-muted);text-decoration:none}
+.nav a[aria-current]{background:var(--chrome-active);color:var(--fg-on-chrome)}
+.nav svg{width:1rem;height:1rem}
+.lang{display:flex;gap:.25rem}
+.lang button{border:1px solid var(--chrome-hover);background:var(--chrome-hover);color:var(--fg-on-chrome-muted);border-radius:var(--radius-md);padding:.25rem .5rem;font-size:.75rem;font-weight:600}
+.lang button[aria-pressed=true]{background:var(--chrome-active);color:var(--fg-on-chrome)}
+main{max-width:100rem;margin:0 auto;padding:1.5rem}
+/* TopBar */
+.topbar{margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+.topbar h1{margin:0}
+/* Card */
+.card{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card)}
+.card-pad{padding:var(--card-p)}
+.card-header{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-bottom:1px solid var(--border);padding:.875rem var(--card-p)}
+.card-title{margin:0}
+.card-body{padding:var(--card-p)}
+.stack{display:flex;flex-direction:column;gap:var(--stack-gap)}
+.sections{display:flex;flex-direction:column;gap:var(--section-gap)}
+/* Tabs (components/ui/tabs.tsx) */
+.tablist{display:flex;gap:.25rem;border-bottom:1px solid var(--border);overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+.tab{margin-bottom:-1px;border:0;border-bottom:2px solid transparent;background:none;padding:.5rem .75rem;font-size:.875rem;font-weight:500;color:var(--fg-muted);white-space:nowrap}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected=true]{border-bottom-color:var(--accent);font-weight:600;color:var(--accent-active)}
+.tab:focus-visible{outline:none;box-shadow:0 0 0 2px rgb(27 158 138/.4)}
+.tabpanel{padding-top:1rem}
+/* Form controls (components/ui/input.tsx, select.tsx) */
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem 1.25rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.25rem}
+@media (max-width:1100px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grid4,.grid2{grid-template-columns:minmax(0,1fr)}}
+.field{display:flex;flex-direction:column;gap:.375rem;min-width:0}
+.label{display:block;font-size:.75rem;font-weight:600;color:var(--fg)}
+.req{margin-left:.125rem;color:var(--danger)}
+.opt{font-weight:400;color:var(--fg-subtle)}
+.control{width:100%;height:2.5rem;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);color:var(--fg);font:inherit;font-size:.875rem;padding:0 .75rem;outline:none;transition:border-color .1s,box-shadow .1s}
+.control:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgb(27 158 138/.15)}
+.control:disabled,.control[readonly]{cursor:not-allowed;background:var(--surface-2);color:var(--fg-subtle)}
+.control[readonly]{cursor:default;color:var(--fg)}
+.control.invalid{border-color:var(--danger)}
+.control.invalid:focus{box-shadow:0 0 0 3px rgb(211 60 60/.15)}
+select.control{appearance:none;padding-right:2.25rem;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa3b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center}
+textarea.control{height:auto;min-height:6.5rem;padding:.5rem .75rem;line-height:1.625;resize:vertical}
+.with-icon{position:relative}.with-icon svg{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);width:1rem;height:1rem;color:var(--fg-subtle);pointer-events:none}.with-icon .control{padding-left:2.25rem}
+.hint{font-size:.75rem;color:var(--fg-subtle)}
+.error{font-size:.75rem;color:var(--danger-fg)}
+/* Button (components/ui/button.tsx) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;white-space:nowrap;border-radius:var(--radius-md);font-weight:600;line-height:1;border:0;transition:background-color .1s,color .1s,box-shadow .1s}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 2px var(--canvas),0 0 0 4px rgb(27 158 138/.4)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn svg{width:1rem;height:1rem}
+.btn-primary{background:var(--accent);color:var(--fg-on-accent)}.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:var(--surface);color:var(--fg);border:1px solid var(--border-strong)}.btn-secondary:hover{background:var(--canvas)}
+.btn-ghost{background:transparent;color:var(--fg)}.btn-ghost:hover{background:var(--surface-2)}
+.btn-sm{height:2rem;padding:0 .625rem;font-size:.75rem;gap:.375rem}
+.btn-md{height:2.5rem;padding:0 .875rem;font-size:.875rem}
+.btn-lg{height:2.75rem;padding:0 1.125rem;font-size:.875rem}
+.icon-btn{width:2rem;padding:0}
+/* Checkbox (components/ui/choice.tsx) */
+.check{appearance:none;width:17px;height:17px;margin:0;border:1px solid var(--border-strong);border-radius:5px;background:var(--surface);cursor:pointer;display:inline-grid;place-content:center;vertical-align:middle}
+.check:checked,.check:indeterminate{border-color:var(--accent);background:var(--accent)}
+.check:checked::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.check:indeterminate::after{content:'';width:9px;height:2px;background:#fff}
+.check:disabled{opacity:.5;cursor:not-allowed}
+/* Table (components/ui/table.tsx) */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-lg)}
+table{width:100%;border-collapse:collapse;font-size:.8125rem}
+th{border-bottom:1px solid var(--border);padding:.625rem .875rem;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.025em;color:var(--fg-muted);background:var(--surface);white-space:nowrap}
+td{padding:var(--row-py) .875rem;vertical-align:middle;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:0}
+tr.po-row td{background:var(--canvas)}
+tr.selected td{background:var(--accent-subtle)}
+td.indent{padding-left:2.5rem}
+.cell-end{text-align:right;white-space:nowrap}
+.row-flex{display:flex;align-items:center;gap:.5rem}
+/* Badge / StatusPill / Alert */
+.badge{display:inline-flex;align-items:center;gap:.25rem;border-radius:var(--radius-md);padding:.125rem .5rem;font-size:.75rem;font-weight:600;line-height:1.25;background:var(--surface-2);color:var(--fg-muted)}
+.pill{display:inline-flex;align-items:center;gap:.375rem;border-radius:var(--radius-md);padding:.25rem .5rem;font-size:.75rem;font-weight:600;line-height:1;white-space:nowrap}
+.pill::before{content:'';width:6px;height:6px;border-radius:999px;background:currentColor}
+.tone-cyan{background:var(--cyan-subtle);color:var(--cyan-fg)}.tone-violet{background:var(--violet-subtle);color:var(--violet-fg)}.tone-lime{background:var(--lime-subtle);color:var(--lime-fg)}.tone-info{background:var(--info-subtle);color:var(--info-fg)}.tone-warning{background:var(--warning-subtle);color:var(--warning-fg)}.tone-neutral{background:var(--surface-2);color:var(--fg-muted)}.tone-success{background:var(--success-subtle);color:var(--success-fg)}.tone-danger{background:var(--danger-subtle);color:var(--danger-fg)}.tone-accent{background:var(--accent-subtle);color:var(--accent-strong)}
+.alert{display:flex;align-items:flex-start;gap:.625rem;border-radius:var(--radius-lg);padding:.75rem .875rem;font-size:.875rem;line-height:1.375}
+.alert svg{width:1rem;height:1rem;flex:none;margin-top:.125rem}
+/* Status subcard + stepper (New component) */
+.subcard{border:1px solid var(--border);border-radius:var(--radius-md);background:var(--canvas);padding:1rem}
+.status-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:1.25rem}
+.status-row .field{width:min(100%,25rem)}
+.stepper{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;list-style:none;margin:1rem 0 0;padding:0}
+.step{border-top:3px solid var(--border-strong);padding-top:.5rem;display:flex;gap:.5rem;align-items:center;font-size:.8125rem;color:var(--fg-subtle)}
+.step .num{flex:none;width:22px;height:22px;border-radius:999px;border:1px solid var(--border-strong);display:grid;place-content:center;font-size:.75rem;font-weight:600;background:var(--surface)}
+.step.current{border-top-color:var(--accent);color:var(--fg);font-weight:600}
+.step.current .num{background:var(--accent);border-color:var(--accent);color:var(--fg-on-accent)}
+.step.unrecorded{border-top-style:dashed}
+@media (max-width:640px){.stepper{gap:.5rem}.step{flex-direction:column;align-items:flex-start;font-size:.6875rem}}
+/* Partial selections compact rows */
+.partial-row{display:grid;grid-template-columns:minmax(9rem,1fr) minmax(10rem,1.6fr) minmax(10rem,1fr) minmax(10rem,1.2fr) auto;gap:.75rem;align-items:end;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.partial-row:last-child{border-bottom:0}
+@media (max-width:1100px){.partial-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.partial-row{grid-template-columns:minmax(0,1fr)}}
+.chips{display:flex;flex-wrap:wrap;gap:.375rem}
+/* Attachments (features/attachments/components/attachment-panel.tsx) */
+.file-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-2);padding:.75rem}
+.file-icon{border-radius:var(--radius-md);background:var(--surface);padding:.5rem;color:var(--accent);display:inline-flex}
+.file-icon svg{width:1.25rem;height:1.25rem}
+.empty-box{border:1px dashed var(--border);border-radius:var(--radius-md);padding:1rem;font-size:.875rem;color:var(--fg-muted)}
+.progress{height:4px;border-radius:999px;background:var(--surface);overflow:hidden;width:8rem}.progress>span{display:block;height:100%;background:var(--accent)}
+/* Modal (components/ui/modal.tsx) */
+.scrim{position:fixed;inset:0;z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;padding:1rem}
+.scrim-bg{position:absolute;inset:0;background:rgb(6 20 37/.45)}
+.modal{position:relative;width:min(100%,64rem);max-height:calc(100vh - 2rem);display:flex;flex-direction:column;border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow-modal)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-bottom:1px solid var(--border);padding:1rem 1.125rem}
+.modal-body{padding:1rem 1.125rem;overflow-y:auto}
+.modal-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.5rem;border-top:1px solid var(--border);background:var(--canvas);padding:.875rem 1.125rem;border-radius:0 0 var(--radius-xl) var(--radius-xl)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
+@media (max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.metric{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);padding:1rem;box-shadow:var(--shadow-card)}
+.metric .v{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem 1.25rem;margin:0}
+@media (max-width:760px){.facts{grid-template-columns:minmax(0,1fr)}}
+.facts dt{font-size:.75rem;font-weight:600;color:var(--fg-muted)}.facts dd{margin:0}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.375rem}
+.checks li{display:flex;gap:.5rem;align-items:flex-start}
+.checks svg{width:1rem;height:1rem;flex:none;margin-top:.15rem}
+/* Toast */
+.toast{position:fixed;right:1rem;bottom:1rem;z-index:var(--z-toast);max-width:24rem;border-radius:var(--radius-lg);background:var(--chrome);color:var(--fg-on-chrome);padding:.75rem 1rem;box-shadow:var(--shadow-popover);border-left:4px solid var(--success)}
+/* Skeleton (components/feedback/loading-placeholder) */
+.skeleton{height:2.5rem;border-radius:var(--radius-md);background:var(--surface-2);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+/* ---------- Preview-only review annotations (never shipped) ---------- */
+.nc{position:relative;outline:2px dashed var(--accent);outline-offset:3px;border-radius:var(--radius-lg)}
+.nc-label{display:inline-block;max-width:100%;margin:0 0 .5rem;border:1px solid #9fd8c7;border-radius:var(--radius-md);background:#eaf8f2;padding:.125rem .5rem;font-size:.6875rem;font-weight:700;color:#1f6f45}
+.nc-label a{color:inherit}
+body.hide-nc .nc{outline:none}body.hide-nc .nc-label{display:none}
+.bn{display:inline-grid;place-content:center;width:1.25rem;height:1.25rem;border-radius:999px;background:var(--chrome);color:#fff;font-size:.6875rem;font-weight:700;margin-left:.375rem;vertical-align:middle;border:0;cursor:pointer}
+body.hide-bn .bn{display:none}
+.tools{position:fixed;left:1rem;bottom:1rem;z-index:var(--z-popover);width:min(22rem,calc(100vw - 2rem));border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-popover);font-size:.8125rem}
+.tools summary{cursor:pointer;padding:.625rem .875rem;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+.tools .tools-body{border-top:1px solid var(--border);padding:.75rem .875rem;display:flex;flex-direction:column;gap:.625rem;max-height:60vh;overflow:auto}
+.seg{display:flex;flex-wrap:wrap;gap:.25rem}.seg button{border:1px solid var(--border-strong);background:var(--surface);border-radius:var(--radius-md);padding:.25rem .5rem;font-size:.75rem;font-weight:600}.seg button[aria-pressed=true]{background:var(--chrome);color:#fff;border-color:var(--chrome)}
+.notes-panel{position:fixed;right:1rem;top:5rem;bottom:1rem;z-index:var(--z-popover);width:min(26rem,calc(100vw - 2rem));overflow:auto;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-popover)}
+.notes-panel ol{margin:0;padding:0;list-style:none}
+.notes-panel li{padding:.75rem 1rem;border-bottom:1px solid var(--border)}
+.notes-panel li.hl{background:var(--accent-subtle)}
+.sim-banner{background:var(--warning-subtle);color:var(--warning-fg);font-size:.75rem;padding:.375rem 1.5rem;text-align:center}
+@media (max-width:900px){.nav{display:none}.shell-inner,main{padding-left:1rem;padding-right:1rem}}
+.actions-end{display:flex;justify-content:flex-end;margin-top:1.25rem}
+.inline-frame{width:100%;height:min(70vh,52rem);border:0;border-radius:var(--radius-lg);background:var(--canvas)}
+</style>
+</head>
+<body>
+<div class="sim-banner" id="sim-banner"></div>
+<div id="app"></div>
+<script>
+const EL = __EL_JSON__;
+</script>
+<script>
+'use strict';
+/* Greek for strings not yet in production labels (proposed; confirm with the office). */
+const ELX = {
+  'Dashboard':'Πίνακας ελέγχου','Shipments':'Αποστολές','Warehouses':'Αποθήκες','Users':'Χρήστες','Companies':'Εταιρείες',
+  'Overview':'Επισκόπηση','Orders and Collis':'Παραγγελίες και κόλι','Documents':'Έγγραφα',
+  'Shipment details':'Στοιχεία αποστολής','Shipment status':'Κατάσταση αποστολής','Status':'Κατάσταση',
+  'Preparing':'Σε προετοιμασία','Ready for dispatch':'Έτοιμη για αποστολή','Dispatched':'Απεστάλη','Arrived':'Αφίχθηκε',
+  'Road':'Οδική','Air':'Αεροπορική','Sea':'Θαλάσσια','Unknown':'Άγνωστο','Unknown — not recorded':'Άγνωστο — δεν καταχωρίστηκε',
+  'Document type':'Τύπος εγγράφου','Document number':'Αριθμός εγγράφου','Transport reference':'Στοιχείο μεταφοράς','Not recorded':'Δεν καταχωρίστηκε',
+  'Date dispatched':'Ημερομηνία αποστολής','Date arrived':'Ημερομηνία άφιξης','Optional':'Προαιρετικό',
+  'Shipment purpose':'Σκοπός αποστολής','Warehouse transfer':'Μεταφορά σε αποθήκη','Destination warehouse':'Αποθήκη προορισμού',
+  'Derived from selected Orders':'Προκύπτει από τις επιλεγμένες παραγγελίες','Select purpose first':'Επιλέξτε πρώτα σκοπό',
+  'Notes':'Σημειώσεις','Internal Notes':'Εσωτερικές σημειώσεις','External Notes':'Εξωτερικές σημειώσεις',
+  'Select purchase orders and collis':'Επιλογή παραγγελιών αγοράς και κόλι','By purchase order':'Ανά παραγγελία','From arrived shipments':'Από αποστολές που αφίχθηκαν',
+  'Create new order':'Νέα παραγγελία','Show collis for {po}':'Εμφάνιση κόλι της {po}','Hide collis for {po}':'Απόκρυψη κόλι της {po}',
+  'Select an origin warehouse to list eligible purchase orders.':'Επιλέξτε αποθήκη προέλευσης για να εμφανιστούν οι διαθέσιμες παραγγελίες.',
+  'Select the receiving warehouse to list Orders for this arrival.':'Επιλέξτε αποθήκη παραλαβής για να εμφανιστούν οι παραγγελίες της άφιξης.',
+  'Whole Orders only when recording an arrived shipment.':'Κατά την καταχώριση αποστολής που αφίχθηκε επιλέγονται μόνο ολόκληρες παραγγελίες.',
+  'Search shipment or transport document number':'Αναζήτηση αριθμού αποστολής ή εγγράφου μεταφοράς',
+  'Route':'Διαδρομή','Transport document type':'Τύπος εγγράφου μεταφοράς','Transport document number':'Αριθμός εγγράφου μεταφοράς','Available collis':'Διαθέσιμα κόλι',
+  'Availability':'Διαθεσιμότητα','Available':'Διαθέσιμο','Reserved by {id}':'Δεσμευμένο από {id}','Show contents of {id}':'Εμφάνιση περιεχομένων της {id}','Hide contents of {id}':'Απόκρυψη περιεχομένων της {id}',
+  'Select all available collis of {id}':'Επιλογή όλων των διαθέσιμων κόλι της {id}',
+  'No arrived shipments at this origin.':'Δεν υπάρχουν αποστολές που αφίχθηκαν σε αυτή την αφετηρία.',
+  'No partial selections to confirm.':'Δεν υπάρχουν μερικές επιλογές για επιβεβαίωση.',
+  'Operational separation':'Επιχειρησιακός διαχωρισμός','Uncollectable remainder':'Μη συλλέξιμο υπόλοιπο','Other':'Άλλο',
+  '{count} remaining':'{count} παραμένουν','Remark is required for Other':'Η παρατήρηση είναι υποχρεωτική για «Άλλο»',
+  'Attachments':'Συνημμένα','Choose documents or photos':'Επιλογή εγγράφων ή φωτογραφιών',
+  'PDF, images, Word, Excel, CSV or text · up to 25 MB each':'PDF, εικόνες, Word, Excel, CSV ή κείμενο · έως 25 MB το καθένα',
+  'Files stay pending until the shipment is created.':'Τα αρχεία παραμένουν σε αναμονή μέχρι να δημιουργηθεί η αποστολή.',
+  'No attachments uploaded.':'Δεν έχουν ανέβει συνημμένα.','Uploading':'Μεταφόρτωση','Ready':'Έτοιμο','Upload failed — check the connection and retry.':'Η μεταφόρτωση απέτυχε — ελέγξτε τη σύνδεση και δοκιμάστε ξανά.',
+  'Retry':'Επανάληψη','Document':'Έγγραφο','Photo':'Φωτογραφία','Pending':'Σε αναμονή','Download':'Λήψη',
+  'Creation review':'Έλεγχος δημιουργίας','Back to editing':'Επιστροφή στην επεξεργασία','Confirm and create shipment':'Επιβεβαίωση και δημιουργία αποστολής',
+  'Confirm and record arrival':'Επιβεβαίωση και καταχώριση άφιξης',
+  'Creates PREPARING: reserves the selected collis and creates any child Orders. It does not confirm readiness or record departure.':'Δημιουργεί αποστολή PREPARING: δεσμεύει τα επιλεγμένα κόλι και δημιουργεί τυχόν θυγατρικές παραγγελίες. Δεν επιβεβαιώνει ετοιμότητα ούτε καταχωρίζει αναχώρηση.',
+  'Records ARRIVED: links the whole Orders to this arrival. Stock confirmation stays a separate step.':'Καταχωρίζει αποστολή ARRIVED: συνδέει τις ολόκληρες παραγγελίες με την άφιξη. Η επιβεβαίωση αποθέματος παραμένει ξεχωριστό βήμα.',
+  'Country and city references are complete and compatible':'Οι χώρες και πόλεις είναι πλήρεις και συμβατές',
+  'At least one colli is selected':'Έχει επιλεγεί τουλάχιστον ένα κόλι','Document number is valid':'Ο αριθμός εγγράφου είναι έγκυρος',
+  'Selected files are ready':'Τα επιλεγμένα αρχεία είναι έτοιμα','Dates are in order and not in the future':'Οι ημερομηνίες είναι σε σειρά και όχι μελλοντικές',
+  'Review selected files':'Έλεγχος επιλεγμένων αρχείων','Files':'Αρχεία','No files selected.':'Δεν επιλέχθηκαν αρχεία.',
+  'Simulated: shipment created as PREPARING. Nothing was saved.':'Προσομοίωση: η αποστολή δημιουργήθηκε ως PREPARING. Δεν αποθηκεύτηκε τίποτα.',
+  'Simulated: arrival recorded as ARRIVED. Nothing was saved.':'Προσομοίωση: η άφιξη καταχωρίστηκε ως ARRIVED. Δεν αποθηκεύτηκε τίποτα.',
+  'Cancel':'Ακύρωση','Create':'Δημιουργία','Close':'Κλείσιμο',
+  'Could not load eligible purchase orders.':'Δεν ήταν δυνατή η φόρτωση των διαθέσιμων παραγγελιών.',
+  'Shipment number':'Αριθμός αποστολής','Orders':'Παραγγελίες','Existing arrival':'Υπάρχουσα άφιξη','New arrival — AWAITING_IMPORT':'Νέα άφιξη — AWAITING_IMPORT',
+  'Linked stocked stay — stays IN_STOCK':'Συνδεδεμένη παραμονή σε απόθεμα — παραμένει IN_STOCK',
+  'This number is already used by {id}.':'Ο αριθμός χρησιμοποιείται ήδη από την {id}.',
+  'Use 255 characters or fewer.':'Χρησιμοποιήστε έως 255 χαρακτήρες.',
+  'All participating Orders must reference the same vessel.':'Όλες οι συμμετέχουσες παραγγελίες πρέπει να αφορούν το ίδιο πλοίο.',
+  'Date arrived cannot be before date dispatched.':'Η ημερομηνία άφιξης δεν μπορεί να είναι πριν από την ημερομηνία αποστολής.',
+  'Dates cannot be in the future.':'Οι ημερομηνίες δεν μπορούν να είναι μελλοντικές.',
+  'The server rejected the shipment: HU-DEMO-STOCK-MULTI-A-2 is already reserved by SH-DEMO-0150. Your draft is unchanged.':'Ο διακομιστής απέρριψε την αποστολή: το HU-DEMO-STOCK-MULTI-A-2 είναι ήδη δεσμευμένο από την SH-DEMO-0150. Το πρόχειρό σας δεν άλλαξε.',
+  'Order details':'Στοιχεία παραγγελίας','Simulated new order':'Προσομοιωμένη νέα παραγγελία',
+  'Dimensions (cm)':'Διαστάσεις (cm)','Gross weight (kg)':'Μικτό βάρος (kg)','Description':'Περιγραφή','missing':'λείπει',
+  '{n} missing':'{n} λείπουν','Loading…':'Φόρτωση…'
+};
+const tr = (key, vars) => {
+  let s = S.lang === 'el' ? (EL[key] ?? ELX[key] ?? key) : key;
+  if (vars) for (const k in vars) s = s.replaceAll('{' + k + '}', vars[k]);
+  return s;
+};
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const T = (k, v) => esc(tr(k, v));
+
+/* ---------------- Fixtures (docs/reference/demo-data.md + invented demo values) ---------------- */
+const COUNTRIES = [{id:'GR', name:'Greece'}, {id:'NL', name:'Netherlands'}];
+const CITIES = [{id:'ATH', name:'Athens', country:'GR'}, {id:'PIR', name:'Piraeus', country:'GR'}, {id:'RTM', name:'Rotterdam', country:'NL'}];
+const WAREHOUSES = [
+  {id:'ATH-HUB', name:'Frontline Athens Hub', kind:'FRONTLINE_HUB', city:'ATH', operator:'FRONT LINE Forwarding & Agency LTD'},
+  {id:'PIR-AGENT-HUB', name:'Piraeus Associated Agent Hub', kind:'ASSOCIATED_AGENT_HUB', city:'PIR', operator:'Piraeus Associated Agent'},
+  {id:'RTM-HUB', name:'Frontline Rotterdam Hub', kind:'FRONTLINE_HUB', city:'RTM', operator:'FRONT LINE Forwarding & Agency LTD'},
+  {id:'DEMO-NOCITY', name:'Demo warehouse without city', kind:'FRONTLINE_HUB', city:null, operator:'FRONT LINE Forwarding & Agency LTD'}
+];
+const AGENTS = [{id:'AG-4', name:'Demo Agent Company'}];
+const colli = (id, desc, dims, kg) => ({id, desc, dims, kg});
+const ORDERS = [
+  {id:'PO-0000005', status:'IN_STOCK', wh:'ATH-HUB', client:'Demo Client Company', vessel:'MV Aegean Star', collis:[colli('HU-DEMO-STOCK-A-1','Spare pump seals','40×30×25',12.5)]},
+  {id:'PO-0000006', status:'IN_STOCK', wh:'ATH-HUB', client:'Demo Client Company', vessel:'MV Aegean Star', collis:[colli('HU-DEMO-STOCK-B-1','Filter cartridges','60×40×40',18)]},
+  {id:'PO-0000007', status:'IN_STOCK', wh:'ATH-HUB', client:'Demo Client Company', vessel:'MV Aegean Star', collis:[colli('HU-DEMO-STOCK-MULTI-A-1','Valve set','50×50×30',22),colli('HU-DEMO-STOCK-MULTI-A-2','Gasket kit','30×20×15',4.2),colli('HU-DEMO-STOCK-MULTI-A-3','Hydraulic hoses',null,null)]},
+  {id:'PO-0000008', status:'IN_STOCK', wh:'ATH-HUB', client:'Demo Client Company', vessel:'MV Blue Horizon', collis:[colli('HU-DEMO-STOCK-MULTI-B-1','Deck paint','80×60×50',64),colli('HU-DEMO-STOCK-MULTI-B-2','Brushes and rollers','40×40×30',6)]},
+  {id:'PO-0000002', status:'EXPECTED_READINESS', wh:'ATH-HUB', client:'Demo Client Company', vessel:'MV Frontline Trader', collis:[colli('HU-DEMO-SPLIT-KEEP','Electrical spares','45×35×30',9.8)]},
+  {id:'PO-0000001', status:'IN_STOCK', wh:'RTM-HUB', client:'Demo Client Company', vessel:'MV Blue Horizon', collis:[colli('HU-DEMO-HUB-1','Engine parts','100×80×70',140)]}
+];
+/* Historical-arrival candidates at a receiving warehouse (invented). */
+const HIST_ORDERS = [
+  {id:'PO-0000011', status:'EXPECTED_READINESS', recv:'ATH-HUB', client:'Demo Commercial Client Company', vessel:'MV Oceanic Dawn', match:null, collis:[colli('HU-DEMO-HIST-1','Galley equipment','90×60×60',48),colli('HU-DEMO-HIST-2','Galley utensils','40×30×30',7)]},
+  {id:'PO-0000012', status:'IN_STOCK', recv:'ATH-HUB', client:'Oceanic Shipping Company', vessel:'MV Oceanic Spirit', match:'2026-09-30', collis:[colli('HU-DEMO-HIST-3','Safety equipment','70×50×40',26)]},
+  {id:'PO-0000014', status:'PREPARED_FOR_SHIPMENT', recv:'ATH-HUB', client:'Oceanic Shipping Company', vessel:'MV Oceanic Spirit', excluded:'Reserved by {id}', excludedBy:'SH-DEMO-0150', collis:[colli('HU-DEMO-HIST-4','Ropes','60×60×60',30)]}
+];
+const SOURCES = [
+  {id:'SH-DEMO-0101', origin:'RTM-HUB', dest:'ATH-HUB', mode:'ROAD', doc:'CMR-DEMO-1001', contents:[
+    {colli:'HU-DEMO-STOCK-MULTI-A-1', po:'PO-0000007', avail:true},{colli:'HU-DEMO-STOCK-MULTI-A-2', po:'PO-0000007', avail:true},
+    {colli:'HU-DEMO-MIX-A-1', po:'PO-0000003', avail:false, by:'SH-DEMO-0150'}]},
+  {id:'SH-DEMO-0102', origin:'RTM-HUB', dest:'ATH-HUB', mode:'AIR', doc:'AWB-DEMO-2002', contents:[{colli:'HU-DEMO-MIX-B-1', po:'PO-0000004', avail:false, by:'SH-DEMO-0150'}]}
+];
+const USED_DOCS = {'CMR-DEMO-1001':'SH-DEMO-0101','AWB-DEMO-2002':'SH-DEMO-0102'};
+const PO_TONE = {IN_STOCK:'tone-cyan', EXPECTED_READINESS:'tone-violet', READY:'tone-lime', PREPARED_FOR_SHIPMENT:'tone-info'};
+const DOC = {ROAD:'CMR', AIR:'Air Waybill (AWB)', SEA:'Bill of Lading (B/L)'};
+const TODAY = '2026-10-26';
+
+/* ---------------- Business notes (from the agreed FRO-341 decisions) ---------------- */
+const NOTES = [
+  ['Page title', 'Production TopBar: the title only, no subtitle and no heading card. One teal primary action per view: Create shipment.'],
+  ['Shipment status', 'Only Preparing and Arrived are selectable; Preparing is the default. Arrived starts FRO-324’s separate historical operation, not a free status change. The four steps are display only. For Arrived, earlier steps are dashed because no transition is recorded. Ready for dispatch appears once FRO-325 adds that status.'],
+  ['Geography first', 'Origin country → city → origin warehouse; destination country → city → destination warehouse. Warehouses are filtered by the selected city (FRO-339, release/0.0.2). A warehouse never fills or overwrites geography; changing a city clears an incompatible warehouse. Warehouses with no city on record are never offered. If none match: “No matching warehouse in the selected destination city”, and creation stays blocked.'],
+  ['Opened from an Order', 'When the page opens with originWarehouseId (from an Order page), the origin country and city are prefilled from that warehouse’s city. This is the only time a warehouse fills geography; the operator can still change it. The preselected Orders stay selected.'],
+  ['Transport document', 'Document type follows the mode: Road → CMR, Air → AWB, Sea → B/L. The number is optional at creation and must be unique across shipments (max 255). A missing number does not block creation; dispatch still needs one (FRO-325).'],
+  ['Arrival dates', 'Visible always, disabled for Preparing. For Arrived they are optional date-only values; a blank date stays unknown and is never replaced by today or the recording time. Arrived cannot be before dispatched; no future dates.'],
+  ['Purpose', 'One dropdown: Warehouse transfer, Third-party agent, Direct delivery on board, Via agent or launch station. Warehouse transfer lists both warehouse kinds. Direct delivery derives the vessel from the selected Orders, which must all share one vessel. Arrived allows only Warehouse transfer.'],
+  ['Notes', 'Two plain text boxes; their values are submitted with creation. FRO-292 owns storage and visibility.'],
+  ['Selecting goods', 'In-stock Orders may be selected partly; upcoming Orders only as a whole. Collapsing an Order never clears its selection.'],
+  ['From arrived shipments', 'Preparing only. Only goods still IN_STOCK at the selected origin and not reserved can be added. Only the colli selection is copied — no route, mode, document or dates.'],
+  ['Partial selections', 'One compact row per partly selected in-stock Order: reason is required, and the remark is required for Other. Include remaining selects the rest and drops the decision. The child Order is created at submission, not before.'],
+  ['Documents', 'Production AttachmentPanel, extended for files pending creation (FRO-342). Creation is blocked while a file is uploading or failed. Files attach to the shipment only on successful creation.'],
+  ['Creation review', 'Opening the review never creates anything. Counters: Purchase orders, Collis shipping, Collis remaining, Declared gross (per-colli PCS is retired). Confirm stays disabled until every check passes; the server re-checks everything and a rejection keeps the draft.'],
+  ['Repacking', 'There is no repacking at creation. Pallets and boxes are added later in Shipment Details (FRO-316/FRO-325), so this page must not ship before that is live.']
+];
+
+/* ---------------- State ---------------- */
+const params = new URLSearchParams(location.search);
+const S = {
+  lang: params.get('lang') === 'el' ? 'el' : 'en',
+  tab: ['overview','orders','documents'].includes(params.get('tab')) ? params.get('tab') : 'overview',
+  ui: ['default','loading','empty','error'].includes(params.get('state')) ? params.get('state') : 'default',
+  status: params.get('status') === 'arrived' ? 'ARRIVED' : 'PREPARING',
+  oc:'', ocity:'', dc:'', dcity:'', originWh:'', mode:'ROAD', docNo:'', dispatched:'', arrived:'',
+  purpose:'NETWORK_TRANSFER', dest:'', notesInt:'', notesExt:'',
+  subTab:'po', search:'', srcSearch:'',
+  sel:new Set(), histSel:new Set(), expanded:new Set(), srcExpanded:new Set(), partial:{}, bulk:{reason:'',remark:''},
+  files:[], reviewOpen:false, orderOpen:false, submitError:'', toast:'', notesOpen:false, activeNote:null,
+  showNc: params.get('markers') !== '0', showBn: params.get('notes') !== '0', extraOrders:[], creating:false
+};
+const deepWh = params.get('originWarehouseId');
+if (deepWh) {
+  const w = WAREHOUSES.find(x => x.id === deepWh);
+  if (w && w.city) { const c = CITIES.find(x => x.id === w.city); S.originWh = w.id; S.ocity = c.id; S.oc = c.country; }
+  (params.get('purchaseOrderIds') || params.get('purchaseOrderId') || '').split(',').filter(Boolean).forEach(id => {
+    const o = ORDERS.find(x => x.id === id && x.wh === deepWh); if (o) o.collis.forEach(c => S.sel.add(c.id));
+  });
+}
+
+/* ---------------- Derived ---------------- */
+const isArr = () => S.status === 'ARRIVED';
+const whById = id => WAREHOUSES.find(w => w.id === id);
+const cityName = id => CITIES.find(c => c.id === id)?.name ?? '';
+const countryName = id => COUNTRIES.find(c => c.id === id)?.name ?? '';
+const whLabel = w => w ? `${w.operator} · ${w.id} · ${w.name}` : '';
+const originWarehouses = () => S.ocity ? WAREHOUSES.filter(w => w.city === S.ocity) : [];
+const destWarehouses = () => S.dcity ? WAREHOUSES.filter(w => w.city === S.dcity && w.id !== S.originWh) : [];
+const allOrders = () => ORDERS.concat(S.extraOrders);
+const eligibleOrders = () => {
+  if (S.ui === 'empty' || !S.originWh) return [];
+  const q = S.search.trim().toLowerCase();
+  return allOrders().filter(o => o.wh === S.originWh && ['IN_STOCK','READY','EXPECTED_READINESS'].includes(o.status))
+    .filter(o => !q || [o.id, o.vessel, o.client, ...o.collis.map(c => c.id)].join(' ').toLowerCase().includes(q));
+};
+const histOrders = () => (S.ui === 'empty' || !S.dest) ? [] : HIST_ORDERS.filter(o => o.recv === S.dest);
+const selectedCount = o => o.collis.filter(c => S.sel.has(c.id)).length;
+const participating = () => isArr() ? HIST_ORDERS.filter(o => S.histSel.has(o.id)) : allOrders().filter(o => selectedCount(o) > 0);
+const partialOrders = () => isArr() ? [] : allOrders().filter(o => o.status === 'IN_STOCK' && selectedCount(o) > 0 && selectedCount(o) < o.collis.length);
+const sourcesForOrigin = () => {
+  if (S.ui === 'empty' || !S.originWh) return [];
+  const q = S.srcSearch.trim().toLowerCase();
+  return SOURCES.filter(s => s.dest === S.originWh).filter(s => !q || (s.id + ' ' + s.doc).toLowerCase().includes(q));
+};
+const findColli = id => { for (const o of allOrders()) { const c = o.collis.find(x => x.id === id); if (c) return {o, c}; } return null; };
+
+function validation() {
+  const v = {};
+  const arr = isArr();
+  if (arr) {
+    v.geo = !!(S.dc && S.dcity) && (!S.ocity || CITIES.find(c => c.id === S.ocity)?.country === S.oc) && (!S.originWh || (S.ocity && whById(S.originWh)?.city === S.ocity));
+  } else {
+    v.geo = !!(S.oc && S.ocity && S.dc && S.dcity);
+  }
+  const ow = whById(S.originWh), dw = whById(S.dest);
+  if (arr) v.route = !!dw && dw.city === S.dcity && S.purpose === 'NETWORK_TRANSFER';
+  else {
+    v.route = !!ow && ow.city === S.ocity && !!S.mode;
+    if (S.purpose === 'NETWORK_TRANSFER') v.route = v.route && !!dw && dw.city === S.dcity;
+    else if (S.purpose === 'DELIVERY_TO_VESSEL') v.route = v.route && new Set(participating().map(o => o.vessel)).size === 1;
+    else v.route = v.route && !!S.dest;
+  }
+  v.vesselError = !arr && S.purpose === 'DELIVERY_TO_VESSEL' && new Set(participating().map(o => o.vessel)).size > 1;
+  v.selection = arr ? S.histSel.size > 0 : S.sel.size > 0;
+  v.partial = partialOrders().every(o => { const d = S.partial[o.id]; return d && d.reason && (d.reason !== 'OTHER' || d.remark.trim()); });
+  const n = S.docNo.trim();
+  v.docError = n.length > 255 ? tr('Use 255 characters or fewer.') : USED_DOCS[n] ? tr('This number is already used by {id}.', {id: USED_DOCS[n]}) : '';
+  v.doc = !v.docError;
+  v.files = S.files.every(f => f.state === 'ready');
+  v.datesError = arr ? ((S.dispatched && S.dispatched > TODAY) || (S.arrived && S.arrived > TODAY) ? tr('Dates cannot be in the future.') : (S.dispatched && S.arrived && S.arrived < S.dispatched) ? tr('Date arrived cannot be before date dispatched.') : '') : '';
+  v.dates = !v.datesError;
+  v.ok = v.geo && v.route && v.selection && v.partial && v.doc && v.files && v.dates;
+  return v;
+}
+
+/* ---------------- Icons (lucide, as used in the client) ---------------- */
+const I = {
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>',
+  clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
+  file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>',
+  ok:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+  bad:'<svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>',
+  truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62L18.3 9.38a1 1 0 0 0-.78-.38H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>'
+};
+
+/* ---------------- Render helpers ---------------- */
+const bn = n => `<button type="button" class="bn" data-note="${n}" aria-label="Business note ${n}">${n}</button>`;
+const nc = (ticket, text) => `<p class="nc-label">New component · <a href="https://linear.app/front-line-ltd/issue/${ticket}" target="_blank" rel="noopener">${ticket}</a>${text ? ' — ' + esc(text) : ''}</p>`;
+const opt = (value, label, current) => `<option value="${esc(value)}"${value === current ? ' selected' : ''}>${esc(label)}</option>`;
+const field = (id, label, control, {required, optional, hint, error} = {}) =>
+  `<div class="field"><label class="label" for="${id}">${esc(label)}${required ? '<span class="req" aria-hidden="true">*</span>' : ''}${optional ? ` <span class="opt">· ${T('Optional')}</span>` : ''}</label>${control}${error ? `<p class="error" id="${id}-err">${esc(error)}</p>` : hint ? `<p class="hint">${esc(hint)}</p>` : ''}</div>`;
+const select = (id, options, value, {disabled, placeholder, invalid, describedBy} = {}) =>
+  `<select class="control${invalid ? ' invalid' : ''}" id="${id}" data-bind="${id}"${disabled ? ' disabled' : ''}${describedBy ? ` aria-describedby="${describedBy}"` : ''}${invalid ? ' aria-invalid="true"' : ''}>${placeholder !== undefined ? opt('', placeholder, value) : ''}${options.map(o => opt(o[0], o[1], value)).join('')}</select>`;
+const pill = status => `<span class="pill ${PO_TONE[status] || 'tone-neutral'}">${esc(status)}</span>`;
+const fmtKg = n => n == null ? '—' : n.toLocaleString(S.lang === 'el' ? 'el-GR' : 'en-GB', {maximumFractionDigits:1});
+
+function renderHeader() {
+  const nav = [['Dashboard',''],['Purchase orders',''],['Shipments','current'],['Warehouses',''],['Users',''],['Companies','']];
+  return `<header class="shell-header"><div class="shell-inner"><div class="row-flex"><span class="brand">Frontline console</span>
+    <nav class="nav" aria-label="Main">${nav.map(([l, c]) => `<a href="#" ${c ? 'aria-current="page"' : ''}>${c ? I.truck : ''}${T(l)}</a>`).join('')}</nav></div>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="${S.lang === 'en'}">EN</button><button type="button" data-lang="el" aria-pressed="${S.lang === 'el'}">EL</button></div></div></header>`;
+}
+
+function renderStatus() {
+  const arr = isArr();
+  const steps = ['Preparing','Ready for dispatch','Dispatched','Arrived'];
+  const current = arr ? 3 : 0;
+  return `<div class="subcard nc">${nc('FRO-324', 'Preparing / Arrived status and indicator')}
+    <div class="status-row">${field('status', tr('Status'), select('status', [['PREPARING', tr('Preparing')], ['ARRIVED', tr('Arrived')]], S.status), {required:true})}${bn(2)}</div>
+    <ol class="stepper" aria-label="${T('Shipment status')}">${steps.map((s, i) => `<li class="step${i === current ? ' current' : ''}${arr && i < 3 ? ' unrecorded' : ''}"${i === current ? ' aria-current="step"' : ''}><span class="num">${i + 1}</span><span>${T(s)}</span></li>`).join('')}</ol></div>`;
+}
+
+function renderDetails(v) {
+  const arr = isArr();
+  const loading = S.ui === 'loading';
+  const countryOpts = loading ? [] : COUNTRIES.map(c => [c.id, c.name]);
+  const citiesOf = cc => CITIES.filter(c => c.country === cc).map(c => [c.id, c.name]);
+  const ow = originWarehouses();
+  const owDisabled = !S.ocity && !S.originWh;
+  const owPlaceholder = !S.ocity ? tr('Select the origin city first') : ow.length ? tr('Select origin') : tr('No matching warehouse in the selected destination city').replace(tr('destination'), tr('origin'));
+  const owBad = S.originWh && whById(S.originWh)?.city !== S.ocity;
+  const modeOpts = [['ROAD', tr('Road')], ['AIR', tr('Air')], ['SEA', tr('Sea')]];
+  const docType = S.mode ? DOC[S.mode] : tr('Transport reference');
+  const docLabel = tr('Document number');
+  return `<section class="card nc" aria-labelledby="h-details"><div class="card-header"><h2 class="card-title text-subheading" id="h-details">${T('Shipment details')}</h2></div>
+  <div class="card-body stack">
+    ${nc('FRO-325', 'Optional document number and type at creation')}
+    ${renderStatus()}
+    <div class="grid4">
+      ${field('oc', tr('Origin country'), select('oc', countryOpts, S.oc, {placeholder: loading ? tr('Loading…') : tr('Select country'), disabled: loading}), {required: !arr, optional: arr})}
+      ${field('ocity', tr('Origin city'), select('ocity', citiesOf(S.oc), S.ocity, {placeholder: S.oc ? tr('Select city') : tr('Select country'), disabled: !S.oc}), {required: !arr, optional: arr})}
+      ${field('dc', tr('Destination country'), select('dc', countryOpts, S.dc, {placeholder: loading ? tr('Loading…') : tr('Select country'), disabled: loading}), {required:true})}
+      ${field('dcity', tr('Destination city'), select('dcity', citiesOf(S.dc), S.dcity, {placeholder: S.dc ? tr('Select city') : tr('Select country'), disabled: !S.dc}), {required:true})}
+      ${field('originWh', tr('Origin warehouse'), select('originWh', ow.map(w => [w.id, whLabel(w)]).concat(owBad ? [[S.originWh, whLabel(whById(S.originWh))]] : []), S.originWh, {placeholder: owPlaceholder, disabled: owDisabled, invalid: owBad, describedBy: owBad ? 'originWh-err' : ''}), {required: !arr, optional: arr, error: owBad ? tr('The origin warehouse must be in the selected origin city') : ''})}
+      ${field('mode', tr('Mode'), select('mode', modeOpts, S.mode, arr ? {placeholder: tr('Unknown — not recorded')} : {}), {required: !arr, optional: arr})}
+      ${field('docType', tr('Document type'), `<input class="control" id="docType" readonly value="${esc(docType)}">`)}
+      ${field('docNo', docLabel, `<input class="control mono${v.docError ? ' invalid' : ''}" id="docNo" data-bind="docNo" maxlength="300" autocomplete="off" value="${esc(S.docNo)}"${v.docError ? ' aria-invalid="true" aria-describedby="docNo-err"' : ''}>`, {optional:true, error: v.docError})}
+    </div>
+    <div class="nc" style="padding:.25rem 0 .25rem">${nc('FRO-324', 'Arrival dates')}
+      <div class="grid4">
+        ${field('dispatched', tr('Date dispatched'), `<input type="date" class="control mono" id="dispatched" data-bind="dispatched" max="${TODAY}" value="${esc(S.dispatched)}"${arr ? '' : ' disabled'}>`, {optional: arr})}
+        ${field('arrived', tr('Date arrived'), `<input type="date" class="control mono${v.datesError ? ' invalid' : ''}" id="arrived" data-bind="arrived" max="${TODAY}" value="${esc(S.arrived)}"${arr ? '' : ' disabled'}>`, {optional: arr, error: v.datesError})}
+      </div></div>
+    <p class="hint">${bn(3)} ${bn(4)} ${bn(5)} ${bn(6)}</p>
+  </div></section>`;
+}
+
+function renderPurpose(v) {
+  const arr = isArr();
+  const purposes = [['NETWORK_TRANSFER', tr('Warehouse transfer')], ['THIRD_PARTY_TRANSFER', tr('Third-party agent')], ['DELIVERY_TO_VESSEL', tr('Direct delivery on board')], ['DELIVERY_TO_LAUNCH_STATION', tr('Via agent or launch station')]];
+  let dest;
+  if (S.purpose === 'NETWORK_TRANSFER') {
+    const ws = destWarehouses();
+    const placeholder = !S.dcity ? tr('Select the destination city first') : ws.length ? tr('Choose a warehouse') : tr('No matching warehouse in the selected destination city');
+    dest = select('dest', ws.map(w => [w.id, whLabel(w)]), S.dest, {placeholder, disabled: !S.dcity || !ws.length});
+  } else if (S.purpose === 'DELIVERY_TO_VESSEL') {
+    const vessels = [...new Set(participating().map(o => o.vessel))];
+    const label = vessels.length === 1 ? vessels[0] : tr('Derived from selected Orders');
+    dest = select('dest', [], '', {placeholder: label, disabled:true, invalid: v.vesselError, describedBy: v.vesselError ? 'dest-err' : ''});
+  } else {
+    dest = select('dest', AGENTS.map(a => [a.id, a.name]), S.dest, {placeholder: S.purpose === 'THIRD_PARTY_TRANSFER' ? tr('Choose a third-party agent') : tr('Agent / launch station')});
+  }
+  return `<section class="card" aria-labelledby="h-purpose"><div class="card-header"><h2 class="card-title text-subheading" id="h-purpose">${T('Shipment purpose')} ${bn(7)}</h2></div>
+  <div class="card-body"><div class="grid2">
+    ${field('purpose', tr('Purpose'), select('purpose', arr ? purposes.slice(0, 1) : purposes, S.purpose, {disabled: arr}), {required:true})}
+    ${field('dest', S.purpose === 'NETWORK_TRANSFER' ? tr('Destination warehouse') : tr('Destination details'), dest, {required:true, error: v.vesselError ? tr('All participating Orders must reference the same vessel.') : ''})}
+  </div></div></section>`;
+}
+
+function renderNotes() {
+  return `<section class="card nc" aria-labelledby="h-notes"><div class="card-header"><h2 class="card-title text-subheading" id="h-notes">${T('Notes')} ${bn(8)}</h2></div>
+  <div class="card-body">${nc('FRO-292', '')}<div class="grid2">
+    ${field('notesInt', tr('Internal Notes'), `<textarea class="control" id="notesInt" data-bind="notesInt" rows="4">${esc(S.notesInt)}</textarea>`, {optional:true})}
+    ${field('notesExt', tr('External Notes'), `<textarea class="control" id="notesExt" data-bind="notesExt" rows="4">${esc(S.notesExt)}</textarea>`, {optional:true})}
+  </div></div></section>`;
+}
+
+function orderRows(o, {hist} = {}) {
+  const total = o.collis.length;
+  const count = hist ? (S.histSel.has(o.id) ? total : 0) : selectedCount(o);
+  const whole = hist || o.status !== 'IN_STOCK';
+  const expanded = S.expanded.has(o.id);
+  const disabled = hist && o.excluded;
+  const label = expanded ? tr('Hide collis for {po}', {po:o.id}) : tr('Show collis for {po}', {po:o.id});
+  let html = `<tr class="po-row${count ? ' selected' : ''}"><td><input type="checkbox" class="check" data-po="${o.id}"${hist ? ' data-hist="1"' : ''} aria-label="${esc(o.id)}"${count === total ? ' checked' : ''}${disabled ? ' disabled' : ''}${count && count < total ? ' data-indeterminate="1"' : ''}></td>
+    <td><span class="mono" style="font-weight:600">${esc(o.id)}</span> ${o.fixture ? `<span class="badge tone-warning">${T('Simulated new order')}</span>` : ''}</td><td>${pill(o.status)}</td><td>${esc(o.client)}</td><td>${esc(o.vessel)}</td>
+    <td class="cell-end"><span class="mono">${count}/${total}</span> ${disabled ? `<span class="badge tone-danger">${T(o.excluded, {id:o.excludedBy})}</span>` : hist ? `<span class="badge ${o.match ? 'tone-accent' : 'tone-neutral'}">${o.match ? T('Existing arrival') + ' · ' + o.match : T('New arrival — AWAITING_IMPORT')}</span>` : ''}
+    <button type="button" class="btn btn-ghost btn-sm icon-btn" data-expand="${o.id}" aria-expanded="${expanded}" aria-controls="c-${o.id}" aria-label="${esc(label)}" title="${esc(label)}">${expanded ? I.up : I.down}</button></td></tr>`;
+  if (expanded) html += o.collis.map(c => {
+    const on = hist ? S.histSel.has(o.id) : S.sel.has(c.id);
+    return `<tr id="c-${o.id}" class="${on ? 'selected' : ''}"><td></td><td class="indent" colspan="3"><span class="mono">${esc(c.id)}</span> <span class="muted">· ${esc(c.desc)}</span></td><td class="muted mono">${c.dims ? esc(c.dims) + ' cm' : '—'}</td>
+      <td class="cell-end"><input type="checkbox" class="check" data-colli="${c.id}" aria-label="${esc(c.id)}"${on ? ' checked' : ''}${whole ? ` disabled title="${T('Upcoming POs must be selected in full')}"` : ''}></td></tr>`;
+  }).join('');
+  return html;
+}
+
+function ordersTable(orders, hist) {
+  return `<div class="table-wrap"><table><thead><tr><th style="width:2.5rem"><span class="sr-only">${T('Select')}</span></th><th>${T('PO / colli')}</th><th>${T('Status')}</th><th>${T('Client')}</th><th>${T('Vessel')}</th><th class="cell-end">${T('Selection')}</th></tr></thead>
+    <tbody>${orders.map(o => orderRows(o, {hist})).join('')}</tbody></table></div>`;
+}
+
+function renderSelection() {
+  const arr = isArr();
+  const loading = S.ui === 'loading', error = S.ui === 'error';
+  let body;
+  if (!arr && S.subTab === 'src') body = renderSources();
+  else {
+    const orders = arr ? histOrders() : eligibleOrders();
+    const empty = arr ? (!S.dest ? tr('Select the receiving warehouse to list Orders for this arrival.') : tr('No eligible purchase orders found.')) : (!S.originWh ? tr('Select an origin warehouse to list eligible purchase orders.') : tr('No eligible purchase orders found.'));
+    body = `<div class="row-flex" style="flex-wrap:wrap;margin-bottom:.75rem"><div class="with-icon" style="flex:1 1 18rem">${I.search}<input class="control" id="search" data-bind="search" type="search" placeholder="${T('Search PO, vessel, reference, or tracking code')}" aria-label="${T('Search PO, vessel, reference, or tracking code')}" value="${esc(S.search)}"></div>
+      ${arr ? '' : `<div class="nc" style="border-radius:var(--radius-md)"><button type="button" class="btn btn-secondary btn-md" id="create-order-btn" data-act="open-order">${I.plus}${T('Create new order')}</button></div>`}</div>
+      ${arr ? `<p class="hint" style="margin:0 0 .75rem">${T('Whole Orders only when recording an arrived shipment.')}</p>` : ''}
+      ${loading ? '<div class="stack"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>'
+        : error ? `<div class="alert tone-danger" role="alert">${I.bad}<div>${T('Could not load eligible purchase orders.')} <button type="button" class="btn btn-secondary btn-sm" data-act="retry">${T('Retry')}</button></div></div>`
+        : orders.length ? ordersTable(orders, arr) : `<p class="empty-box">${esc(empty)}</p>`}`;
+  }
+  return `<section class="card" aria-labelledby="h-select"><div class="card-header"><h2 class="card-title text-subheading" id="h-select">${T('Select purchase orders and collis')} ${bn(9)}</h2></div>
+  <div class="card-body">${arr ? '' : `<div class="nc" style="margin-bottom:1rem">${nc('FRO-323', 'From arrived shipments')}${tabsHtml('sub', [['po', tr('By purchase order')], ['src', tr('From arrived shipments')]], S.subTab)}</div>`}${body}</div></section>`;
+}
+
+function renderSources() {
+  const list = sourcesForOrigin();
+  if (S.ui === 'loading') return '<div class="stack"><div class="skeleton"></div><div class="skeleton"></div></div>';
+  if (S.ui === 'error') return `<div class="alert tone-danger" role="alert">${I.bad}<div>${T('Could not load eligible purchase orders.')} <button type="button" class="btn btn-secondary btn-sm" data-act="retry">${T('Retry')}</button></div></div>`;
+  const search = `<div class="with-icon" style="margin-bottom:.75rem">${I.search}<input class="control" id="srcSearch" data-bind="srcSearch" type="search" placeholder="${T('Search shipment or transport document number')}" aria-label="${T('Search shipment or transport document number')}" value="${esc(S.srcSearch)}"></div>`;
+  if (!S.originWh) return search + `<p class="empty-box">${T('Select an origin warehouse to list eligible purchase orders.')}</p>`;
+  if (!list.length) return search + `<p class="empty-box">${T('No arrived shipments at this origin.')}</p>`;
+  const rows = list.map(s => {
+    const avail = s.contents.filter(c => c.avail);
+    const on = avail.filter(c => S.sel.has(c.colli)).length;
+    const expanded = S.srcExpanded.has(s.id);
+    const label = expanded ? tr('Hide contents of {id}', {id:s.id}) : tr('Show contents of {id}', {id:s.id});
+    let html = `<tr class="po-row"><td><input type="checkbox" class="check" data-src="${s.id}" aria-label="${T('Select all available collis of {id}', {id:s.id})}"${avail.length && on === avail.length ? ' checked' : ''}${on && on < avail.length ? ' data-indeterminate="1"' : ''}${avail.length ? '' : ' disabled'}></td>
+      <td class="mono" style="color:var(--accent-strong);font-weight:600">${s.id}</td><td>${esc(s.origin)} → ${esc(s.dest)}</td><td>${esc(DOC[s.mode])}</td><td class="mono">${esc(s.doc)}</td>
+      <td class="cell-end"><span class="mono">${avail.length}/${s.contents.length}</span> <button type="button" class="btn btn-ghost btn-sm icon-btn" data-src-expand="${s.id}" aria-expanded="${expanded}" aria-controls="s-${s.id}" aria-label="${esc(label)}" title="${esc(label)}">${expanded ? I.up : I.down}</button></td></tr>`;
+    if (expanded) html += s.contents.map(c => `<tr id="s-${s.id}"><td></td><td class="indent mono">${esc(c.po)}</td><td class="mono" colspan="2">${esc(c.colli)}</td>
+      <td>${c.avail ? `<span class="pill tone-cyan">${T('Available')}</span>` : `<span class="pill tone-info">${T('Reserved by {id}', {id:c.by})}</span>`}</td>
+      <td class="cell-end"><input type="checkbox" class="check" data-colli="${c.colli}" aria-label="${esc(c.colli)}"${S.sel.has(c.colli) ? ' checked' : ''}${c.avail ? '' : ' disabled'}></td></tr>`).join('');
+    return html;
+  }).join('');
+  return search + `<div class="table-wrap"><table><thead><tr><th style="width:2.5rem"><span class="sr-only">${T('Select')}</span></th><th>${T('Shipment number')}</th><th>${T('Route')}</th><th>${T('Transport document type')}</th><th>${T('Transport document number')}</th><th class="cell-end">${T('Available collis')}</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="hint">${bn(10)}</p>`;
+}
+
+function renderPartials() {
+  const list = partialOrders();
+  const arr = isArr();
+  let body;
+  if (arr) body = `<p class="text-body-sm muted" style="margin:0">${T('Whole Orders only when recording an arrived shipment.')}</p>`;
+  else if (!S.sel.size) body = `<p class="text-body-sm muted" style="margin:0">${T('No partial selections to confirm.')}</p>`;
+  else if (!list.length) body = `<p class="text-body-sm muted" style="margin:0">${T('Every selected PO is included in full. No child PO is needed.')}</p>`;
+  else {
+    const reasons = [['OPERATIONAL_SEPARATION', tr('Operational separation')], ['UNCOLLECTABLE_REMAINDER', tr('Uncollectable remainder')], ['OTHER', tr('Other')]];
+    body = (list.length > 1 ? `<div class="subcard" style="margin-bottom:.75rem"><p class="label" style="margin:0 0 .5rem">${T('Apply one decision to all partial POs')}</p><div class="grid4" style="align-items:end">
+        ${field('bulkReason', tr('Reason'), select('bulkReason', reasons, S.bulk.reason, {placeholder: tr('Select reason')}))}
+        ${field('bulkRemark', tr('Remark'), `<input class="control" id="bulkRemark" data-bind="bulkRemark" value="${esc(S.bulk.remark)}">`)}
+        <div><button type="button" class="btn btn-secondary btn-md" data-act="bulk">${T('Apply to all POs')}</button></div></div></div>` : '')
+      + list.map(o => {
+        const d = S.partial[o.id] || {reason:'', remark:''};
+        const remaining = o.collis.filter(c => !S.sel.has(c.id));
+        const remarkErr = d.reason === 'OTHER' && !d.remark.trim();
+        return `<div class="partial-row"><div><p class="mono" style="margin:0;font-weight:600">${esc(o.id)}</p><p class="hint" style="margin:0">${T('{count} remaining', {count: remaining.length})}</p></div>
+          <div class="chips">${remaining.map(c => `<span class="badge mono">${esc(c.id)}</span>`).join('')}</div>
+          ${field('reason-' + o.id, tr('Reason'), select('reason-' + o.id, reasons, d.reason, {placeholder: tr('Select reason'), invalid: !d.reason}), {required:true})}
+          ${field('remark-' + o.id, tr('Remark'), `<input class="control${remarkErr ? ' invalid' : ''}" id="remark-${o.id}" data-bind="remark-${o.id}" value="${esc(d.remark)}"${remarkErr ? ` aria-invalid="true" aria-describedby="remark-${o.id}-err"` : ''}>`, {required: d.reason === 'OTHER', error: remarkErr ? tr('Remark is required for Other') : ''})}
+          <div><button type="button" class="btn btn-secondary btn-md" data-include="${o.id}">${T('Include remaining collis')}</button></div></div>`;
+      }).join('');
+  }
+  return `<section class="card nc" aria-labelledby="h-partial"><div class="card-header"><h2 class="card-title text-subheading" id="h-partial">${T('Partial selections')} ${bn(11)}</h2></div><div class="card-body">${nc('FRO-325', 'Compact partial-selection rows')}${body}</div></section>`;
+}
+
+function renderDocuments() {
+  const files = S.ui === 'empty' ? [] : S.files;
+  return `<section class="card card-pad nc" aria-labelledby="h-att">${nc('FRO-342', 'Pending files before creation')}
+    <div class="row-flex" style="justify-content:space-between;flex-wrap:wrap"><div><h3 class="row-flex text-subheading" id="h-att" style="margin:0"><span style="color:var(--accent);display:inline-flex;width:1rem">${I.clip}</span>${T('Attachments')} ${bn(12)}</h3>
+      <p class="text-body-sm muted" style="margin:.25rem 0 0">${T('Files stay pending until the shipment is created.')}</p></div>
+      <label class="btn btn-secondary btn-md" for="file-input" tabindex="0" id="file-label">${I.plus}${T('Choose documents or photos')}</label><input id="file-input" class="sr-only" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx,.csv,.txt"></div>
+    <p class="hint" style="margin:.5rem 0 0">${T('PDF, images, Word, Excel, CSV or text · up to 25 MB each')}</p>
+    <div class="stack" style="margin-top:1rem">${files.length ? files.map(f => `<div class="file-row"><div class="row-flex" style="min-width:0"><span class="file-icon">${f.kind === 'PHOTO' ? I.image : I.file}</span>
+        <div style="min-width:0"><p style="margin:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</p><p class="text-caption muted" style="margin:0">${T(f.kind === 'PHOTO' ? 'Photo' : 'Document')} · ${esc(f.size)} · Demo operator · ${esc(f.at)}</p>
+        ${f.state === 'uploading' ? `<div class="progress" role="progressbar" aria-label="${T('Uploading')}" aria-valuenow="${f.pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${f.pct}%"></span></div>` : f.state === 'error' ? `<p class="error" style="margin:.25rem 0 0" role="alert">${T('Upload failed — check the connection and retry.')}</p>` : `<span class="badge tone-warning" style="margin-top:.25rem">${T('Pending')}</span>`}</div></div>
+        <div class="row-flex">${f.state === 'error' ? `<button type="button" class="btn btn-secondary btn-sm" data-retry="${f.id}">${T('Retry')}</button>` : ''}${f.state === 'ready' ? `<button type="button" class="btn btn-ghost btn-sm" data-act="noop">${T('Download')}</button>` : ''}<button type="button" class="btn btn-ghost btn-sm" data-remove="${f.id}">${T('Remove')}</button></div></div>`).join('')
+      : `<p class="empty-box">${T('No attachments uploaded.')}</p>`}</div></section>`;
+}
+
+function tabsHtml(group, tabs, current) {
+  return `<div class="tablist" role="tablist" data-group="${group}">${tabs.map(([v, l]) => `<button type="button" role="tab" class="tab" id="tab-${group}-${v}" data-tab-group="${group}" data-tab="${v}" aria-selected="${v === current}" aria-controls="panel-${group}" tabindex="${v === current ? 0 : -1}">${esc(l)}</button>`).join('')}</div>`;
+}
+
+function renderReview(v) {
+  const arr = isArr();
+  const parts = participating();
+  const selected = arr ? parts.flatMap(o => o.collis) : parts.flatMap(o => o.collis.filter(c => S.sel.has(c.id)));
+  const remaining = arr ? 0 : parts.reduce((n, o) => n + o.collis.length - selectedCount(o), 0);
+  const missing = selected.filter(c => c.kg == null).length;
+  const gross = selected.reduce((n, c) => n + (c.kg || 0), 0);
+  const ow = whById(S.originWh), dw = whById(S.dest);
+  const destText = S.purpose === 'DELIVERY_TO_VESSEL' ? ([...new Set(parts.map(o => o.vessel))].join(', ') || tr('Not selected')) : S.purpose === 'NETWORK_TRANSFER' ? (dw ? whLabel(dw) : tr('Not selected')) : (AGENTS.find(a => a.id === S.dest)?.name || tr('Not selected'));
+  const fact = (l, val) => `<div><dt>${esc(l)}</dt><dd>${esc(val || '—')}</dd></div>`;
+  const check = (ok, l) => `<li>${ok ? I.ok : I.bad}<span>${esc(l)}</span></li>`;
+  const partials = partialOrders();
+  const unk = tr('Unknown — not recorded');
+  return `<div class="scrim" id="review"><div class="scrim-bg" data-act="close-review"></div>
+  <div class="modal nc" role="dialog" aria-modal="true" aria-labelledby="review-title">
+    <div class="modal-head"><h2 class="text-subheading" id="review-title" style="margin:0">${T('Creation review')} ${bn(13)}</h2><button type="button" class="btn btn-ghost btn-sm icon-btn" data-act="close-review" aria-label="${T('Close')}">${I.x}</button></div>
+    <div class="modal-body sections">
+      ${nc('FRO-325', 'Creation review content')}
+      ${S.submitError ? `<div class="alert tone-danger" role="alert">${I.bad}<div>${T(S.submitError)}</div></div>` : ''}
+      <div class="alert ${arr ? 'tone-info' : 'tone-accent'}">${I.info}<div><strong>${arr ? 'ARRIVED' : 'PREPARING'}</strong> — ${T(arr ? 'Records ARRIVED: links the whole Orders to this arrival. Stock confirmation stays a separate step.' : 'Creates PREPARING: reserves the selected collis and creates any child Orders. It does not confirm readiness or record departure.')}</div></div>
+      <div class="metrics">
+        <div class="metric"><div class="text-caption muted">${T('Purchase orders')}</div><div class="v">${parts.length}</div></div>
+        <div class="metric"><div class="text-caption muted">${T('Collis shipping')}</div><div class="v">${selected.length}</div></div>
+        <div class="metric"><div class="text-caption muted">${T('Collis remaining')}</div><div class="v">${remaining}</div></div>
+        <div class="metric"><div class="text-caption muted">${T('Declared gross')}</div><div class="v">${fmtKg(gross)} kg</div>${missing ? `<div class="text-caption subtle">${T('{n} missing', {n: missing})}</div>` : ''}</div>
+      </div>
+      <section><h3 class="text-heading" style="margin:0 0 .5rem">${T('Route and commercial plan')}</h3><dl class="facts">
+        ${fact(tr('Origin country'), countryName(S.oc) || (arr ? unk : ''))}${fact(tr('Origin city'), cityName(S.ocity) || (arr ? unk : ''))}${fact(tr('Origin warehouse'), ow ? whLabel(ow) : (arr ? unk : ''))}
+        ${fact(tr('Destination country'), countryName(S.dc))}${fact(tr('Destination city'), cityName(S.dcity))}${fact(S.purpose === 'NETWORK_TRANSFER' ? tr('Destination warehouse') : tr('Destination details'), destText)}
+        ${fact(tr('Purpose'), tr({NETWORK_TRANSFER:'Warehouse transfer', THIRD_PARTY_TRANSFER:'Third-party agent', DELIVERY_TO_VESSEL:'Direct delivery on board', DELIVERY_TO_LAUNCH_STATION:'Via agent or launch station'}[S.purpose]))}
+        ${fact(tr('Mode'), S.mode ? tr({ROAD:'Road', AIR:'Air', SEA:'Sea'}[S.mode]) : unk)}${fact(S.mode ? DOC[S.mode] : tr('Transport reference'), S.docNo.trim() || tr('Not recorded'))}
+        ${arr ? fact(tr('Date dispatched'), S.dispatched || unk) + fact(tr('Date arrived'), S.arrived || unk) : ''}
+        ${S.notesInt.trim() ? fact(tr('Internal Notes'), S.notesInt) : ''}${S.notesExt.trim() ? fact(tr('External Notes'), S.notesExt) : ''}
+      </dl></section>
+      <section><h3 class="text-heading" style="margin:0 0 .5rem">${T('Validation')}</h3><ul class="checks">
+        ${check(v.geo, tr('Country and city references are complete and compatible'))}${check(v.route, tr('Route and destination are compatible'))}
+        ${check(v.selection, tr('At least one colli is selected'))}${arr ? check(v.dates, tr('Dates are in order and not in the future')) : check(v.partial, tr('Every partial PO has an explicit child-creation decision'))}
+        ${check(v.doc, tr('Document number is valid'))}${check(v.files, tr('Selected files are ready'))}</ul></section>
+      <section><h3 class="text-heading" style="margin:0 0 .5rem">${T('Purchase-order allocation')}</h3>
+        ${parts.length ? `<div class="table-wrap"><table><thead><tr><th>${T('PO / colli')}</th><th>${T('Client')}</th><th>${T('Vessel')}</th><th>${T('Dimensions (cm)')}</th><th class="cell-end">${T('Gross weight (kg)')}</th></tr></thead><tbody>
+          ${parts.map(o => { const cs = arr ? o.collis : o.collis.filter(c => S.sel.has(c.id)); return `<tr class="po-row"><td class="mono" style="font-weight:600">${esc(o.id)} <span class="muted" style="font-weight:400">${arr ? (o.match ? T('Linked stocked stay — stays IN_STOCK') : T('New arrival — AWAITING_IMPORT')) : T('{shipping}/{total} collis shipping', {shipping: cs.length, total: o.collis.length})}</span></td><td>${esc(o.client)}</td><td>${esc(o.vessel)}</td><td></td><td></td></tr>`
+            + cs.map(c => `<tr><td class="indent"><span class="mono">${esc(c.id)}</span> <span class="muted">· ${esc(c.desc)}</span></td><td></td><td></td><td class="mono">${c.dims || '—'}</td><td class="cell-end mono">${fmtKg(c.kg)}</td></tr>`).join(''); }).join('')}</tbody></table></div>` : `<p class="empty-box">${T('No eligible purchase orders found.')}</p>`}
+        ${partials.length ? `<div class="alert tone-warning" style="margin-top:.75rem">${I.info}<div>${T('Creating this shipment will also create {poCount} in-stock child PO(s) containing {colliCount} selected colli(s); the shipment follows each child PO.', {poCount: partials.length, colliCount: partials.reduce((n, o) => n + selectedCount(o), 0)})}
+          <ul style="margin:.25rem 0 0;padding-left:1.1rem">${partials.map(o => `<li><span class="mono">${o.id}</span> — ${T('{count} stay on parent PO', {count: o.collis.length - selectedCount(o)})}${S.partial[o.id]?.reason ? ' · ' + T({OPERATIONAL_SEPARATION:'Operational separation', UNCOLLECTABLE_REMAINDER:'Uncollectable remainder', OTHER:'Other'}[S.partial[o.id].reason]) : ''}${S.partial[o.id]?.remark ? ' · ' + esc(S.partial[o.id].remark) : ''}</li>`).join('')}</ul></div></div>` : ''}
+      </section>
+      <section><h3 class="text-heading" style="margin:0 0 .5rem">${T('Files')}</h3>
+        ${S.files.length ? `<ul class="checks">${S.files.map(f => `<li>${f.state === 'ready' ? I.ok : I.bad}<span>${esc(f.name)}</span></li>`).join('')}</ul>` : `<p class="text-body-sm muted" style="margin:0">${T('No files selected.')}</p>`}
+        <button type="button" class="btn btn-secondary btn-sm" style="margin-top:.5rem" data-act="review-files">${T('Review selected files')}</button></section>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-secondary btn-md" data-act="close-review">${T('Back to editing')}</button>
+      <button type="button" class="btn btn-primary btn-md" data-act="confirm"${v.ok && !S.creating ? '' : ' disabled'}>${T(arr ? 'Confirm and record arrival' : 'Confirm and create shipment')}</button></div>
+  </div></div>`;
+}
+
+function renderOrderModal() {
+  return `<div class="scrim" id="order-modal"><div class="scrim-bg" data-act="close-order"></div>
+  <div class="modal nc" role="dialog" aria-modal="true" aria-labelledby="order-title" style="width:min(100%,80rem)">
+    <div class="modal-head"><h2 class="text-subheading" id="order-title" style="margin:0">${T('Create new order')}</h2><button type="button" class="btn btn-ghost btn-sm icon-btn" data-act="close-order" aria-label="${T('Close')}">${I.x}</button></div>
+    <div class="modal-body">${nc('FRO-343', 'FRO-335 Create Order card, reused')}<iframe class="inline-frame" title="FRO-335 Create Order" src="inline-order-${S.lang}.html"></iframe></div>
+    <div class="modal-foot"><button type="button" class="btn btn-secondary btn-md" data-act="close-order">${T('Cancel')}</button><button type="button" class="btn btn-primary btn-md" data-act="create-order">${T('Create')}</button></div>
+  </div></div>`;
+}
+
+function renderTools() {
+  const seg = (name, values, cur) => `<div class="seg" role="group" aria-label="${name}">${values.map(([v, l]) => `<button type="button" data-tool="${name}" data-val="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
+  return `<details class="tools" id="tools"${S.toolsOpen ? ' open' : ''}><summary>Review tools <span class="subtle">preview only</span></summary><div class="tools-body">
+    <div><p class="label" style="margin:0 0 .25rem">State</p>${seg('state', [['default','Default'],['loading','Loading'],['empty','Empty'],['error','Error']], S.ui)}</div>
+    <div><p class="label" style="margin:0 0 .25rem">Annotations</p>${seg('nc', [['1','New components on'],['0','off']], S.showNc ? '1' : '0')}</div>
+    <div><p class="label" style="margin:0 0 .25rem">Business notes</p>${seg('bn', [['1','Markers on'],['0','off']], S.showBn ? '1' : '0')} <button type="button" class="btn btn-secondary btn-sm" style="margin-top:.375rem" data-act="notes">Open notes panel</button></div>
+    <div><p class="label" style="margin:0 0 .25rem">Scenarios</p><div class="stack" style="gap:.375rem">
+      <a href="?originWarehouseId=ATH-HUB&purchaseOrderIds=PO-0000007&tab=orders">Open from Order PO-0000007 (deep link)</a>
+      <button type="button" class="btn btn-secondary btn-sm" data-act="fill">Fill a valid Preparing draft</button>
+      <button type="button" class="btn btn-secondary btn-sm" data-act="fill-partial">Partial selection on 2 Orders</button>
+      <button type="button" class="btn btn-secondary btn-sm" data-act="fill-arrived">Arrived draft</button>
+      <button type="button" class="btn btn-secondary btn-sm" data-act="fail-upload">Add a failed upload</button>
+      <a href="?">Reset</a></div></div>
+    <p class="hint" style="margin:0">Fixture data only (docs/reference/demo-data.md and invented values). Nothing is uploaded or saved.</p></div></details>`;
+}
+
+function renderNotesPanel() {
+  return `<aside class="notes-panel" aria-label="Business notes"><div class="card-header"><h2 class="text-subheading" style="margin:0">Business notes</h2><button type="button" class="btn btn-ghost btn-sm icon-btn" data-act="notes" aria-label="Close">${I.x}</button></div>
+    <ol>${NOTES.map(([title, text], i) => `<li id="note-${i + 1}" class="${S.activeNote === i + 1 ? 'hl' : ''}"><p style="margin:0;font-weight:600"><span class="bn" style="margin:0 .375rem 0 0">${i + 1}</span>${esc(title)}</p><p class="text-body-sm" style="margin:.25rem 0 0">${esc(text)}</p></li>`).join('')}</ol></aside>`;
+}
+
+function render() {
+  const active = document.activeElement;
+  const focusId = active && active.id;
+  const selStart = active && 'selectionStart' in active ? active.selectionStart : null;
+  const v = validation();
+  document.documentElement.lang = S.lang;
+  document.body.classList.toggle('hide-nc', !S.showNc);
+  document.body.classList.toggle('hide-bn', !S.showBn);
+  document.getElementById('sim-banner').textContent = 'Static FRO-341 preview — fixture data, browser-only simulation. Nothing is uploaded or saved.';
+  const tabs = [['overview', tr('Overview')], ['orders', tr('Orders and Collis')], ['documents', tr('Documents')]];
+  const panel = S.tab === 'overview' ? `<div class="sections">${renderDetails(v)}${renderPurpose(v)}${renderNotes()}</div>`
+    : S.tab === 'orders' ? `<div class="sections">${renderSelection()}${renderPartials()}</div>` : renderDocuments();
+  document.getElementById('app').innerHTML = renderHeader() + `<main>
+    <div class="topbar"><h1 class="text-title">${T('Create shipment')} ${bn(1)}</h1></div>
+    <div class="card card-pad">${tabsHtml('main', tabs, S.tab)}<div class="tabpanel" role="tabpanel" id="panel-main" aria-labelledby="tab-main-${S.tab}">${panel}</div></div>
+    <div class="actions-end"><button type="button" class="btn btn-primary btn-lg" id="create-shipment-btn" data-act="open-review">${T('Create shipment')}</button></div>
+  </main>` + (S.reviewOpen ? renderReview(v) : '') + (S.orderOpen ? renderOrderModal() : '') + renderTools() + (S.notesOpen ? renderNotesPanel() : '') + (S.toast ? `<div class="toast" role="status" aria-live="polite">${esc(S.toast)}</div>` : '');
+  document.querySelectorAll('[data-indeterminate]').forEach(el => el.indeterminate = true);
+  if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus(); if (selStart != null && 'setSelectionRange' in el) try { el.setSelectionRange(selStart, selStart); } catch (e) {} } }
+}
+
+/* ---------------- Behaviour ---------------- */
+function setField(id, value) {
+  if (id.startsWith('reason-') || id.startsWith('remark-')) {
+    const po = id.slice(7); const d = S.partial[po] || (S.partial[po] = {reason:'', remark:''});
+    if (id.startsWith('reason-')) d.reason = value; else d.remark = value; return;
+  }
+  if (id === 'bulkReason') { S.bulk.reason = value; return; }
+  if (id === 'bulkRemark') { S.bulk.remark = value; return; }
+  if (id === 'status') { S.status = value; if (value === 'ARRIVED') { S.purpose = 'NETWORK_TRANSFER'; S.subTab = 'po'; } S.histSel.clear(); return; }
+  if (id === 'oc') { S.oc = value; S.ocity = ''; clearOrigin(); return; }
+  if (id === 'ocity') { S.ocity = value; if (S.originWh && whById(S.originWh)?.city !== value) clearOrigin(); return; }
+  if (id === 'dc') { S.dc = value; S.dcity = ''; clearDest(); return; }
+  if (id === 'dcity') { S.dcity = value; if (S.dest && S.purpose === 'NETWORK_TRANSFER' && whById(S.dest)?.city !== value) clearDest(); return; }
+  if (id === 'originWh') { S.originWh = value; S.sel.clear(); S.partial = {}; S.srcExpanded.clear(); return; }
+  if (id === 'purpose') { S.purpose = value; S.dest = ''; return; }
+  if (id === 'dest') { S.dest = value; if (isArr()) S.histSel.clear(); return; }
+  S[id] = value;
+}
+function clearOrigin() { S.originWh = ''; S.sel.clear(); S.partial = {}; S.srcExpanded.clear(); }
+function clearDest() { S.dest = ''; if (isArr()) S.histSel.clear(); }
+function cleanPartials() { for (const po of Object.keys(S.partial)) if (!partialOrders().some(o => o.id === po)) delete S.partial[po]; }
+
+document.addEventListener('input', e => {
+  const id = e.target.dataset.bind; if (!id || e.target.tagName === 'SELECT') return;
+  setField(id, e.target.value); render();
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.tagName === 'SELECT' && t.dataset.bind) { setField(t.dataset.bind, t.value); render(); return; }
+  if (t.type === 'date') { setField(t.dataset.bind, t.value); render(); return; }
+  if (t.id === 'file-input') { addFiles([...t.files]); t.value = ''; return; }
+  if (t.dataset.po) {
+    if (t.dataset.hist) { t.checked ? S.histSel.add(t.dataset.po) : S.histSel.delete(t.dataset.po); }
+    else { const o = allOrders().find(x => x.id === t.dataset.po); o.collis.forEach(c => t.checked ? S.sel.add(c.id) : S.sel.delete(c.id)); cleanPartials(); }
+    render(); return;
+  }
+  if (t.dataset.colli) {
+    const hit = findColli(t.dataset.colli);
+    if (hit && hit.o.status !== 'IN_STOCK') hit.o.collis.forEach(c => t.checked ? S.sel.add(c.id) : S.sel.delete(c.id));
+    else t.checked ? S.sel.add(t.dataset.colli) : S.sel.delete(t.dataset.colli);
+    cleanPartials(); render(); return;
+  }
+  if (t.dataset.src) { const s = SOURCES.find(x => x.id === t.dataset.src); s.contents.filter(c => c.avail).forEach(c => t.checked ? S.sel.add(c.colli) : S.sel.delete(c.colli)); cleanPartials(); render(); }
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('button, [data-act]'); if (!b) return;
+  if (b.dataset.lang) { S.lang = b.dataset.lang; render(); return; }
+  if (b.dataset.note) { S.notesOpen = true; S.activeNote = +b.dataset.note; render(); document.getElementById('note-' + b.dataset.note)?.scrollIntoView({block:'nearest'}); return; }
+  if (b.dataset.tab) { switchTab(b.dataset.tabGroup, b.dataset.tab); return; }
+  if (b.dataset.expand) { S.expanded.has(b.dataset.expand) ? S.expanded.delete(b.dataset.expand) : S.expanded.add(b.dataset.expand); render(); return; }
+  if (b.dataset.srcExpand) { S.srcExpanded.has(b.dataset.srcExpand) ? S.srcExpanded.delete(b.dataset.srcExpand) : S.srcExpanded.add(b.dataset.srcExpand); render(); return; }
+  if (b.dataset.include) { allOrders().find(o => o.id === b.dataset.include).collis.forEach(c => S.sel.add(c.id)); cleanPartials(); render(); return; }
+  if (b.dataset.remove) { S.files = S.files.filter(f => f.id !== +b.dataset.remove); render(); return; }
+  if (b.dataset.retry) { const f = S.files.find(x => x.id === +b.dataset.retry); f.state = 'uploading'; f.pct = 0; simulateUpload(f); render(); return; }
+  if (b.dataset.tool) {
+    const v = b.dataset.val;
+    if (b.dataset.tool === 'state') S.ui = v; else if (b.dataset.tool === 'nc') S.showNc = v === '1'; else S.showBn = v === '1';
+    S.toolsOpen = true; render(); return;
+  }
+  const act = b.dataset.act; if (!act) return;
+  S.toolsOpen = !!e.target.closest('.tools');
+  if (act === 'open-review') { S.reviewOpen = true; S.submitError = ''; render(); document.querySelector('#review [data-act="close-review"].icon-btn')?.focus(); }
+  else if (act === 'close-review') { S.reviewOpen = false; render(); document.getElementById('create-shipment-btn').focus(); }
+  else if (act === 'review-files') { S.reviewOpen = false; S.tab = 'documents'; render(); document.getElementById('tab-main-documents').focus(); }
+  else if (act === 'confirm') confirmCreate();
+  else if (act === 'open-order') { S.orderOpen = true; render(); document.querySelector('#order-modal .icon-btn')?.focus(); }
+  else if (act === 'close-order') { S.orderOpen = false; render(); document.getElementById('create-order-btn')?.focus(); }
+  else if (act === 'create-order') createOrder();
+  else if (act === 'retry') { S.ui = 'default'; render(); }
+  else if (act === 'bulk') { partialOrders().forEach(o => S.partial[o.id] = {reason: S.bulk.reason, remark: S.bulk.remark}); render(); }
+  else if (act === 'notes') { S.notesOpen = !S.notesOpen; render(); }
+  else if (act === 'fill') { fillPreparing(); render(); }
+  else if (act === 'fill-partial') { fillPreparing(); S.sel.delete('HU-DEMO-STOCK-MULTI-A-3'); ['HU-DEMO-STOCK-MULTI-B-1'].forEach(id => S.sel.add(id)); S.purpose = 'NETWORK_TRANSFER'; S.tab = 'orders'; render(); }
+  else if (act === 'fill-arrived') { S.status = 'ARRIVED'; S.purpose = 'NETWORK_TRANSFER'; S.dc = 'GR'; S.dcity = 'ATH'; S.dest = 'ATH-HUB'; S.oc = 'NL'; S.ocity = ''; S.originWh = ''; S.mode = ''; S.histSel = new Set(['PO-0000011','PO-0000012']); S.arrived = '2026-09-28'; render(); }
+  else if (act === 'fail-upload') { S.files.push({id: Date.now(), name:'demo-delivery-scan.pdf', kind:'DOCUMENT', size:'1.2 MB', at: TODAY, state:'error', pct:0}); render(); }
+});
+function fillPreparing() {
+  Object.assign(S, {status:'PREPARING', oc:'GR', ocity:'ATH', originWh:'ATH-HUB', dc:'GR', dcity:'PIR', purpose:'NETWORK_TRANSFER', dest:'PIR-AGENT-HUB', mode:'ROAD', docNo:'CMR-DEMO-3003', partial:{}});
+  S.sel = new Set(['HU-DEMO-STOCK-MULTI-A-1','HU-DEMO-STOCK-MULTI-A-2','HU-DEMO-STOCK-MULTI-A-3','HU-DEMO-STOCK-A-1']);
+}
+function switchTab(group, value) {
+  if (group === 'main') { S.tab = value; const u = new URL(location); u.searchParams.set('tab', value); history.replaceState(null, '', u); }
+  else S.subTab = value;
+  render(); document.getElementById(`tab-${group}-${value}`)?.focus();
+}
+document.addEventListener('keydown', e => {
+  const tab = e.target instanceof Element ? e.target.closest('[role=tab]') : null;
+  if (tab && ['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) {
+    const tabs = [...tab.parentElement.querySelectorAll('[role=tab]')]; let i = tabs.indexOf(tab);
+    i = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    e.preventDefault(); switchTab(tabs[i].dataset.tabGroup, tabs[i].dataset.tab); return;
+  }
+  if (e.target.id === 'file-label' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); document.getElementById('file-input').click(); return; }
+  const modal = document.querySelector('.scrim .modal');
+  if (modal && e.key === 'Escape') { if (S.orderOpen) { S.orderOpen = false; render(); document.getElementById('create-order-btn')?.focus(); } else { S.reviewOpen = false; render(); document.getElementById('create-shipment-btn').focus(); } return; }
+  if (modal && e.key === 'Tab') {
+    const f = [...modal.querySelectorAll('button:not([disabled]),a,input:not([disabled]),select:not([disabled]),iframe')];
+    if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  }
+});
+let fileSeq = 1;
+function addFiles(list) {
+  for (const file of list) {
+    const tooBig = file.size > 25 * 1024 * 1024, empty = file.size === 0;
+    const f = {id: fileSeq++, name: file.name, kind: /^image\//.test(file.type) ? 'PHOTO' : 'DOCUMENT', size: (file.size / 1048576).toFixed(1) + ' MB', at: TODAY, state: tooBig || empty ? 'error' : 'uploading', pct: 0};
+    S.files.push(f); if (f.state === 'uploading') simulateUpload(f);
+  }
+  render();
+}
+function simulateUpload(f) {
+  const tick = () => { if (!S.files.includes(f)) return; f.pct = Math.min(100, f.pct + 25); if (f.pct >= 100) f.state = 'ready'; if (S.tab === 'documents' || S.reviewOpen) render(); if (f.state === 'uploading') setTimeout(tick, 350); };
+  setTimeout(tick, 350);
+}
+function confirmCreate() {
+  if (S.creating || !validation().ok) return;
+  if (S.ui === 'error') { S.submitError = 'The server rejected the shipment: HU-DEMO-STOCK-MULTI-A-2 is already reserved by SH-DEMO-0150. Your draft is unchanged.'; render(); return; }
+  S.creating = true; render();
+  setTimeout(() => { S.creating = false; S.reviewOpen = false; S.toast = tr(isArr() ? 'Simulated: arrival recorded as ARRIVED. Nothing was saved.' : 'Simulated: shipment created as PREPARING. Nothing was saved.'); render(); document.getElementById('create-shipment-btn').focus(); setTimeout(() => { S.toast = ''; render(); }, 5000); }, 600);
+}
+let orderSeq = 13;
+function createOrder() {
+  if (S.creating) return; S.creating = true;
+  const id = 'PO-00000' + orderSeq++, cid = 'HU-DEMO-NEW-' + (orderSeq - 13);
+  S.extraOrders.push({id, status:'IN_STOCK', wh: S.originWh || 'ATH-HUB', client:'Demo Client Company', vessel:'MV Aegean Star', fixture:true, collis:[colli(cid, 'Simulated new order', null, null)]});
+  if (!S.originWh) S.extraOrders[S.extraOrders.length - 1].wh = '__none';
+  S.sel.add(cid); S.orderOpen = false; S.tab = 'orders'; S.subTab = 'po'; S.creating = false; render();
+  document.getElementById('create-order-btn')?.focus();
+}
+render();
+</script>
+</body>
+</html>

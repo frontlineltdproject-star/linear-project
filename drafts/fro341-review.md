@@ -42,6 +42,48 @@ Date: 2026-10-26. Read-only review; no Linear write.
 12. The attached preview requires a ChatGPT sign-in (HTTP 401), so Grigoris and Chris cannot open it. It is not a Cloudflare Pages `fro-341-<hex6>` project and has no recorded project name. Its local source is `shipment-create-preview/`, built with an Oct-13 theme.css copy, hand-rolled components and a custom style.css.
 13. Cloudflare preflight: `wrangler whoami` shows the session is not authenticated, and no Pages-scoped token is set. Step 2b is blocked until one is set.
 
+## Round 1 decisions (accepted 2026-10-26)
+
+1. Rewrite as one standalone spec. Take the latest correction where versions conflict, and reference the FRO-339 release/0.0.2 behaviour instead of re-specifying it.
+2. Drop "Declared pcs". The review counters are Purchase orders · Collis shipping · Collis remaining · Declared gross.
+3. Deep link with `originWarehouseId` prefills origin country/city from that warehouse's city (the only exception). The operator can change them, and the preselected Orders stay selected.
+4. Add blockedBy FRO-316. FRO-341 must not ship before repacking is live in Shipment Details.
+5. Notes are two plain Textareas (FormField + Textarea), submitted with creation; FRO-292 owns storage and visibility.
+6. Warehouses with no city are never offered. When none match, show the production message "No matching warehouse in the selected destination city"; Context for agents notes the address must be completed.
+7. Specify the page through the production components, type scale and tokens. The title uses TopBar (no heading card), and "New component" markers are preview-only.
+8. Rebuild the preview on Cloudflare Pages `fro-341-<hex6>` and replace the chatgpt.site link after approval. This needs a Pages-only token.
+
+## Component map (live client, main 5c51030 / release/0.0.2)
+
+| Element | Production component (source) | Notes |
+| --- | --- | --- |
+| App frame | AppShell header nav (`components/layout/app-shell.tsx`) | unchanged |
+| Page title | `TopBar` (`components/layout/top-bar.tsx`) | title only, no description |
+| Outer tabs and Orders sub-tabs | `Tabs`/`TabList`/`Tab`/`TabPanel` (`components/ui/tabs.tsx`) | Arrow/Home/End keys plus roving tabindex are an **extension** of `Tab` (not present today) |
+| Section cards | `Card`, `CardHeader`, `CardTitle`, `CardBody` (`components/ui/card.tsx`) | |
+| Status, Mode, Purpose, Reason | `Select` (`components/ui/select.tsx`) via `SelectField` (`components/form/select-field.tsx`) | short fixed lists |
+| Countries, cities, warehouses, agents | `Combobox` (`components/ui/combobox.tsx`) | preview uses native select styled as Select |
+| Labels, errors, hints | `FormField`/`Label` (`components/ui/input.tsx`) | |
+| Document type (read-only), Document number, search, remarks | `Input` (`components/ui/input.tsx`) | |
+| Date dispatched / Date arrived | `DatePicker` (`components/ui/date-picker.tsx`) via `date-field.tsx` | preview uses native date input |
+| Notes | `Textarea` (`components/ui/input.tsx`) | |
+| Orders, sources, allocation tables | `Table`/`THead`/`TR`/`TH`/`TD` (`components/ui/table.tsx`), `Checkbox` (`components/ui/choice.tsx`) | |
+| PO status | Purchase-order status pill (`features/purchase-orders/components/purchase-order-status-pill`) per DESIGN.md palette | |
+| Buttons | `Button` primary/secondary/ghost, sizes sm/md/lg (`components/ui/button.tsx`) | Create shipment is the single primary action; Create new order is secondary |
+| Documents | `AttachmentPanel` (`features/attachments/components/attachment-panel.tsx`) | **extension** for pending creation files (FRO-342) |
+| Review and Create Order overlay | `Modal` (`components/ui/modal.tsx`), `MetricCard` (`components/ui/card.tsx`), `Alert` (`components/ui/alert.tsx`), `Badge` (`components/ui/badge.tsx`) | |
+| Loading / errors / toast | `loading-placeholder.tsx`, `ErrorMessage`, `useToast` | |
+| **New compositions** | Status subcard with 4-step indicator; compact partial-selection row; arrived-shipment source table; pending-file rows | composed from the primitives above |
+
+Production labels reused (release/0.0.2): Origin country, Origin city, Destination country, Destination city, Select country, Select city, Select the origin/destination city first, No matching warehouse in the selected destination city, The origin/destination warehouse must be in the selected … city.
+
+## Preview
+
+- Source: `previews/fro341/index.src.html` and `build.py`, with the production Greek labels in `el-labels.json`. It reuses the FRO-335 inline Create Order pages.
+- canvas-design skill: tried first (2026-10-26). It only produces abstract art (.md/.png/.pdf), not an HTML screen, so the canvas was written by hand from the live tokens.
+- Local verification (http://127.0.0.1): no console errors from the page, no failed requests. Desktop and 400px have no page-level horizontal overflow. EN/EL. Default/loading/empty/error states. Checked: deep-link prefill; geography clearing; destination filtering and no-match; duplicate document number; vessel rule; partial decisions (Other needs a remark, include remaining, bulk); Arrived (dates enabled, purpose locked, whole Orders, ARRIVED review); file failure blocks Confirm; Review selected files; submission rejection keeps the draft; tab keys; Escape and focus return; Create new order overlay.
+- Cloudflare Pages deploy: blocked until `CLOUDFLARE_API_TOKEN` (Pages: Edit only) is set.
+
 ## Status
 
-Round 1 questions asked in chat. Recommendations are not decisions.
+Round 1 settled. The preview is verified locally and not yet deployed. The full ticket draft is pending.
