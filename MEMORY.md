@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-341 revision 2 mock branch published from main
+
+- Revision 2 (R1–R7) followed AGENTS.md step 4e: base main 5c51030, unmounted preparation components only, live page unchanged. All four slices approved after review; slice 4 browser check fixed a long-file-name overflow in Documents.
+- User deleted the old revision 1 remote branch (70a75af on release/0.0.2; still kept locally as backup/fro-341-release-0.0.2 and in the bundle) and reconfirmed the ruleset enforcement gap (rulesets still 403 on this plan; push=true, admin=false).
+- Created mock/fro-341-create-shipment-layout from 5c51030 with four commits, each the approved cumulative snapshot: 6895fc4 shell/rules/review gate, 537094c Overview cards, 675f4cb Orders and collis, 1093f0f Documents and Creation review. Pushed with the explicit same-name refspec.
+- Remote verified: head 1093f0fd6450ba33d0442bcb9d087ef8b2d05dcd matches local; 4 ahead / 0 behind main; 17 added files, all under frontline-forwarding-client/src/features/shipments/components/creation/. Checks: Prettier clean, 75 creation tests (full suite 277/277), tsc 0 new errors, build OK. No PR, merge, deployment or Linear change.
+- URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-341-create-shipment-layout. Later modifications go as new reviewed commits on this branch; each push needs fresh approval.
+
 ### 2026-10-26 — FRO-316 branch and previous-UI links added
 
 - User approved four edits. Context for agents: the stale Cloudflare line replaced with the prepared branch (mock/fro-316-shipment-details-ui, 2078b6e) and local review instructions; new "Previous UI" line linking the hosted chatgpt.site preview as historical reference only. Bold around "Measurement rule (FRO-299)" restored.
