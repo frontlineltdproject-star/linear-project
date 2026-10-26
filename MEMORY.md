@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 slice 1 prepared, uncommitted
+
+- User agreed the plan and confirmed the implementation-model checkpoint; asked for slice-by-slice review. Deps: npm install --package-lock=false (lockfile untouched), Node 24.13.
+- Slice 1 in C:/ffx/fro352 (detached main 5c51030, uncommitted, 9 new files under src/features/exports/details/, 1580 insertions): types, export-detail-rules (+test), labels (+test), layout (+test), ui-parts, README. Red: 19/21 rule tests failed on a stub (2 passed trivially against all-false capabilities). Green: 30/30 focused tests. Layout tests written with the component, not Red-first. Prettier, git diff --check and README links pass; tsc shows only the baseline TS2352 casts, now at delivery-note-service.test.ts 134/138. Full suite/build deferred to the end, as planned. Diff in drafts/fro352-slice1.patch. Awaiting slice 1 review.
+
 ### 2026-10-26 — FRO-352 step 4e plan drafted
 
 - Isolated clone C:/ffx/fro352 detached at main 5c51030. Playbook loaded for FRO-352: HEAD 5c51030, policy committed, SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. User confirmed the planning-model checkpoint.
