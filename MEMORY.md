@@ -4,7 +4,7 @@
 
 - User authorized step 4e: prepare mock/fro-350-export-create from main in an isolated copy, verify, and show the full diff before any branch, commit or push.
 - Isolated clone C:/ffx/fro350 detached at main 5c51030 (re-fetched, unchanged). Production playbook loaded: HEAD 5c51030, policy committed, SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc (needed PYTHONUTF8=1 on Windows).
-- Plan in drafts/fro350-frontend-plan.md: new files only under frontline-forwarding-client/src/features/exports/, unmounted, 4 slices, TDD for pure rules, temporary uncommitted browser harness. Waiting for the playbook's planning-model checkpoint and plan agreement; implementation checkpoint follows. No code, branch or commit yet.
+- Plan in drafts/fro350-frontend-plan.md: new files only under frontline-forwarding-client/src/features/exports/, unmounted, 4 slices, TDD for pure rules, temporary uncommitted browser harness. User confirmed the planning-model checkpoint and agreed the plan: build all four slices uncommitted, show the full diff once at the end. Implementation-model checkpoint pending. No code, branch or commit yet.
 
 ### 2026-10-26 — FRO-317 EAD "not later than today" patch saved
 
