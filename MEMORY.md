@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 mock branch published
+
+- User approved creating, committing and pushing, and accepted the ruleset enforcement gap. Re-verified before writing: main still 5c51030, branch absent on the remote, diff hash unchanged (6fe6e01e...).
+- Created mock/fro-350-export-create from 5c51030; one commit ea00f108c9b9a1c41e67b85abc8e419e3bbfb328 "feat(FRO-350): prepare export create UI" (16 added files under frontline-forwarding-client/src/features/exports/, +3,207), byte-identical to the audited diff. Pushed via gh credentials with the explicit same-name refspec.
+- Remote verified: head ea00f10 matches local; 1 ahead / 0 behind main; 16 files, all added, none outside src/features/exports/; remote diff hash equals the audited one. No PR, merge, deployment or Linear change.
+- URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-350-export-create. Later changes go as new reviewed commits on this branch; each push needs fresh approval. Linking the branch in FRO-350 (Context for agents + link attachment) needs a separate approved edit.
+
 ### 2026-10-26 — FRO-350 frontend prepared and verified; push gate pending
 
 - User confirmed the implementation-model checkpoint. Built all four slices uncommitted in C:/ffx/fro350 at main 5c51030: 16 new files only under frontline-forwarding-client/src/features/exports/ (+3,207). TDD Red for the rules (12 behavioural failures) then Green.

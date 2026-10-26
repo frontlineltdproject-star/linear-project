@@ -1,6 +1,6 @@
 # FRO-350 — frontend preparation handoff (step 4e)
 
-Status: **prepared and verified, uncommitted.** No branch, commit or push yet.
+Status: **published** as `mock/fro-350-export-create`, commit `ea00f108c9b9a1c41e67b85abc8e419e3bbfb328` (approved 2026-10-26; remote verified 1 ahead / 0 behind main, 16 added files).
 
 ## Baseline and provenance
 
@@ -56,7 +56,7 @@ Browser (temporary harness, real components and production theme, Vite dev on 12
 
 Housekeeping: the dev server regenerated `src/routeTree.gen.ts` (ordering only); the server was stopped and the file restored. Final status: only the new `src/features/exports/` folder is untracked; nothing else changed.
 
-## Push gate (not yet approved)
+## Push gate (approved and completed)
 
 - Branch: `mock/fro-350-export-create` (does not exist on the remote) from 5c51030; one commit `feat(FRO-350): prepare export create UI`.
 - Command: `git push github mock/fro-350-export-create:mock/fro-350-export-create` (explicit refspec; no force).
