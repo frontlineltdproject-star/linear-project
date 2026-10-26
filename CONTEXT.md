@@ -75,3 +75,12 @@ The warehouse, company or saved address selected to supply loading or destinatio
 
 **Client delivery location**:
 A physical delivery address associated with a commercial Client, distinct from its invoicing companies and their fiscal addresses. A shared delivery location can be associated with more than one Client.
+
+**Export Customs Declaration (Export)**:
+One export customs declaration with its own MRN, belonging to one physical Shipment and one fiscal group. A Shipment can have several Exports; the Export owns its explicitly selected Supplier Invoices, not the Shipment's goods.
+
+**Export type**:
+The Export's procedure, set by the Invoicing company's tax registration: Greek invoicing company or Foreign invoicing company. It is distinct from a Supplier Invoice's own invoice type.
+
+**Shipper (Αποστολέας)**:
+The company shown as sender on an Export: the Invoicing company for a Greek invoicing company Export, the Supplier for a Foreign invoicing company Export. It is distinct from the Order's Client.
