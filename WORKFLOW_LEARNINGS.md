@@ -206,3 +206,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-350 saved rewrite](MEMORY.md#2026-10-26--fro-350-approved-rewrite-saved-fro-317-ead-patch-drafted).
 - Action next time: Before showing a draft for approval, replace bare domain names with plain words (for example "the ChatGPT-hosted preview") or a full URL in backticks.
 - Status: Active.
+
+### 2026-10-26 — Stopping a dev-server task can leave Vite running on Windows
+
+- Problem: After stopping the FRO-350 review server task, the Vite process kept running and its route watcher kept rewriting `src/routeTree.gen.ts`, so restoring the file did not stick and the first diff included a 508-line unrelated change.
+- Evidence: [FRO-350 frontend record](MEMORY.md#2026-10-26--fro-350-frontend-prepared-and-verified-push-gate-pending).
+- Action next time: After stopping a dev server, confirm the port is free (`Get-NetTCPConnection -LocalPort <port>`), then restore generated files and re-run `git status` before producing the audited diff.
+- Status: Active.

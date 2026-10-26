@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 frontend prepared and verified; push gate pending
+
+- User confirmed the implementation-model checkpoint. Built all four slices uncommitted in C:/ffx/fro350 at main 5c51030: 16 new files only under frontline-forwarding-client/src/features/exports/ (+3,207). TDD Red for the rules (12 behavioural failures) then Green.
+- Checks: exports 35/35, full suite 237/237, build OK, tsc only the 2 baseline errors, Prettier and diff-check clean, no secrets. Node 24.13 (22.13 required).
+- Browser check through a temporary harness (removed; copy in the session scratchpad): all scenarios pass, EN/EL, 1280px and 400px, no console errors. Fix during the check: Greek tab labels wrapped; tabs now nowrap with a scrolling row.
+- A leftover Vite dev process kept rewriting src/routeTree.gen.ts; stopped it (the session's own server on 8352) and restored the file.
+- Full diff kept in the session scratchpad only (fro350-frontend-preparation.patch, SHA-256 6fe6e01e...): auto mode refused committing production source to this repo. Handoff drafts/fro350-frontend-handoff.md. Rulesets 403, no protection on main, push=true admin=false. Awaiting approval to create mock/fro-350-export-create, commit and push.
+
 ### 2026-10-26 — FRO-350 step 4e started; planning checkpoint pending
 
 - User authorized step 4e: prepare mock/fro-350-export-create from main in an isolated copy, verify, and show the full diff before any branch, commit or push.
