@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-317 approved description saved and verified
+
+- User approved the exact draft (drafts/fro317-reviewed-spec.md) with the listed metadata. Target re-read unchanged (2026-10-23T09:57:41.333Z) before saving. Full description replaced; labels re-passed (entry note/export/Pending_Review/Integration/Story); blockedBy FRO-321 added (replaces the former related FRO-321 link).
+- Save auto-added related FRO-303/FRO-347/FRO-356 from mentions; removed only those. Final re-read: Todo, same labels, 0.0.10, Pre-releases 0.0.x, all 8 attachments, blocks FRO-350/352, blockedBy FRO-321, original 13 other related links. Linear split the bold around the FRO-319 mention in "Entry Note shared Export (FRO-319):" (cosmetic). Final updatedAt 2026-10-26T12:58:43.839Z.
+- Follow-ups (not started, need separate approval): align FRO-352 (cancel action for managers at Awaiting EAD, Add invoice at Completed, Γ΄ instead of Δ΄ Piraeus template, invoice type matrix) and FRO-350 (type matrix, Free Zone fixture wording); new tickets for the Exports list page, the Shipment Details Create Export action, and the Informative List / Proof of delivery / Pending invoices prints. Starting protocol number is still a release prerequisite. EAD date vs MRN date ordering was not decided.
+- No UI, preview or production branch; canvas/preview/step 4e skipped (presentation owned by FRO-350/352).
+
 ### 2026-10-26 — FRO-317 workflow review started; round 1 pending
 
 - User asked for a full workflow review of FRO-317 (Export Customs Declaration entity), originally written without the workflow. No UI work: presentation stays with FRO-350/FRO-352; canvas/preview/step 4e skipped; no production branch.

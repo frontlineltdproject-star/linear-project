@@ -63,6 +63,8 @@ AGENTS.md remains the authoritative workflow.
   as a related link again, and Linear's re-save can drop bold markers
   next to a mention. Re-check relations after every description save,
   including small patches.
+  FRO-317 (2026-10-26): mentions added related FRO-303/FRO-347/FRO-356;
+  removing them was included in the write approval and succeeded.
 - Status: Active.
 
 ### 2026-10-26 — Parallel sessions share one planning checkout
@@ -186,3 +188,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-341 revision 2 mock branch](MEMORY.md#2026-10-26--fro-341-revision-2-mock-branch-published-from-main).
 - Action next time: Base every mock branch on `main`. When a contract is missing there, build unmounted components on UI view models and record the dependency in the folder README's activation boundary, as FRO-316/335/341 do. Ask the user before implementing on any other base. Before the push gate, run `gh api .../compare/main...<branch>` and show the file list.
 - Status: Active; reinforces [step 4e](AGENTS.md#4e-verified-frontendui-mock-branch--ask-before-creating-it).
+
+### 2026-10-26 — Check the status of every ticket a spec depends on
+
+- Problem: FRO-317 still named FRO-241 as its dependency for invoice types and statuses, but FRO-241 was Canceled and FRO-321 had replaced it with different rules (Not required instead of Exempted, Supplier taken from the Order).
+- Evidence: [FRO-317 review](MEMORY.md#2026-10-26--fro-317-workflow-review-started-round-1-pending).
+- Action next time: At the start of a review, fetch the status of every ticket the spec cites as a dependency or owner. For a Canceled or superseded one, find its replacement and compare the rules before asking questions.
+- Status: Active.
