@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 all four slices verified; branch approval pending
+
+- User approved slice 3 (keep uncommitted). Slice 4: protocol card + Print ΥΔ dialog, stamping (3 stages, per-stage selection, arrows), stamping dialog, documents card + remove dialog, cancel dialog; YdTemplate/YdDocument/PendingUpload types; labels; README controller duties. Red: 18/18 failed on stubs; Green 71/71, plus a stampingMinimumDate rule test added after the code (72 focused).
+- Final checks on Node 24.13: full suite 48 files / 274 tests pass; npm run build passes; tsc only the 2 baseline TS2352 (delivery-note-service.test.ts 134/138); prettier on the folder and git diff --check pass. Build regenerated routeTree.gen.ts (254/254 route-order churn) — restored, excluded.
+- Browser check via a temporary harness (.fro352-harness in the clone with its own vite config; copy in session scratchpad; deleted; launch.json entry removed): details edit/used MRN/focus, customs dialog, invoices add with reasons and save, protocol, stamping dialog, print grouping (2 documents), uploads (valid/empty/type), remove dialog, cancel flow → read-only, viewer role without buttons, EN/EL, 400px no overflow on 4 fixtures × 4 tabs × 2 languages, no console errors. Script-only artefacts (programmatic focus in an unfocused window) noted, not bugs.
+- Final diff: 24 new files under frontline-forwarding-client/src/features/exports/details/, 5676 insertions, nothing outside; C:/ffx/fro352-final.patch SHA-256 2be5a20d4d6a6c4e530c44eeaa8a13626d5b06a469d07dbf447bd21156be3a16. main still 5c51030; remote mock/fro-352-export-details absent; rulesets 403, main protection 404 (enforcement gap). Awaiting explicit approval to create/commit/push.
+
 ### 2026-10-26 — FRO-352 slice 3 prepared, uncommitted
 
 - User approved slice 2 (keep uncommitted). Slice 3 (invoices tab): invoices card (Edit add/remove at EAD, Add invoice add-only after, locked saved rows, New/Paperwork only badges, picker reasons, Escape order, focus moves), Connected Orders card, local SearchPicker in ui-parts, InvoiceUnavailableReason/InvoiceSearchResult types, labels, README. Red: 9/9 failed on stubs; Green: 53/53 focused tests (one test assertion corrected: it queried the still-open picker list, not the table). Prettier, diff --check pass; tsc only the 2 baseline TS2352. Cumulative slices 1–3: 17 new files, 3792 insertions; diff at C:/ffx/fro352-slices-1-3.patch.
