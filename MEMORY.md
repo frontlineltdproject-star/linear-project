@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 previous UI marked as historical reference
+
+- User asked to add the older UI as a historical reference; approved the draft. Pull: up to date. Baseline 14:58:49.364Z unchanged. Context for agents sentence replaced with "**Previous UI (historical reference only):** [Export details preview (ChatGPT-hosted)](…)" (sign-in required, predates the spec; this description wins). Saved 15:01:30Z, labels re-passed.
+- Re-adding the same URL with title "Previous FRO-352 UI (historical reference)" did not rename or duplicate the attachment: Linear kept "Export details — read-only UI preview". Renaming would need delete + re-add (pending user choice). Auto-added related FRO-319 removed; final relations = original set, updatedAt 15:01:43.906Z.
+
 ### 2026-10-26 — FRO-352 branch link added in Linear
 
 - User approved the drafted edit (drafts/fro352-branch-link-edit.md), confirmed again after the exact text was shown in chat. Baseline unchanged (14:17:47.621Z). Patched Context for agents: FRO-350 branch row no longer "(when published)"; new "Prepared frontend branch" paragraph (base 5c51030, head dc8d3a9, activation needs); Gotchas "FRO-347/FRO-350". Added link attachment "Prepared frontend branch — mock/fro-352-export-details"; old ChatGPT preview attachment kept. Labels re-passed.
