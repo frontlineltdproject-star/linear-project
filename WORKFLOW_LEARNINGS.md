@@ -59,6 +59,10 @@ AGENTS.md remains the authoritative workflow.
   approval request. When a draft keeps a related link and also adds a
   blocking link to the same issue, tell the user only the blocking link
   will remain.
+  FRO-316/FRO-325 (2026-10-26): a description patch re-adds every mention
+  as a related link again, and Linear's re-save can drop bold markers
+  next to a mention. Re-check relations after every description save,
+  including small patches.
 - Status: Active.
 
 ### 2026-10-26 — Parallel sessions share one planning checkout

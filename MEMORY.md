@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-316 set Ready; FRO-325 consumer additions saved
+
+- User approved FRO-316 → Ready: labels Shipment/Edited/Frontend/Story/Ready, Todo; description unchanged at that step.
+- FRO-325 targeted review (drafts/fro325-consumer-review.md). Accepted Q1–Q5: targeted edit; live Order display data + root Order on the participation read; readiness/dispatch blocker lists (AC13); omitted load-unit net weight/notes kept; label (≤100, unique per Shipment) and weight rules stated in FRO-325 and added to FRO-316's editor validation.
+- Approved and saved: FRO-325 description from drafts/fro325-consumer-additions.md (updatedAt 09:44:29Z; labels, Todo, 0.0.7 and both attachments unchanged). FRO-316 one-sentence patch in the Validation bullet (09:44:37Z; still Ready). Auto-added related links removed (FRO-325: 295/297/339; FRO-316: 297). Final relations match the original sets.
+- Side effect: re-saving FRO-316 dropped the bold closing marker after "Measurement rule (FRO-299)"; the text is unchanged. Not fixed.
+- Still open: FRO-341 "Preparing" → "Preparing for dispatch"; FRO-316 preview publication (skipped by the user).
+
 ### 2026-10-26 — FRO-316 approved rewrite saved and verified
 
 - User approved the complete displayed draft, metadata changes, attachment removal and relation cleanup. Pre-write read: description unchanged, but updatedAt had moved to 09:00:03Z because the FRO-341 session made FRO-316 block FRO-341 (this replaced the related link). Kept it, since it matches FRO-341's accepted decision 4.
