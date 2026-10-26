@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-317 workflow review started; round 1 pending
+
+- User asked for a full workflow review of FRO-317 (Export Customs Declaration entity), originally written without the workflow. No UI work: presentation stays with FRO-350/FRO-352; canvas/preview/step 4e skipped; no production branch.
+- Baseline: FRO-317 Todo, labels entry note/export/Pending_Review/Integration/Story, milestone 0.0.10, project Pre-releases 0.0.x, updatedAt 2026-10-23T09:57:41.333Z, no comments, 8 attachments, blocks FRO-350/352, no blockers, 14 related. Live main now 5c51030 (ticket cites 3820e89).
+- Facts found: FRO-241 is Canceled (FRO-317 still depends on it; FRO-321 now owns invoices, non-UD = Not required, Supplier derived from Order). Vessel has only id/name; Client link via client_vessel. GREEK vat_number unique in DB, FOREIGN not; vat_number nullable. Attachment owner check allows only Order/Shipment. Shipment statuses PREPARING/DISPATCHED/ARRIVED/CANCELLED/LOCATION_UNKNOWN; cancel only in PREPARING. FRO-319 requires one shared Export for a note's storage invoices. FRO-316 excludes Export grouping, so the Shipment "Create Export" entry point and an Exports list have no owner. Order mrn column is retired by FRO-329.
+- Round 1 questions (Q1–Q12) sent; no decisions yet, no Linear write.
+
 ### 2026-10-26 — FRO-341 branch link and workflow lesson added
 
 - User approved the drafted edits. FRO-341: one Context for agents bullet appended (prepared branch mock/fro-341-create-shipment-layout, base 5c51030, head 1093f0f, unmounted creation components, README activation boundary); link attachment "Prepared frontend branch — mock/fro-341-create-shipment-layout" added. FRO-339 bullet kept (release/0.0.2 still 2 ahead of main).
