@@ -23,6 +23,14 @@
 - Round 1 (Q1–Q10) asked; recommendations are not decisions. Cloudflare still unauthenticated (no Pages token). No Linear writes, no preview yet, no production branch.
 - User accepted all ten recommendations (Q10 typed "pl", then confirmed "ok"). Preview built from production tokens in previews/fro316/ and verified locally; Pages deploy blocked (no token). Full draft drafts/fro316-reviewed-spec.md awaiting approval. Follow-ups: FRO-325 must add Order display metadata + root number to its participation read; FRO-341 label "Preparing" → "Preparing for dispatch". No Linear writes yet.
 
+### 2026-10-26 — FRO-341 step 4e: four UI slices approved; push gate pending
+
+- User authorized step 4e ("Go ahead"), completed both production-playbook model checkpoints and accepted plan D1–D6 (drafts/fro341-frontend-plan.md). Isolated clone in the session scratchpad, remote `github`, detached at release/0.0.2 09394e5218927b54a9fd72f62f98298c0199b46e. Playbook loaded: committed policy b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc.
+- Slices 1–4 each reviewed and approved: page shell + review modal (tabs keyboard opt-in), Overview cards (combined destination hubs, deep-link origin prefill, vessel rule), Orders and Collis (collapsible rows, compact partial rows), Creation review content (4 counters, route facts, checks, allocation). 5 client files, +1208/−1422 ignoring whitespace; no backend/GraphQL/generated/dependency changes.
+- Verification: 208/208 tests (intermittent 5 s timeouts under full-suite load also seen on the base); build passes; only pre-existing tsc (2) and Prettier (5) issues; browser checks against a local fixture API (EN/EL, desktop/400px). The npm ci lock mismatch, Node 24 vs 22.13, and Windows CRLF were handled locally without tracked changes.
+- Final audit: base unchanged, no remote/local 341 branch, all paths client-only, no untracked/secret/debug content, cumulative slice patches rebuild the tree byte-identically. Enforcement gap: account push=true admin=false; rulesets unavailable (403, plan); no branch protection on main or release/0.0.2. Git uses Credential Manager (account unverified), so the proposed push uses gh credentials. Patches are kept in the scratchpad only (production source).
+- Pending: explicit approval to create mock/fro-341-create-shipment-layout with 4 commits and push via an explicit refspec. No Linear status change.
+
 ### 2026-10-26 — FRO-341 approved rewrite saved and verified
 
 - User skipped the Cloudflare step and asked to link the old UI in the ticket as a historical reference. Spec check and full draft in drafts/fro341-reviewed-spec.md; the user approved it with the listed metadata changes and cleanup of automatic relations.
