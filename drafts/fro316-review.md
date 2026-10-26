@@ -81,3 +81,7 @@ Q1 rewrite scope · Q2 tabs · Q3 heading · Q4 status presentation and PREPARIN
 - canvas-design skill not retried: on FRO-341 (same day) it produced abstract art only, so the canvas was hand-written from live tokens/components (`previews/fro316/`, build with `python -I build.py ../fro341/el-labels.json <out>`).
 - Local verification at http://127.0.0.1:8316: zero console errors, no failed requests; no page overflow at 400px or 1280px across 10 scenarios × 5 tabs × EN/EL; loading/empty/error/view-only states. Flows: packing validation → review → Ready → Dispatch; doc-only edit keeps Ready; mode change keep/replace/clear; Ready warning; delivery-note reconciliation; participation (emptied unit, partial reason/remark, added colli individual); failed save keeps draft; Escape/focus return; tab keys; View history highlight.
 - Cloudflare Pages deploy blocked: wrangler unauthenticated, no CLOUDFLARE_API_TOKEN.
+
+## Saved (2026-10-26)
+
+Approved and saved at 09:28:34Z; FRO-297 auto-relation removed at 09:29:05Z. Three outdated attachments removed. Verified against the approved draft after normalization. FRO-341 now blocked by FRO-316 (set by the FRO-341 session before this write; preserved).

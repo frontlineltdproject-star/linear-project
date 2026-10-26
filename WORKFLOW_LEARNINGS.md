@@ -73,6 +73,9 @@ AGENTS.md remains the authoritative workflow.
   `git status`/`git log` and other active sessions for linked tickets.
   Coordinate overlapping ownership before asking the user to decide.
   Commit with explicit paths, and check what is already staged first.
+  FRO-316 (2026-10-26): the FRO-341 session changed FRO-316's relations
+  between the review read and the write. Re-read the target right before
+  saving and compare updatedAt, description and relations with the baseline.
 - Status: Active.
 
 ### 2026-10-21 — A linked redesign may arrive too late for the feature
