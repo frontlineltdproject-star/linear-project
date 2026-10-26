@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 previous UI reference added; attachment rename pending
+
+- User approved drafts/fro350-previous-ui-edit.md (edits 1 and 2). Baseline 14:10:14.754Z unchanged.
+- Edit 1 saved once (idempotent anchor): Context for agents now has "Previous UI (historical reference only)" linking the ChatGPT-hosted preview (401 signed out) and marking the FRO-317 previews and retained-requirements document historical. Save re-added related FRO-319/FRO-321; removed. Verified 14:16:04.923Z: Ready/Todo, relations original set, 8 attachments.
+- Edit 2 not done: re-adding the link with a new title does not rename it, and the connector has no attachment-update tool. Options asked: remove and re-add the link with the new title, rename it in Linear by hand, or keep the old title.
+
 ### 2026-10-26 — FRO-350 marked Ready
 
 - User instructed replacing Pending_Review with Ready, status Todo, everything else unchanged. Baseline 14:07:56.093Z unchanged before writing.
