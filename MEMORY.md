@@ -1,5 +1,15 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-300 reviewed, rewritten and verified
+
+- Mandatory planning pull succeeded. Read full FRO-300 (updatedAt 2026-10-20T11:10:31.791Z; Todo, Ready/Shipment, Chris, No priority, 0.0.9, blocks 316, related 325/299, no attachments/comments), FRO-316, FRO-341, FRO-325, FRO-299. Live source main 5c51030680c9d45b3827a7e19b8320c19aa5ed9a via gh.
+- User: ticket was not created through the workflow; no new UI (FRO-316/FRO-341 own presentation); no production branch. Canvas/preview and step 4e skipped.
+- Findings in drafts/fro300-review.md: "unpacked" collides with the colli Unpacked flag; measurement source (declared vs warehouse-confirmed) unspecified; Shipment read lacks per-colli measurements/description, so Details review needs a read extension with an owner; row content/order and child/root display undefined; missing exactly-once invariant, saved-vs-reviewed consistency, out-of-scope, decisions, context and verification sections. FRO-299 still describes retired wizard steps (flagged only).
+- Round 1 (Q1–Q5) asked; recommendations are not decisions. No Linear writes. Preserve unrelated FRO-326 local changes.
+- Round 2 (Q6–Q9) accepted: FRO-299 owns the Shipment measurement read (consistent with the concurrent FRO-299 session's unsaved draft); FRO-300 consumes it, adds blockedBy FRO-299; latest confirmed measurement at any warehouse, per-value, declared fallback with marker; labels Ready/Shipment/Frontend/Story/Edited; title "Shipment Details — list individual collis in Review repacking". Decisions messaged to the FRO-299 session. Glossary term Individual colli added. Full draft drafts/fro300-reviewed-spec.md awaiting approval. Commit/push was blocked by the auto-mode permission check; changes staged only.
+- Approved and saved 2026-10-26: FRO-300 updated (08:15:14Z) from drafts/fro300-reviewed-spec.md with new title, labels Shipment/Edited/Ready/Frontend/Story, blockedBy FRO-299. Re-read matched after normalization; removed only auto-added related FRO-297/FRO-341 and re-read. Final relations: blocks 316, blockedBy 299, related 325 (related 299 became the blocking link). Todo/Chris/no priority/0.0.9/no attachments unchanged. FRO-299 still Pending_Review, so the blocker is not yet Ready.
+- Follow-ups noted, not done: FRO-316 Review repacking text still says "permanent ID/name"/"recorded dimensions" and should reference FRO-299/FRO-300's resolved values (separate reviewed edit). Root/parent Order reference is not on the Shipment read; FRO-316's Colli allocation must source it.
+
 ### 2026-10-23 — FRO-320 approved replacement saved and verified
 
 - User approved the complete displayed draft with "ok". Required pull succeeded; current320 baseline unchanged. Saved drafts/fro320-reviewed-spec.md with Ready/Shipment labels.

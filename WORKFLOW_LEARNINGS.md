@@ -49,9 +49,30 @@ AGENTS.md remains the authoritative workflow.
   FRO-307 relation removal then failed automatic approval review under
   description-only authorization.
 - Evidence: [FRO-307 saved-description and relation-cleanup record](MEMORY.md#2026-10-21--fro-307-approved-description-saved-relation-cleanup-blocked).
+  FRO-300 (2026-10-26): mentions added related FRO-297/FRO-341, and adding
+  blockedBy FRO-299 replaced the existing related FRO-299 link, because
+  Linear keeps one relation per issue pair
+  ([FRO-300 record](MEMORY.md#2026-10-26--fro-300-reviewed-rewritten-and-verified)).
 - Action next time: Compare saved relations with the approved set. Report
   unexpected additions and resolve cleanup authorization before attempting
-  another write.
+  another write. Include cleanup of automatic additions in the write
+  approval request. When a draft keeps a related link and also adds a
+  blocking link to the same issue, tell the user only the blocking link
+  will remain.
+- Status: Active.
+
+### 2026-10-26 — Parallel sessions share one planning checkout
+
+- Problem: The FRO-299 and FRO-300 sessions ran at the same time in the
+  same folder and their decisions overlapped. The FRO-299 commit included
+  files the FRO-300 session had staged. Both sessions had drafted the same
+  read-contract ownership.
+- Evidence: commit `ce2cff9`;
+  [FRO-300 record](MEMORY.md#2026-10-26--fro-300-reviewed-rewritten-and-verified).
+- Action next time: At the start and before each decision round, check
+  `git status`/`git log` and other active sessions for linked tickets.
+  Coordinate overlapping ownership before asking the user to decide.
+  Commit with explicit paths, and check what is already staged first.
 - Status: Active.
 
 ### 2026-10-21 — A linked redesign may arrive too late for the feature

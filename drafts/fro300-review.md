@@ -48,3 +48,17 @@ Round 1 asked 2026-10-26. User accepted all five recommendations:
 - Linear Area labels (Frontend / Backend) are single-select.
 
 Round 2 asked: Q6 read ownership vs FRO-299, Q7 measurement rule refinement, Q8 labels/relations, Q9 coordination with the FRO-299 session.
+
+Round 2 (2026-10-26), all accepted: Q6 FRO-299 owns the read, FRO-300 consumes and adds blockedBy FRO-299; Q7 most recent confirmed value at any warehouse, dimensions/weight independent, declared fallback with marker; Q8 labels Ready/Shipment/Frontend/Story/Edited, Todo, Chris, new title, relations blocks 316, blockedBy 299, related 325/299; Q9 decisions sent to the FRO-299 session (no reply yet).
+
+## Draft
+
+Complete standalone replacement: `drafts/fro300-reviewed-spec.md`. Awaiting full-text approval before any Linear write. Possible automatic relations from mentions (FRO-341, FRO-297) must be compared after save.
+
+## Saved and verified (2026-10-26)
+
+- User approved the complete displayed draft and metadata, including removal of automatically added relations.
+- Saved `drafts/fro300-reviewed-spec.md` to FRO-300 (updatedAt 2026-10-26T08:15:14.662Z). Title "Shipment Details — list individual collis in Review repacking"; labels Shipment, Edited, Ready, Frontend, Story; blockedBy FRO-299 added.
+- Re-read: description matches the approved text after Linear mention/escape normalization (`<issue>` tags, `\~`). Linear auto-added related FRO-297 and FRO-341; removed only those two and re-read (updatedAt 08:15:29.920Z).
+- Final metadata: Todo, Chris, No priority, Pre-releases 0.0.x / 0.0.9, no attachments/documents; blocks FRO-316; blockedBy FRO-299; related FRO-325. The earlier related FRO-299 link is now the blockedBy link (Linear keeps one relation per issue pair).
+- No UI, preview, production branch, production code or database action. FRO-299 remains Pending_Review.
