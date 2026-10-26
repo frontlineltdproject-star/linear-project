@@ -6,6 +6,9 @@
 - Findings in drafts/fro350-review.md: patch-stack text; agreed chatgpt.site preview returns 401; misaligned with saved FRO-317 (MRN rules, EAD >= MRN date, Greek >=1 invoice, type matrix, Entry Note shared Export, full blocking list, Company-record grouping); "Free Zone" fixture; production identifier is shipmentNumber and search is number/transport doc; entry points unowned; post-create, duplicate, cancel, invoice-table columns, picker eligibility and access undefined.
 - Read-only production clone at C:/ffx/fro350 (short path; scratchpad path too long for git on Windows). Cloudflare token not set.
 - Round 1 (Q1-Q12) asked; recommendations are not decisions. No Linear writes, no preview, no branch.
+- User accepted all Q1-Q12 as recommended: full rewrite; align to FRO-317; EAD date not after today (needs a one-line FRO-317 patch, separate approval); fixture storage invoice; Shipment number search excluding CANCELLED; entry buttons are follow-ups; result + Open Export + post-create uploads with Retry, unknown-outcome check; duplicate -> Open existing; Cancel/unload guard; invoice columns with Source and Paperwork only badge; picker reasons; preview local + mock/fro-350-export-create (client-only, unmounted, src/features/exports/).
+- Preview rebuilt from production tokens: previews/fro350 (base.css from fro316, app.js, build.py). Single direction (design already agreed). Verified locally: search, auto-select, preview toggle, invoices/VAT/Orders, picker reasons, validation focus, replace/cancel modals, outcomes, loading/empty/error, EN/EL, 400px no overflow, no console errors. Not deployed (no Cloudflare token). .claude/launch.json added for the local server.
+- Full draft drafts/fro350-reviewed-spec.md shown for approval. No Linear write yet.
 
 ### 2026-10-26 — FRO-317 marked Ready; EAD/MRN rule pending text approval
 
