@@ -6,6 +6,27 @@
 - Pre-write baseline unchanged (08:15:29.875Z). Saved 09:00:03Z: labels Shipment/Edited/Pending_Review/Frontend/Story, blockedBy FRO-316 (the related link became the blocker). The save automatically added related FRO-295 (from a mention); it was removed, final updatedAt 09:00:21.347Z. Re-read: description matches after Linear normalization; Todo, 0.0.9, project, no assignee/priority and the single chatgpt.site attachment unchanged; the 8 original blockers and 7 remaining related links kept.
 - Not done: no Ready promotion; FRO-316 field-mapping label alignment ("Country of origin" vs the production "Origin country") is a possible separate edit. Local commits 22b43e2/4c1746e plus this record are unpushed because auto-mode refused pushing production-derived preview files; awaiting the user's decision.
 
+### 2026-10-26 — FRO-316 approved rewrite saved and verified
+
+- User approved the complete displayed draft, metadata changes, attachment removal and relation cleanup. Pre-write read: description unchanged, but updatedAt had moved to 09:00:03Z because the FRO-341 session made FRO-316 block FRO-341 (this replaced the related link). Kept it, since it matches FRO-341's accepted decision 4.
+- Saved drafts/fro316-reviewed-spec.md. Title "Shipment Details — Page Redesign"; labels Shipment/Edited/Frontend/Story/Pending_Review (Ready removed until the user approves it for Chris). Todo, Chris, no priority, Pre-releases 0.0.x / 0.0.9 unchanged.
+- Removed attachments: the uploaded "Revised Shipment detail proposal" HTML, fro-316-09642d.pages.dev and fro-315-4aadaf.pages.dev. Kept the 22 Sep screenshot. The save auto-added related FRO-297; removed it. Final updatedAt 2026-10-26T09:29:05.789Z. Relations: blockedBy 345/299/344/300/339/324/325/292; blocks 341; related 350/343/342/240/320/309/315/307/326/323/317.
+- Re-read matched the approved text after Linear normalization (issue tags, <url> links, escaped brackets).
+- Pending: publish the preview to Pages fro-316-<hex6> (needs CLOUDFLARE_API_TOKEN), then attach it and replace the placeholder in Context for agents. FRO-325 edit for Order display metadata/root number. FRO-341 label alignment. Planning repo pushed on the user's explicit instruction (4c5b995); these memory entries are committed separately, leaving the FRO-326 session's uncommitted MEMORY.md edits untouched.
+
+### 2026-10-26 — FRO-316 review started; round 1 pending
+
+- User: FRO-316 was not created through the workflow; review gaps and rebuild the UI from the production design system. Planning pull succeeded. Read the full description (278 lines; updatedAt 2026-10-21T12:33:27.612Z; Todo, Ready/Shipment, Chris, 0.0.9, 8 blockers, 12 related, 4 attachments, no comments). Live main 5c51030; release/0.0.2 09394e5 (FRO-339).
+- Findings in drafts/fro316-review.md: patch-stack text with preview narration; History & activity tab missing (FRO-345); Order metadata (owner ref/client/vessel/supplier/root number) not on the Shipment read and unowned; FRO-299 measurement rule not applied; DG count and Final handover would be dropped; packing Save vs Confirm flow; blocking reasons; FRO-344 delivery-note reconciliation; historical ARRIVED delivery-note ineligibility; heading/stepper/PREPARING-label conflicts with FRO-341/FRO-326; stale attachments (fro-316-09642d now serves a FRO-315 page).
+- Round 1 (Q1–Q10) asked; recommendations are not decisions. Cloudflare still unauthenticated (no Pages token). No Linear writes, no preview yet, no production branch.
+- User accepted all ten recommendations (Q10 typed "pl", then confirmed "ok"). Preview built from production tokens in previews/fro316/ and verified locally; Pages deploy blocked (no token). Full draft drafts/fro316-reviewed-spec.md awaiting approval. Follow-ups: FRO-325 must add Order display metadata + root number to its participation read; FRO-341 label "Preparing" → "Preparing for dispatch". No Linear writes yet.
+
+### 2026-10-26 — FRO-341 approved rewrite saved and verified
+
+- User skipped the Cloudflare step and asked to link the old UI in the ticket as a historical reference. Spec check and full draft in drafts/fro341-reviewed-spec.md; the user approved it with the listed metadata changes and cleanup of automatic relations.
+- Pre-write baseline unchanged (08:15:29.875Z). Saved 09:00:03Z: labels Shipment/Edited/Pending_Review/Frontend/Story, blockedBy FRO-316 (the related link became the blocker). The save automatically added related FRO-295 (from a mention); it was removed, final updatedAt 09:00:21.347Z. Re-read: description matches after Linear normalization; Todo, 0.0.9, project, no assignee/priority and the single chatgpt.site attachment unchanged; the 8 original blockers and 7 remaining related links kept.
+- Not done: no Ready promotion; FRO-316 field-mapping label alignment ("Country of origin" vs the production "Origin country") is a possible separate edit. Local commits 22b43e2/4c1746e plus this record are unpushed because auto-mode refused pushing production-derived preview files; awaiting the user's decision.
+
 ### 2026-10-26 — FRO-341 round 1 settled; preview rebuilt locally
 
 - User accepted all eight round-1 recommendations: full standalone rewrite; drop Declared pcs; deep-link origin prefill; blockedBy FRO-316; plain Notes textareas; warehouses with no city never offered; production components/TopBar with preview-only annotations; Cloudflare Pages preview.
