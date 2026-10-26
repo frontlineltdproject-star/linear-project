@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FRO-316 · Shipment details preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+__CSS__
+/* ---------- FRO-316 additions (composed from the same tokens) ---------- */
+.card-head-actions{display:flex;align-items:center;gap:.5rem}
+.facts4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.875rem 1.25rem;margin:0}
+@media (max-width:1100px){.facts4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.facts4{grid-template-columns:minmax(0,1fr)}}
+.facts4 dt,.facts dt{font-size:.75rem;font-weight:600;color:var(--fg-muted)}
+.facts4 dd{margin:0;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;border-top:1px solid var(--border);padding-top:.75rem;font-size:.75rem;color:var(--fg-muted)}
+.marker{color:var(--fg-subtle);font-size:.75rem;margin-left:.25rem}
+.status-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem}
+.status-value{font-size:.9375rem;font-weight:600}
+.step.done{border-top-color:var(--accent);color:var(--fg)}
+.step.done .num{border-color:var(--accent);color:var(--accent-strong);background:var(--accent-subtle)}
+.exception{display:flex;gap:.625rem;align-items:flex-start;margin-top:.75rem}
+.reasons{margin:.5rem 0 0;padding-left:1.1rem;font-size:.8125rem;color:var(--fg-muted)}
+.status-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.5rem;margin-top:.75rem}
+.notes-text{white-space:pre-wrap;margin:0;font-size:.875rem}
+.sub{border:1px solid var(--border);border-radius:var(--radius-md);padding:.875rem}
+.sub-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.edit-foot{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.5rem;margin-top:.75rem}
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(18rem,1fr));gap:.75rem}
+.pkg{border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
+.pkg-head{display:flex;justify-content:space-between;gap:.5rem;padding:.625rem .75rem;border-bottom:1px solid var(--border);background:var(--canvas);border-radius:var(--radius-md) var(--radius-md) 0 0}
+.pkg-list{list-style:none;margin:0;padding:0}
+.pkg-list li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.5rem;padding:.375rem .75rem;border-bottom:1px solid var(--border);font-size:.8125rem}
+.pkg-list li:last-child{border-bottom:0}
+.pkg-list .hdr{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.025em;color:var(--fg-muted)}
+a.link{color:var(--accent-active);text-decoration:none;font-weight:600}a.link:hover{text-decoration:underline}
+a.link-quiet{color:var(--fg-muted);text-decoration:none}a.link-quiet:hover{text-decoration:underline}
+.unit-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:.75rem;background:var(--surface)}
+.unit-grid{display:grid;grid-template-columns:minmax(8rem,1fr) minmax(8rem,1fr) repeat(4,minmax(5rem,.6fr)) auto;gap:.5rem .75rem;align-items:end}
+@media (max-width:900px){.unit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.assign-row{display:grid;grid-template-columns:minmax(10rem,1.4fr) minmax(7rem,.8fr) minmax(8rem,.9fr) minmax(5rem,.6fr) minmax(12rem,1.2fr);gap:.75rem;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.8125rem}
+.assign-scroll{overflow-x:auto}.assign-inner{min-width:46rem}
+.order-group{margin-top:.75rem}.order-group>h4{margin:0 0 .25rem;font-size:.8125rem}
+.history-row{display:grid;grid-template-columns:minmax(9rem,auto) minmax(0,1fr);gap:.25rem 1rem;padding:.625rem 0;border-bottom:1px solid var(--border);font-size:.8125rem}
+.history-row:last-child{border-bottom:0}
+.history-row.hl{background:var(--accent-subtle);border-radius:var(--radius-md);padding-left:.5rem;padding-right:.5rem}
+@media (max-width:640px){.history-row{grid-template-columns:minmax(0,1fr)}}
+.action-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem}
+.dn-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:.875rem}
+.tone-danger-border{border-color:var(--danger)}
+.counter{font-size:.75rem;color:var(--fg-subtle);text-align:right}
+</style>
+</head>
+<body>
+<div class="sim-banner" id="sim-banner"></div>
+<div id="app"></div>
+<script>
+const EL = __EL_JSON__;
+</script>
+<script>
+__APP_JS__
+</script>
+</body>
+</html>
