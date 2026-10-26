@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-352 branch link added in Linear
+
+- User approved the drafted edit (drafts/fro352-branch-link-edit.md), confirmed again after the exact text was shown in chat. Baseline unchanged (14:17:47.621Z). Patched Context for agents: FRO-350 branch row no longer "(when published)"; new "Prepared frontend branch" paragraph (base 5c51030, head dc8d3a9, activation needs); Gotchas "FRO-347/FRO-350". Added link attachment "Prepared frontend branch — mock/fro-352-export-details"; old ChatGPT preview attachment kept. Labels re-passed.
+- Save auto-added related FRO-319; removed only that. Final re-read: Todo, labels export/Pending_Review/Frontend/Story, blockedBy FRO-317, related 350/348/354/353/347/321, 2 attachments, updatedAt 2026-10-26T14:58:49.364Z. Linear rendered some untouched mentions as plain links (FRO-317 in the attachments row, FRO-347 and FRO-319 in Gotchas) — cosmetic.
+
 ### 2026-10-26 — FRO-352 mock branch pushed and verified
 
 - User approved creating mock/fro-352-export-details from 5c51030 with one commit per slice and pushing with the explicit refspec, and accepted the branch-protection gap for this branch.
