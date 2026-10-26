@@ -1,11 +1,5 @@
 # Linear — ticket creation and editing memory
 
-### 2026-10-26 — FRO-341 approved rewrite saved and verified
-
-- User skipped the Cloudflare step and asked to link the old UI in the ticket as a historical reference. Spec check and full draft in drafts/fro341-reviewed-spec.md; the user approved it with the listed metadata changes and cleanup of automatic relations.
-- Pre-write baseline unchanged (08:15:29.875Z). Saved 09:00:03Z: labels Shipment/Edited/Pending_Review/Frontend/Story, blockedBy FRO-316 (the related link became the blocker). The save automatically added related FRO-295 (from a mention); it was removed, final updatedAt 09:00:21.347Z. Re-read: description matches after Linear normalization; Todo, 0.0.9, project, no assignee/priority and the single chatgpt.site attachment unchanged; the 8 original blockers and 7 remaining related links kept.
-- Not done: no Ready promotion; FRO-316 field-mapping label alignment ("Country of origin" vs the production "Origin country") is a possible separate edit. Local commits 22b43e2/4c1746e plus this record are unpushed because auto-mode refused pushing production-derived preview files; awaiting the user's decision.
-
 ### 2026-10-26 — FRO-316 approved rewrite saved and verified
 
 - User approved the complete displayed draft, metadata changes, attachment removal and relation cleanup. Pre-write read: description unchanged, but updatedAt had moved to 09:00:03Z because the FRO-341 session made FRO-316 block FRO-341 (this replaced the related link). Kept it, since it matches FRO-341's accepted decision 4.
