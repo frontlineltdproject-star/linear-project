@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 marked Ready
+
+- User instructed replacing Pending_Review with Ready, status Todo, everything else unchanged. Baseline 14:07:56.093Z unchanged before writing.
+- Re-read (updatedAt 2026-10-26T14:10:14.754Z): labels export/Ready/Frontend/Story; Todo; description unchanged; 8 attachments; blockedBy FRO-317; related 348/347/353/352/341/316. No relation side effects.
+- Still open (not started): Cloudflare Pages preview (no token); follow-up tickets for the Exports list page, the Shipment Details Create Export button and the prints; FRO-352 alignment with FRO-317. FRO-321 is still Pending_Review.
+
 ### 2026-10-26 — FRO-350 branch link saved
 
 - User approved edits 1-3 (drafts/fro350-branch-link-edit.md). Baseline unchanged (13:36:02.589Z) before writing.
