@@ -130,3 +130,10 @@ AGENTS.md remains the authoritative workflow.
   and interview step linked below.
 - Status: Incorporated into [Mandatory Linear workflow](AGENTS.md#mandatory-linear-workflow)
   and [step 1: Grill the request](AGENTS.md#1-grill-the-request).
+
+### 2026-10-26 — A display requirement moved to a new screen may lose its data source
+
+- Problem: FRO-299 asked to show colli measurements in the wizard, which received them from the creation candidate read. Its replacement screen (FRO-316 Shipment Details) reads `ShipmentContent`, which has no measurements; FRO-300 had the same unowned gap.
+- Evidence: [FRO-299 review](MEMORY.md#2026-10-26--fro-299-reviewed-rewritten-and-verified).
+- Action next time: When a UI requirement moves to a redesigned screen, check that screen's actual read contract for every displayed value and assign an owner for missing fields.
+- Status: Active.

@@ -52,6 +52,10 @@ The retired declared piece quantity within a colli. It is distinct from the numb
 **Per-colli Notes**:
 The retired general free-text note for an individual colli. It is distinct from the colli's contents Description, Order Internal/External Notes and dedicated UN / DG details.
 
+**Individual colli (Μεμονωμένο κόλι)**:
+A participating colli of a Shipment that is not inside any load unit and travels as its own transport piece. It is distinct from the colli flag Unpacked, which means the goods arrived without packaging.
+_Avoid_: unpacked colli, loose colli
+
 **Transport pieces**:
 The physical packages presented for transport: individually shipped collis plus shipment load units. Collis inside a load unit are not counted again as individual transport pieces.
 
