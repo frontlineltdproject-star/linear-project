@@ -213,3 +213,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-350 frontend record](MEMORY.md#2026-10-26--fro-350-frontend-prepared-and-verified-push-gate-pending).
 - Action next time: After stopping a dev server, confirm the port is free (`Get-NetTCPConnection -LocalPort <port>`), then restore generated files and re-run `git status` before producing the audited diff.
 - Status: Active.
+
+### 2026-10-26 — Linear connector reads can be stale right after a write
+
+- Problem: After a FRO-350 patch, the save response and several reads showed the previous version, so a retry applied the same insertion twice and duplicated a paragraph. Reads alternated between old and new `updatedAt` values.
+- Evidence: [FRO-350 branch link record](MEMORY.md#2026-10-26--fro-350-branch-link-saved).
+- Action next time: Never retry a description patch because a response looks unchanged. Re-read until `updatedAt` is newer than the baseline, and trust only the read with the newest `updatedAt`. Make retry patches idempotent (anchor on text that disappears once the edit applies).
+- Status: Active.

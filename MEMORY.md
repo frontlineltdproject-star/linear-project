@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-26 — FRO-350 branch link saved
+
+- User approved edits 1-3 (drafts/fro350-branch-link-edit.md). Baseline unchanged (13:36:02.589Z) before writing.
+- Saved: Context for agents "Prepared frontend branch" paragraph (mock/fro-350-export-create, base 5c51030, head ea00f10); link attachment "Prepared frontend branch — mock/fro-350-export-create"; wording "The attached ChatGPT-hosted creation preview" replaces Linear's chatgpt.site auto-link.
+- Incident: the first save's response (and several reads) were stale, so I retried the text patch; the retry duplicated the branch paragraph. Removed the duplicate (approved text restored). Each description save re-added related FRO-319/FRO-321; removed after the last save.
+- Final verified (updatedAt 2026-10-26T14:07:56.093Z): one branch paragraph, new wording, 8 attachments (7 original + branch link), labels export/Pending_Review/Frontend/Story, Todo, blockedBy FRO-317, related 348/347/353/352/341/316. Cosmetic: the two FRO-317 mentions in the preview sentence now render as Markdown links.
+
 ### 2026-10-26 — FRO-350 mock branch published
 
 - User approved creating, committing and pushing, and accepted the ruleset enforcement gap. Re-verified before writing: main still 5c51030, branch absent on the remote, diff hash unchanged (6fe6e01e...).
