@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fro350-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-I", "-m", "http.server", "8350", "--bind", "127.0.0.1", "--directory", "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/2ea8b5ee-b370-424e-ae4b-6b480d15feb2/scratchpad/preview"],
+      "port": 8350
+    }
+  ]
+}
