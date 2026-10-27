@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-355 workflow review started, round 1 pending
+
+- User: FRO-355 (Order Details — Create or open Customs Storage Entry) was not created through the workflow; review for gaps. No new UI (FRO-326 hosts the card; FRO-353/354 own the target pages); no production branch. Canvas/preview/step 4e skipped. Pull: up to date.
+- Baseline: Todo, labels entry note/Order/Pending_Review/Frontend/Story, 0.0.11, Pre-releases 0.0.x, updatedAt 2026-10-27T07:53:59.772Z, no comments, blocks FRO-326, blockedBy FRO-319/353/354, related FRO-349, 1 attachment (ChatGPT-hosted "Entry Note action preview", historical). Main 5c51030; FRO-356 still on unmerged chriskazakos/fro-356-order-customs-regime (5 ahead).
+- Grounded: mock/fro-326-order-details-ui already has OrderDocumentAction (kind 'entry', states loading/error/denied/create/open/disabled, denied hides the card, "Owning Order" caption) with "Entry Note" labels. Shipment-preparation partial split creates an IN_STOCK child with preserved stock time (purchase-order-colli-journey.md); manual splits only in PENDING/EXPECTED_READINESS/READY. PURCHASE_ORDER_VIEW gives partners participant-scoped Order reads.
+- Gaps raised (Q1–Q9): FRO-355 0.0.11 blocks FRO-326 0.0.5 (dependency direction/milestone); post-admission split child when the ancestor has no entry yet; state precedence (Open beats ineligible, e.g. cancelled covered child); eligibility-with-reason read not listed in FRO-319 retrieval; permission presentation incl. partners; post-create destination (FRO-353 silent too); owning-Order/entry number on the card; EN/EL reason strings; house-style rewrite (no Decisions/Context, stale 3820e89, preview narration). Side observation: FRO-319 says manual splits can follow admission; repo allows manual splits only before stock.
+- No Linear write. Awaiting round 1 answers.
+
 ### 2026-10-27 — FRO-319 approved for development (Ready)
 
 - User approved FRO-319 for the developer. Saved 08:07:00Z: status Todo, labels entry note/Backend/Story/Ready (Pending_Review removed via removeLabels/addLabels); description, milestone 0.0.11 and relations unchanged.
