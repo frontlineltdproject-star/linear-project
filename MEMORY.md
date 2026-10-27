@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-358 created; entity renamed Customs Storage Entry
+
+- User decided (option A) to rename the portal entity: section **Customs Storage / Τελωνειακή Αποθήκευση**, record **Customs Storage Entry**, Greek label stays **Δελτίο Εισόδου**. "Customs Warehousing" rejected because the FRO-356 code uses CUSTOMS_WAREHOUSING for Αποταμίευση (CUSTOMS_STORAGE = Αποθήκευση). CONTEXT.md updated.
+- Created FRO-358 "Customs Storage — entries list, active register output & recipient copies (UI)" from drafts/customs-storage-list-register-spec.md, 2026-10-27T07:46:35Z: Backlog, Frontend/Story/Pending_Review/entry note, Pre-releases 0.0.x, no milestone, blockedBy FRO-319, related FRO-353/354/248 (verified; no extra relations). Decisions: five recipient-copy choices on FRO-248 templates; all invoices printed; prints from current data, nothing stored; register as landscape PDF + .xlsx (18 columns, "Ελλείψεις" sheet); list with Active cases only filter, no status badge; staff-only; screens EN/EL, prints Greek; design round (canvas + Pages preview) required before implementation. Repo: OpenHTML PDF service exists (delivery notes), no Excel library.
+- Next (needs approval): rename sweep "Entry Note" → "Customs Storage Entry" in FRO-319/353/354/355 combined with FRO-319's alignment changes for FRO-353/354/355 (eligible-Order search, warehouse-prefilled permit/operator, unknown weight/missing depositor/currency display, Print button on FRO-354 for FRO-358).
+
 ### 2026-10-27 — FRO-319 reviewed, rewritten and saved
 
 - User: FRO-319 (Entry Note entity) was not created through the workflow; review for gaps, no UI (FRO-353/354 own presentation), no production branch. Canvas/preview/4e skipped. Baseline: Todo, Backend/Story, 0.0.11, updatedAt 2026-10-26T15:01:43.918Z, no comments. Main 5c51030; FRO-356 lives on unmerged branch chriskazakos/fro-356-order-customs-regime (defines storage admission, CUSTOMS_STORAGE, warehouse licences, expects FRO-319 regime-correction check).
