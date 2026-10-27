@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 branch link saved
+
+- User approved drafts/fro354-branch-link-edit.md. Baseline unchanged (10:18:15.474Z). Saved 10:42:41Z: Context for agents branch line now links mock/fro-354-customs-storage-entry-details (base 5c51030, head 7f65b41, 15 files) with activation needs; link attachment "Prepared frontend branch — mock/fro-354-customs-storage-entry-details" added; labels re-passed.
+- Save auto-added related FRO-356/347/321/350/317; removed (10:42:54Z). Final: Todo, entry note/Pending_Review/Frontend/Story, 0.0.11, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326, 2 attachments (old one still titled "Entry Note details"). Linear turned the new FRO-353/FRO-319 mentions in that paragraph into plain links (cosmetic).
+- Still open: FRO-354 Ready approval (Pending_Review); optional MRN-date wrap fix on mock/fro-353.
+
 ### 2026-10-27 — FRO-354 branch link edit drafted
 
 - User asked to draft the FRO-354 edit linking the pushed branch. Baseline 10:18:15.474Z unchanged. Draft drafts/fro354-branch-link-edit.md: Context for agents branch line → link, base 5c51030, head 7f65b41, 15 files, activation needs; link attachment "Prepared frontend branch — mock/fro-354-customs-storage-entry-details"; labels re-passed; remove auto-added relations after save. Awaiting approval; no Linear write.
