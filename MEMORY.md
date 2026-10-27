@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-353 previous UI linked in the description
+
+- User asked for the older FRO-353 UI as an explicit link, not only the attachment. Baseline 09:42:44.258Z unchanged. Saved 09:49:25Z: Context for agents sentence replaced by "**Previous UI (historical reference only):** [Create Customs Storage Entry — earlier preview (ChatGPT-hosted)](…fro-353-entry-note-create…?scenario=blank&highlights=off)", needs sign-in, description is the contract. Labels re-passed (Ready).
+- Save auto-added related FRO-348/356/317/321; removed (09:49:35Z). Final: Todo, Ready, relations as before, 3 attachments (old attachment title still "Entry Note creation — no Order selected"; rename needs delete + re-add or a manual edit).
+
 ### 2026-10-27 — FRO-353 approved for development (Ready)
 
 - User asked to move FRO-353. Baseline 09:37:35.257Z unchanged. Saved 09:42:44Z: Pending_Review removed, Ready added, status Todo; description, attachments, milestone unchanged. Older UI already referenced (ChatGPT preview attachment + "historical reference only" sentence in Context for agents), so no edit.
@@ -417,7 +422,6 @@
 - Saved title Order & Shipment — structural support for file uploads during creation; added Order label and blocks FRO-335, preserving existing blocks FRO-341 and related FRO-325/FRO-316. Expanded creator/entity/context ownership, Order permissions, atomic child/state/audit association, recovery, cleanup and verification. Remains structural design/specification only; no production/UI/preview/code/branch/deployment work.
 - Independent read verified complete description after Linear formatting normalization, all original labels plus Order, Todo/Pending_Review, priority/project/milestone and other metadata. Final updatedAt 2026-10-23T13:51:31.724Z. FRO-335 description is byte-for-byte unchanged; reciprocal blockedBy FRO-342 confirmed.
 - FRO-335 needs a targeted follow-up text reconciliation: existing create-first/upload-after, partial saved-Order upload recovery, frontend-only uncertainty/no backend idempotency, cancellation-without-writes, relevant acceptance/verification and browser-local-only preview statements conflict with staged uploads/atomic creation. User asked for advice, not that rewrite; no FRO-335 text or preview changes. Preserve its carefully developed layout, fields, initial-readiness/customs/colli/invoice/notes rules. Full saved specification and review receipt under workspace Generated files/FRO-342/Drafts and notes/.
-
 
 ### 2026-10-23 — FRO-325 full-grill revision saved and verified
 
@@ -1660,6 +1664,42 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - Found three local corrections before handoff: current warehouse must show code/position; ALK validation must not block unrelated Invoice company correction; customs controls need draft applicability while preserving incompatible values for explicit resolution. These qualify prior broad preparation-complete wording. Approved visual direction stands; findings not fixed in this review.
 - Backend blockers unchanged:292 Notes;346 atomicDetails;303/356 corrections/impacts;333/334Pickup;337invoice;328email;349/355documents and owners; colli safe row-save ownership unresolved. Release milestone conflict persists. No branch/commit/push to production, no publishing or Linear edit. Planning-only records synced.
 
+### 2026-10-23 — FRO-326 three frontend findings fixed
+
+All three findings were corrected locally after explicit user authorization. Warehouse display now uses code and storage position, with EN/EL Unpositioned and the existing no-stay fallback. ALK validation is scoped to affected applicable customs changes or ALK correction, so unrelated Invoice company/ordinary edits can reach authoritative review with legacy ALK unchanged. Inapplicable regime/ALK controls are disabled without erasing draft values; toggling back or returning from review preserves them. Real customs clearing still requires explicit review and the owning backend contract.
+
+Regression tests reproduced six failures before the fixes; all12 focused tests then passed. Full suite45files188tests passed; production build passed (2.28s). Final changed-file Prettier and tracked whitespace checks passed. Typecheck reports only the two unchanged TS2352 delivery-note test casts at77/81. Generated route ordering drift restored. No dependency/schema/backend changes.
+
+The refreshed26-file complete patch and four-file incremental fro326-three-fixes.patch both pass reverse-apply checks. No branch, production commit, push, Linear update or publishing occurred. User explicitly deferred pushing; planning records are saved locally without synchronization this turn.
+
+
+### 2026-10-23 — FRO-326 local branch and reviewed commit created
+
+User explicitly authorized local branch mock/fro-326-order-details-ui and committing the reviewed26-file diff, while deferring all pushes, PR creation and publishing. Verified the uncommitted patch matched the approved patch byte-for-byte before staging; index initially empty, no active local Git hooks. Created the exact branch at3820e89e8caa341261e2d48bcb282d93e1bb1d03 and committed only26 approved frontend files.
+
+Commit:4f7f9f165bc4980990f9a577af01892aa7f76b77 — feat(FRO-326): prepare Order Details frontend and local review. Post-commit verified expected branch/base, clean checkout,26 frontend-only paths, no upstream, approved patch reverse-check. No implementation changes or repeated tests in this turn; prior188-test/build results apply to identical approved contents. Existing type/install/format limitations and backend blockers remain.
+
+Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Prior model checkpoints/approvals preserved. No remote push, PR, Cloudflare/deployment or Linear mutation. Planning records remain local because pushing is explicitly deferred.
+
+### 2026-10-23 — FRO-326 push protection check blocked
+
+- User requested protection verification and exact push for approval. Planning pull succeeded. Authenticated frontlineltdproject-star has maintain/push permissions, admin=false. Local branch mock/fro-326-order-details-ui is clean at4f7f9f165bc4980990f9a577af01892aa7f76b77. Remote main3820e89 unchanged; target branch absent remotely.
+- GitHub main metadata: protected=false, protection.enabled=false, enforcement off. Ruleset listing including parents and effective rules for main/mock branch return403 with a plan-upgrade message. Classic protection endpoint404. Required branch-restricted identity and protection against updating other branches/force/deletion cannot be verified. Do not infer enforcement from branch naming/refspec. No account/repo/rules changes made.
+- AGENTS.md4e blocks publication pending administrator configuration and verification of protections, or an explicit user revision to that requirement. Exact deferred command: git push github mock/fro-326-order-details-ui:mock/fro-326-order-details-ui. Not executed; approval is not requested while the protection gate fails. Existing baseline check limitations also remain before publication clearance. No push, PR, deployment or Linear changes. Planning records saved locally under push deferral.
+
+### 2026-10-23 — FRO-326 reviewed branch pushed by explicit exception
+
+- After disclosure of unprotected main, broad maintain access and unavailable rulesets, user explicitly instructed: Go ahead and push even as of now. This overrides the project protection gate for this specific push only; no repository protections or permissions were changed. PR/deployment remain deferred.
+- Prepush verified clean branch mock/fro-326-order-details-ui at4f7f9f165bc4980990f9a577af01892aa7f76b77, approved patch match, destination github=https://github.com/Frontline-Forwarding/frontline-forwarding.git, target branch absent remotely and main3820e89 unchanged.
+- Executed exact same-name refspec: git push github mock/fro-326-order-details-ui:mock/fro-326-order-details-ui. Push succeeded. Fetched remote branch and confirmed head4f7f9f165bc4980990f9a577af01892aa7f76b77. Main remains3820e89e8caa341261e2d48bcb282d93e1bb1d03. Remote diff contains only26 approved frontend files. No PR, deployment, Cloudflare or Linear mutation. Existing188-test/build evidence and baseline type/install/format limitations remain as reviewed; no code changes this turn.
+- Branch URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-326-order-details-ui . Planning records retained locally; authorization was scoped to the frontend branch push.
+
+### 2026-10-23 — FRO-330 deferred until FRO-326 base is merged
+
+- User proposed extending the existing326 branch, with fallback to backlog/wait if risky. Chose the fallback to preserve the reviewed326 handoff and separate ticket scope. No frontend branch or source changes.
+- Planning pull succeeded; refreshed full330/current FRO workflow. Status-only change Todo -> Backlog, user-authorized; re-passed all labels. Re-read confirms Backlog and exact preservation of description/title/labels/assignee/project/milestone/priority/relations/attachment. BlockedBy326 retained. No business rule/design change; consumer tracing/canvas not applicable.
+- Resume330 from updated main after the relevant326 branch is merged; do not create a stacked branch or add330 to326. No deployment or new push. Planning memory remains local under existing scoped publication deferral.
+
 ### 2026-10-23 — FRO-345 review evidence complete; first interview round pending
 
 - Mandatory planning pull succeeded; live gh auth/read verified at production main3820e89e8caa341261e2d48bcb282d93e1bb1d03. Full target/current comments (none), labels/statuses and linked316/341/325/344/326 read. Optional shared-agent-context endpoint unavailable; direct reads work. Target unchanged at2026-10-20T11:09:58.191Z, Todo, Pending_Review/Shipment, milestone0.0.7, No priority, no assignee returned/attachments/documents; original blocks316 and related325/344/326 preserved.
@@ -1667,11 +1707,13 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - Evidence and consumer impact in drafts/fro345-review.md: exact exception-event lookup/predecessor contract missing for316; canonical cancellation reason absent from current output; root creation/split command correlation; fresh per-invocation UUIDs do not provide caller retry identity; occurrence/recording chronology and incomplete legacy provenance; comment terminal/size/retry/plan-version boundaries; Notes operation scope and lifecycle-owner activation; concrete read-only verification/house metadata gaps.
 - Await first-round decisions: recording/command order versus occurrence ordering; terminal-state comments; affected data population and evidence-only backfill scope; proposed existing Order 2000-character comment convention. Recommendations remain proposals; no final replacement ticket until answers, complete shown draft and explicit Linear approval. No glossary/ADR change. Preserve unrelated326 planning and memory changes; synchronize only this review and checkpoint.
 
+
 ### 2026-10-23 — FRO-345 first grill round accepted; Notes operation scope pending
 
 - Planning pull succeeded. User accepted recording/command order with separate occurrence dates, authorized comments in all saved Shipment states including terminal states, and the existing 2,000-character Order comment limit. User confirmed current Shipment data is mock data. No data-reset/deletion authorization is inferred; historical-arrival support still follows FRO-324, while production legacy reconstruction is unnecessary for the confirmed population.
 - Re-read FRO-345 unchanged at 2026-10-20T11:09:58.191Z and current FRO-292/FRO-324. FRO-292 permits all-status Shipment Notes edits, preserves readiness/movement, requires actor/time attribution and protects Internal Notes from broader audit outputs. It does not settle whether Notes edits belong in FRO-345's Recorded operations.
 - Remaining Q5 proposes one Notes updated operation with changed field names, actor/time and protected audit references, no copied note text in the activity summary; combined saves remain one operation and comments a separate stream. Pending user decision. Review record updated; no final draft or Linear change yet. Preserve all metadata and unrelated planning work. No UI/preview/production branch, code or database change; no new vocabulary/ADR.
+
 
 ### 2026-10-23 — FRO-345 grill complete; full replacement draft awaiting approval
 
@@ -1681,12 +1723,14 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - Proposed Linear update is description-only: preserve title, Todo, Pending_Review/Shipment, assignment/priority, project/milestone, blocks316, related325/344/326, no blockers and empty attachments/documents. References to292/324 do not authorize new relations; preserve the reviewed set after any save-induced additions. No Ready promotion.
 - Updated review with before/after comparison outside the proposed description. Checked all original operation categories/protections and five accepted decisions against final draft; pending complete-text approval before any Linear mutation. Canvas/preview and production branch skipped. No implementation/deployment test or production write. Synchronize only345 files and345 memory entries, preserving unrelated326/330 work.
 
+
 ### 2026-10-23 — FRO-345 approved revision saved and verified
 
 - User approved the complete displayed draft with "ok". Mandatory planning pull succeeded; full fresh FRO-345 remained unchanged at 2026-10-20T11:09:58.191Z. Saved exact drafts/fro345-reviewed-spec.md content and re-passed both existing labels.
 - Independent re-read matched the complete approved description after Linear issue-mention/link/list normalization. Save automatically added related FRO-324/FRO-292/FRO-341; removed only those additions under the explicit metadata-preservation approval and independently re-read again.
 - Final verified description and metadata: unchanged title, Todo, Shipment/Pending_Review, unassigned, null delegate/estimate/parent/cycle/due date, No priority, Pre-releases 0.0.x / 0.0.7, blocks316, related325/344/326, no blockers, empty attachments/documents. UpdatedAt 2026-10-23T13:06:53.505Z. No Ready promotion or linked-ticket edits.
 - Updated drafts/fro345-review.md with completed workflow and verification receipt. No production code/database write, UI/preview/branch or deployment action. No new glossary/ADR. Synchronize only this345 receipt and memory entry; preserve unrelated planning changes.
+
 
 
 ### 2026-10-23 — FRO-344 evidence review; first interview round pending
@@ -1718,6 +1762,18 @@ Appended only the authorized italic archived-preview link at the end of FRO-335,
 - Independent re-read matched the full description after Linear mention/link/list normalization. Save auto-added related297/303/295/357/323; removed only those additions under approved metadata preservation, then independently re-read again.
 - Final metadata comparison has no changes: title, Todo, both labels, null assignment/delegate/estimate/parent/cycle/due date, No priority, project/milestone0.0.7, blocks316, related343/341/292/339/326/325/345, no blockers, empty attachments/documents. Final updatedAt2026-10-23T13:30:52.704Z. No Ready promotion or linked-ticket changes.
 - Review receipt saved in drafts/fro344-review.md. No UI/preview, production branch/code/database write or deployment verification. No new glossary/ADR. Synchronize only344 receipt/checkpoint; preserve unrelated planning changes.
+
+### 2026-10-23 — FRO-326 current React preview link added
+
+- User explicitly requested adding the current preview link. Inserted current laptop-only URL http://127.0.0.1:8341/dev/fro326/index.html and pushed branch link under Preview and exclusions, with local-run source path and clear fixture/integration limitations. Hosted publication remains deferred. No product behavior change; consumer tracing/design round not applicable.
+- Re-read verifies requested insertion after Linear link-angle normalization, all11 attachment identities/URLs preserved apart from refreshed signatures, all labels/status/title/project/milestone/priority/assignee/relations preserved. No branch/source/deployment changes. Planning records remain local under prior scoped push deferral.
+
+### 2026-10-23 — FRO-326 shared React preview prepared; scoped token pending
+
+- User authorized publishing the current React preview and updating326 with shared link, production deployment deferred. Planning pull succeeded. Wrangler4.152.0 whoami verifies Front Line account but broad OAuth permissions; no process/User/Machine CLOUDFLARE_API_TOKEN. User explicitly chose to configure Pages-only token, not waive the credential rule. No Cloudflare write or Linear update attempted pending credential.
+- Built isolated hosting artifact outside production checkout at visualization root/fro326-shared-preview/dist using reviewed branch components and copied fixture entry. Removed DEV/loopback guard only in the external copy, renamed banner/title Shared React preview, retained fictional local effects; no normal app/backend/server/config/dependency edits. Production Git checkout remains clean. Standard branch dev-only exclusion remains unchanged.
+- External Vite config uses existing dependencies/react/tailwind, explicit sources, no env/public files, no sourcemaps. Build passed; bundle audit no backend endpoint/config. Local Python default MIME initially served JS text/plain causing blank screen; corrected external preview server8354 MIME. Packaged preview default/loading/error and colli tab checked; console error log empty. Final favicon data URI avoids404. Hosted QA still pending after upload; no shared URL yet. Existing fixtures/ENEL/controls preserved.
+- Deployment plan remains new fro-326-hex6 Pages project only, using scoped Pages Edit token, pages project list before create/deploy. Never touch existing Cloudflare objects. After upload verify actual shared URL/states/mobile/network then update326 narrowly and reread metadata. Token must never be recorded in repo/chat/logs. Resume with token from authorized environment (User variable may need importing into tool process); no further publishing approval needed once token available.
 
 ### 2026-10-23 — FRO-343 evidence review; first interview pending
 
