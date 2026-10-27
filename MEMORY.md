@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 previous UI linked in the description
+
+- User asked whether the older UI was linked as a historical reference; it was only an attachment plus a plain sentence. User approved the FRO-353-style link. Baseline 10:43:46.316Z unchanged. Saved 10:45:24Z: Context for agents sentence replaced by "**Previous UI (historical reference only):** [Customs Storage Entry details — earlier preview (ChatGPT-hosted)](…fro-353-entry-note-details…?highlights=off)", needs sign-in, description is the contract. Labels re-passed (Ready).
+- Save auto-added related FRO-321/347/356/317/350; removed (10:45:42Z). Final: Todo, entry note/Ready/Frontend/Story, relations as before, 2 attachments (old one still titled "Entry Note details"). The preceding sentence also ends "this description is the contract" (minor repetition, left as is).
+
 ### 2026-10-27 — FRO-354 approved for development (Ready)
 
 - User approved moving FRO-354. Baseline 10:42:54.726Z unchanged. Saved 10:43:46Z: Pending_Review removed, Ready added, status Todo; description, attachments, milestone and relations unchanged (re-read: entry note/Frontend/Story/Ready, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326).
