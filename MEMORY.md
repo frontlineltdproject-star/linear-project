@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 workflow review started, round 1 pending
+
+- User: FRO-354 (Customs Storage Entry — Details page UI) was not created through the workflow; review gaps, rebuild the UI from the production design system, mock branch client-UI-folder only (as other mock branches). Pull up to date.
+- Baseline: Todo, entry note/Pending_Review/Frontend/Story, 0.0.11, updatedAt 2026-10-27T07:53:37.719Z, no comments, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326, 1 attachment (ChatGPT preview, historical). Main 5c51030. Wrangler unauthenticated → local preview only.
+- Findings and Q1–Q12: drafts/fro354-review.md. No Linear write.
+
 ### 2026-10-27 — FRO-353 previous UI linked in the description
 
 - User asked for the older FRO-353 UI as an explicit link, not only the attachment. Baseline 09:42:44.258Z unchanged. Saved 09:49:25Z: Context for agents sentence replaced by "**Previous UI (historical reference only):** [Create Customs Storage Entry — earlier preview (ChatGPT-hosted)](…fro-353-entry-note-create…?scenario=blank&highlights=off)", needs sign-in, description is the contract. Labels re-passed (Ready).
