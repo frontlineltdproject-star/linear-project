@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-319 approved for development (Ready)
+
+- User approved FRO-319 for the developer. Saved 08:07:00Z: status Todo, labels entry note/Backend/Story/Ready (Pending_Review removed via removeLabels/addLabels); description, milestone 0.0.11 and relations unchanged.
+- Starting entry number: user will specify it in a later version as the project progresses; the ticket's "supplied by the business before release" wording already covers this, so no text change.
+- Build gate: FRO-356 (blocker) is still Todo/Pending_Review and its code is on unmerged branch chriskazakos/fro-356-order-customs-regime.
+
 ### 2026-10-27 — Customs Storage Entry rename batch 2 saved (FRO-321/317/326/347/348/352)
 
 - User approved drafts/customs-storage-rename-batch2.md, text only, no branch changes. Baselines matched. Saved replace_all patches 08:00:24–08:00:36Z: 61 visible mentions renamed (FRO-321 15, FRO-317 7, FRO-326 9, FRO-347 10, FRO-348 13, FRO-352 7), incl. "an/An Entry Note" → "a/A Customs Storage Entry". FRO-326 re-check: 0 "Entry Note", 9 "Customs Storage Entry". Titles, labels, status, attachments unchanged.
