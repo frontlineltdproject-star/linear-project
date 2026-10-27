@@ -2,7 +2,7 @@
 
 ### 2026-10-27 — FRO-354 step 4e started; plan at the model checkpoint
 
-- User asked to prepare mock/fro-354-customs-storage-entry-details from main, client UI folder only, diff and checks before any push. Worktree C:/ffx/fro354 (of the fro353 clone, remote github) detached at main 5c51030; npm ci OK.
+- User asked to prepare mock/fro-354-customs-storage-entry-details from main, client UI folder only, diff and checks before any push. Worktree C:/ffx/fro354 (of the fro353 clone, remote github) detached at main 5c51030. npm ci failed (package-lock out of sync with package.json; repo uses pnpm); node_modules is a junction to C:/ffx/fro353 (same package files as main), lock untouched. Node 24.13 (22.13 not installed).
 - Playbook FRO-354: HEAD 5c51030, committed, SHA-256 b1a66b22…7dc. First load failed (Windows charmap on "→"); PYTHONIOENCODING=utf-8 fixed it.
 - Plan drafts/fro354-frontend-plan.md (3 slices under src/features/customs-storage/details/, local copies of FRO-353 parts). Waiting for the playbook's planning/implementation model checkpoints and plan agreement.
 

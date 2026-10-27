@@ -1,6 +1,6 @@
 # FRO-354 — step 4e frontend plan (mock/fro-354-customs-storage-entry-details)
 
-Playbook: FRO-354, HEAD 5c51030, policy committed, SHA-256 b1a66b22…7dc (same policy as FRO-353). First load failed on a Windows console encoding error (`charmap` cannot encode `→`); reloaded with `PYTHONIOENCODING=utf-8`, exit 0. Base: `main` 5c51030 (fetched 2026-10-27). Isolated worktree `C:/ffx/fro354` (of the FRO-353 clone, remote `github` → Frontline-Forwarding/frontline-forwarding), detached at main.
+Playbook: FRO-354, HEAD 5c51030, policy committed, SHA-256 b1a66b22…7dc (same policy as FRO-353). First load failed on a Windows console encoding error (`charmap` cannot encode `→`); reloaded with `PYTHONIOENCODING=utf-8`, exit 0. Base: `main` 5c51030 (fetched 2026-10-27). Isolated worktree `C:/ffx/fro354` (of the FRO-353 clone, remote `github` → Frontline-Forwarding/frontline-forwarding), detached at main. `npm ci` fails on main (package-lock out of sync; the repo uses pnpm), so `node_modules` is a junction to the FRO-353 checkout, installed from identical package files; lock files untouched. Node 24.13 (22.13 not installed).
 
 ## Scope and boundary
 
