@@ -1,5 +1,9 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 branch link edit drafted
+
+- User asked to draft the FRO-354 edit linking the pushed branch. Baseline 10:18:15.474Z unchanged. Draft drafts/fro354-branch-link-edit.md: Context for agents branch line → link, base 5c51030, head 7f65b41, 15 files, activation needs; link attachment "Prepared frontend branch — mock/fro-354-customs-storage-entry-details"; labels re-passed; remove auto-added relations after save. Awaiting approval; no Linear write.
+
 ### 2026-10-27 — FRO-354 mock branch pushed and verified
 
 - User approved creating mock/fro-354-customs-storage-entry-details from 5c51030 as one commit with the explicit refspec, and accepted the branch-protection gap for this branch. Re-verified first: main 5c51030, branch absent, diff hash unchanged (e7fe3050…).
