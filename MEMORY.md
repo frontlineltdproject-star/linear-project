@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 mock branch pushed and verified
+
+- User approved creating mock/fro-354-customs-storage-entry-details from 5c51030 as one commit with the explicit refspec, and accepted the branch-protection gap for this branch. Re-verified first: main 5c51030, branch absent, diff hash unchanged (e7fe3050…).
+- Commit 7f65b41c60453672290757e17e5e44ce53c4819c "feat(FRO-354): prepare Customs Storage Entry details UI" (15 added files under frontline-forwarding-client/src/features/customs-storage/details/, +3,469), identity giwrgoskakepakis, no hooks. Committed diff byte-identical to the audited patch.
+- Pushed with git push github mock/fro-354-customs-storage-entry-details:mock/fro-354-customs-storage-entry-details. Remote head 7f65b41 = local; 1 ahead / 0 behind main; 15 files, all added, none outside the folder; remote diff hash equals the audited one; no PR. No merge or deployment. Branch owned by this session for FRO-354. URL https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-354-customs-storage-entry-details
+- Next (needs approval): add the branch link to FRO-354 in Linear (Context for agents "(when published)" → head 7f65b41 + link attachment); possibly the same MRN-date wrap fix on mock/fro-353.
+
 ### 2026-10-27 — FRO-354 frontend prepared and verified; push gate pending
 
 - User confirmed both model checkpoints and agreed drafts/fro354-frontend-plan.md. C:/ffx/fro354 detached at main 5c51030 (re-fetched, unchanged); node_modules junction to fro353.
