@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-355 rewrite and FRO-319 eligibility patch saved
+
+- User approved both drafts ("ok"). Baselines unchanged (FRO-355 07:53:59.772Z, FRO-319 08:07:00.210Z). Saved FRO-355 full description = drafts/fro355-reviewed-spec.md (sha256 f7ef4b54…) with labels re-passed, 08:20:17Z; FRO-319 two-insert patch = drafts/fro319-eligibility-read-patch.md, 08:20:19Z.
+- FRO-355 save auto-added related FRO-356/FRO-358; removed (08:20:31Z). Final: Todo, entry note/Order/Pending_Review/Frontend/Story, 0.0.11, blocks FRO-326, blockedBy FRO-319/353/354, related FRO-349, 1 attachment (title still "Entry Note action preview"). FRO-319: Todo, Ready labels, relations unchanged.
+- Follow-ups (not started, each needs approval): rename labels and add entry number/reason table in mock/fro-326-order-details-ui OrderDocumentAction; FRO-353 could state its own post-create landing; FRO-319 Split coverage row still says "manual or during Shipment preparation" although repo allows manual splits only before stock; milestone gap FRO-355 0.0.11 → FRO-326 0.0.5 for release planning.
+
 ### 2026-10-27 — FRO-355 round 1 answered; full draft shown
 
 - User accepted Q2–Q9 as recommended. Q1 rejected: FRO-326 is UI-only and, by policy, blocked by every structural Order ticket, so FRO-355 keeps blocking FRO-326; no FRO-326 edit. Milestone gap (0.0.5 vs 0.0.11) flagged in Context only.

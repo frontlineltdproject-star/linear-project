@@ -221,3 +221,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-350 branch link record](MEMORY.md#2026-10-26--fro-350-branch-link-saved).
 - Action next time: Never retry a description patch because a response looks unchanged. Re-read until `updatedAt` is newer than the baseline, and trust only the read with the newest `updatedAt`. Make retry patches idempotent (anchor on text that disappears once the edit applies).
 - Status: Active.
+
+### 2026-10-27 — A copied timestamp can look like a business event
+
+- Problem: FRO-319 ties a Customs Storage Entry to an Order's storage admission, but the Shipment-preparation split child keeps the parent's stock time, so a check for "has been admitted" would pass on the child and allow a second entry.
+- Evidence: [FRO-355 review](MEMORY.md#2026-10-27--fro-355-workflow-review-started-round-1-pending); `docs/workflows/purchase-order-colli-journey.md` (Shipment-preparation partial selection).
+- Action next time: When a rule depends on an event (admission, stock, dispatch), check which code paths copy that event's fields onto new records — splits, copies, transfers — and state the rule for those records explicitly.
+- Status: Active.
