@@ -4,19 +4,67 @@
     {
       "name": "fro350-preview",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-I", "-m", "http.server", "8350", "--bind", "127.0.0.1", "--directory", "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/2ea8b5ee-b370-424e-ae4b-6b480d15feb2/scratchpad/preview"],
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "8350",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/2ea8b5ee-b370-424e-ae4b-6b480d15feb2/scratchpad/preview"
+      ],
       "port": 8350
     },
     {
       "name": "fro352-preview",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-I", "-m", "http.server", "8360", "--bind", "127.0.0.1", "--directory", "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/102251e4-9dec-41da-aaec-19a444e8141a/scratchpad/preview352"],
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "8360",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/102251e4-9dec-41da-aaec-19a444e8141a/scratchpad/preview352"
+      ],
       "port": 8360
     },
     {
       "name": "fro350-client-review",
       "url": "http://127.0.0.1:8352",
       "port": 8352
+    },
+    {
+      "name": "fro353-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "8353",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/a37638be-097d-4cbe-909f-e12fa95fcb9e/scratchpad/preview353"
+      ],
+      "port": 8353
+    },
+    {
+      "name": "fro354-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "8364",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "C:/Users/Giorgos/AppData/Local/Temp/claude/C--Users-Giorgos-Downloads-FrontLine-backup-14-09-2026-Linear/0054daa9-bba8-4646-9147-ebea985c3933/scratchpad/preview354"
+      ],
+      "port": 8364
     }
   ]
 }

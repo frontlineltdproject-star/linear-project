@@ -33,4 +33,4 @@ Started 2026-10-27. Workflow review: the ticket was not created through the AGEN
 
 ## Round 1
 
-Questions Q1–Q12 asked in chat; answers pending.
+Q1–Q12 accepted as recommended (2026-10-27). Draft: drafts/fro354-reviewed-spec.md.

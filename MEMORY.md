@@ -6,6 +6,12 @@
 - Baseline: Todo, entry note/Pending_Review/Frontend/Story, 0.0.11, updatedAt 2026-10-27T07:53:37.719Z, no comments, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326, 1 attachment (ChatGPT preview, historical). Main 5c51030. Wrangler unauthenticated → local preview only.
 - Findings and Q1–Q12: drafts/fro354-review.md. No Linear write.
 
+### 2026-10-27 — FRO-354 round 1 accepted; preview verified; full draft at the gate
+
+- User accepted Q1–Q12 as recommended: FRO-353 search fields/reasons; extra reasons Current Order of this entry / Covered by this entry; one editor at a time; Change Order keeps warehouse values with dialog warning + post-save review notice when warehouse differs; simple confirm dialog text; covered-child banner + Back to child; title by number, subtitle Order · date, no active badge; Created by caption (needs FRO-319 read to return creator — listed as dependency, no FRO-319 edit); Print place reserved, FRO-358 adds it (view authority); all ten entry-owned fields editable with FRO-353 rules; FRO-352 failed/stale/leave behavior; branch from main, self-contained src/features/customs-storage/details/ with copies of FRO-353 parts.
+- Preview previews/fro354 (FRO-353 base.css, launch fro354-preview port 8364, scratchpad build). Verified: one-editor hint, tariff validation + focus, draft kept across EL/tabs, save → read-only + focus Edit, Change Order reasons and warehouse warning, refresh + notice + Unknown weight, stale banner + Escape, Back to Order discard dialog, all page states, EN/EL toast, 375px no overflow. Not deployed (no Cloudflare token).
+- Draft drafts/fro354-reviewed-spec.md (full rewrite). Metadata unchanged; remove auto-added related links after save. Awaiting approval; no Linear write.
+
 ### 2026-10-27 — FRO-353 previous UI linked in the description
 
 - User asked for the older FRO-353 UI as an explicit link, not only the attachment. Baseline 09:42:44.258Z unchanged. Saved 09:49:25Z: Context for agents sentence replaced by "**Previous UI (historical reference only):** [Create Customs Storage Entry — earlier preview (ChatGPT-hosted)](…fro-353-entry-note-create…?scenario=blank&highlights=off)", needs sign-in, description is the contract. Labels re-passed (Ready).
