@@ -4,7 +4,7 @@
 
 - User approved drafts/fro355-followup-patches.md. Baselines unchanged. FRO-319 Split coverage first row now "(today only Shipment-preparation partial selection; manual splits happen before stock)" + "Any future post-admission split follows the same rule", 08:31:00Z. FRO-353 new Actions and states bullet: success opens the new entry's FRO-354 page; from Order Details it carries return context and shows Back to Order {Stock ID} / Επιστροφή στην παραγγελία {Stock ID}, 08:31:02Z.
 - Re-read: no auto-added relations on either; labels/status unchanged (FRO-319 Ready, FRO-353 entry note/Frontend/Story).
-- Still open (need explicit decision): update OrderDocumentAction on mock/fro-326-order-details-ui (production-repo push); FRO-355 0.0.11 vs FRO-326 0.0.5 milestone gap.
+- User chose to leave mock/fro-326-order-details-ui as it is for now (OrderDocumentAction still says Entry Note, no entry number/reasons). FRO-355 0.0.11 vs FRO-326 0.0.5 milestone gap still undecided.
 
 ### 2026-10-27 — FRO-355 rewrite and FRO-319 eligibility patch saved
 
