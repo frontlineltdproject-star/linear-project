@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 rewrite saved
+
+- User approved the draft with metadata unchanged and removal of auto-added related links. Baseline 07:53:37.719Z unchanged. Saved drafts/fro354-reviewed-spec.md 10:18:04Z, labels re-passed (entry note/Pending_Review/Frontend/Story).
+- Save auto-added related FRO-350/321/317/347; removed (10:18:15Z). Final: Todo, 0.0.11, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326, 1 attachment (title still "Entry Note details"). Linear rendered many plain links as issue chips, incl. a self-mention of FRO-354 in the entry-points table (cosmetic).
+- Next (needs approval at the push gate): step 4e mock/fro-354-customs-storage-entry-details from main 5c51030, client-only under src/features/customs-storage/details/.
+
 ### 2026-10-27 — FRO-354 workflow review started, round 1 pending
 
 - User: FRO-354 (Customs Storage Entry — Details page UI) was not created through the workflow; review gaps, rebuild the UI from the production design system, mock branch client-UI-folder only (as other mock branches). Pull up to date.
