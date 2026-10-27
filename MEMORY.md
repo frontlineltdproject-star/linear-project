@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 approved for development (Ready)
+
+- User approved moving FRO-354. Baseline 10:42:54.726Z unchanged. Saved 10:43:46Z: Pending_Review removed, Ready added, status Todo; description, attachments, milestone and relations unchanged (re-read: entry note/Frontend/Story/Ready, blocks FRO-355, blockedBy FRO-319, related 353/352/358/348/326).
+- Workflow status: steps 0–4, 4e and 5 done; step 2b only local (previews/fro354, launch fro354-preview, port 8364; no Cloudflare token); step 6 waits for deployment.
+- Optional follow-up: same MRN-date wrap fix on mock/fro-353 (needs approval).
+
 ### 2026-10-27 — FRO-354 branch link saved
 
 - User approved drafts/fro354-branch-link-edit.md. Baseline unchanged (10:18:15.474Z). Saved 10:42:41Z: Context for agents branch line now links mock/fro-354-customs-storage-entry-details (base 5c51030, head 7f65b41, 15 files) with activation needs; link attachment "Prepared frontend branch — mock/fro-354-customs-storage-entry-details" added; labels re-passed.
