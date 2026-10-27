@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-355 round 1 answered; full draft shown
+
+- User accepted Q2–Q9 as recommended. Q1 rejected: FRO-326 is UI-only and, by policy, blocked by every structural Order ticket, so FRO-355 keeps blocking FRO-326; no FRO-326 edit. Milestone gap (0.0.5 vs 0.0.11) flagged in Context only.
+- Draft drafts/fro355-reviewed-spec.md: card-state precedence table (no view authority → no card; loading; error+Retry; Open wins incl. cancelled covered child; no create authority → no card; Create; disabled with reasons cancelled → not Customs Storage → not admitted → admitted under another Order), EN/EL strings, entry number + Owning Order link, post-create landing on FRO-354 with Back to Order, server eligibility read, Decisions, Context (main 5c51030, mock/fro-326 OrderDocumentAction), read-only verification. Metadata unchanged.
+- Q4 needs FRO-319 patch drafts/fro319-eligibility-read-patch.md (post-admission child never eligible on its own; eligibility read with ordered reason codes). New EL strings beyond Q8: Αριθμός δελτίου, Επιστροφή στην παραγγελία {Stock ID}.
+- Awaiting exact-text approval for both writes.
+
 ### 2026-10-27 — FRO-355 workflow review started, round 1 pending
 
 - User: FRO-355 (Order Details — Create or open Customs Storage Entry) was not created through the workflow; review for gaps. No new UI (FRO-326 hosts the card; FRO-353/354 own the target pages); no production branch. Canvas/preview/step 4e skipped. Pull: up to date.
