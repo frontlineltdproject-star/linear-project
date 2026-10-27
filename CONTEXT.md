@@ -88,5 +88,17 @@ The company shown as sender on an Export: the Invoicing company for a Greek invo
 **Informative List**:
 The Supplier Invoices an Export declares: its saved, explicitly selected invoices. It is not the Shipment's Orders, not the creation suggestions and not a stamping or ΥΔ print selection.
 
+**Entry Note (Δελτίο Εισόδου)**:
+The customs warehousing record of one Order's storage admission under Τελωνειακή Αποθήκευση. It is distinct from the Exit (Εξόδου) and Transfer (Μεταβίβασης) notes, from the ΑΛΚ, and from a warehouse licence reference.
+
+**Storage admission**:
+Confirming an Order in stock at a warehouse, including arrival by network transfer. For an Entry Note it fixes the admitted collis: the Order's non-terminal collis at that moment.
+
+**Admission coverage**:
+The Orders that share one Entry Note: the owning Order plus children split from it after its storage admission. A split before admission, a common family root or an equal entry MRN does not establish coverage.
+
+**Statistical VAT (Στατιστικός ΦΠΑ)**:
+A hypothetical 24% of an Entry Note's matching invoice net value, reported for the customs warehouse register. It is not VAT charged or payable and is distinct from the invoices' actual VAT.
+
 **Paperwork only invoice**:
 An invoice in an Export's Informative List whose linked Order has no collis in that Export's Shipment. It adds its Order to Connected Orders but no physical goods to the Shipment.
