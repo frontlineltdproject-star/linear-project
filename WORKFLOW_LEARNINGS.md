@@ -228,3 +228,17 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-355 review](MEMORY.md#2026-10-27--fro-355-workflow-review-started-round-1-pending); `docs/workflows/purchase-order-colli-journey.md` (Shipment-preparation partial selection).
 - Action next time: When a rule depends on an event (admission, stock, dispatch), check which code paths copy that event's fields onto new records — splits, copies, transfers — and state the rule for those records explicitly.
 - Status: Active.
+
+### 2026-10-27 — Production checkout setup fails on Windows defaults
+
+- Problem: The playbook loader failed with a `charmap` encoding error on "→", and `npm ci` failed because `package-lock.json` is out of sync with `package.json` on main (the repo uses pnpm).
+- Evidence: [FRO-354 step 4e record](MEMORY.md#2026-10-27--fro-354-frontend-prepared-and-verified-push-gate-pending).
+- Action next time: Run the loader with `PYTHONIOENCODING=utf-8`. Do not run `npm install` (it rewrites the lock file); link `node_modules` from an existing checkout installed from identical package files, or use pnpm, and confirm `git status` shows no lock-file change.
+- Status: Active.
+
+### 2026-10-27 — Programmatic focus does not open pickers in an unfocused browser pane
+
+- Problem: In the browser harness, `focus()` moved focus but fired no focus event while the pane lacked OS focus, so the SearchPicker list stayed closed and scripted checks looked like failures.
+- Evidence: [FRO-354 step 4e record](MEMORY.md#2026-10-27--fro-354-frontend-prepared-and-verified-push-gate-pending).
+- Action next time: Open pickers with a click in scripted checks, and confirm `document.activeElement` instead of relying on focus events or timing.
+- Status: Active.

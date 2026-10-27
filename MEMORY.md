@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-354 frontend prepared and verified; push gate pending
+
+- User confirmed both model checkpoints and agreed drafts/fro354-frontend-plan.md. C:/ffx/fro354 detached at main 5c51030 (re-fetched, unchanged); node_modules junction to fro353.
+- 15 new files only under frontline-forwarding-client/src/features/customs-storage/details/ (+3,469): types, rules (+test), labels (+test), layout, Order card with Change Order, dialog, entry card read/edit, invoices, Export, discard dialog, ui-parts (local FRO-353 copies + EditButton/EditActions), component tests, README. No shared file changed.
+- Rule tests Red 14/14 on stubs, Green 14/14; focused 41/41; full 243/243; build OK (routeTree.gen.ts restored); tsc only 2 baseline TS2352; prettier, diff check, secret scan clean.
+- Browser harness (deleted; copy in scratchpad fro354-harness, port 8365 freed): all scenarios incl. Change Order, rejected/stale/failed, discard, page states, EN/EL, 400px, keys, console clean. Fix: MRN date Clear button wraps at 400px in Greek (FRO-353 branch has the same issue, unchanged).
+- Diff drafts/fro354-frontend-preparation.patch (SHA-256 e7fe3050…82ebcf); handoff drafts/fro354-frontend-handoff.md. Rulesets 403, main protection 404 (same gap). Remote branch absent. Awaiting approval to create mock/fro-354-customs-storage-entry-details, commit and push.
+
 ### 2026-10-27 — FRO-354 step 4e started; plan at the model checkpoint
 
 - User asked to prepare mock/fro-354-customs-storage-entry-details from main, client UI folder only, diff and checks before any push. Worktree C:/ffx/fro354 (of the fro353 clone, remote github) detached at main 5c51030. npm ci failed (package-lock out of sync with package.json; repo uses pnpm); node_modules is a junction to C:/ffx/fro353 (same package files as main), lock untouched. Node 24.13 (22.13 not installed).

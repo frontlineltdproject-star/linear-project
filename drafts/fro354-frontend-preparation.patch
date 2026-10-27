@@ -1,0 +1,3559 @@
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/README.md b/frontline-forwarding-client/src/features/customs-storage/details/README.md
+new file mode 100644
+index 0000000..7f0dfa6
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/README.md
+@@ -0,0 +1,126 @@
++# Customs Storage Entry details presentation (FRO-354)
++
++FRO-354's Customs Storage Entry details page is prepared here as controlled
++React components on UI view models. It is **unconnected preparation**, not a
++working Customs Storage feature or completion of the ticket's acceptance
++criteria. There is no route, menu entry, service, GraphQL document, authority,
++persistence or backend change.
++
++## Components and state ownership
++
++- `components/customs-storage-details-layout.tsx` — page states (loading,
++  load error + Retry, not found, access denied), `TopBar` with
++  **Customs Storage Entry {number}**, subtitle **Order {Stock ID} · {entry
++  date-time}**, the `headerActions` place reserved for FRO-358's Print,
++  **Back to Order** only with return context, the covered-child banner, and the
++  outer `Card` with three `Tabs` (Overview, Related Supplier Invoices (N),
++  Related Export) and local arrow/Home/End roving focus.
++- `components/order-relationship-card.tsx` — the owning Order's read-only
++  facts with **Unknown** and **Missing** markers. **Edit** opens Change Order:
++  a `SearchPicker` in which the current Order and Orders covered by this entry
++  show their own reasons and other ineligible Orders show the FRO-319 reason
++  (with **Open** for an entry); a server rejection message; Cancel / Save.
++- `components/change-order-dialog.tsx` — **Change Order to {Stock ID}?** with
++  the warehouse warning when the chosen Order was admitted elsewhere, Cancel /
++  Confirm change.
++- `components/entry-details-card.tsx` — sub-cards **Entry details → Goods and
++  transport → Warehouse operator** read-only, with **Created by**; **Edit**
++  turns the ten entry-owned fields into controls (`DatePicker` +
++  `Input type="time"`, MRN date with Clear, tariff, goods, transport, permit,
++  operator, ΑΦΜ, address). Entry number and Transport Company stay read-only.
++  Shows the warehouse review notice after a Change Order to another warehouse.
++- `components/related-invoices-card.tsx`, `components/related-export-card.tsx`
++  — the owning Order's invoices (per-row currency, Statistical VAT, EUR-only
++  `tfoot` totals, mixed-currency alert) and the Export (facts, Customs status,
++  "n of m", empty explanations). Read-only.
++- `components/discard-changes-dialog.tsx` — **Discard your changes?** for
++  Back to Order with a changed draft.
++- `components/customs-storage-details-ui-parts.tsx` — card heading with an
++  action slot, `EditButton` (disabled with a hint while another card edits),
++  `EditActions` (validation / failed / stale + Refresh, Cancel / Save),
++  `cancelOnEscape`, read-only field, record link, value marker, amount and
++  Athens date-time formatting, `SearchPicker`, `focusEntryField` and
++  `entryErrorMessage`.
++- `customs-storage-details-rules.ts` — page-side rules: Statistical VAT and
++  EUR-only totals, Export coverage, validation of entry-owned values and first
++  error field, one editor at a time, dirty check, Change Order options,
++  entry date-time label and warehouse change. FRO-319 remains authoritative.
++- `localization/customs-storage-details-labels.ts` — EN/EL copy through
++  `useLocale`.
++
++The heading, field, link, marker, picker, money/validation rules, invoice and
++Export cards are local copies of FRO-353's parts
++(`mock/fro-353-customs-storage-entry-create`,
++`../create/`), so this folder shares no file with another mock branch.
++De-duplicate them with `create/` when both features are integrated.
++
++The eventual controller owns the page and edit state above the conditionally
++mounted tab panels, so an open draft survives tab and language changes and
++rejected saves. It must:
++
++- load the entry by id and map failures: denied → `denied`, missing →
++  `notFound`, other errors → `error` with Retry; never show a failed or denied
++  read as not found;
++- read the return context (FRO-355 Open from the owner or a covered child,
++  FRO-353 creation) and show the created toast **Customs Storage Entry
++  {number} created.** when arriving from creation;
++- keep `editing` to one card (`canStartEdit`, `editBlocked`); hide Edit without
++  edit authority;
++- **Entry details:** copy `entry.values` into the draft on Edit; on Save run
++  `validateEntryValues`, on errors show `validation` and call
++  `focusEntryField(firstErrorField(errors))`; send only the entry-owned values
++  with `entry.version`; map failure → `failed`, version conflict → `stale`
++  (Refresh reloads the entry and keeps the draft); on success replace the
++  entry, close the editor and toast **Changes saved.**;
++- **Change Order:** debounce FRO-319's Order search for entry creation, ignore
++  stale responses, clear the choice when the query is typed over, restore the
++  chosen Stock ID on close; Save opens `ChangeOrderDialog` with
++  `otherWarehouse` when `warehouseChanged`; Confirm sends the Order and
++  `entry.version`; map an ineligible answer → `rejected`, failure → `failed`,
++  conflict → `stale`; on success replace the entry (derived values, invoices,
++  Export), set `warehouseReview` when the warehouse changed, toast **Order
++  changed to {Stock ID}.** and keep the return context;
++- ask `DiscardChangesDialog` on Back to Order only when the open draft is
++  dirty (`isEditDirty`, or a chosen Order) and warn on unload while dirty.
++
++## Dependencies blocking integration
++
++Inspected baseline: production `main` at
++`5c51030680c9d45b3827a7e19b8320c19aa5ed9a`.
++
++| Capability                                                        | Missing source                           | Owner               |
++| ----------------------------------------------------------------- | ---------------------------------------- | ------------------- |
++| Entry read with owner, derived facts, version and creator         | No Customs Storage Entry entity or reads | FRO-319             |
++| Edit entry-owned values with version precondition                 | No entry operations                      | FRO-319             |
++| Change Order and Order search for entry creation with eligibility | No entry operations or reads             | FRO-319             |
++| View / create-edit authorities                                    | Not in `../../auth/types.ts`             | FRO-319             |
++| Customs regime, warehouse licences, storage admission             | Unmerged `chriskazakos/fro-356-…` branch | FRO-356             |
++| Supplier Invoices of type Αποθήκη Αποθήκευσης                     | No Supplier Invoice entity               | FRO-321             |
++| Export holding the invoices and its Customs status                | No Export entity                         | FRO-317             |
++| Page route, FRO-355 Open and FRO-353 landing, Print, list entry   | Not built                                | FRO-354/355/353/358 |
++
++Available today: `PurchaseOrderStatusPill` and the existing Order search text
++(Stock ID, message number, references, vessel, colli tracking code), which the
++FRO-319 search read reuses.
++
++## Verification
++
++Run from `frontline-forwarding-client/` (Node 22.13.0 required):
++
++```sh
++npm run test -- src/features/customs-storage
++npm run test
++npm run build
++npx prettier --check src/features/customs-storage
++npx tsc --noEmit
++```
++
++Tests cover the page-side rules (written first), EN/EL label parity, the
++header and return context, covered-child banner, page states, tab keyboard
++navigation, one editor at a time, Change Order reasons, rejection and dialog,
++entry fields in read and edit mode with errors and feedback, invoice totals and
++currency handling, Export coverage and the discard dialog. They do not
++establish server validation, permission, concurrency or refresh correctness.
++
++Design authority: [DESIGN.md](../../../../DESIGN.md),
++[theme.css](../../../styles/theme.css) and the shared component source.
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/change-order-dialog.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/change-order-dialog.tsx
+new file mode 100644
+index 0000000..0437156
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/change-order-dialog.tsx
+@@ -0,0 +1,63 @@
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Modal } from '#/components/ui/modal'
++import {
++  fillLabel,
++  useCustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import type { WarehouseReference } from '../types'
++
++export interface ChangeOrderDialogProps {
++  /** The chosen Order; the dialog is closed when null. */
++  target: { stockId: string } | null
++  /** The chosen Order's admitting warehouse when it differs from the current one. */
++  otherWarehouse: WarehouseReference | null
++  confirming: boolean
++  /** Cancel, Escape or the backdrop; nothing is saved. */
++  onCancel: () => void
++  onConfirm: () => void
++}
++
++/** Simple Change Order confirmation; no impact breakdown (FRO-354). */
++export function ChangeOrderDialog({
++  target,
++  otherWarehouse,
++  confirming,
++  onCancel,
++  onConfirm,
++}: ChangeOrderDialogProps) {
++  const text = useCustomsStorageDetailsLabels()
++  const stockId = target?.stockId ?? ''
++  return (
++    <Modal
++      open={target !== null}
++      onClose={onCancel}
++      size="md"
++      title={fillLabel(text.changeOrderTitle, { stockId })}
++      footer={
++        <>
++          <Button variant="secondary" onClick={onCancel}>
++            {text.cancel}
++          </Button>
++          <Button onClick={onConfirm} loading={confirming}>
++            {text.confirmChange}
++          </Button>
++        </>
++      }
++    >
++      <div className="space-y-3">
++        <p className="text-sm text-fg">
++          {fillLabel(text.changeOrderText, { stockId })}
++        </p>
++        {otherWarehouse && (
++          <Alert tone="warning">
++            {fillLabel(text.changeOrderWarehouse, {
++              stockId,
++              warehouse: `${otherWarehouse.code} · ${otherWarehouse.name}`,
++            })}
++          </Alert>
++        )}
++      </div>
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-layout.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-layout.tsx
+new file mode 100644
+index 0000000..1b24f3e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-layout.tsx
+@@ -0,0 +1,213 @@
++import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react'
++import { TopBar } from '#/components/layout/top-bar'
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { Tab, TabList, TabPanel, Tabs } from '#/components/ui/tabs'
++import { entryDateTimeLabel } from '../customs-storage-details-rules'
++import {
++  fillLabel,
++  useCustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import type {
++  CustomsStorageDetailsTab,
++  PageState,
++  RecordHref,
++  ReturnContext,
++  SavedEntry,
++} from '../types'
++
++export interface CustomsStorageDetailsPanels {
++  overview: ReactNode
++  invoices: ReactNode
++  export: ReactNode
++}
++
++export interface CustomsStorageDetailsLayoutProps {
++  state: PageState
++  /** Required when `state.kind` is `ready`. */
++  entry?: SavedEntry
++  panels: CustomsStorageDetailsPanels
++  activeTab: CustomsStorageDetailsTab
++  onTabChange: (tab: CustomsStorageDetailsTab) => void
++  invoiceCount: number
++  /** Present only when opened from an Order (FRO-355) or after creation. */
++  returnContext?: ReturnContext | null
++  /** Back to Order; the controller asks first when a draft is open. */
++  onBack: () => void
++  onRetry: () => void
++  hrefFor: RecordHref
++  /** Header action place reserved for FRO-358's Print. */
++  headerActions?: ReactNode
++}
++
++const tabValues: CustomsStorageDetailsTab[] = ['overview', 'invoices', 'export']
++
++export function CustomsStorageDetailsLayout({
++  state,
++  entry,
++  panels,
++  activeTab,
++  onTabChange,
++  invoiceCount,
++  returnContext,
++  onBack,
++  onRetry,
++  hrefFor,
++  headerActions,
++}: CustomsStorageDetailsLayoutProps) {
++  const text = useCustomsStorageDetailsLabels()
++  const tabList = useRef<HTMLDivElement>(null)
++
++  // Complete roving focus locally without changing the shared Tabs primitive.
++  useEffect(() => {
++    tabList.current
++      ?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
++      .forEach((tab, index) => {
++        tab.tabIndex = tabValues[index] === activeTab ? 0 : -1
++      })
++  }, [activeTab, state.kind])
++
++  function onTabKeyDown(event: KeyboardEvent<HTMLDivElement>) {
++    const tabs = Array.from(
++      event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
++    )
++    const current = tabs.indexOf(event.target as HTMLButtonElement)
++    if (
++      current < 0 ||
++      !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)
++    )
++      return
++    event.preventDefault()
++    const next =
++      event.key === 'Home'
++        ? 0
++        : event.key === 'End'
++          ? tabs.length - 1
++          : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) %
++            tabs.length
++    onTabChange(tabValues[next])
++    tabs[next].focus()
++  }
++
++  if (state.kind === 'denied')
++    return (
++      <div className="min-w-0">
++        <Alert tone="danger">{text.accessDenied}</Alert>
++      </div>
++    )
++
++  if (state.kind === 'loading')
++    return (
++      <div className="min-w-0 space-y-5" aria-busy="true">
++        <span className="sr-only">{text.loading}</span>
++        <div className="h-7 w-72 max-w-full animate-pulse rounded-md bg-surface-2" />
++        <Card flush className="space-y-3 p-4 min-[701px]:p-5">
++          {[0, 1, 2].map((row) => (
++            <div
++              key={row}
++              className="h-10 animate-pulse rounded-md bg-surface-2"
++            />
++          ))}
++        </Card>
++      </div>
++    )
++
++  if (state.kind === 'error')
++    return (
++      <div className="min-w-0">
++        <Alert tone="danger">
++          <span className="flex flex-wrap items-center gap-2">
++            {text.loadFailed}
++            <Button size="sm" variant="secondary" onClick={onRetry}>
++              {text.retry}
++            </Button>
++          </span>
++        </Alert>
++      </div>
++    )
++
++  if (state.kind === 'notFound')
++    return (
++      <div className="min-w-0">
++        <p className="rounded-md border border-dashed border-border p-4 text-sm text-fg-muted">
++          {fillLabel(text.notFound, { entryNumber: state.entryNumber })}
++        </p>
++      </div>
++    )
++
++  if (!entry) return null
++
++  return (
++    <div className="min-w-0 space-y-5">
++      <div className="[&>div]:mb-2">
++        <TopBar
++          title={fillLabel(text.title, { entryNumber: entry.entryNumber })}
++          description={fillLabel(text.subtitle, {
++            stockId: entry.owner.stockId,
++            dateTime: entryDateTimeLabel(entry.values),
++          })}
++          actions={headerActions}
++        />
++        {returnContext && (
++          <p className="text-body-sm">
++            <a
++              href={hrefFor('order', returnContext.order.id)}
++              onClick={(event) => {
++                event.preventDefault()
++                onBack()
++              }}
++              className="font-semibold text-accent-active underline underline-offset-2 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
++            >
++              {fillLabel(text.backToOrder, {
++                stockId: returnContext.order.stockId,
++              })}
++            </a>
++          </p>
++        )}
++      </div>
++      {returnContext?.coveredChild && (
++        <Alert tone="info">
++          {fillLabel(text.coveredChild, {
++            childStockId: returnContext.order.stockId,
++            ownerStockId: entry.owner.stockId,
++          })}
++        </Alert>
++      )}
++      <Card flush className="p-4 min-[701px]:p-5">
++        <Tabs
++          defaultValue="overview"
++          value={activeTab}
++          onValueChange={(value) => {
++            const tab = tabValues.find((t) => t === value)
++            if (tab) onTabChange(tab)
++          }}
++        >
++          <div
++            ref={tabList}
++            onKeyDown={onTabKeyDown}
++            className="overflow-x-auto"
++          >
++            {/* Long Greek labels stay on one line; the row scrolls instead. */}
++            <TabList className="w-max min-w-full [&>[role=tab]]:whitespace-nowrap">
++              <Tab value="overview">{text.overview}</Tab>
++              <Tab value="invoices">
++                {fillLabel(text.invoicesTab, { count: invoiceCount })}
++              </Tab>
++              <Tab value="export">{text.exportTab}</Tab>
++            </TabList>
++          </div>
++          <TabPanel value="overview" className="space-y-5 pt-5">
++            {panels.overview}
++          </TabPanel>
++          <TabPanel value="invoices" className="pt-5">
++            {panels.invoices}
++          </TabPanel>
++          <TabPanel value="export" className="pt-5">
++            {panels.export}
++          </TabPanel>
++        </Tabs>
++      </Card>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui-parts.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui-parts.tsx
+new file mode 100644
+index 0000000..03f70db
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui-parts.tsx
+@@ -0,0 +1,491 @@
++import {
++  forwardRef,
++  useEffect,
++  useId,
++  useRef,
++  useState,
++  type KeyboardEvent,
++  type ReactNode,
++} from 'react'
++import { Search } from 'lucide-react'
++import type { Locale } from '#/app/providers/labels-provider'
++import { Alert } from '#/components/ui/alert'
++import { Badge } from '#/components/ui/badge'
++import { Button } from '#/components/ui/button'
++import { Input, Label } from '#/components/ui/input'
++import { cn } from '#/lib/utils'
++import {
++  textLimits,
++  type EntryValueError,
++} from '../customs-storage-details-rules'
++import {
++  fillLabel,
++  type CustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import type { EntryField } from '../types'
++
++/*
++ * Local copies of the FRO-353 parts (mock/fro-353-customs-storage-entry-create,
++ * `../create/components/customs-storage-ui-parts.tsx`, themselves copies of the
++ * FRO-350 picker parts), so this folder shares no file with another mock
++ * branch. De-duplicate with `create/` on integration. New here: the card
++ * heading action slot and `EditActions`.
++ */
++
++/** Card spacing used by every FRO-354 card. */
++export const cardPadding = 'p-4 min-[701px]:p-5'
++
++/** Tables scroll inside their card; `relative` keeps visually hidden headers inside. */
++export const tableScroll =
++  'relative max-w-full overflow-x-auto rounded-lg border border-border'
++
++export function CardHeading({
++  id,
++  title,
++  description,
++  level = 2,
++  action,
++}: {
++  id: string
++  title: string
++  description?: string
++  level?: 2 | 3
++  /** Top-right card action, such as Edit. */
++  action?: ReactNode
++}) {
++  const Heading = level === 2 ? 'h2' : 'h3'
++  return (
++    <div className="mb-4 flex min-w-0 flex-wrap items-start justify-between gap-3">
++      <div className="min-w-0">
++        <Heading id={id} className="text-subheading text-fg">
++          {title}
++        </Heading>
++        {description && (
++          <p className="mt-1 text-body-sm text-fg-muted">{description}</p>
++        )}
++      </div>
++      {action}
++    </div>
++  )
++}
++
++/**
++ * The card's Edit button (FRO-348/352 per-card pattern). While another card is
++ * in edit mode it stays visible but disabled, with the reason underneath.
++ */
++export const EditButton = forwardRef<
++  HTMLButtonElement,
++  { label: string; blockedHint?: string; onClick: () => void }
++>(function EditButton({ label, blockedHint, onClick }, ref) {
++  const hintId = useId()
++  return (
++    <div className="flex flex-col items-end gap-1">
++      <Button
++        ref={ref}
++        variant="secondary"
++        size="sm"
++        disabled={!!blockedHint}
++        aria-describedby={blockedHint ? hintId : undefined}
++        onClick={onClick}
++      >
++        {label}
++      </Button>
++      {blockedHint && (
++        <p id={hintId} className="max-w-56 text-right text-xs text-fg-muted">
++          {blockedHint}
++        </p>
++      )}
++    </div>
++  )
++})
++
++/** Save feedback and Cancel / Save at the bottom of a card in edit mode. */
++export function EditActions({
++  text,
++  feedback,
++  saving,
++  saveDisabled,
++  onCancel,
++  onSave,
++  onRefresh,
++}: {
++  text: CustomsStorageDetailsLabels
++  feedback: 'validation' | 'failed' | 'stale' | null
++  saving: boolean
++  saveDisabled?: boolean
++  onCancel: () => void
++  onSave: () => void
++  onRefresh: () => void
++}) {
++  return (
++    <div className="mt-4 space-y-3">
++      {feedback === 'validation' && (
++        <Alert tone="danger">{text.errorSummary}</Alert>
++      )}
++      {feedback === 'failed' && <Alert tone="danger">{text.saveFailed}</Alert>}
++      {feedback === 'stale' && (
++        <Alert tone="warning">
++          <span>{text.saveStale}</span>{' '}
++          <Button size="sm" variant="secondary" onClick={onRefresh}>
++            {text.refresh}
++          </Button>
++        </Alert>
++      )}
++      <div className="flex flex-wrap justify-end gap-2">
++        <Button variant="secondary" onClick={onCancel}>
++          {text.cancel}
++        </Button>
++        <Button onClick={onSave} loading={saving} disabled={saveDisabled}>
++          {saving ? text.saving : text.save}
++        </Button>
++      </div>
++    </div>
++  )
++}
++
++/** Escape cancels a card's edit unless an open picker or calendar takes it first. */
++export function cancelOnEscape(onCancel: () => void) {
++  return (event: KeyboardEvent<HTMLElement>) => {
++    if (
++      event.key !== 'Escape' ||
++      event.defaultPrevented ||
++      event.currentTarget.querySelector('[aria-expanded="true"]')
++    )
++      return
++    event.preventDefault()
++    onCancel()
++  }
++}
++
++/** A value flag such as Unknown or Missing; text, never colour alone. */
++export function ValueMarker({ children }: { children: ReactNode }) {
++  return (
++    <Badge tone="warning" className="ml-1.5 align-middle">
++      {children}
++    </Badge>
++  )
++}
++
++export function ReadOnlyField({
++  label,
++  marker,
++  className,
++  mono = false,
++  children,
++}: {
++  label: string
++  marker?: ReactNode
++  className?: string
++  mono?: boolean
++  children?: ReactNode
++}) {
++  const id = useId()
++  const empty = children === null || children === undefined || children === ''
++  return (
++    <div className={cn('flex min-w-0 flex-col gap-1.5', className)}>
++      <Label id={id}>
++        {label}
++        {marker}
++      </Label>
++      <div
++        aria-labelledby={id}
++        role="group"
++        className={cn(
++          'flex min-h-10 items-center rounded-md border border-border bg-surface-2 px-3 py-1.5 text-sm [overflow-wrap:anywhere]',
++          empty ? 'text-fg-subtle' : 'text-fg',
++          mono && !empty && 'font-mono',
++        )}
++      >
++        {empty ? '—' : children}
++      </div>
++    </div>
++  )
++}
++
++export function RecordLink({
++  href,
++  mono = true,
++  children,
++}: {
++  href: string
++  mono?: boolean
++  children: ReactNode
++}) {
++  return (
++    <a
++      href={href}
++      className={cn(
++        'font-semibold text-accent-active underline underline-offset-2 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
++        mono && 'font-mono',
++      )}
++    >
++      {children}
++    </a>
++  )
++}
++
++const athensParts = new Intl.DateTimeFormat('en-GB', {
++  timeZone: 'Europe/Athens',
++  day: '2-digit',
++  month: '2-digit',
++  year: 'numeric',
++  hour: '2-digit',
++  minute: '2-digit',
++  hourCycle: 'h23',
++})
++
++/** dd/mm/yyyy HH:mm of an instant in Europe/Athens, the same in EN and EL. */
++export function formatAthensDateTime(iso: string): string {
++  const parts = athensParts.formatToParts(new Date(iso))
++  const part = (type: Intl.DateTimeFormatPartTypes) =>
++    parts.find((p) => p.type === type)?.value ?? ''
++  return `${part('day')}/${part('month')}/${part('year')} ${part('hour')}:${part('minute')}`
++}
++
++/** Formats an exact decimal string with two decimals, without float conversion. */
++export function formatAmount(value: string, locale: Locale): string {
++  const [whole, fraction = ''] = value.split('.')
++  const group = locale === 'el' ? '.' : ','
++  const decimal = locale === 'el' ? ',' : '.'
++  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, group)
++  return `${grouped}${decimal}${fraction.padEnd(2, '0').slice(0, 2)}`
++}
++
++export interface SearchPickerResult {
++  key: string
++  primary: ReactNode
++  secondary?: ReactNode
++  /** When set, the result is listed but cannot be selected. */
++  unavailableReason?: ReactNode
++  /** Extra control shown under an unavailable result (e.g. Open). */
++  unavailableAction?: ReactNode
++}
++
++export interface SearchPickerProps {
++  label: string
++  placeholder: string
++  query: string
++  onQueryChange: (query: string) => void
++  /** Restores the field to the selected value when the list closes. */
++  onClose?: () => void
++  results: SearchPickerResult[]
++  /** Replaces the results with a loading, empty or error row. */
++  status?: ReactNode
++  onSelect: (key: string) => void
++  required?: boolean
++  fieldName: string
++}
++
++/**
++ * Search field with an overlay result list (FRO-347/350 picker behaviour):
++ * opens on focus or click, closes on outside click, focus leaving or Escape.
++ * Arrow keys move through results, including unavailable ones so their reason
++ * is read; Enter selects only available results. Typing never changes the
++ * current selection.
++ */
++export function SearchPicker({
++  label,
++  placeholder,
++  query,
++  onQueryChange,
++  onClose,
++  results,
++  status,
++  onSelect,
++  required,
++  fieldName,
++}: SearchPickerProps) {
++  const id = useId()
++  const [open, setOpen] = useState(false)
++  const root = useRef<HTMLDivElement>(null)
++  const input = useRef<HTMLInputElement>(null)
++  const suppressOpen = useRef(false)
++
++  function close() {
++    setOpen(false)
++    onClose?.()
++  }
++
++  useEffect(() => {
++    if (!open) return
++    const onPointer = (event: PointerEvent) => {
++      if (!root.current?.contains(event.target as Node)) close()
++    }
++    document.addEventListener('pointerdown', onPointer)
++    return () => document.removeEventListener('pointerdown', onPointer)
++  })
++
++  function options() {
++    return Array.from(
++      root.current?.querySelectorAll<HTMLElement>('[data-picker-option]') ?? [],
++    )
++  }
++
++  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
++    if (event.key === 'Escape' && open) {
++      event.preventDefault()
++      close()
++      if (document.activeElement !== input.current) {
++        suppressOpen.current = true
++        input.current?.focus()
++      }
++      return
++    }
++    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
++    event.preventDefault()
++    if (!open) setOpen(true)
++    requestAnimationFrame(() => {
++      const list = options()
++      if (list.length === 0) return
++      const current = list.indexOf(document.activeElement as HTMLElement)
++      const next =
++        event.key === 'ArrowDown'
++          ? Math.min(current + 1, list.length - 1)
++          : current <= 0
++            ? -1
++            : current - 1
++      if (next < 0) input.current?.focus()
++      else list[next].focus()
++    })
++  }
++
++  const optionClass =
++    'block w-full rounded-md px-2.5 py-2 text-left outline-none hover:bg-accent-subtle focus-visible:bg-accent-subtle'
++
++  return (
++    <div
++      ref={root}
++      className="relative flex min-w-0 flex-col gap-1.5"
++      data-entry-field={fieldName}
++      onKeyDown={onKeyDown}
++      onBlur={(event) => {
++        if (open && !root.current?.contains(event.relatedTarget as Node | null))
++          close()
++      }}
++    >
++      <Label htmlFor={`${id}-input`} required={required}>
++        {label}
++      </Label>
++      <Input
++        ref={input}
++        id={`${id}-input`}
++        role="combobox"
++        aria-expanded={open}
++        aria-controls={`${id}-list`}
++        aria-autocomplete="list"
++        autoComplete="off"
++        placeholder={placeholder}
++        value={query}
++        leadingIcon={<Search aria-hidden />}
++        onFocus={() => {
++          if (suppressOpen.current) suppressOpen.current = false
++          else setOpen(true)
++        }}
++        onClick={() => setOpen(true)}
++        onChange={(event) => {
++          onQueryChange(event.target.value)
++          setOpen(true)
++        }}
++      />
++      {open && (
++        <ul
++          id={`${id}-list`}
++          role="listbox"
++          aria-label={label}
++          className="absolute inset-x-0 top-full mt-1 max-h-80 overflow-y-auto rounded-md border border-border bg-surface p-1 shadow-popover"
++          style={{ zIndex: 'var(--z-popover)' as unknown as number }}
++        >
++          {status ? (
++            <li className="px-2.5 py-2 text-xs text-fg-muted">{status}</li>
++          ) : (
++            results.map((result) => {
++              const unavailable = result.unavailableReason != null
++              const body = (
++                <>
++                  <span className="block text-sm font-semibold text-fg">
++                    {result.primary}
++                  </span>
++                  {result.secondary && (
++                    <span className="block text-xs text-fg-muted">
++                      {result.secondary}
++                    </span>
++                  )}
++                </>
++              )
++              return (
++                <li
++                  key={result.key}
++                  role="option"
++                  aria-selected={false}
++                  aria-disabled={unavailable || undefined}
++                >
++                  {unavailable ? (
++                    <div
++                      data-picker-option
++                      tabIndex={-1}
++                      aria-disabled
++                      className={cn(optionClass, 'cursor-not-allowed')}
++                    >
++                      {body}
++                      <span className="mt-0.5 block text-xs text-warning-fg">
++                        {result.unavailableReason}
++                      </span>
++                      {result.unavailableAction}
++                    </div>
++                  ) : (
++                    <button
++                      type="button"
++                      data-picker-option
++                      className={optionClass}
++                      onClick={() => {
++                        onSelect(result.key)
++                        setOpen(false)
++                      }}
++                    >
++                      {body}
++                    </button>
++                  )}
++                </li>
++              )
++            })
++          )}
++        </ul>
++      )}
++    </div>
++  )
++}
++
++/** Focuses the first control of a field after the controller opens Overview. */
++export function focusEntryField(field: EntryField) {
++  requestAnimationFrame(() => {
++    const container = document.querySelector<HTMLElement>(
++      `[data-entry-field="${field}"]`,
++    )
++    const target =
++      container?.querySelector<HTMLElement>('input, textarea, button') ??
++      container
++    target?.focus()
++  })
++}
++
++export function entryErrorMessage(
++  text: CustomsStorageDetailsLabels,
++  field: EntryField,
++  error: EntryValueError,
++): string {
++  if (error === 'tooLong')
++    return fillLabel(text.errorTooLong, { limit: textLimits[field] ?? 500 })
++  switch (field) {
++    case 'entryDate':
++    case 'entryTime':
++      return error === 'required'
++        ? text.errorEntryDateRequired
++        : text.errorEntryDateFuture
++    case 'entryMrnDate':
++      return text.errorMrnDateFuture
++    case 'tariffCode':
++      return text.errorTariff
++    default:
++      return text.errorSummary
++  }
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui.test.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui.test.tsx
+new file mode 100644
+index 0000000..d8fcb3c
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/customs-storage-details-ui.test.tsx
+@@ -0,0 +1,692 @@
++import { useState, type ReactNode } from 'react'
++import {
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  within,
++} from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { LabelsProvider, useLocale } from '#/app/providers/labels-provider'
++import { exportCoverage } from '../customs-storage-details-rules'
++import {
++  CustomsStatus,
++  EntryIneligibleReason,
++  type CustomsStorageDetailsTab,
++  type ExportSummary,
++  type InvoiceRow,
++  type OrderSearchResult,
++  type PageState,
++  type SavedEntry,
++} from '../types'
++import { ChangeOrderDialog } from './change-order-dialog'
++import { CustomsStorageDetailsLayout } from './customs-storage-details-layout'
++import { DiscardChangesDialog } from './discard-changes-dialog'
++import { EntryDetailsCard } from './entry-details-card'
++import { OrderRelationshipCard } from './order-relationship-card'
++import { RelatedExportCard } from './related-export-card'
++import { RelatedInvoicesCard } from './related-invoices-card'
++
++afterEach(() => {
++  cleanup()
++  localStorage.clear()
++})
++
++const hrefFor = (kind: string, id: string) => `/${kind}/${id}`
++const wrap = (ui: ReactNode) => render(<LabelsProvider>{ui}</LabelsProvider>)
++const NOW = new Date('2026-10-27T08:00:00Z')
++
++const entry: SavedEntry = {
++  id: 'cse-1042',
++  entryNumber: '1042',
++  version: 'v1',
++  values: {
++    entryDate: '2026-10-20',
++    entryTime: '10:05',
++    entryMrn: '26GR0000CS00001042',
++    entryMrnDate: '2026-10-20',
++    tariffCode: '0402100000',
++    goodsDescription: 'Ship spares',
++    transportMeans: 'Truck DEMO-1234',
++    permitNumber: 'DEMO-CS-0001',
++    operatorName: 'Demo Hub Operator S.A.',
++    operatorVat: '800000003',
++    warehouseAddress: 'Demo Street 12, 18545 Piraeus',
++  },
++  createdBy: { name: 'Demo Operator', at: '2026-10-20T07:07:00Z' },
++  owner: {
++    id: 'po-5',
++    stockId: 'PO-0000005',
++    admissionAt: '2026-10-20T06:42:00Z',
++    warehouse: { id: 'wh-1', code: 'ATH-HUB', name: 'Demo Athens Hub' },
++    admittedCollis: 10,
++    grossWeightKg: null,
++    depositor: null,
++    client: { name: 'Demo Client Company', vatNumber: null },
++    supplier: { name: 'Demo Supplier S.A.', vatNumber: '800000001' },
++  },
++}
++
++const coveredByThis = {
++  eligible: false as const,
++  reason: EntryIneligibleReason.ALREADY_COVERED,
++  order: { id: 'po-5', stockId: 'PO-0000005' },
++  entry: { id: 'cse-1042', entryNumber: '1042' },
++}
++const result = (
++  id: string,
++  stockId: string,
++  eligibility: OrderSearchResult['eligibility'],
++): OrderSearchResult => ({
++  id,
++  stockId,
++  status: 'IN_STOCK',
++  clientName: 'Demo Client Company',
++  supplierName: 'Demo Supplier S.A.',
++  eligibility,
++})
++const results: OrderSearchResult[] = [
++  result('po-5', 'PO-0000005', coveredByThis),
++  result('po-5-1', 'PO-0000005_1', coveredByThis),
++  result('po-6', 'PO-0000006', { eligible: true }),
++  result('po-8', 'PO-0000008', {
++    eligible: false,
++    reason: EntryIneligibleReason.ALREADY_COVERED,
++    order: { id: 'po-3', stockId: 'PO-0000003' },
++    entry: { id: 'cse-1041', entryNumber: '1041' },
++  }),
++  result('po-9', 'PO-0000009', {
++    eligible: false,
++    reason: EntryIneligibleReason.CANCELLED,
++  }),
++]
++
++const row = (
++  id: string,
++  netValue: string,
++  currency = 'EUR',
++  exportId: string | null = 'exp-1',
++): InvoiceRow => ({
++  id,
++  invoiceNumber: `INV-${id}`,
++  invoiceDate: '2026-10-12',
++  supplierName: 'Demo Supplier S.A.',
++  invoiceType: 'Αποθήκη Αποθήκευσης (Δελτίο Εισόδου)',
++  currency,
++  netValue,
++  vatValue: '0.00',
++  exportId,
++})
++const fourInvoices = [
++  row('301', '250.00'),
++  row('302', '199.99'),
++  row('303', '210.50'),
++  row('304', '143.13'),
++]
++const exp: ExportSummary = {
++  id: 'exp-1',
++  exportNumber: 'EXP-31',
++  mrn: '26GR0000EX00000412',
++  mrnDate: '2026-10-24',
++  customsStatus: CustomsStatus.AWAITING_IE599,
++}
++
++function GreekSwitch() {
++  const { setLocale } = useLocale()
++  return <button onClick={() => setLocale('el')}>EL</button>
++}
++
++describe('layout', () => {
++  function Harness({
++    state = { kind: 'ready' },
++    coveredChild = false,
++    withReturn = true,
++    onBack = () => {},
++    onRetry = () => {},
++  }: {
++    state?: PageState
++    coveredChild?: boolean
++    withReturn?: boolean
++    onBack?: () => void
++    onRetry?: () => void
++  }) {
++    const [tab, setTab] = useState<CustomsStorageDetailsTab>('overview')
++    return (
++      <CustomsStorageDetailsLayout
++        state={state}
++        entry={entry}
++        panels={{
++          overview: <p>overview panel</p>,
++          invoices: <p>invoices panel</p>,
++          export: <p>export panel</p>,
++        }}
++        activeTab={tab}
++        onTabChange={setTab}
++        invoiceCount={4}
++        returnContext={
++          withReturn
++            ? {
++                order: coveredChild
++                  ? { id: 'po-5-1', stockId: 'PO-0000005_1' }
++                  : { id: 'po-5', stockId: 'PO-0000005' },
++                coveredChild,
++              }
++            : null
++        }
++        onBack={onBack}
++        onRetry={onRetry}
++        hrefFor={hrefFor}
++      />
++    )
++  }
++
++  it('shows the title, subtitle, Back to Order and three tabs', () => {
++    const onBack = vi.fn()
++    wrap(<Harness onBack={onBack} />)
++    expect(
++      screen.getByRole('heading', { name: 'Customs Storage Entry 1042' }),
++    ).toBeTruthy()
++    expect(screen.getByText('Order PO-0000005 · 20/10/2026 10:05')).toBeTruthy()
++    expect(screen.getAllByRole('tab').map((t) => t.textContent)).toEqual([
++      'Overview',
++      'Related Supplier Invoices (4)',
++      'Related Export',
++    ])
++    fireEvent.click(
++      screen.getByRole('link', { name: 'Back to Order PO-0000005' }),
++    )
++    expect(onBack).toHaveBeenCalledOnce()
++    expect(
++      screen.queryByRole('button', { name: /Edit|Save|Create/ }),
++    ).toBeNull()
++  })
++
++  it('has no back link without return context', () => {
++    wrap(<Harness withReturn={false} />)
++    expect(screen.queryByRole('link', { name: /Back to Order/ })).toBeNull()
++  })
++
++  it('names the child and the owner when opened from a covered child', () => {
++    wrap(<Harness coveredChild />)
++    expect(
++      screen.getByText(
++        'Opened from Order PO-0000005_1, which is covered by this entry (split after admission). The entry belongs to Order PO-0000005.',
++      ),
++    ).toBeTruthy()
++    expect(
++      screen.getByRole('link', { name: 'Back to Order PO-0000005_1' }),
++    ).toBeTruthy()
++  })
++
++  it('moves between tabs with the arrow keys', () => {
++    wrap(<Harness />)
++    fireEvent.keyDown(screen.getByRole('tab', { name: 'Overview' }), {
++      key: 'ArrowRight',
++    })
++    expect(screen.getByText('invoices panel')).toBeTruthy()
++    fireEvent.keyDown(screen.getByRole('tab', { name: /Related Supplier/ }), {
++      key: 'End',
++    })
++    expect(screen.getByText('export panel')).toBeTruthy()
++  })
++
++  it('shows the denied, error, not-found and loading states', () => {
++    const onRetry = vi.fn()
++    const { unmount } = wrap(<Harness state={{ kind: 'denied' }} />)
++    expect(
++      screen.getByText(
++        'You do not have permission to view Customs Storage Entries.',
++      ),
++    ).toBeTruthy()
++    expect(screen.queryByRole('tab')).toBeNull()
++    unmount()
++    const second = wrap(<Harness state={{ kind: 'error' }} onRetry={onRetry} />)
++    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++    expect(onRetry).toHaveBeenCalledOnce()
++    second.unmount()
++    const third = wrap(
++      <Harness state={{ kind: 'notFound', entryNumber: '1099' }} />,
++    )
++    expect(
++      screen.getByText('Customs Storage Entry 1099 was not found.'),
++    ).toBeTruthy()
++    third.unmount()
++    wrap(<Harness state={{ kind: 'loading' }} />)
++    expect(screen.getByText('Loading…')).toBeTruthy()
++    expect(screen.queryByRole('tab')).toBeNull()
++  })
++})
++
++describe('Order relationship', () => {
++  const card = (
++    props: Partial<Parameters<typeof OrderRelationshipCard>[0]> = {},
++  ) => (
++    <OrderRelationshipCard
++      entry={entry}
++      canEdit
++      editing={null}
++      onEdit={() => {}}
++      onCancel={() => {}}
++      onSave={() => {}}
++      onRefresh={() => {}}
++      saving={false}
++      feedback={null}
++      query=""
++      onQueryChange={() => {}}
++      onSearchClose={() => {}}
++      search={{ kind: 'results', results }}
++      onRetrySearch={() => {}}
++      onSelect={() => {}}
++      chosen={null}
++      hrefFor={hrefFor}
++      {...props}
++    />
++  )
++
++  it('shows the owner facts with Unknown and Missing markers', () => {
++    wrap(card())
++    const region = screen.getByRole('region', { name: 'Order relationship' })
++    expect(
++      within(region).getByRole('link', { name: 'PO-0000005' }),
++    ).toBeTruthy()
++    expect(within(region).getAllByText('Unknown')).toHaveLength(2)
++    expect(within(region).getByText('Missing')).toBeTruthy()
++    expect(within(region).getByText('10')).toBeTruthy()
++  })
++
++  it('offers Edit only with edit authority and disables it during another edit', () => {
++    const onEdit = vi.fn()
++    const { rerender } = wrap(card({ onEdit }))
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    expect(onEdit).toHaveBeenCalledOnce()
++    rerender(<LabelsProvider>{card({ editing: 'details' })}</LabelsProvider>)
++    const edit = screen.getByRole('button', {
++      name: 'Edit',
++    }) as HTMLButtonElement
++    expect(edit.disabled).toBe(true)
++    expect(
++      screen.getByText('Save or cancel the current edit first.'),
++    ).toBeTruthy()
++    rerender(<LabelsProvider>{card({ canEdit: false })}</LabelsProvider>)
++    expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
++  })
++
++  it('lists the current Order, Orders covered here and other reasons', () => {
++    const onSelect = vi.fn()
++    wrap(card({ editing: 'order', onSelect }))
++    fireEvent.focus(screen.getByRole('combobox', { name: /Order/ }))
++    const list = screen.getByRole('listbox')
++    expect(within(list).getByText('Current Order of this entry')).toBeTruthy()
++    expect(
++      within(list).getByText('Covered by this entry (split after admission)'),
++    ).toBeTruthy()
++    expect(within(list).getByText('This Order is cancelled.')).toBeTruthy()
++    expect(within(list).getByRole('link', { name: 'Open' })).toBeTruthy()
++    expect(
++      within(list)
++        .queryAllByRole('button')
++        .map((b) => b.textContent),
++    ).toEqual([expect.stringContaining('PO-0000006')])
++    fireEvent.click(within(list).getByRole('button'))
++    expect(onSelect).toHaveBeenCalledWith('po-6')
++  })
++
++  it('enables Save only with a chosen Order and cancels with Escape', () => {
++    const onSave = vi.fn()
++    const onCancel = vi.fn()
++    const { rerender } = wrap(card({ editing: 'order', onSave, onCancel }))
++    expect(
++      (screen.getByRole('button', { name: 'Save' }) as HTMLButtonElement)
++        .disabled,
++    ).toBe(true)
++    rerender(
++      <LabelsProvider>
++        {card({ editing: 'order', onSave, onCancel, chosen: results[2] })}
++      </LabelsProvider>,
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++    expect(onSave).toHaveBeenCalledOnce()
++    // The first Escape closes an open result list; the next one cancels.
++    const search = screen.getByRole('combobox', { name: /Order/ })
++    fireEvent.focus(search)
++    fireEvent.keyDown(search, { key: 'Escape' })
++    expect(onCancel).not.toHaveBeenCalled()
++    expect(screen.queryByRole('listbox')).toBeNull()
++    fireEvent.keyDown(screen.getByRole('button', { name: 'Save' }), {
++      key: 'Escape',
++    })
++    expect(onCancel).toHaveBeenCalledOnce()
++  })
++
++  it('shows a server rejection and save failures', () => {
++    const { rerender } = wrap(
++      card({
++        editing: 'order',
++        feedback: { kind: 'rejected', eligibility: results[3].eligibility },
++      }),
++    )
++    expect(
++      screen.getAllByRole('link', { name: 'PO-0000003' }),
++    ).not.toHaveLength(0)
++    expect(
++      screen.getAllByText(/Already covered by Customs Storage Entry 1041/)
++        .length,
++    ).toBeGreaterThan(0)
++    rerender(
++      <LabelsProvider>
++        {card({ editing: 'order', feedback: { kind: 'stale' } })}
++      </LabelsProvider>,
++    )
++    expect(screen.getByRole('button', { name: 'Refresh' })).toBeTruthy()
++  })
++
++  it('shows the search loading and error states', () => {
++    const onRetrySearch = vi.fn()
++    wrap(card({ editing: 'order', search: { kind: 'error' }, onRetrySearch }))
++    fireEvent.focus(screen.getByRole('combobox', { name: /Order/ }))
++    expect(screen.getByText('Could not search Orders.')).toBeTruthy()
++    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++    expect(onRetrySearch).toHaveBeenCalledOnce()
++  })
++})
++
++describe('Change Order dialog', () => {
++  it('names the Order, warns about another warehouse and confirms', () => {
++    const onConfirm = vi.fn()
++    const onCancel = vi.fn()
++    wrap(
++      <ChangeOrderDialog
++        target={{ stockId: 'PO-0000006' }}
++        otherWarehouse={{
++          id: 'wh-2',
++          code: 'ATH-HUB-2',
++          name: 'Demo Athens Hub 2',
++        }}
++        confirming={false}
++        onCancel={onCancel}
++        onConfirm={onConfirm}
++      />,
++    )
++    const dialog = screen.getByRole('dialog')
++    expect(within(dialog).getByText('Change Order to PO-0000006?')).toBeTruthy()
++    expect(
++      within(dialog).getByText(
++        'Order PO-0000006 was admitted at ATH-HUB-2 · Demo Athens Hub 2. The warehouse operator values on this entry are not changed.',
++      ),
++    ).toBeTruthy()
++    fireEvent.click(
++      within(dialog).getByRole('button', { name: 'Confirm change' }),
++    )
++    expect(onConfirm).toHaveBeenCalledOnce()
++    fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
++    expect(onCancel).toHaveBeenCalledOnce()
++  })
++
++  it('has no warehouse warning for the same warehouse and is closed without a target', () => {
++    const { rerender } = wrap(
++      <ChangeOrderDialog
++        target={{ stockId: 'PO-0000007' }}
++        otherWarehouse={null}
++        confirming={false}
++        onCancel={() => {}}
++        onConfirm={() => {}}
++      />,
++    )
++    expect(screen.queryByText(/was admitted at/)).toBeNull()
++    rerender(
++      <LabelsProvider>
++        <ChangeOrderDialog
++          target={null}
++          otherWarehouse={null}
++          confirming={false}
++          onCancel={() => {}}
++          onConfirm={() => {}}
++        />
++      </LabelsProvider>,
++    )
++    expect(screen.queryByRole('dialog')).toBeNull()
++  })
++})
++
++describe('entry details', () => {
++  const card = (
++    props: Partial<Parameters<typeof EntryDetailsCard>[0]> = {},
++  ) => (
++    <EntryDetailsCard
++      entry={entry}
++      canEdit
++      editing={null}
++      draft={null}
++      errors={{}}
++      onEdit={() => {}}
++      onChange={() => {}}
++      onCancel={() => {}}
++      onSave={() => {}}
++      onRefresh={() => {}}
++      saving={false}
++      feedback={null}
++      warehouseReview={null}
++      now={NOW}
++      {...props}
++    />
++  )
++
++  it('shows saved values read-only with Created by and fixed fields', () => {
++    wrap(card())
++    expect(screen.getByText('1042')).toBeTruthy()
++    expect(screen.getByText('20/10/2026 10:05')).toBeTruthy()
++    expect(screen.getByText('20/10/2026')).toBeTruthy()
++    expect(screen.getByText('0402100000')).toBeTruthy()
++    expect(screen.getByText('FRONT LINE Forwarding & Agency LTD')).toBeTruthy()
++    expect(
++      screen.getByText('Created by Demo Operator · 20/10/2026 10:07'),
++    ).toBeTruthy()
++    expect(screen.queryByRole('textbox')).toBeNull()
++    expect(
++      screen
++        .getAllByRole('heading', { level: 3 })
++        .map((heading) => heading.textContent),
++    ).toEqual(['Entry details', 'Goods and transport', 'Warehouse operator'])
++  })
++
++  it('turns the ten entry-owned fields into controls while editing', () => {
++    const onChange = vi.fn()
++    wrap(card({ editing: 'details', draft: entry.values, onChange }))
++    const mrn = screen.getByRole('textbox', { name: /Entry MRN/ })
++    expect((mrn as HTMLInputElement).value).toBe('26GR0000CS00001042')
++    fireEvent.change(screen.getByRole('textbox', { name: /Tariff/ }), {
++      target: { value: '0012' },
++    })
++    expect(onChange).toHaveBeenCalledWith('tariffCode', '0012')
++    for (const name of [
++      /Goods description/,
++      /Transport means/,
++      /Permit number/,
++      /Operator name/,
++      /Operator ΑΦΜ/,
++      /Warehouse address/,
++    ])
++      expect(screen.getByRole('textbox', { name })).toBeTruthy()
++    expect(screen.getByText('1042')).toBeTruthy()
++    expect(screen.getByText('FRONT LINE Forwarding & Agency LTD')).toBeTruthy()
++    expect(screen.getByLabelText('Entry time')).toBeTruthy()
++  })
++
++  it('shows field errors, the summary and stale feedback', () => {
++    const onRefresh = vi.fn()
++    const { rerender } = wrap(
++      card({
++        editing: 'details',
++        draft: { ...entry.values, tariffCode: '12a' },
++        errors: { tariffCode: 'format', entryDate: 'future' },
++        feedback: { kind: 'validation' },
++      }),
++    )
++    expect(screen.getByText('Use digits only, up to 10.')).toBeTruthy()
++    expect(
++      screen.getByText('The entry date and time cannot be later than now.'),
++    ).toBeTruthy()
++    expect(screen.getByText('Fix the highlighted fields.')).toBeTruthy()
++    rerender(
++      <LabelsProvider>
++        {card({
++          editing: 'details',
++          draft: entry.values,
++          feedback: { kind: 'stale' },
++          onRefresh,
++        })}
++      </LabelsProvider>,
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
++    expect(onRefresh).toHaveBeenCalledOnce()
++  })
++
++  it('cancels with Escape and shows the warehouse review notice', () => {
++    const onCancel = vi.fn()
++    const { rerender } = wrap(
++      card({ editing: 'details', draft: entry.values, onCancel }),
++    )
++    fireEvent.keyDown(screen.getByRole('textbox', { name: /Entry MRN/ }), {
++      key: 'Escape',
++    })
++    expect(onCancel).toHaveBeenCalledOnce()
++    rerender(
++      <LabelsProvider>
++        {card({
++          warehouseReview: {
++            id: 'wh-2',
++            code: 'ATH-HUB-2',
++            name: 'Demo Athens Hub 2',
++          },
++        })}
++      </LabelsProvider>,
++    )
++    expect(
++      screen.getByText(
++        'The admitting warehouse is now ATH-HUB-2 · Demo Athens Hub 2. Warehouse operator values were kept; review them.',
++      ),
++    ).toBeTruthy()
++  })
++
++  it('disables Edit while the Order card is being edited', () => {
++    wrap(card({ editing: 'order' }))
++    expect(
++      (screen.getByRole('button', { name: 'Edit' }) as HTMLButtonElement)
++        .disabled,
++    ).toBe(true)
++  })
++})
++
++describe('related invoices', () => {
++  it('lists rows with Statistical VAT and the EUR totals footer', () => {
++    wrap(<RelatedInvoicesCard invoices={fourInvoices} hrefFor={hrefFor} />)
++    expect(
++      screen.getByText(
++        'Active invoices of type Αποθήκη Αποθήκευσης (Δελτίο Εισόδου) on the owning Order.',
++      ),
++    ).toBeTruthy()
++    const footer = screen.getByText('Totals (EUR)').closest('tr')!
++    expect(within(footer).getByText('803.62')).toBeTruthy()
++    expect(within(footer).getByText('192.87')).toBeTruthy()
++    expect(screen.getByRole('link', { name: '301' }).getAttribute('href')).toBe(
++      '/invoice/301',
++    )
++  })
++
++  it('hides totals for mixed currency and explains no invoices', () => {
++    const { rerender } = wrap(
++      <RelatedInvoicesCard
++        invoices={[row('1', '10.00'), row('2', '5.00', 'USD')]}
++        hrefFor={hrefFor}
++      />,
++    )
++    expect(screen.queryByText('Totals (EUR)')).toBeNull()
++    expect(
++      screen.getByText(
++        'Mixed or non-EUR currency: totals and total Statistical VAT are not shown.',
++      ),
++    ).toBeTruthy()
++    rerender(
++      <LabelsProvider>
++        <RelatedInvoicesCard invoices={[]} hrefFor={hrefFor} />
++      </LabelsProvider>,
++    )
++    expect(
++      screen.getByText('This Order has no matching invoices yet.'),
++    ).toBeTruthy()
++  })
++
++  it('uses Greek separators and labels', () => {
++    wrap(
++      <>
++        <GreekSwitch />
++        <RelatedInvoicesCard
++          invoices={[row('1', '1234.50')]}
++          hrefFor={hrefFor}
++        />
++      </>,
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'EL' }))
++    expect(
++      screen.getByRole('columnheader', {
++        name: 'Στατιστικός ΦΠΑ (υποθετικός, 24%)',
++      }),
++    ).toBeTruthy()
++    expect(screen.getAllByRole('cell', { name: '1.234,50' })).toHaveLength(2)
++  })
++})
++
++describe('related Export', () => {
++  it('shows the Export facts and status, with the partial note', () => {
++    wrap(
++      <RelatedExportCard
++        coverage={exportCoverage(
++          [row('1', '1.00'), row('2', '1.00', 'EUR', null)],
++          exp,
++        )}
++        hrefFor={hrefFor}
++      />,
++    )
++    expect(screen.getByText('1 of 2 invoices are in this Export.')).toBeTruthy()
++    expect(screen.getByRole('link', { name: 'EXP-31' })).toBeTruthy()
++    expect(screen.getByText('24/10/2026')).toBeTruthy()
++    expect(screen.getByText('Awaiting IE599')).toBeTruthy()
++    expect(
++      screen.getByText('Read from the Export. Change it on the Export page.'),
++    ).toBeTruthy()
++  })
++
++  it('explains the empty cases', () => {
++    const { rerender } = wrap(
++      <RelatedExportCard
++        coverage={exportCoverage([], null)}
++        hrefFor={hrefFor}
++      />,
++    )
++    expect(screen.getByText('No matching invoices, so no Export.')).toBeTruthy()
++    rerender(
++      <LabelsProvider>
++        <RelatedExportCard
++          coverage={exportCoverage([row('1', '1.00', 'EUR', null)], null)}
++          hrefFor={hrefFor}
++        />
++      </LabelsProvider>,
++    )
++    expect(
++      screen.getByText('None of the matching invoices is in an Export yet.'),
++    ).toBeTruthy()
++  })
++})
++
++describe('discard dialog', () => {
++  it('keeps or discards', () => {
++    const onKeep = vi.fn()
++    const onDiscard = vi.fn()
++    wrap(<DiscardChangesDialog open onKeep={onKeep} onDiscard={onDiscard} />)
++    expect(screen.getByText('Discard your changes?')).toBeTruthy()
++    fireEvent.click(screen.getByRole('button', { name: 'Keep editing' }))
++    expect(onKeep).toHaveBeenCalledOnce()
++    fireEvent.click(screen.getByRole('button', { name: 'Discard' }))
++    expect(onDiscard).toHaveBeenCalledOnce()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/discard-changes-dialog.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/discard-changes-dialog.tsx
+new file mode 100644
+index 0000000..98391df
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/discard-changes-dialog.tsx
+@@ -0,0 +1,36 @@
++import { Button } from '#/components/ui/button'
++import { Modal } from '#/components/ui/modal'
++import { useCustomsStorageDetailsLabels } from '../localization/customs-storage-details-labels'
++
++/** Back to Order with a changed draft asks first. Keep editing keeps it. */
++export function DiscardChangesDialog({
++  open,
++  onKeep,
++  onDiscard,
++}: {
++  open: boolean
++  onKeep: () => void
++  onDiscard: () => void
++}) {
++  const text = useCustomsStorageDetailsLabels()
++  return (
++    <Modal
++      open={open}
++      onClose={onKeep}
++      size="sm"
++      title={text.discardTitle}
++      footer={
++        <>
++          <Button variant="secondary" onClick={onKeep}>
++            {text.keepEditing}
++          </Button>
++          <Button variant="danger" onClick={onDiscard}>
++            {text.discard}
++          </Button>
++        </>
++      }
++    >
++      <p className="text-sm text-fg-muted">{text.discardDescription}</p>
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/entry-details-card.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/entry-details-card.tsx
+new file mode 100644
+index 0000000..2a80483
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/entry-details-card.tsx
+@@ -0,0 +1,359 @@
++import { useEffect, useId, useRef, type ReactNode } from 'react'
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { DatePicker } from '#/components/ui/date-picker'
++import { FormField, Input, Textarea } from '#/components/ui/input'
++import { formatDMY, formatIsoDate, parseIsoDate } from '#/lib/date'
++import { cn } from '#/lib/utils'
++import {
++  athensNow,
++  editBlocked,
++  entryDateTimeLabel,
++  type EntryValueErrors,
++} from '../customs-storage-details-rules'
++import {
++  fillLabel,
++  useCustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import type {
++  EditingCard,
++  EntryField,
++  EntryValues,
++  SaveFeedback,
++  SavedEntry,
++  WarehouseReference,
++} from '../types'
++import {
++  CardHeading,
++  EditActions,
++  EditButton,
++  ReadOnlyField,
++  cancelOnEscape,
++  cardPadding,
++  entryErrorMessage,
++  formatAthensDateTime,
++} from './customs-storage-details-ui-parts'
++
++export const TRANSPORT_COMPANY = 'FRONT LINE Forwarding & Agency LTD'
++
++export interface EntryDetailsCardProps {
++  entry: SavedEntry
++  canEdit: boolean
++  editing: EditingCard
++  /** The open draft while this card is in edit mode. */
++  draft: EntryValues | null
++  errors: EntryValueErrors
++  onEdit: () => void
++  onChange: (field: EntryField, value: string) => void
++  onCancel: () => void
++  onSave: () => void
++  onRefresh: () => void
++  saving: boolean
++  feedback: SaveFeedback | null
++  /** Set after a Change Order moved the entry to another admitting warehouse. */
++  warehouseReview: WarehouseReference | null
++  /** Clock for the date limits; defaults to now. */
++  now?: Date
++}
++
++function SubCard({
++  id,
++  title,
++  children,
++}: {
++  id: string
++  title: string
++  children: ReactNode
++}) {
++  return (
++    <section
++      aria-labelledby={id}
++      className="rounded-md border border-border bg-canvas p-4"
++    >
++      <CardHeading id={id} title={title} level={3} />
++      {children}
++    </section>
++  )
++}
++
++export function EntryDetailsCard({
++  entry,
++  canEdit,
++  editing,
++  draft,
++  errors,
++  onEdit,
++  onChange,
++  onCancel,
++  onSave,
++  onRefresh,
++  saving,
++  feedback,
++  warehouseReview,
++  now = new Date(),
++}: EntryDetailsCardProps) {
++  const text = useCustomsStorageDetailsLabels()
++  const id = useId()
++  const editButton = useRef<HTMLButtonElement>(null)
++  const card = useRef<HTMLDivElement>(null)
++  const wasEditing = useRef(false)
++  const values = entry.values
++  const editingHere = editing === 'details' && draft !== null
++
++  // Focus the first field when editing starts and return to Edit when it ends.
++  useEffect(() => {
++    if (editingHere && !wasEditing.current)
++      card.current
++        ?.querySelector<HTMLElement>(
++          '[data-entry-field] button, [data-entry-field] input',
++        )
++        ?.focus()
++    if (!editingHere && wasEditing.current) editButton.current?.focus()
++    wasEditing.current = editingHere
++  }, [editingHere])
++
++  const today = parseIsoDate(athensNow(now).date) ?? undefined
++  const error = (field: EntryField) => {
++    const value = errors[field]
++    return value ? entryErrorMessage(text, field, value) : undefined
++  }
++  const optional = (label: string) => (
++    <>
++      {label}{' '}
++      <span className="font-normal text-fg-subtle">· {text.optional}</span>
++    </>
++  )
++  const savedDate = (value: string) => {
++    const parsed = parseIsoDate(value)
++    return parsed ? formatDMY(parsed) : null
++  }
++
++  /** A saved value, or its text control while editing. */
++  const textField = (
++    field: EntryField,
++    label: string,
++    options: {
++      mono?: boolean
++      maxLength?: number
++      hint?: string
++      inputMode?: 'numeric'
++    } = {},
++  ) =>
++    editingHere ? (
++      <div data-entry-field={field} className="min-w-0">
++        <FormField
++          label={optional(label)}
++          htmlFor={`${id}-${field}`}
++          error={error(field)}
++          hint={options.hint}
++        >
++          <Input
++            id={`${id}-${field}`}
++            value={draft[field]}
++            maxLength={options.maxLength ?? 500}
++            inputMode={options.inputMode}
++            invalid={!!errors[field]}
++            className={cn(options.mono && 'font-mono')}
++            onChange={(event) => onChange(field, event.target.value)}
++          />
++        </FormField>
++      </div>
++    ) : (
++      <ReadOnlyField label={label} mono={options.mono}>
++        {values[field]}
++      </ReadOnlyField>
++    )
++
++  const mrnDate = editingHere ? parseIsoDate(draft.entryMrnDate) : null
++  const action =
++    canEdit && !editingHere ? (
++      <EditButton
++        ref={editButton}
++        label={text.edit}
++        blockedHint={
++          editBlocked(editing, 'details') ? text.editBlocked : undefined
++        }
++        onClick={onEdit}
++      />
++    ) : undefined
++
++  return (
++    <Card
++      flush
++      className={cardPadding}
++      role="region"
++      aria-labelledby={`${id}-heading`}
++    >
++      <div
++        ref={card}
++        onKeyDown={editingHere ? cancelOnEscape(onCancel) : undefined}
++      >
++        <CardHeading
++          id={`${id}-heading`}
++          title={text.entryDetailsCard}
++          action={action}
++        />
++        <div className="space-y-4">
++          <SubCard id={`${id}-entry`} title={text.entryDetails}>
++            <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
++              <ReadOnlyField label={text.entryNumber} mono>
++                {entry.entryNumber}
++              </ReadOnlyField>
++              {editingHere ? (
++                <div data-entry-field="entryDate" className="min-w-0">
++                  <FormField
++                    label={text.entryDateTime}
++                    required
++                    error={error('entryDate')}
++                  >
++                    <div className="grid grid-cols-[minmax(0,1fr)_8rem] gap-2">
++                      <DatePicker
++                        value={parseIsoDate(draft.entryDate)}
++                        max={today}
++                        invalid={!!errors.entryDate}
++                        onChange={(date) =>
++                          onChange('entryDate', formatIsoDate(date))
++                        }
++                      />
++                      <Input
++                        type="time"
++                        aria-label={text.entryTime}
++                        value={draft.entryTime}
++                        invalid={!!errors.entryDate}
++                        className="font-mono"
++                        onChange={(event) =>
++                          onChange('entryTime', event.target.value)
++                        }
++                      />
++                    </div>
++                  </FormField>
++                </div>
++              ) : (
++                <ReadOnlyField label={text.entryDateTime} mono>
++                  {entryDateTimeLabel(values)}
++                </ReadOnlyField>
++              )}
++              {textField('entryMrn', text.entryMrn, { mono: true })}
++              {editingHere ? (
++                <div data-entry-field="entryMrnDate" className="min-w-0">
++                  <FormField
++                    label={optional(text.entryMrnDate)}
++                    error={error('entryMrnDate')}
++                  >
++                    <div className="flex flex-wrap gap-2">
++                      <div className="min-w-40 flex-1">
++                        <DatePicker
++                          value={mrnDate}
++                          max={today}
++                          invalid={!!errors.entryMrnDate}
++                          onChange={(date) =>
++                            onChange('entryMrnDate', formatIsoDate(date))
++                          }
++                        />
++                      </div>
++                      {mrnDate && (
++                        <Button
++                          variant="ghost"
++                          onClick={() => onChange('entryMrnDate', '')}
++                        >
++                          {text.clearDate}
++                        </Button>
++                      )}
++                    </div>
++                  </FormField>
++                </div>
++              ) : (
++                <ReadOnlyField label={text.entryMrnDate} mono>
++                  {savedDate(values.entryMrnDate)}
++                </ReadOnlyField>
++              )}
++              {textField('tariffCode', text.tariffCode, {
++                mono: true,
++                maxLength: 10,
++                inputMode: 'numeric',
++                hint: text.tariffHint,
++              })}
++            </div>
++            <p className="mt-3 text-xs text-fg-subtle">
++              {fillLabel(text.createdBy, {
++                user: entry.createdBy.name,
++                dateTime: formatAthensDateTime(entry.createdBy.at),
++              })}
++            </p>
++          </SubCard>
++
++          <SubCard id={`${id}-goods`} title={text.goodsAndTransport}>
++            <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
++              {editingHere ? (
++                <div
++                  data-entry-field="goodsDescription"
++                  className="min-w-0 sm:col-span-2"
++                >
++                  <FormField
++                    label={optional(text.goodsDescription)}
++                    htmlFor={`${id}-goods-description`}
++                    error={error('goodsDescription')}
++                  >
++                    <Textarea
++                      id={`${id}-goods-description`}
++                      rows={4}
++                      maxLength={2000}
++                      value={draft.goodsDescription}
++                      invalid={!!errors.goodsDescription}
++                      onChange={(event) =>
++                        onChange('goodsDescription', event.target.value)
++                      }
++                    />
++                  </FormField>
++                </div>
++              ) : (
++                <ReadOnlyField
++                  label={text.goodsDescription}
++                  className="sm:col-span-2 [&>[role=group]]:whitespace-pre-line"
++                >
++                  {values.goodsDescription}
++                </ReadOnlyField>
++              )}
++              {textField('transportMeans', text.transportMeans)}
++              <ReadOnlyField label={text.transportCompany}>
++                {TRANSPORT_COMPANY}
++              </ReadOnlyField>
++            </div>
++          </SubCard>
++
++          <SubCard id={`${id}-operator`} title={text.warehouseOperator}>
++            {warehouseReview && (
++              <Alert tone="warning" className="mb-4">
++                {fillLabel(text.warehouseReview, {
++                  warehouse: `${warehouseReview.code} · ${warehouseReview.name}`,
++                })}
++              </Alert>
++            )}
++            <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
++              {textField('permitNumber', text.permitNumber, { mono: true })}
++              {textField('operatorName', text.operatorName)}
++              {textField('operatorVat', text.operatorVat, { mono: true })}
++              <div className="min-w-0 sm:col-span-2 xl:col-span-3">
++                {textField('warehouseAddress', text.warehouseAddress)}
++              </div>
++            </div>
++          </SubCard>
++        </div>
++
++        {editingHere && (
++          <EditActions
++            text={text}
++            feedback={
++              feedback && feedback.kind !== 'rejected' ? feedback.kind : null
++            }
++            saving={saving}
++            onCancel={onCancel}
++            onSave={onSave}
++            onRefresh={onRefresh}
++          />
++        )}
++      </div>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/order-relationship-card.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/order-relationship-card.tsx
+new file mode 100644
+index 0000000..ee5e6af
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/order-relationship-card.tsx
+@@ -0,0 +1,314 @@
++import { useEffect, useRef, type ReactNode } from 'react'
++import { useLocale } from '#/app/providers/labels-provider'
++import { Alert } from '#/components/ui/alert'
++import { Button } from '#/components/ui/button'
++import { Card } from '#/components/ui/card'
++import { PurchaseOrderStatusPill } from '#/features/purchase-orders/components/purchase-order-status-pill'
++import {
++  changeOrderOption,
++  editBlocked,
++} from '../customs-storage-details-rules'
++import {
++  fillLabel,
++  useCustomsStorageDetailsLabels,
++  type CustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import {
++  ChangeOrderLocalReason,
++  EntryIneligibleReason,
++  type EditingCard,
++  type EntryEligibility,
++  type OrderSearchResult,
++  type OrderSearchState,
++  type RecordHref,
++  type SaveFeedback,
++  type SavedEntry,
++} from '../types'
++import {
++  CardHeading,
++  EditActions,
++  EditButton,
++  ReadOnlyField,
++  RecordLink,
++  SearchPicker,
++  ValueMarker,
++  cancelOnEscape,
++  cardPadding,
++  formatAmount,
++  formatAthensDateTime,
++} from './customs-storage-details-ui-parts'
++
++/** A FRO-319 eligibility reason, with links to the Order or entry it names. */
++export function EligibilityReason({
++  eligibility,
++  hrefFor,
++  text,
++}: {
++  eligibility: EntryEligibility
++  hrefFor: RecordHref
++  text: CustomsStorageDetailsLabels
++}): ReactNode {
++  if (eligibility.eligible) return null
++  const withOrder = (template: string, entryNumber?: string) => {
++    const order = eligibility.order
++    if (!order) return template
++    const [before, after] = fillLabel(template, {
++      entryNumber: entryNumber ?? '',
++    }).split('{stockId}')
++    return (
++      <>
++        {before}
++        <RecordLink href={hrefFor('order', order.id)}>
++          {order.stockId}
++        </RecordLink>
++        {after}
++      </>
++    )
++  }
++  switch (eligibility.reason) {
++    case EntryIneligibleReason.CANCELLED:
++      return text.reasonCancelled
++    case EntryIneligibleReason.NOT_CUSTOMS_STORAGE:
++      return text.reasonNotCustomsStorage
++    case EntryIneligibleReason.NOT_ADMITTED:
++      return text.reasonNotAdmitted
++    case EntryIneligibleReason.ADMITTED_UNDER_ANOTHER_ORDER:
++      return withOrder(text.reasonAdmittedUnder)
++    case EntryIneligibleReason.ALREADY_COVERED:
++      return (
++        <>
++          {withOrder(text.reasonCovered, eligibility.entry?.entryNumber)}
++          {eligibility.entry && (
++            <>
++              {' '}
++              <RecordLink
++                href={hrefFor('entry', eligibility.entry.id)}
++                mono={false}
++              >
++                {text.open}
++              </RecordLink>
++            </>
++          )}
++        </>
++      )
++  }
++}
++
++export interface OrderRelationshipCardProps {
++  entry: SavedEntry
++  canEdit: boolean
++  editing: EditingCard
++  onEdit: () => void
++  onCancel: () => void
++  /** Opens the Change Order confirmation; disabled until an Order is chosen. */
++  onSave: () => void
++  onRefresh: () => void
++  saving: boolean
++  feedback: SaveFeedback | null
++  query: string
++  onQueryChange: (query: string) => void
++  /** Restores the field to the chosen Stock ID when the list closes. */
++  onSearchClose: () => void
++  search: OrderSearchState
++  onRetrySearch: () => void
++  onSelect: (orderId: string) => void
++  /** The eligible Order chosen in the picker, if any. */
++  chosen: OrderSearchResult | null
++  hrefFor: RecordHref
++}
++
++export function OrderRelationshipCard(props: OrderRelationshipCardProps) {
++  const { entry, editing, search, hrefFor } = props
++  const text = useCustomsStorageDetailsLabels()
++  const { locale } = useLocale()
++  const order = entry.owner
++  const editingHere = editing === 'order'
++  const editButton = useRef<HTMLButtonElement>(null)
++  const card = useRef<HTMLDivElement>(null)
++  const wasEditing = useRef(false)
++
++  // Focus the search when editing starts and return to Edit when it ends.
++  useEffect(() => {
++    if (editingHere && !wasEditing.current)
++      card.current
++        ?.querySelector<HTMLInputElement>('[role="combobox"]')
++        ?.focus()
++    if (!editingHere && wasEditing.current) editButton.current?.focus()
++    wasEditing.current = editingHere
++  }, [editingHere])
++
++  const results = search.kind === 'results' ? search.results : []
++  const status =
++    search.kind === 'loading' ? (
++      text.loading
++    ) : search.kind === 'error' ? (
++      <span className="flex flex-wrap items-center gap-2 text-danger-fg">
++        {text.searchFailed}
++        <Button size="sm" variant="secondary" onClick={props.onRetrySearch}>
++          {text.retry}
++        </Button>
++      </span>
++    ) : search.kind === 'results' && results.length === 0 ? (
++      text.noOrders
++    ) : search.kind === 'idle' ? (
++      text.orderSearchPlaceholder
++    ) : undefined
++
++  const reasonFor = (result: OrderSearchResult): ReactNode => {
++    const option = changeOrderOption(result, {
++      id: entry.id,
++      ownerId: order.id,
++    })
++    if (option.selectable) return undefined
++    if ('local' in option)
++      return option.local === ChangeOrderLocalReason.CURRENT_ORDER
++        ? text.reasonCurrentOrder
++        : text.reasonCoveredHere
++    return (
++      <EligibilityReason
++        eligibility={option.eligibility}
++        hrefFor={hrefFor}
++        text={text}
++      />
++    )
++  }
++
++  const action =
++    props.canEdit && !editingHere ? (
++      <EditButton
++        ref={editButton}
++        label={text.edit}
++        blockedHint={
++          editBlocked(editing, 'order') ? text.editBlocked : undefined
++        }
++        onClick={props.onEdit}
++      />
++    ) : undefined
++
++  const feedback = props.feedback
++  return (
++    <Card
++      flush
++      className={cardPadding}
++      role="region"
++      aria-labelledby="csd-order-heading"
++    >
++      <div
++        ref={card}
++        onKeyDown={editingHere ? cancelOnEscape(props.onCancel) : undefined}
++      >
++        <CardHeading
++          id="csd-order-heading"
++          title={text.orderRelationship}
++          action={action}
++        />
++        {editingHere && (
++          <div className="mb-4">
++            {/* New composition: SearchPicker with reasons (FRO-353 pattern). */}
++            <SearchPicker
++              label={text.order}
++              required
++              placeholder={text.orderSearchPlaceholder}
++              query={props.query}
++              onQueryChange={props.onQueryChange}
++              onClose={props.onSearchClose}
++              status={status}
++              fieldName="order"
++              onSelect={props.onSelect}
++              results={results.map((result) => ({
++                key: result.id,
++                primary: (
++                  <span className="flex flex-wrap items-center gap-2">
++                    <span className="font-mono">{result.stockId}</span>
++                    <PurchaseOrderStatusPill status={result.status} />
++                  </span>
++                ),
++                secondary: [result.clientName, result.supplierName]
++                  .filter(Boolean)
++                  .join(' · '),
++                unavailableReason: reasonFor(result),
++              }))}
++            />
++            {feedback?.kind === 'rejected' && (
++              <Alert tone="warning" className="mt-3">
++                <EligibilityReason
++                  eligibility={feedback.eligibility}
++                  hrefFor={hrefFor}
++                  text={text}
++                />
++              </Alert>
++            )}
++          </div>
++        )}
++
++        <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
++          <ReadOnlyField label={text.stockId}>
++            <RecordLink href={hrefFor('order', order.id)}>
++              {order.stockId}
++            </RecordLink>
++          </ReadOnlyField>
++          <ReadOnlyField label={text.admission}>
++            {`${order.warehouse.code} · ${order.warehouse.name} · ${formatAthensDateTime(order.admissionAt)}`}
++          </ReadOnlyField>
++          <ReadOnlyField label={text.admittedCollis} mono>
++            {String(order.admittedCollis)}
++          </ReadOnlyField>
++          <ReadOnlyField
++            label={text.grossWeight}
++            mono
++            marker={
++              order.grossWeightKg === null && (
++                <ValueMarker>{text.unknown}</ValueMarker>
++              )
++            }
++          >
++            {order.grossWeightKg === null
++              ? text.unknown
++              : fillLabel(text.grossWeightValue, {
++                  value: formatAmount(order.grossWeightKg, locale),
++                })}
++          </ReadOnlyField>
++          <ReadOnlyField
++            label={text.depositor}
++            marker={
++              !order.depositor && <ValueMarker>{text.missing}</ValueMarker>
++            }
++          >
++            {order.depositor?.name}
++          </ReadOnlyField>
++          <ReadOnlyField label={text.depositorVat} mono>
++            {order.depositor?.vatNumber}
++          </ReadOnlyField>
++          <ReadOnlyField label={text.client}>{order.client.name}</ReadOnlyField>
++          <ReadOnlyField
++            label={text.supplier}
++            marker={
++              !order.supplier && <ValueMarker>{text.missing}</ValueMarker>
++            }
++          >
++            {order.supplier?.name}
++          </ReadOnlyField>
++          <ReadOnlyField label={text.supplierVat} mono>
++            {order.supplier?.vatNumber}
++          </ReadOnlyField>
++        </div>
++
++        {editingHere && (
++          <EditActions
++            text={text}
++            feedback={
++              feedback?.kind === 'failed' || feedback?.kind === 'stale'
++                ? feedback.kind
++                : null
++            }
++            saving={props.saving}
++            saveDisabled={!props.chosen}
++            onCancel={props.onCancel}
++            onSave={props.onSave}
++            onRefresh={props.onRefresh}
++          />
++        )}
++      </div>
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/related-export-card.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/related-export-card.tsx
+new file mode 100644
+index 0000000..705ba4d
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/related-export-card.tsx
+@@ -0,0 +1,92 @@
++import { Alert } from '#/components/ui/alert'
++import { StatusPill, type StatusTone } from '#/components/ui/badge'
++import { Card } from '#/components/ui/card'
++import { formatDMY, parseIsoDate } from '#/lib/date'
++import type { ExportCoverage } from '../customs-storage-details-rules'
++import {
++  fillLabel,
++  useCustomsStorageDetailsLabels,
++  type CustomsStorageDetailsLabels,
++} from '../localization/customs-storage-details-labels'
++import { CustomsStatus, type RecordHref } from '../types'
++import {
++  CardHeading,
++  ReadOnlyField,
++  RecordLink,
++  cardPadding,
++} from './customs-storage-details-ui-parts'
++
++const statusTone: Record<CustomsStatus, StatusTone> = {
++  [CustomsStatus.AWAITING_EAD]: 'warning',
++  [CustomsStatus.AWAITING_IE599]: 'info',
++  [CustomsStatus.COMPLETED]: 'success',
++}
++
++function statusLabel(text: CustomsStorageDetailsLabels, status: CustomsStatus) {
++  return status === CustomsStatus.AWAITING_EAD
++    ? text.awaitingEad
++    : status === CustomsStatus.AWAITING_IE599
++      ? text.awaitingIe599
++      : text.completed
++}
++
++export function RelatedExportCard({
++  coverage,
++  hrefFor,
++}: {
++  coverage: ExportCoverage
++  hrefFor: RecordHref
++}) {
++  const text = useCustomsStorageDetailsLabels()
++  const empty =
++    coverage.kind === 'noInvoices'
++      ? text.exportNoInvoices
++      : coverage.kind === 'notInExport'
++        ? text.exportNotYet
++        : null
++  const mrnDate =
++    coverage.kind === 'all' || coverage.kind === 'partial'
++      ? parseIsoDate(coverage.export.mrnDate)
++      : null
++
++  return (
++    <Card flush className={cardPadding} aria-labelledby="csd-export-heading">
++      <CardHeading id="csd-export-heading" title={text.exportCard} />
++      {empty !== null ? (
++        <p className="rounded-md border border-dashed border-border p-4 text-sm text-fg-muted">
++          {empty}
++        </p>
++      ) : coverage.kind === 'all' || coverage.kind === 'partial' ? (
++        <div className="space-y-3">
++          {coverage.kind === 'partial' && (
++            <Alert tone="info">
++              {fillLabel(text.exportPartial, {
++                count: coverage.inExport,
++                total: coverage.total,
++              })}
++            </Alert>
++          )}
++          <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2 xl:grid-cols-4">
++            <ReadOnlyField label={text.exportLabel}>
++              <RecordLink href={hrefFor('export', coverage.export.id)}>
++                {coverage.export.exportNumber}
++              </RecordLink>
++            </ReadOnlyField>
++            <ReadOnlyField label={text.exportMrn} mono>
++              {coverage.export.mrn}
++            </ReadOnlyField>
++            <ReadOnlyField label={text.exportMrnDate} mono>
++              {mrnDate ? formatDMY(mrnDate) : null}
++            </ReadOnlyField>
++            <ReadOnlyField label={text.customsStatus}>
++              <StatusPill tone={statusTone[coverage.export.customsStatus]}>
++                {statusLabel(text, coverage.export.customsStatus)}
++              </StatusPill>
++            </ReadOnlyField>
++          </div>
++          <p className="text-xs text-fg-subtle">{text.exportSource}</p>
++        </div>
++      ) : null}
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/components/related-invoices-card.tsx b/frontline-forwarding-client/src/features/customs-storage/details/components/related-invoices-card.tsx
+new file mode 100644
+index 0000000..1d89243
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/components/related-invoices-card.tsx
+@@ -0,0 +1,113 @@
++import { useLocale } from '#/app/providers/labels-provider'
++import { Alert } from '#/components/ui/alert'
++import { Card } from '#/components/ui/card'
++import { TBody, TD, TH, THead, TR, Table } from '#/components/ui/table'
++import { formatDMY, parseIsoDate } from '#/lib/date'
++import { invoiceTotals, statisticalVat } from '../customs-storage-details-rules'
++import { useCustomsStorageDetailsLabels } from '../localization/customs-storage-details-labels'
++import type { InvoiceRow, RecordHref } from '../types'
++import {
++  CardHeading,
++  RecordLink,
++  cardPadding,
++  formatAmount,
++  tableScroll,
++} from './customs-storage-details-ui-parts'
++
++export interface RelatedInvoicesCardProps {
++  invoices: InvoiceRow[]
++  hrefFor: RecordHref
++}
++
++const amountCell = 'whitespace-nowrap text-right font-mono'
++
++export function RelatedInvoicesCard({
++  invoices,
++  hrefFor,
++}: RelatedInvoicesCardProps) {
++  const text = useCustomsStorageDetailsLabels()
++  const { locale } = useLocale()
++  const totals = invoiceTotals(invoices)
++  const amount = (value: string) => formatAmount(value, locale)
++  const date = (value: string) => {
++    const parsed = parseIsoDate(value)
++    return parsed ? formatDMY(parsed) : value
++  }
++
++  return (
++    <Card flush className={cardPadding} aria-labelledby="csd-invoices-heading">
++      <CardHeading
++        id="csd-invoices-heading"
++        title={text.invoicesCard}
++        description={text.invoicesDescription}
++      />
++      {invoices.length === 0 ? (
++        <p className="rounded-md border border-dashed border-border p-4 text-sm text-fg-muted">
++          {text.noInvoices}
++        </p>
++      ) : (
++        <div className="space-y-3">
++          {totals.kind === 'mixedCurrency' && (
++            <Alert tone="warning">{text.mixedCurrency}</Alert>
++          )}
++          <div className={tableScroll}>
++            <Table>
++              <THead>
++                <TR>
++                  <TH>{text.invoiceId}</TH>
++                  <TH>{text.invoiceNumber}</TH>
++                  <TH>{text.invoiceDate}</TH>
++                  <TH>{text.supplier}</TH>
++                  <TH>{text.invoiceType}</TH>
++                  <TH>{text.currency}</TH>
++                  <TH className="text-right">{text.netValue}</TH>
++                  <TH className="text-right">{text.actualVat}</TH>
++                  <TH className="text-right">{text.statisticalVat}</TH>
++                </TR>
++              </THead>
++              <TBody>
++                {invoices.map((row) => (
++                  <TR key={row.id}>
++                    <TD>
++                      <RecordLink href={hrefFor('invoice', row.id)}>
++                        {row.id}
++                      </RecordLink>
++                    </TD>
++                    <TD className="whitespace-nowrap font-mono">
++                      {row.invoiceNumber}
++                    </TD>
++                    <TD className="whitespace-nowrap font-mono">
++                      {date(row.invoiceDate)}
++                    </TD>
++                    <TD>{row.supplierName ?? '—'}</TD>
++                    <TD>{row.invoiceType}</TD>
++                    <TD className="font-mono">{row.currency}</TD>
++                    <TD className={amountCell}>{amount(row.netValue)}</TD>
++                    <TD className={amountCell}>{amount(row.vatValue)}</TD>
++                    <TD className={amountCell}>
++                      {amount(statisticalVat(row.netValue))}
++                    </TD>
++                  </TR>
++                ))}
++              </TBody>
++              {totals.kind === 'eur' && (
++                // New composition: table.tsx has no footer part.
++                <tfoot className="border-t-2 border-border-strong bg-surface-2 font-semibold">
++                  <TR>
++                    <TD colSpan={6}>{text.totals}</TD>
++                    <TD className={amountCell}>{amount(totals.net)}</TD>
++                    <TD className={amountCell}>{amount(totals.vat)}</TD>
++                    <TD className={amountCell}>
++                      {amount(totals.statisticalVat)}
++                    </TD>
++                  </TR>
++                </tfoot>
++              )}
++            </Table>
++          </div>
++          <p className="text-xs text-fg-subtle">{text.statisticalVatNote}</p>
++        </div>
++      )}
++    </Card>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.test.ts b/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.test.ts
+new file mode 100644
+index 0000000..aecae69
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.test.ts
+@@ -0,0 +1,259 @@
++import { describe, expect, it } from 'vitest'
++import {
++  canStartEdit,
++  changeOrderOption,
++  editBlocked,
++  entryDateTimeLabel,
++  exportCoverage,
++  firstErrorField,
++  invoiceTotals,
++  isEditDirty,
++  statisticalVat,
++  validateEntryValues,
++  warehouseChanged,
++} from './customs-storage-details-rules'
++import {
++  ChangeOrderLocalReason,
++  CustomsStatus,
++  EntryIneligibleReason,
++  type EntryValues,
++  type ExportSummary,
++  type InvoiceRow,
++  type OrderSearchResult,
++} from './types'
++
++// 10:00 in Athens (UTC+2 after the October clock change).
++const NOW = new Date('2026-10-27T08:00:30Z')
++
++const invoice = (
++  id: string,
++  netValue: string,
++  currency = 'EUR',
++  exportId: string | null = 'exp-1',
++): InvoiceRow => ({
++  id,
++  invoiceNumber: `INV-${id}`,
++  invoiceDate: '2026-10-12',
++  supplierName: 'Demo Supplier S.A.',
++  invoiceType: 'Αποθήκη Αποθήκευσης (Δελτίο Εισόδου)',
++  currency,
++  netValue,
++  vatValue: '0.00',
++  exportId,
++})
++
++const exp: ExportSummary = {
++  id: 'exp-1',
++  exportNumber: 'EXP-31',
++  mrn: '26GR0000EX00000412',
++  mrnDate: '2026-10-24',
++  customsStatus: CustomsStatus.AWAITING_IE599,
++}
++
++const saved: EntryValues = {
++  entryDate: '2026-10-20',
++  entryTime: '10:05',
++  entryMrn: '26GR0000CS00001042',
++  entryMrnDate: '2026-10-20',
++  tariffCode: '0402100000',
++  goodsDescription: 'Ship spares',
++  transportMeans: 'Truck DEMO-1234',
++  permitNumber: 'DEMO-CS-0001',
++  operatorName: 'Demo Hub Operator S.A.',
++  operatorVat: '800000003',
++  warehouseAddress: 'Demo Street 12, 18545 Piraeus',
++}
++
++const values = (patch: Partial<EntryValues> = {}): EntryValues => ({
++  ...saved,
++  ...patch,
++})
++
++const result = (
++  id: string,
++  eligibility: OrderSearchResult['eligibility'],
++): OrderSearchResult => ({
++  id,
++  stockId: id.toUpperCase(),
++  status: 'IN_STOCK',
++  clientName: 'Demo Client Company',
++  supplierName: 'Demo Supplier S.A.',
++  eligibility,
++})
++
++const thisEntry = { id: 'cse-1042', ownerId: 'po-5' }
++
++describe('Statistical VAT and totals', () => {
++  it('rounds 24% of each row half-up in its own currency', () => {
++    expect(statisticalVat('250.00')).toBe('60.00')
++    expect(statisticalVat('199.99')).toBe('48.00')
++    expect(statisticalVat('0.02')).toBe('0.00')
++    expect(statisticalVat('0.03')).toBe('0.01')
++  })
++
++  it('totals only when every row is EUR, rounding the total once', () => {
++    const rows = [
++      invoice('1', '250.00'),
++      invoice('2', '199.99'),
++      invoice('3', '210.50'),
++      invoice('4', '143.13'),
++    ]
++    expect(invoiceTotals(rows)).toEqual({
++      kind: 'eur',
++      net: '803.62',
++      vat: '0.00',
++      statisticalVat: '192.87',
++    })
++  })
++
++  it('shows no totals for mixed currency or no rows', () => {
++    expect(
++      invoiceTotals([invoice('1', '10.00'), invoice('2', '5.00', 'USD')]),
++    ).toEqual({ kind: 'mixedCurrency' })
++    expect(invoiceTotals([])).toEqual({ kind: 'none' })
++  })
++})
++
++describe('Export coverage', () => {
++  it('distinguishes no invoices, none in an Export, all and partial', () => {
++    expect(exportCoverage([], null)).toEqual({ kind: 'noInvoices' })
++    expect(exportCoverage([invoice('1', '1.00', 'EUR', null)], null)).toEqual({
++      kind: 'notInExport',
++    })
++    expect(exportCoverage([invoice('1', '1.00')], exp)).toEqual({
++      kind: 'all',
++      export: exp,
++    })
++    expect(
++      exportCoverage(
++        [invoice('1', '1.00'), invoice('2', '1.00', 'EUR', null)],
++        exp,
++      ),
++    ).toEqual({ kind: 'partial', export: exp, inExport: 1, total: 2 })
++  })
++})
++
++describe('entry validation', () => {
++  it('accepts the saved values', () => {
++    expect(validateEntryValues(values(), NOW)).toEqual({})
++  })
++
++  it('requires date and time and rejects a future date-time', () => {
++    expect(validateEntryValues(values({ entryTime: '' }), NOW)).toEqual({
++      entryDate: 'required',
++    })
++    expect(
++      validateEntryValues(
++        values({ entryDate: '2026-10-27', entryTime: '10:01' }),
++        NOW,
++      ),
++    ).toEqual({ entryDate: 'future' })
++    expect(
++      validateEntryValues(
++        values({ entryDate: '2026-10-27', entryTime: '10:00' }),
++        NOW,
++      ),
++    ).toEqual({})
++  })
++
++  it('rejects an MRN date after today and a bad tariff code', () => {
++    expect(
++      validateEntryValues(values({ entryMrnDate: '2026-10-28' }), NOW),
++    ).toEqual({ entryMrnDate: 'future' })
++    for (const tariffCode of ['12a', '12345678901', '1.5'])
++      expect(validateEntryValues(values({ tariffCode }), NOW)).toEqual({
++        tariffCode: 'format',
++      })
++    expect(validateEntryValues(values({ tariffCode: '0012' }), NOW)).toEqual({})
++  })
++
++  it('enforces text limits and reports the first field in page order', () => {
++    const errors = validateEntryValues(
++      values({
++        tariffCode: 'x',
++        warehouseAddress: 'a'.repeat(501),
++        goodsDescription: 'g'.repeat(2001),
++      }),
++      NOW,
++    )
++    expect(errors).toEqual({
++      tariffCode: 'format',
++      goodsDescription: 'tooLong',
++      warehouseAddress: 'tooLong',
++    })
++    expect(firstErrorField(errors)).toBe('tariffCode')
++    expect(firstErrorField({})).toBeNull()
++  })
++})
++
++describe('editing', () => {
++  it('allows one editor at a time and only with edit authority', () => {
++    expect(canStartEdit(null, true)).toBe(true)
++    expect(canStartEdit('details', true)).toBe(false)
++    expect(canStartEdit(null, false)).toBe(false)
++    expect(editBlocked('details', 'order')).toBe(true)
++    expect(editBlocked('details', 'details')).toBe(false)
++    expect(editBlocked(null, 'order')).toBe(false)
++  })
++
++  it('detects a changed draft', () => {
++    expect(isEditDirty(values(), saved)).toBe(false)
++    expect(isEditDirty(values({ entryMrn: 'X' }), saved)).toBe(true)
++  })
++})
++
++describe('Change Order options', () => {
++  it('marks the current owner and Orders covered by this entry first', () => {
++    const covered = {
++      eligible: false as const,
++      reason: EntryIneligibleReason.ALREADY_COVERED,
++      order: { id: 'po-5', stockId: 'PO-5' },
++      entry: { id: 'cse-1042', entryNumber: '1042' },
++    }
++    expect(changeOrderOption(result('po-5', covered), thisEntry)).toEqual({
++      selectable: false,
++      local: ChangeOrderLocalReason.CURRENT_ORDER,
++    })
++    expect(changeOrderOption(result('po-5_1', covered), thisEntry)).toEqual({
++      selectable: false,
++      local: ChangeOrderLocalReason.COVERED_BY_THIS_ENTRY,
++    })
++  })
++
++  it('keeps FRO-319 reasons for other Orders and selects eligible ones', () => {
++    const other = {
++      eligible: false as const,
++      reason: EntryIneligibleReason.ALREADY_COVERED,
++      order: { id: 'po-3', stockId: 'PO-3' },
++      entry: { id: 'cse-1041', entryNumber: '1041' },
++    }
++    expect(changeOrderOption(result('po-8', other), thisEntry)).toEqual({
++      selectable: false,
++      eligibility: other,
++    })
++    const cancelled = {
++      eligible: false as const,
++      reason: EntryIneligibleReason.CANCELLED,
++    }
++    expect(changeOrderOption(result('po-9', cancelled), thisEntry)).toEqual({
++      selectable: false,
++      eligibility: cancelled,
++    })
++    expect(
++      changeOrderOption(result('po-6', { eligible: true }), thisEntry),
++    ).toEqual({ selectable: true })
++  })
++})
++
++describe('header and warehouse', () => {
++  it('formats the entry date-time as dd/mm/yyyy HH:mm', () => {
++    expect(entryDateTimeLabel(saved)).toBe('20/10/2026 10:05')
++  })
++
++  it('reports a different admitting warehouse', () => {
++    const a = { id: 'wh-1', code: 'ATH-HUB', name: 'Demo Athens Hub' }
++    const b = { id: 'wh-2', code: 'ATH-HUB-2', name: 'Demo Athens Hub 2' }
++    expect(warehouseChanged(a, b)).toBe(true)
++    expect(warehouseChanged(a, { ...a })).toBe(false)
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.ts b/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.ts
+new file mode 100644
+index 0000000..cdde2f4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/customs-storage-details-rules.ts
+@@ -0,0 +1,215 @@
++import {
++  ChangeOrderLocalReason,
++  EntryIneligibleReason,
++  type ChangeOrderOption,
++  type EditingCard,
++  type EntryField,
++  type EntryValues,
++  type ExportSummary,
++  type InvoiceRow,
++  type OrderSearchResult,
++  type WarehouseReference,
++} from './types'
++
++/*
++ * Page-side rules for FRO-354. FRO-319 stays authoritative: the server repeats
++ * every check and owns eligibility, Change Order, versions and derived values.
++ * The money and validation rules are copies of FRO-353's
++ * (`../create/customs-storage-create-rules.ts`); de-duplicate on integration.
++ */
++
++export type EntryValueError = 'required' | 'future' | 'format' | 'tooLong'
++export type EntryValueErrors = Partial<Record<EntryField, EntryValueError>>
++
++const STATISTICAL_VAT_PERCENT = 24n
++
++/** Parses a non-negative decimal string with at most two decimals into cents. */
++function toCents(value: string): bigint {
++  const [whole, fraction = ''] = value.trim().split('.')
++  return (
++    BigInt(whole || '0') * 100n + BigInt(fraction.padEnd(2, '0').slice(0, 2))
++  )
++}
++
++function fromCents(cents: bigint): string {
++  const whole = cents / 100n
++  const fraction = (cents % 100n).toString().padStart(2, '0')
++  return `${whole}.${fraction}`
++}
++
++/** 24% of cents, rounded half-up to whole cents. */
++function percentHalfUp(cents: bigint): bigint {
++  return (cents * STATISTICAL_VAT_PERCENT + 50n) / 100n
++}
++
++/** Statistical VAT (hypothetical, 24%) of one net value, in its own currency. */
++export function statisticalVat(net: string): string {
++  return fromCents(percentHalfUp(toCents(net)))
++}
++
++export type InvoiceTotals =
++  | { kind: 'none' }
++  | { kind: 'mixedCurrency' }
++  | { kind: 'eur'; net: string; vat: string; statisticalVat: string }
++
++/** Totals only when every invoice is in EUR; the total VAT is rounded once. */
++export function invoiceTotals(rows: InvoiceRow[]): InvoiceTotals {
++  if (rows.length === 0) return { kind: 'none' }
++  if (rows.some((row) => row.currency !== 'EUR'))
++    return { kind: 'mixedCurrency' }
++  const net = rows.reduce((sum, row) => sum + toCents(row.netValue), 0n)
++  const vat = rows.reduce((sum, row) => sum + toCents(row.vatValue), 0n)
++  return {
++    kind: 'eur',
++    net: fromCents(net),
++    vat: fromCents(vat),
++    statisticalVat: fromCents(percentHalfUp(net)),
++  }
++}
++
++export type ExportCoverage =
++  | { kind: 'noInvoices' }
++  | { kind: 'notInExport' }
++  | { kind: 'all'; export: ExportSummary }
++  | { kind: 'partial'; export: ExportSummary; inExport: number; total: number }
++
++export function exportCoverage(
++  invoices: InvoiceRow[],
++  exp: ExportSummary | null,
++): ExportCoverage {
++  if (invoices.length === 0) return { kind: 'noInvoices' }
++  if (!exp) return { kind: 'notInExport' }
++  const inExport = invoices.filter((row) => row.exportId === exp.id).length
++  return inExport === invoices.length
++    ? { kind: 'all', export: exp }
++    : { kind: 'partial', export: exp, inExport, total: invoices.length }
++}
++
++const athensFormat = new Intl.DateTimeFormat('en-GB', {
++  timeZone: 'Europe/Athens',
++  year: 'numeric',
++  month: '2-digit',
++  day: '2-digit',
++  hour: '2-digit',
++  minute: '2-digit',
++  hourCycle: 'h23',
++})
++
++/** The current date (yyyy-mm-dd) and minute (HH:mm) in Europe/Athens. */
++export function athensNow(now: Date): { date: string; time: string } {
++  const part = (type: Intl.DateTimeFormatPartTypes) =>
++    athensFormat.formatToParts(now).find((p) => p.type === type)?.value ?? ''
++  return {
++    date: `${part('year')}-${part('month')}-${part('day')}`,
++    time: `${part('hour')}:${part('minute')}`,
++  }
++}
++
++/** Page order, used to focus the first invalid field. */
++const fieldOrder: EntryField[] = [
++  'entryDate',
++  'entryTime',
++  'entryMrn',
++  'entryMrnDate',
++  'tariffCode',
++  'goodsDescription',
++  'transportMeans',
++  'permitNumber',
++  'operatorName',
++  'operatorVat',
++  'warehouseAddress',
++]
++
++export const textLimits: Partial<Record<EntryField, number>> = {
++  entryMrn: 500,
++  goodsDescription: 2000,
++  transportMeans: 500,
++  permitNumber: 500,
++  operatorName: 500,
++  operatorVat: 500,
++  warehouseAddress: 500,
++}
++
++/** The date-time error is reported on `entryDate`, the pair's first control. */
++export function validateEntryValues(
++  values: EntryValues,
++  now: Date,
++): EntryValueErrors {
++  const errors: EntryValueErrors = {}
++  const today = athensNow(now)
++  if (!values.entryDate || !values.entryTime) errors.entryDate = 'required'
++  else if (
++    `${values.entryDate}T${values.entryTime}` > `${today.date}T${today.time}`
++  )
++    errors.entryDate = 'future'
++  if (values.entryMrnDate && values.entryMrnDate > today.date)
++    errors.entryMrnDate = 'future'
++  if (values.tariffCode && !/^\d{1,10}$/.test(values.tariffCode))
++    errors.tariffCode = 'format'
++  for (const [field, limit] of Object.entries(textLimits) as [
++    EntryField,
++    number,
++  ][])
++    if (values[field].length > limit) errors[field] = 'tooLong'
++  return errors
++}
++
++export function firstErrorField(errors: EntryValueErrors): EntryField | null {
++  return fieldOrder.find((field) => errors[field]) ?? null
++}
++
++/** Only one card can be in edit mode, and only with edit authority. */
++export function canStartEdit(editing: EditingCard, canEdit: boolean): boolean {
++  return canEdit && editing === null
++}
++
++/** True when another card's edit keeps this card's Edit disabled. */
++export function editBlocked(
++  editing: EditingCard,
++  card: Exclude<EditingCard, null>,
++): boolean {
++  return editing !== null && editing !== card
++}
++
++export function isEditDirty(draft: EntryValues, saved: EntryValues): boolean {
++  return (Object.keys(draft) as EntryField[]).some(
++    (field) => draft[field] !== saved[field],
++  )
++}
++
++/**
++ * How a Change Order search result appears. FRO-319 reports the entry's own
++ * owner and the Orders it covers as "already covered" by this entry; the page
++ * names those cases instead of pointing the operator to the entry they are on.
++ */
++export function changeOrderOption(
++  result: OrderSearchResult,
++  entry: { id: string; ownerId: string },
++): ChangeOrderOption {
++  if (result.id === entry.ownerId)
++    return { selectable: false, local: ChangeOrderLocalReason.CURRENT_ORDER }
++  const eligibility = result.eligibility
++  if (eligibility.eligible) return { selectable: true }
++  if (
++    eligibility.reason === EntryIneligibleReason.ALREADY_COVERED &&
++    eligibility.entry?.id === entry.id
++  )
++    return {
++      selectable: false,
++      local: ChangeOrderLocalReason.COVERED_BY_THIS_ENTRY,
++    }
++  return { selectable: false, eligibility }
++}
++
++/** dd/mm/yyyy HH:mm of the entry's own date and time. */
++export function entryDateTimeLabel(values: EntryValues): string {
++  const [year, month, day] = values.entryDate.split('-')
++  return `${day}/${month}/${year} ${values.entryTime}`
++}
++
++export function warehouseChanged(
++  current: WarehouseReference,
++  next: WarehouseReference,
++): boolean {
++  return current.id !== next.id
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.test.ts b/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.test.ts
+new file mode 100644
+index 0000000..fa92ba6
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.test.ts
+@@ -0,0 +1,30 @@
++import { describe, expect, it } from 'vitest'
++import {
++  customsStorageDetailsLabelsFor,
++  fillLabel,
++} from './customs-storage-details-labels'
++
++describe('customs storage details labels', () => {
++  it('provides every key in English and Greek', () => {
++    const en = customsStorageDetailsLabelsFor('en')
++    const el = customsStorageDetailsLabelsFor('el')
++    expect(Object.keys(el).sort()).toEqual(Object.keys(en).sort())
++    for (const value of [...Object.values(en), ...Object.values(el)])
++      expect(value.trim()).not.toBe('')
++  })
++
++  it('keeps the same placeholders in both languages', () => {
++    const en = customsStorageDetailsLabelsFor('en')
++    const el = customsStorageDetailsLabelsFor('el')
++    const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort()
++    for (const key of Object.keys(en) as (keyof typeof en)[])
++      expect(placeholders(el[key])).toEqual(placeholders(en[key]))
++  })
++
++  it('fills placeholders and leaves unknown ones', () => {
++    expect(fillLabel('Back to Order {stockId}', { stockId: 'PO-1' })).toBe(
++      'Back to Order PO-1',
++    )
++    expect(fillLabel('{count} of {total}', { count: 2 })).toBe('2 of {total}')
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.ts b/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.ts
+new file mode 100644
+index 0000000..056ec90
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/localization/customs-storage-details-labels.ts
+@@ -0,0 +1,295 @@
++import { useLocale, type Locale } from '#/app/providers/labels-provider'
++
++const en = {
++  title: 'Customs Storage Entry {entryNumber}',
++  subtitle: 'Order {stockId} · {dateTime}',
++  backToOrder: 'Back to Order {stockId}',
++  coveredChild:
++    'Opened from Order {childStockId}, which is covered by this entry (split after admission). The entry belongs to Order {ownerStockId}.',
++  created: 'Customs Storage Entry {entryNumber} created.',
++  accessDenied: 'You do not have permission to view Customs Storage Entries.',
++  loadFailed: 'Could not load the entry.',
++  notFound: 'Customs Storage Entry {entryNumber} was not found.',
++  overview: 'Overview',
++  invoicesTab: 'Related Supplier Invoices ({count})',
++  exportTab: 'Related Export',
++  optional: 'Optional',
++  unknown: 'Unknown',
++  missing: 'Missing',
++  open: 'Open',
++  retry: 'Retry',
++  loading: 'Loading…',
++
++  edit: 'Edit',
++  save: 'Save',
++  saving: 'Saving…',
++  cancel: 'Cancel',
++  refresh: 'Refresh',
++  editBlocked: 'Save or cancel the current edit first.',
++  saveFailed:
++    'Changes could not be saved. Nothing changed. Your edits are kept.',
++  saveStale:
++    'This entry changed since you opened it. Refresh to review the latest version. Your edits are kept.',
++  changesSaved: 'Changes saved.',
++  discardTitle: 'Discard your changes?',
++  discardDescription: 'Your unsaved changes will be lost.',
++  keepEditing: 'Keep editing',
++  discard: 'Discard',
++
++  orderRelationship: 'Order relationship',
++  order: 'Order',
++  orderSearchPlaceholder: 'Search Stock ID, reference, vessel or colli code…',
++  noOrders: 'No Orders match your search.',
++  searchFailed: 'Could not search Orders.',
++  reasonCurrentOrder: 'Current Order of this entry',
++  reasonCoveredHere: 'Covered by this entry (split after admission)',
++  reasonCancelled: 'This Order is cancelled.',
++  reasonNotCustomsStorage: "The Order's customs regime is not Customs Storage.",
++  reasonNotAdmitted:
++    'The Order has not been admitted to a Customs Storage warehouse yet.',
++  reasonAdmittedUnder:
++    'Goods were admitted under Order {stockId}. Create the entry from that Order.',
++  reasonCovered:
++    'Already covered by Customs Storage Entry {entryNumber} (Order {stockId}).',
++  changeOrderTitle: 'Change Order to {stockId}?',
++  changeOrderText:
++    "Collis, weight, parties, invoices and Export will be read from Order {stockId}. The entry number and the entry's own fields stay the same.",
++  changeOrderWarehouse:
++    'Order {stockId} was admitted at {warehouse}. The warehouse operator values on this entry are not changed.',
++  confirmChange: 'Confirm change',
++  orderChanged: 'Order changed to {stockId}.',
++  warehouseReview:
++    'The admitting warehouse is now {warehouse}. Warehouse operator values were kept; review them.',
++  stockId: 'Stock ID',
++  admission: 'Admitting warehouse · admission',
++  admittedCollis: 'Admitted collis',
++  grossWeight: 'Gross weight',
++  grossWeightValue: '{value} kg',
++  depositor: 'Depositor (Invoicing company)',
++  depositorVat: 'Depositor ΑΦΜ',
++  client: 'Operational Client',
++  supplier: 'Supplier',
++  supplierVat: 'Supplier ΑΦΜ',
++
++  entryDetailsCard: 'Customs Storage Entry details',
++  entryDetails: 'Entry details',
++  goodsAndTransport: 'Goods and transport',
++  warehouseOperator: 'Warehouse operator',
++  entryNumber: 'Entry number',
++  entryDateTime: 'Entry date & time',
++  entryTime: 'Entry time',
++  entryMrn: 'Entry MRN',
++  entryMrnDate: 'Entry MRN date',
++  clearDate: 'Clear date',
++  tariffCode: 'Tariff classification code',
++  tariffHint: 'Digits only, up to 10',
++  goodsDescription: 'Goods description for printed copies',
++  transportMeans: 'Transport means / number',
++  transportCompany: 'Transport Company',
++  permitNumber: 'Permit number',
++  operatorName: 'Operator name',
++  operatorVat: 'Operator ΑΦΜ',
++  warehouseAddress: 'Warehouse address',
++  createdBy: 'Created by {user} · {dateTime}',
++
++  errorSummary: 'Fix the highlighted fields.',
++  errorEntryDateRequired: 'Enter the entry date and time.',
++  errorEntryDateFuture: 'The entry date and time cannot be later than now.',
++  errorMrnDateFuture: 'The Entry MRN date cannot be later than today.',
++  errorTariff: 'Use digits only, up to 10.',
++  errorTooLong: 'Use up to {limit} characters.',
++
++  invoicesCard: 'Related Supplier Invoices',
++  invoicesDescription:
++    'Active invoices of type Αποθήκη Αποθήκευσης (Δελτίο Εισόδου) on the owning Order.',
++  noInvoices: 'This Order has no matching invoices yet.',
++  invoiceId: 'Invoice ID',
++  invoiceNumber: 'Invoice number',
++  invoiceDate: 'Invoice date',
++  invoiceType: 'Invoice type',
++  currency: 'Currency',
++  netValue: 'Net value',
++  actualVat: 'Actual VAT',
++  statisticalVat: 'Statistical VAT (hypothetical, 24%)',
++  totals: 'Totals (EUR)',
++  mixedCurrency:
++    'Mixed or non-EUR currency: totals and total Statistical VAT are not shown.',
++  statisticalVatNote:
++    'Statistical VAT is reporting information only. It is not VAT charged or payable.',
++
++  exportCard: 'Related Export',
++  exportLabel: 'Export',
++  exportMrn: 'Export MRN',
++  exportMrnDate: 'Export MRN date',
++  customsStatus: 'Customs status',
++  awaitingEad: 'Awaiting EAD',
++  awaitingIe599: 'Awaiting IE599',
++  completed: 'Completed',
++  exportSource: 'Read from the Export. Change it on the Export page.',
++  exportNoInvoices: 'No matching invoices, so no Export.',
++  exportNotYet: 'None of the matching invoices is in an Export yet.',
++  exportPartial: '{count} of {total} invoices are in this Export.',
++}
++
++export type CustomsStorageDetailsLabels = typeof en
++
++const labels: Record<Locale, CustomsStorageDetailsLabels> = {
++  en,
++  el: {
++    title: 'Δελτίο Εισόδου {entryNumber}',
++    subtitle: 'Παραγγελία {stockId} · {dateTime}',
++    backToOrder: 'Επιστροφή στην παραγγελία {stockId}',
++    coveredChild:
++      'Άνοιγμα από την παραγγελία {childStockId}, που καλύπτεται από αυτό το δελτίο (διαχωρισμός μετά την παραλαβή). Το δελτίο ανήκει στην παραγγελία {ownerStockId}.',
++    created: 'Το Δελτίο Εισόδου {entryNumber} δημιουργήθηκε.',
++    accessDenied: 'Δεν έχετε δικαίωμα προβολής Δελτίων Εισόδου.',
++    loadFailed: 'Δεν ήταν δυνατή η φόρτωση του δελτίου.',
++    notFound: 'Το Δελτίο Εισόδου {entryNumber} δεν βρέθηκε.',
++    overview: 'Επισκόπηση',
++    invoicesTab: 'Σχετικά τιμολόγια προμηθευτών ({count})',
++    exportTab: 'Σχετική εξαγωγή',
++    optional: 'Προαιρετικό',
++    unknown: 'Άγνωστο',
++    missing: 'Λείπει',
++    open: 'Άνοιγμα',
++    retry: 'Επανάληψη',
++    loading: 'Φόρτωση…',
++
++    edit: 'Επεξεργασία',
++    save: 'Αποθήκευση',
++    saving: 'Αποθήκευση…',
++    cancel: 'Άκυρο',
++    refresh: 'Ανανέωση',
++    editBlocked: 'Αποθηκεύστε ή ακυρώστε πρώτα την τρέχουσα επεξεργασία.',
++    saveFailed:
++      'Δεν ήταν δυνατή η αποθήκευση. Δεν άλλαξε τίποτα. Οι αλλαγές σας διατηρούνται.',
++    saveStale:
++      'Το δελτίο άλλαξε από τότε που το ανοίξατε. Ανανεώστε για να δείτε την τελευταία έκδοση. Οι αλλαγές σας διατηρούνται.',
++    changesSaved: 'Οι αλλαγές αποθηκεύτηκαν.',
++    discardTitle: 'Απόρριψη των αλλαγών;',
++    discardDescription: 'Οι μη αποθηκευμένες αλλαγές θα χαθούν.',
++    keepEditing: 'Συνέχεια επεξεργασίας',
++    discard: 'Απόρριψη',
++
++    orderRelationship: 'Σύνδεση με παραγγελία',
++    order: 'Παραγγελία',
++    orderSearchPlaceholder:
++      'Αναζήτηση Stock ID, αναφοράς, πλοίου ή κωδικού κόλι…',
++    noOrders: 'Καμία παραγγελία δεν ταιριάζει με την αναζήτηση.',
++    searchFailed: 'Δεν ήταν δυνατή η αναζήτηση παραγγελιών.',
++    reasonCurrentOrder: 'Τρέχουσα παραγγελία του δελτίου',
++    reasonCoveredHere:
++      'Καλύπτεται από αυτό το δελτίο (διαχωρισμός μετά την παραλαβή)',
++    reasonCancelled: 'Η παραγγελία είναι ακυρωμένη.',
++    reasonNotCustomsStorage:
++      'Το τελωνειακό καθεστώς της παραγγελίας δεν είναι Τελωνειακή Αποθήκευση.',
++    reasonNotAdmitted:
++      'Η παραγγελία δεν έχει παραληφθεί ακόμη σε αποθήκη Τελωνειακής Αποθήκευσης.',
++    reasonAdmittedUnder:
++      'Τα εμπορεύματα παραλήφθηκαν με την παραγγελία {stockId}. Δημιουργήστε το δελτίο από εκείνη την παραγγελία.',
++    reasonCovered:
++      'Καλύπτεται ήδη από το Δελτίο Εισόδου {entryNumber} (παραγγελία {stockId}).',
++    changeOrderTitle: 'Αλλαγή παραγγελίας σε {stockId};',
++    changeOrderText:
++      'Κόλα, βάρος, μέρη, τιμολόγια και εξαγωγή θα διαβάζονται από την παραγγελία {stockId}. Ο αριθμός και τα στοιχεία του δελτίου δεν αλλάζουν.',
++    changeOrderWarehouse:
++      'Η παραγγελία {stockId} παραλήφθηκε στην {warehouse}. Τα στοιχεία διαχειριστή αποθήκης του δελτίου δεν αλλάζουν.',
++    confirmChange: 'Επιβεβαίωση αλλαγής',
++    orderChanged: 'Η παραγγελία άλλαξε σε {stockId}.',
++    warehouseReview:
++      'Η αποθήκη παραλαβής είναι πλέον η {warehouse}. Τα στοιχεία διαχειριστή αποθήκης διατηρήθηκαν· ελέγξτε τα.',
++    stockId: 'Stock ID',
++    admission: 'Αποθήκη παραλαβής · παραλαβή',
++    admittedCollis: 'Κόλα παραλαβής',
++    grossWeight: 'Μικτό βάρος',
++    grossWeightValue: '{value} kg',
++    depositor: 'Αποθέτης (εταιρεία τιμολόγησης)',
++    depositorVat: 'ΑΦΜ αποθέτη',
++    client: 'Πελάτης',
++    supplier: 'Προμηθευτής',
++    supplierVat: 'ΑΦΜ προμηθευτή',
++
++    entryDetailsCard: 'Στοιχεία Δελτίου Εισόδου',
++    entryDetails: 'Στοιχεία δελτίου',
++    goodsAndTransport: 'Εμπορεύματα και μεταφορά',
++    warehouseOperator: 'Διαχειριστής αποθήκης',
++    entryNumber: 'Αριθμός δελτίου',
++    entryDateTime: 'Ημερομηνία και ώρα δελτίου',
++    entryTime: 'Ώρα δελτίου',
++    entryMrn: 'MRN δελτίου',
++    entryMrnDate: 'Ημερομηνία MRN δελτίου',
++    clearDate: 'Καθαρισμός ημερομηνίας',
++    tariffCode: 'Δασμολογική κλάση',
++    tariffHint: 'Μόνο ψηφία, έως 10',
++    goodsDescription: 'Περιγραφή εμπορευμάτων για τα αντίτυπα',
++    transportMeans: 'Μεταφορικό μέσο / αριθμός',
++    transportCompany: 'Μεταφορική εταιρεία',
++    permitNumber: 'Αριθμός άδειας',
++    operatorName: 'Επωνυμία διαχειριστή',
++    operatorVat: 'ΑΦΜ διαχειριστή',
++    warehouseAddress: 'Διεύθυνση αποθήκης',
++    createdBy: 'Δημιουργήθηκε από {user} · {dateTime}',
++
++    errorSummary: 'Διορθώστε τα επισημασμένα πεδία.',
++    errorEntryDateRequired: 'Συμπληρώστε την ημερομηνία και ώρα του δελτίου.',
++    errorEntryDateFuture:
++      'Η ημερομηνία και ώρα του δελτίου δεν μπορεί να είναι μεταγενέστερη από τώρα.',
++    errorMrnDateFuture:
++      'Η ημερομηνία MRN του δελτίου δεν μπορεί να είναι μεταγενέστερη της σημερινής.',
++    errorTariff: 'Χρησιμοποιήστε μόνο ψηφία, έως 10.',
++    errorTooLong: 'Χρησιμοποιήστε έως {limit} χαρακτήρες.',
++
++    invoicesCard: 'Σχετικά τιμολόγια προμηθευτών',
++    invoicesDescription:
++      'Ενεργά τιμολόγια τύπου Αποθήκη Αποθήκευσης (Δελτίο Εισόδου) της παραγγελίας του δελτίου.',
++    noInvoices: 'Η παραγγελία δεν έχει ακόμη αντίστοιχα τιμολόγια.',
++    invoiceId: 'Κωδ. τιμολογίου',
++    invoiceNumber: 'Αριθμός τιμολογίου',
++    invoiceDate: 'Ημερομηνία τιμολογίου',
++    invoiceType: 'Τύπος τιμολογίου',
++    currency: 'Νόμισμα',
++    netValue: 'Καθαρή αξία',
++    actualVat: 'Πραγματικός ΦΠΑ',
++    statisticalVat: 'Στατιστικός ΦΠΑ (υποθετικός, 24%)',
++    totals: 'Σύνολα (EUR)',
++    mixedCurrency:
++      'Μικτό ή μη ευρώ νόμισμα: τα σύνολα και ο συνολικός στατιστικός ΦΠΑ δεν εμφανίζονται.',
++    statisticalVatNote:
++      'Ο στατιστικός ΦΠΑ είναι μόνο πληροφορία αναφοράς. Δεν είναι ΦΠΑ που χρεώνεται ή οφείλεται.',
++
++    exportCard: 'Σχετική εξαγωγή',
++    exportLabel: 'Εξαγωγή',
++    exportMrn: 'MRN εξαγωγής',
++    exportMrnDate: 'Ημερομηνία MRN εξαγωγής',
++    customsStatus: 'Κατάσταση τελωνείου',
++    awaitingEad: 'Αναμονή EAD',
++    awaitingIe599: 'Αναμονή IE599',
++    completed: 'Ολοκληρώθηκε',
++    exportSource:
++      'Προέρχεται από την εξαγωγή. Αλλάξτε το στη σελίδα της εξαγωγής.',
++    exportNoInvoices: 'Δεν υπάρχουν αντίστοιχα τιμολόγια, άρα ούτε εξαγωγή.',
++    exportNotYet: 'Κανένα αντίστοιχο τιμολόγιο δεν βρίσκεται ακόμη σε εξαγωγή.',
++    exportPartial:
++      '{count} από {total} τιμολόγια βρίσκονται σε αυτή την εξαγωγή.',
++  },
++}
++
++export function customsStorageDetailsLabelsFor(
++  locale: Locale,
++): CustomsStorageDetailsLabels {
++  return labels[locale]
++}
++
++export function useCustomsStorageDetailsLabels(): CustomsStorageDetailsLabels {
++  return customsStorageDetailsLabelsFor(useLocale().locale)
++}
++
++/** Replaces `{name}` placeholders in a label. */
++export function fillLabel(
++  template: string,
++  values: Record<string, string | number>,
++): string {
++  return template.replace(/\{(\w+)\}/g, (match, name: string) =>
++    name in values ? String(values[name]) : match,
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/customs-storage/details/types.ts b/frontline-forwarding-client/src/features/customs-storage/details/types.ts
+new file mode 100644
+index 0000000..9ecbb64
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/customs-storage/details/types.ts
+@@ -0,0 +1,171 @@
++/**
++ * UI view models for the FRO-354 Customs Storage Entry details page. They
++ * mirror the reads FRO-319 will provide; no GraphQL type exists for them yet.
++ */
++
++export type CustomsStorageDetailsTab = 'overview' | 'invoices' | 'export'
++
++/** FRO-319 creation-eligibility reasons, in the order the server checks them. */
++export enum EntryIneligibleReason {
++  CANCELLED = 'CANCELLED',
++  NOT_CUSTOMS_STORAGE = 'NOT_CUSTOMS_STORAGE',
++  NOT_ADMITTED = 'NOT_ADMITTED',
++  ADMITTED_UNDER_ANOTHER_ORDER = 'ADMITTED_UNDER_ANOTHER_ORDER',
++  ALREADY_COVERED = 'ALREADY_COVERED',
++}
++
++/** Change Order reasons specific to this page; they come before FRO-319's. */
++export enum ChangeOrderLocalReason {
++  CURRENT_ORDER = 'CURRENT_ORDER',
++  COVERED_BY_THIS_ENTRY = 'COVERED_BY_THIS_ENTRY',
++}
++
++export interface OrderReference {
++  id: string
++  stockId: string
++}
++
++export interface EntryReference {
++  id: string
++  entryNumber: string
++}
++
++export type EntryEligibility =
++  | { eligible: true }
++  | {
++      eligible: false
++      reason: EntryIneligibleReason
++      /** The admitted Order (ADMITTED_UNDER_ANOTHER_ORDER) or owning Order (ALREADY_COVERED). */
++      order?: OrderReference
++      /** The covering entry (ALREADY_COVERED). */
++      entry?: EntryReference
++    }
++
++/** One row of FRO-319's Order search for entry creation. */
++export interface OrderSearchResult extends OrderReference {
++  status: string
++  clientName: string
++  supplierName: string | null
++  eligibility: EntryEligibility
++}
++
++/** What the Change Order picker shows for one search result. */
++export type ChangeOrderOption =
++  | { selectable: true }
++  | { selectable: false; local: ChangeOrderLocalReason }
++  | { selectable: false; eligibility: EntryEligibility }
++
++export interface CompanyFact {
++  name: string
++  vatNumber: string | null
++}
++
++export interface WarehouseReference {
++  id: string
++  code: string
++  name: string
++}
++
++/** The entry's owning Order with the facts FRO-319 derives from it. */
++export interface EntryOrder extends OrderReference {
++  admissionAt: string
++  warehouse: WarehouseReference
++  admittedCollis: number
++  /** Kilograms as a decimal string; null when FRO-319 reports it unknown. */
++  grossWeightKg: string | null
++  depositor: CompanyFact | null
++  client: CompanyFact
++  supplier: CompanyFact | null
++}
++
++/** Entry-owned values. Dates are ISO (yyyy-mm-dd), time HH:mm. */
++export interface EntryValues {
++  entryDate: string
++  entryTime: string
++  entryMrn: string
++  entryMrnDate: string
++  tariffCode: string
++  goodsDescription: string
++  transportMeans: string
++  permitNumber: string
++  operatorName: string
++  operatorVat: string
++  warehouseAddress: string
++}
++
++export type EntryField = keyof EntryValues
++
++/** A saved Customs Storage Entry as the details page reads it. */
++export interface SavedEntry {
++  id: string
++  entryNumber: string
++  /** Optimistic-concurrency token sent back with every save. */
++  version: string
++  values: EntryValues
++  createdBy: { name: string; at: string }
++  owner: EntryOrder
++}
++
++export interface InvoiceRow {
++  id: string
++  invoiceNumber: string
++  invoiceDate: string
++  supplierName: string | null
++  invoiceType: string
++  currency: string
++  /** Exact decimal strings with at most two decimals. */
++  netValue: string
++  vatValue: string
++  /** Export holding this invoice, if any. */
++  exportId: string | null
++}
++
++export enum CustomsStatus {
++  AWAITING_EAD = 'AWAITING_EAD',
++  AWAITING_IE599 = 'AWAITING_IE599',
++  COMPLETED = 'COMPLETED',
++}
++
++export interface ExportSummary {
++  id: string
++  exportNumber: string
++  mrn: string | null
++  mrnDate: string | null
++  customsStatus: CustomsStatus
++}
++
++/** Where the page was opened from (FRO-355 or FRO-353 success). */
++export interface ReturnContext {
++  order: OrderReference
++  /** True when that Order is a covered child, not the owner. */
++  coveredChild: boolean
++}
++
++export type PageState =
++  | { kind: 'loading' }
++  | { kind: 'error' }
++  | { kind: 'notFound'; entryNumber: string }
++  | { kind: 'denied' }
++  | { kind: 'ready' }
++
++/** The card currently in edit mode; only one at a time. */
++export type EditingCard = 'order' | 'details' | null
++
++/** Change Order search lookup state owned by the controller. */
++export type OrderSearchState =
++  | { kind: 'idle' }
++  | { kind: 'loading' }
++  | { kind: 'error' }
++  | { kind: 'results'; results: OrderSearchResult[] }
++
++export type SaveFeedback =
++  | { kind: 'validation' }
++  | { kind: 'failed' }
++  | { kind: 'stale' }
++  /** Change Order rejected by the server with a FRO-319 reason. */
++  | { kind: 'rejected'; eligibility: EntryEligibility }
++
++export type RecordKind = 'order' | 'entry' | 'invoice' | 'export'
++
++/** Authorized detail URLs supplied by the controller. */
++export type RecordHref = (kind: RecordKind, id: string) => string
