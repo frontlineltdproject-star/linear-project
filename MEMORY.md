@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — Customs Storage Entry rename batch 2 saved (FRO-321/317/326/347/348/352)
+
+- User approved drafts/customs-storage-rename-batch2.md, text only, no branch changes. Baselines matched. Saved replace_all patches 08:00:24–08:00:36Z: 61 visible mentions renamed (FRO-321 15, FRO-317 7, FRO-326 9, FRO-347 10, FRO-348 13, FRO-352 7), incl. "an/An Entry Note" → "a/A Customs Storage Entry". FRO-326 re-check: 0 "Entry Note", 9 "Customs Storage Entry". Titles, labels, status, attachments unchanged.
+- Linear auto-added related links on save: FRO-317 +347/+356/+303, FRO-347 +317, FRO-348 +303, FRO-352 +319. Removed with removeRelatedTo (user-approved); re-read confirms all six match the recorded baselines. FRO-321 and FRO-326 had no additions.
+- Still saying "Entry Note": workspace label "entry note"; mock branches mock/fro-326-order-details-ui, mock/fro-348-supplier-invoice-details, mock/fro-352-export-details (UI strings, incl. FRO-352 picker reason and FRO-326 Available actions card); attachment titles on FRO-353/354/355. Branch updates need separate approval.
+
 ### 2026-10-27 — Customs Storage Entry rename + alignment saved (FRO-319/353/354/355)
 
 - User approved drafts/customs-storage-rename-alignment.md. Saved as atomic patches 07:52–07:54Z: titles now "Customs Storage Entry — entity & business rules / — Creation page UI / — Details page UI" and "Order Details — Create or open Customs Storage Entry from Available actions"; Entry Note(s) → Customs Storage Entr(y/ies) throughout; FRO-319 and FRO-353 also note number/date → entry number/date, note-owned → entry-owned. Greek labels unchanged.
