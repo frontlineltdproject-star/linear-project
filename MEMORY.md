@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — Customs Storage Entry rename + alignment saved (FRO-319/353/354/355)
+
+- User approved drafts/customs-storage-rename-alignment.md. Saved as atomic patches 07:52–07:54Z: titles now "Customs Storage Entry — entity & business rules / — Creation page UI / — Details page UI" and "Order Details — Create or open Customs Storage Entry from Available actions"; Entry Note(s) → Customs Storage Entr(y/ies) throughout; FRO-319 and FRO-353 also note number/date → entry number/date, note-owned → entry-owned. Greek labels unchanged.
+- Alignment: FRO-353 eligible-only Order search with reasons, required entry date default now, warehouse-prefilled permit/operator (re-prefill only untouched fields on draft Order change), Unknown weight / Missing depositor-Supplier markers, Currency column + EUR rule, Create disabled without eligible Order, scope → FRO-358; FRO-354 same display rules, eligible-only Change Order, Print (Εκτύπωση) → FRO-358, no cancel/reissue/delete; FRO-355 Create only for eligible Orders + Ineligible Order row (EN reasons; EL per page translations), AC3 updated. Old "Text revision only" paragraphs replaced by Preview status (ChatGPT previews historical).
+- Small follow-up patches in the same approval: FRO-319 "Note date & time" / "Note total" leftovers → Entry; FRO-355 "an Customs" → "a Customs". Generic lower-case "note" wording (and FRO-354 "note number") left as shorthand.
+- Verified: labels/status unchanged, relations unchanged (FRO-358 links came from its creation). Attachment titles still say "Entry Note" (not renamed).
+- Not renamed (follow-up): FRO-321, FRO-317, FRO-326, FRO-347, FRO-348, FRO-352 and the mock/fro-326 + mock/fro-348 branch labels.
+
 ### 2026-10-27 — FRO-358 created; entity renamed Customs Storage Entry
 
 - User decided (option A) to rename the portal entity: section **Customs Storage / Τελωνειακή Αποθήκευση**, record **Customs Storage Entry**, Greek label stays **Δελτίο Εισόδου**. "Customs Warehousing" rejected because the FRO-356 code uses CUSTOMS_WAREHOUSING for Αποταμίευση (CUSTOMS_STORAGE = Αποθήκευση). CONTEXT.md updated.
