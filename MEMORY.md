@@ -1,5 +1,50 @@
 # Linear — ticket creation and editing memory
 
+### 2026-10-27 — FRO-353 approved for development (Ready)
+
+- User asked to move FRO-353. Baseline 09:37:35.257Z unchanged. Saved 09:42:44Z: Pending_Review removed, Ready added, status Todo; description, attachments, milestone unchanged. Older UI already referenced (ChatGPT preview attachment + "historical reference only" sentence in Context for agents), so no edit.
+- Workflow status: steps 0–4, 4e and 5 done; step 2b only local (previews/fro353, launch config fro353-preview, port 8353; no Cloudflare token); step 6 waits for deployment.
+
+### 2026-10-27 — FRO-353 branch link saved
+
+- User approved drafts/fro353-branch-link-edit.md. Baseline unchanged (08:56:57.044Z). Saved 09:37:24Z: Context for agents branch line now links mock/fro-353-customs-storage-entry-create (base 5c51030, head 4c5a3eb, 14 files) with activation needs; link attachment "Prepared frontend branch — mock/fro-353-customs-storage-entry-create" added; labels re-passed.
+- Save auto-added related FRO-317/356/321/348; removed (09:37:35Z). Final: Todo, entry note/Pending_Review/Frontend/Story, 0.0.11, blocks FRO-355, blockedBy FRO-319, related 350/352/248/358/326/354, 3 attachments. Linear rendered the first FRO-319 mention in that paragraph as a plain link (cosmetic).
+- Still open: FRO-354 alignment; FRO-353 Ready approval; planning-repo commit/push blocked.
+
+### 2026-10-27 — FRO-353 mock branch pushed and verified
+
+- User approved creating mock/fro-353-customs-storage-entry-create from 5c51030 as one commit with the explicit refspec, and accepted the branch-protection gap for this branch. Re-verified first: main 5c51030, branch absent, diff hash unchanged (9e7e596d…).
+- Commit 4c5a3eb1cf99147736b9c54e56a2da29fa58d480 "feat(FRO-353): prepare Customs Storage Entry create UI" (14 added files under frontline-forwarding-client/src/features/customs-storage/create/, +3,102), identity giwrgoskakepakis, no hooks. Committed diff byte-identical to the audited patch.
+- Pushed with git push github mock/fro-353-customs-storage-entry-create:mock/fro-353-customs-storage-entry-create (gh credential helper). Remote head 4c5a3eb = local; 1 ahead / 0 behind main; 14 files, all added, none outside the folder; remote diff hash equals the audited one. No PR, merge or deployment. URL https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-353-customs-storage-entry-create
+- Next (needs approval): add the branch link to FRO-353 in Linear (Context for agents "(when published)" → head 4c5a3eb + link attachment); FRO-354 alignment. Planning-repo commit/push still blocked.
+
+### 2026-10-27 — FRO-353 frontend prepared and verified; push gate pending
+
+- User confirmed both model checkpoints and agreed drafts/fro353-frontend-plan.md (three slices uncommitted, full diff at the end). Playbook FRO-353: HEAD 5c51030, policy committed, SHA-256 b1a66b22…7dc.
+- C:/ffx/fro353 detached at main 5c51030 (re-fetched, unchanged). 14 new files only under frontline-forwarding-client/src/features/customs-storage/create/ (rules, types, labels, layout, Order card, entry card, invoices, Export, outcomes, ui-parts with local FRO-350 copies, README, 3 test files). Uses PurchaseOrderStatusPill; no shared file changed.
+- Rule tests Red 20/22 on stubs, Green 22/22; focused 44/44; full 246/246; build OK (routeTree.gen.ts restored); tsc only 2 baseline TS2352; prettier, diff check, secret scan clean. Component tests written alongside the components.
+- Browser harness (deleted; copy in scratchpad fro353-harness): all scenarios, EN/EL, 400px, light/dark, keyboard, no console errors on clean load. Fix: invoice number nowrap. Artefacts: rAF paused in unfocused pane; createRoot error from harness HMR.
+- Diff drafts/fro353-frontend-preparation.patch (3,186 lines, SHA-256 9e7e596d…); handoff drafts/fro353-frontend-handoff.md. Rulesets 403, main protection 404 (same enforcement gap as FRO-350/352). Remote branch absent. Awaiting approval to create mock/fro-353-customs-storage-entry-create, commit and push.
+
+### 2026-10-27 — FRO-353 rewrite and FRO-319 patch saved
+
+- User approved both drafts, Pending_Review on FRO-353 and removal of auto-added related links. Baselines unchanged (FRO-353 08:31:02.173Z, FRO-319 08:31:00.211Z).
+- FRO-353 saved 08:56:32Z = drafts/fro353-reviewed-spec.md (sha256 7e7e7d39…), labels entry note/Pending_Review/Frontend/Story. Save auto-added related FRO-321/356/348/317; removed (08:56:57Z). Final: Todo, 0.0.11, blocks FRO-355, blockedBy FRO-319, related 350/352/248/358/326/354, 2 attachments unchanged (titles still "Entry Note"). Linear turned some plain mentions (FRO-348, FRO-352, FRO-355, FRO-358) into chips — cosmetic.
+- FRO-319 patch (drafts/fro319-search-validation-patch.md) saved 08:56:44Z: date-time ≤ now, MRN date ≤ today, tariff 1–10 digits, text limits, per-invoice currency, "No entry total" wording, Order search for entry creation. Relations unchanged; Todo, Ready.
+- Next (each needs approval): step 4e mock/fro-353-customs-storage-entry-create (client-only under src/features/customs-storage/create/, unmounted, from main); FRO-354 alignment (admitting warehouse, per-row currency, n-of-m Export note, search fields/reasons). Planning-repo commit/push still blocked by the classifier.
+
+### 2026-10-27 — FRO-353 preview verified; rewrite and FRO-319 patch drafted
+
+- Preview previews/fro353 (base.css from fro352 = production tokens at 5c51030; build.py; launch.json fro353-preview, port 8353). One direction (structure already agreed). Verified: search reasons/order + Open, keyboard, preselect ineligible/covered/not-found, denied, lookup error/Retry, prefill + permit hint, Unknown/Missing markers, €803.62/0.00/192.87 footer, mixed-currency message, 2 of 3 Export note, validation + focus, draft retention across tabs/EL, discard modal/Escape, created/duplicate/fail/lost-response outcomes, EN/EL at 400px no overflow (table scrolls). Not deployed (no Cloudflare token).
+- Drafts: drafts/fro353-reviewed-spec.md (full rewrite; component map; branch mock/fro-353-customs-storage-entry-create under src/features/customs-storage/create/) and drafts/fro319-search-validation-patch.md (date/MRN date limits, tariff 1–10 digits, text limits, per-invoice currency, Order search read). Proposed metadata: add Pending_Review; remove auto-added related links after save. Awaiting approval; no Linear write.
+
+### 2026-10-27 — FRO-353 review: round 1 accepted
+
+- User: FRO-353 (Customs Storage Entry — Creation page UI) was not created through the workflow; review gaps, rebuild the UI from the production design system, mock branch client-UI-folder only. Pull up to date. Baseline: Todo, entry note/Frontend/Story (no workflow label), 0.0.11, updatedAt 2026-10-27T08:31:02.173Z, no comments, blocks FRO-355, blockedBy FRO-319, related 350/352/248/358/326/354, 2 attachments (deferred-list upload, ChatGPT preview). Main 5c51030. Findings: drafts/fro353-review.md.
+- Grounded: purchaseOrders search matches Stock ID, message number, owner/supplier reference, vessel name, colli tracking code only (no Client/Supplier/invoice); warehouse address = street/street_number/postal_code/city (nullable); delivery-notes-card pairs DatePicker + Input type=time.
+- Accepted Q1–Q12 as recommended: existing search fields + per-match eligibility via new FRO-319 search read (FRO-319 patch); FRO-355 reason table/order incl. admitted under another Order and covered (entry + Open); ineligible/covered preselection shown unselected with reason, not-found/denied → message + empty; Cancel confirm only with input, back to Order / previous page / Orders list, leave-page warning; FRO-353 owns only the route, nav/list button FRO-358 (0.0.11 reachable only via FRO-355); no create authority → access denied; Admitting warehouse · admission date-time shown; permit hint when no single licence, address "Street Number, Postal code City"; entry date-time ≤ now, MRN date ≤ today, tariff ≤10 digits, text 500 / goods 2,000 (FRO-319 patch); per-row amounts in invoice currency incl. Statistical VAT, totals hidden unless all EUR; no conflicting Export, partial "{n} of {m}"; concurrent duplicate → existing entry + Open, lost response → check current entry before retry.
+- Commit/push of drafts/fro353-review.md blocked by the auto-mode classifier.
+
 ### 2026-10-27 — FRO-319 split wording and FRO-353 post-create landing saved
 
 - User approved drafts/fro355-followup-patches.md. Baselines unchanged. FRO-319 Split coverage first row now "(today only Shipment-preparation partial selection; manual splits happen before stock)" + "Any future post-admission split follows the same rule", 08:31:00Z. FRO-353 new Actions and states bullet: success opens the new entry's FRO-354 page; from Order Details it carries return context and shows Back to Order {Stock ID} / Επιστροφή στην παραγγελία {Stock ID}, 08:31:02Z.
