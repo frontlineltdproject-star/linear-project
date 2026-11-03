@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports submission rules accepted; Shipper requested
+
+- User accepted Q13: internal Import ID at creation; MRN/MRN date blank before submission and required to confirm submission; trimmed uppercase MRN, 18 alphanumeric characters, unique across Imports including cancelled records, no future MRN date. Submission advances to Awaiting customs result.
+- Q14 accepted: allow recording already-underway procedures, including completed ones when required evidence is known, through explicit dated milestone confirmations rather than unexplained status selection/fabricated events. Q15 accepted: Import-owned uploads optional; an upload alone never confirms a lifecycle event.
+- User requests Shipper in the same way as Export. Refreshed FRO-317 unchanged2026-10-27T10:45:42.148Z: Export Shipper is derived from Invoicing company for Greek-company Exports and Supplier for foreign-company Exports; Shipper VAT number is derived from that Company. Import does not yet have an agreed equivalent fiscal classification/derivation. Inclusion accepted; source company, selection/derivation, requiredness and VAT-reference inclusion remain unresolved. Do not silently copy Export fiscal rules or redefine the Export glossary term.
+- User explicitly defers duty/tax amounts, payment reference, Άδεια reference and customs notes: keep these as future candidates, not fields in this initial ticket. Detailed related Shipment fields remain deferred to UI consultation.
+- Step 1 continues; no Linear or production changes. Planning pull succeeded; synchronize this checkpoint only, preserving unrelated local files. No new glossary/ADR until Import Shipper meaning is resolved.
+
 ### 2026-11-03 — Imports payment branching and completion receipt accepted
 
 - Q11 accepted: when recording a positive customs result, staff explicitly confirm Payment required or No payment required. Missing amount/receipt never implies no payment. Payment-required cases enter Awaiting payment, then Awaiting Άδεια Τελωνισθέντων Εμπορευμάτων after payment confirmation; no-payment cases enter Awaiting document directly, without a fabricated payment event.
