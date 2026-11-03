@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 Shipment context flattened
+
+- User requested expanded Shipment context inside the existing Shipment relationship card, without a nested card or repeated collapsed fields. Updated the Export-style local preview: disclosure retained; Client, Vessel, physical status, packing and weight appear inline. Shipment number and document type/number appear only in the always-visible row.
+- Presentation-only adjustment; no business-rule, Linear, production or deployment change. Build/syntax and EN/EL markup checks verify one relationship card and no duplicated transport document. Browser visual review remains with the user.
+
 ### 2026-11-03 — FRO-360 revised around Export UI pattern
 
 - User approved the recommendation to follow FRO-350/352 rather than keep A–C unchanged. Default local preview now has horizontal page tabs; Overview has Shipment relationship then Import details with embedded customs status/actions and event dates. Additional Shipment context is expandable; creation uses stacked relationship/details/coverage sections. Earlier concepts remain in the reviewer selector.
