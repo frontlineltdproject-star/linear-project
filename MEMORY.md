@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 status controls and connected progress track
+
+- User requested transition buttons in FRO-352's location and a connected line coloured through the current stage. Local Export-style Import now has a read-only status field on the left and existing transition actions on the right, above the numbered track; mobile wraps actions below and stacks the connected track vertically.
+- Track reaches the active status; optional payment remains visibly skipped when not required. Existing action rules reused unchanged. Syntax/build and 18 EN/EL scenario render checks passed, including action placement markup and progress extent. Browser visual review remains pending. No Linear/production/deployment changes.
+
 ### 2026-11-03 — FRO-360 customs status bar
 
 - User requested the FRO-352 bar presentation. Current FRO-352 status contract and local preview checked. Added a non-clickable five-stage numbered indicator inside Import details; inspection is shown under the result stage, payment is conditional and explicitly Not required when bypassed. Cancelled records have no progression bar. Existing confirmation actions and rules unchanged.
