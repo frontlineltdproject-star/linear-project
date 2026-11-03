@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-359 Imports structural ticket created and verified
+
+- User approved the complete displayed draft and metadata with ok. Mandatory planning pull and duplicate search succeeded. Created FRO-359: https://linear.app/front-line-ltd/issue/FRO-359/import-customs-declaration-entity-and-business-rules at2026-11-03T09:38:30.949Z.
+- Independent full read matches drafts/imports-structural-spec.md exactly after Linear's issue-chip, link-angle and numbered-list whitespace normalization. Verified Backlog; all five labels Shipment/Business_Input/Pending_Review/Backend/Story; Pre-releases 0.0.x; related317/325/344/322/356; no blockers/blocks, attachments or documents. No Ready promotion or linked-description edits.
+- Whole-colli/sub-colli applicability remains the explicit business confirmation before Ready. UI/preview/production branch and FRO-322 category work remain excluded/deferred. No production changes. Planning records synchronized; unrelated local files preserved.
+
 ### 2026-11-03 — Imports full structural review draft prepared; write approval pending
 
 - User authorized moving on to draft. Applied frontline-linear-issues (project workflow takes precedence for gh and linked-source reads); source/consumer check consolidated, live main still5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Current labels/status/project and duplicate search verified. Optional agent-context endpoint previously unavailable; ordinary Linear reads work.

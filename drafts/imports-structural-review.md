@@ -1,6 +1,6 @@
 # Imports structural planning — open review
 
-Full review draft prepared in `imports-structural-spec.md`. No Linear write approval. UI, preview and production branch excluded. Whole-colli applicability remains an explicit business-input blocker before Ready.
+Approved specification saved as FRO-359; exact source in `imports-structural-spec.md`. UI, preview and production branch excluded. Whole-colli applicability remains an explicit business-input blocker before Ready.
 
 ## Accepted coverage model
 
@@ -47,3 +47,10 @@ Read-only gh inspection of live main `5c51030680c9d45b3827a7e19b8320c19aa5ed9a`.
 ## Final source verification
 
 Main rechecked unchanged at 5c51030. Attachments: exactly one saved owner, existing owner enum Order/Shipment only; add Import. Shared REST multipart, private storage, 25 × 1024 × 1024-byte limit, nonempty, normalized filename 1–255, documented extension allowlist. Sources `docs/workflows/attachments.md`, `AttachmentsApiService.java`, `AttachmentReferenceType.java`. Shipment authority + internal identity pattern verified in authorization docs/UserAuthority/ShipmentAuthorizationService; REST/GraphQL/MCP cancellation adapters delegate to the shared service. No existing Import endpoints/authorities claimed.
+
+## Creation receipt — 3 November 2026
+
+- User approved full displayed body/metadata with ok. Created [FRO-359](https://linear.app/front-line-ltd/issue/FRO-359/import-customs-declaration-entity-and-business-rules), createdAt/updatedAt `2026-11-03T09:38:30.949Z`.
+- Independent get_issue read: normalized body exactly matches approved local text (24,047 normalized characters). Only issue-chip, link-angle and list-indentation normalization.
+- Backlog; Shipment, Business_Input, Pending_Review, Backend, Story; project Pre-releases 0.0.x. Exact five approved related issues, no blocking relations, empty attachments/documents. No unexpected relation cleanup needed.
+- Remains pending business input on whole-colli coverage, not Ready. No production/UI/branch work or deployment verification performed.
