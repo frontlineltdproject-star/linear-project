@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports inspection FSM accepted; related-field selection deferred
+
+- Q6 accepted: Awaiting customs result branches to Awaiting payment on positive result, Awaiting documentary inspection or Awaiting physical inspection on the corresponding referral. Inspections are separate, not concurrent. After inspection, return to Awaiting customs result when the result is pending, or advance to Awaiting payment when positive result is confirmed. Inspection completion alone is not positive-result evidence; referral is not automatically a rejection.
+- Q7 accepted as proposed: provisional whole-colli declaration coverage with whole-Order selection convenience; department confirmation that sub-colli clearance is unnecessary remains outstanding. The user's ok does not supply that operational evidence.
+- Q8 accepted: this ticket records declarations, coverage and customs events; it does not automatically split Orders or change their regime. Actual customs-transition behavior needs separate agreed ownership/rules.
+- Q9 clarification: user asks whether the open zero-payment question means duty/tax exemption and which evidence signals completion. Explain it includes any supported case with no payment required; no exemption eligibility, completion evidence or bypass rule has been established. Await department evidence rather than inventing a payment/receipt event.
+- Q10 scope correction: user wants employee consultation and exact related fields deferred to the later UI ticket. Do not treat the earlier suggested field table, aggregation, totals or multiplicity presentation as approved requirements. Preserve separate data ownership and the Shipment reference; future UI work must verify its read needs and assign any missing backend/API support. This is not a commitment that existing reads already provide every future field.
+- Step 1 remains open; no Linear writes, UI, preview or production changes. Planning checkpoint only; preserve unrelated local work.
+
 ### 2026-11-03 — Imports first decisions and inspection branch proposal
 
 - User accepted one Import per declaration, including pre-submission preparation with internal identity and no required pre-submission MRN; each belongs to one Shipment and a Shipment may have several. Successive partial clearances use another declaration. Added resolved Import definition to CONTEXT.md.
