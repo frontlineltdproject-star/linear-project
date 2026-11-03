@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports payment branching and completion receipt accepted
+
+- Q11 accepted: when recording a positive customs result, staff explicitly confirm Payment required or No payment required. Missing amount/receipt never implies no payment. Payment-required cases enter Awaiting payment, then Awaiting Άδεια Τελωνισθέντων Εμπορευμάτων after payment confirmation; no-payment cases enter Awaiting document directly, without a fabricated payment event.
+- Q12 accepted: receipt of Άδεια Τελωνισθέντων Εμπορευμάτων is the completion point; confirm receipt date, authenticated actor and recording time. Issuance alone and payment alone do not complete the Import. This replaces the earlier generic/payment-receipt completion milestone. Attachment requirement remains undecided.
+- Refreshed FRO-317 (updated2026-10-27T10:45:42.148Z): Export ID, MRN/date validation and event-confirmation pattern are reference contracts only; Import-specific adoption still needs decisions. Next interview frontier: submission identity/evidence, initial entry of already-progressed declarations, files, and additional declaration-owned data. Permissions/corrections/cancellation, eligibility/coverage and consumer trace still need resolution before draft.
+- Planning pull succeeded; no Linear or production changes. Step 1 in progress; preserve unrelated local files. No new glossary/ADR required for these lifecycle decisions.
+
 ### 2026-11-03 — Imports completion document identified
 
 - User consulted the department: Άδεια Τελωνισθέντων Εμπορευμάτων is issued when import customs processing completes; where duties/taxes are paid, issuance follows payment. Added this office-confirmed term to CONTEXT.md, distinguishing it from a payment receipt. This is user-supplied workflow evidence, not independently verified legal advice.
