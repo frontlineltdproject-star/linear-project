@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports structural entity: interview started
+
+- User requests a new Imports customs entity patterned on FRO-317, structural specification only: no UI, preview or production branch. Planning pull succeeded; authenticated gh and Linear access verified. Grilling/domain-modeling loaded; relevant workflow lessons read. Preserve unrelated FRO-326/352/353 local changes.
+- User describes ordinary one-procedure-per-Shipment use, with a reported rare partial-clearance case leaving remainder under a storage regime; proposes allowing multiple Imports per Shipment. Exact regime (Αποθήκευση versus Αποταμίευση), declaration/MRN granularity and goods coverage remain unresolved. Do not infer them from Export invoice grouping.
+- Proposed operational stages: not submitted; submitted/awaiting result; positive result/awaiting payment; paid/awaiting receipt; receipt received/completed. Physical or documentary inspection can intervene after submission. Payment versus receipt separation, zero-payment cases, evidence, timestamps and exception handling are not settled. User wants related Shipment/Order information retrieved read-only rather than copied; exact retrieval scope remains open.
+- Fresh FRO-317 confirms one Shipment to several Exports, mandatory MRN at creation, event-derived Awaiting EAD/Awaiting IE599/Completed and separately owned invoice membership. No Export change authorized. FRO-356 separates whole-Order regime corrections from formal customs transitions; FRO-319 storage admission/register is a separate contract. FRO-322 remains Backlog with unresolved movement category/Import rules; do not silently absorb it. Search for import found no dedicated Import customs entity ticket. Optional Linear get_agent_context endpoint unavailable; normal reads work.
+- Workflow: step 1 in progress; 2/2b/4e skipped by scope; spec trace/draft/write approval pending. No Linear writes, new resolved glossary definition or ADR yet. Recommendations require user acceptance.
+
 ### 2026-10-27 — FRO-354 previous UI linked in the description
 
 - User asked whether the older UI was linked as a historical reference; it was only an attachment plus a plain sentence. User approved the FRO-353-style link. Baseline 10:43:46.316Z unchanged. Saved 10:45:24Z: Context for agents sentence replaced by "**Previous UI (historical reference only):** [Customs Storage Entry details — earlier preview (ChatGPT-hosted)](…fro-353-entry-note-details…?highlights=off)", needs sign-in, description is the contract. Labels re-passed (Ready).
