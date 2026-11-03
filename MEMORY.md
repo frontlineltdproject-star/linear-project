@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Import Shipper manual Company selection accepted
+
+- Q17: user confirms no derivation rule; manually assign Shipper from existing Companies. Record a Company reference, not a separate free-text company name; no automatic Supplier/Client/Export-rule derivation. Added Import Shipper glossary entry without changing Export Shipper semantics.
+- Requiredness before submission, post-submission correction/locking, identity-field editing and cancellation rules remain undecided. Do not infer required VAT number, fiscal classification, new-company creation or Company master-data editing from this choice.
+- Step 1 remains open. No Linear writes, UI or production changes. Planning pull succeeded; synchronize task records only and preserve unrelated local files.
+
 ### 2026-11-03 — Imports submission rules accepted; Shipper requested
 
 - User accepted Q13: internal Import ID at creation; MRN/MRN date blank before submission and required to confirm submission; trimmed uppercase MRN, 18 alphanumeric characters, unique across Imports including cancelled records, no future MRN date. Submission advances to Awaiting customs result.
