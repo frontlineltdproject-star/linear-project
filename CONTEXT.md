@@ -79,6 +79,9 @@ A physical delivery address associated with a commercial Client, distinct from i
 **Export Customs Declaration (Export)**:
 One export customs declaration with its own MRN, belonging to one physical Shipment and one fiscal group. A Shipment can have several Exports; the Export owns its explicitly selected Supplier Invoices, not the Shipment's goods.
 
+**Import Customs Declaration (Import)**:
+One import customs declaration, including its preparation before submission, linked to one physical Shipment. A Shipment can have several Imports, including successive declarations for partial clearance; it is distinct from the physical movement and warehouse intake.
+
 **Export type**:
 The Export's procedure, set by the Invoicing company's tax registration: Greek invoicing company or Foreign invoicing company. It is distinct from a Supplier Invoice's own invoice type.
 

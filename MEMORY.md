@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports first decisions and inspection branch proposal
+
+- User accepted one Import per declaration, including pre-submission preparation with internal identity and no required pre-submission MRN; each belongs to one Shipment and a Shipment may have several. Successive partial clearances use another declaration. Added resolved Import definition to CONTEXT.md.
+- Corrected exceptional regime to Τελωνειακή Αποταμίευση. User thinks coverage should use collis but is unsure whether Orders or collis are split; this is not confirmation that sub-colli clearance never occurs or authorization for automatic Order splits/regime transitions.
+- User accepted separate payment and receipt milestones/five main stages. Zero-payment cases remain unanswered. User prefers exploring documentary/physical inspection as branches of the same FSM after awaiting result; inspection concurrency/sequencing, completion transitions and actual rejection remain unresolved. Do not label an inspection referral as a confirmed rejection automatically.
+- Required read-only related context supplied by user: Shipment AWB/CMR/B/L, dimensions/weight of transport packing, Client and Vessel when present. Exact aggregation, multiplicity and Shipment-wide versus declaration-covered scope remain decisions. Fresh FRO-299/FRO-300 define planned per-colli measurement reads and individual/load-unit distinctions, not a current customs contract.
+- Live main remains 5c51030680c9d45b3827a7e19b8320c19aa5ed9a with no Import/Export customs entities. FRO-356 regime branch 78b6d9ffd501ee643d966b4b1e9952676c69a671 is five commits ahead/unmerged; whole-Order regimes and shipment-preparation splits are not a partial-customs-clearance implementation. Existing AWAITING_IMPORT is warehouse intake, unrelated to customs status.
+- Step 1 remains open; UI/preview/production branch excluded. No Linear writes or changes to FRO-317/322/356; no ADR yet. Planning checkpoint synchronized separately from unrelated local work.
+
 ### 2026-11-03 — Imports structural entity: interview started
 
 - User requests a new Imports customs entity patterned on FRO-317, structural specification only: no UI, preview or production branch. Planning pull succeeded; authenticated gh and Linear access verified. Grilling/domain-modeling loaded; relevant workflow lessons read. Preserve unrelated FRO-326/352/353 local changes.
