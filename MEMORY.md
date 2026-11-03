@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 unfinished progress line fixed
+
+- User requested a grey line between unfinished stages. Found the connector used undefined --border-strong; this preview defines --border2 (#d7dce3). Replaced the missing token in the stepper so future connectors and node outlines render light grey on desktop/mobile; reached connectors stay teal.
+- Verified CSS token references resolve and rebuilt the standalone HTML. Local presentation fix only; no Linear or production change.
+
 ### 2026-11-03 — FRO-360 expanded Shipment copy simplified
 
 - Removed the three requested explanatory texts and their Greek equivalents from More Shipment information in the Export-style preview. Removed DEMO-201/DEMO-202 under the Client name; clarified that these are fixture Order numbers, not invoicing companies. Client name, Vessel, physical status, packing and totals remain.
