@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 expanded Shipment copy simplified
+
+- Removed the three requested explanatory texts and their Greek equivalents from More Shipment information in the Export-style preview. Removed DEMO-201/DEMO-202 under the Client name; clarified that these are fixture Order numbers, not invoicing companies. Client name, Vessel, physical status, packing and totals remain.
+- Text-only local preview adjustment; no business-rule, Linear or production changes. Exact removal checks, JavaScript syntax and rebuild passed.
+
 ### 2026-11-03 — FRO-360 status controls and connected progress track
 
 - User requested transition buttons in FRO-352's location and a connected line coloured through the current stage. Local Export-style Import now has a read-only status field on the left and existing transition actions on the right, above the numbered track; mobile wraps actions below and stacks the connected track vertically.
