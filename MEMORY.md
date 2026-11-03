@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports historical participation preserved; rejection deferred
+
+- Q29 accepted: use recorded colli participation in the linked Shipment. Later movement, Order split or terminal physical disposition does not erase Import coverage, automatically change customs status or alone make historically participating goods ineligible. Preserve permanent identities and Shipment attribution.
+- Q30: user explicitly defers actual customs rejection to later work. Inspection is not rejection. Do not add a Rejected status, rejection/resubmission flow, or portray a rejection as inspection/positive result/completion. Out-of-scope rejection handling is distinct from accepted inspection branches and pre-submission portal-record cancellation.
+- Whole-colli coverage remains provisional pending department confirmation about clearing part of a colli's contents. Can expose this in a draft; do not claim Ready while dependent coverage assumptions remain unresolved.
+- Remaining work: consolidate standalone structural draft, complete consumer/consistency check and current board metadata, load frontline-linear-issues before writing ticket text, show full draft for explicit Linear approval. UI/preview/production branch excluded. No Linear writes. Planning pull succeeded; synchronize this checkpoint only.
+
 ### 2026-11-03 — Imports parent eligibility, Shipment safeguards and rollout accepted
 
 - Q26 accepted: any non-cancelled Shipment may receive an Import, including arrived Shipments for already-underway procedures; staff identify the relevant movement. No automatic geography-based customs classification and no dependency on future Import/Export category. User confirms FRO-322 is the appropriate owner for that Shipment category, but explicitly defers its work until current Shipment implementation completes. Do not edit FRO-322 or add category scope here.

@@ -31,7 +31,7 @@ Read-only gh inspection of live main `5c51030680c9d45b3827a7e19b8320c19aa5ed9a`.
 
 ## Pending before final draft
 
-- Department confirmation about whole-colli coverage; handling of actual customs rejection/withdrawal remains outside agreed happy/inspection paths and must be explicit.
-- Resolve draft eligibility for subsequently terminal goods and stable historical attribution across planned membership edits.
+- Department confirmation about whole-colli coverage remains outstanding. Actual customs rejection explicitly deferred by user (Q30); inspection is not rejection. Post-submission withdrawal/correction remains separately scoped.
+- Q29 accepted: recorded Shipment participation governs coverage; later terminal disposition, movement or Order splitting neither erases coverage nor alone excludes historically participating collis. Preserve attribution across planned membership edits.
 - Complete event chronology, duplicate/stale operation behavior, initial already-progressed recording, attachment policies and read-only acceptance checks using accepted decisions in MEMORY.md.
 - Fetch current board metadata, apply frontline-linear-issues, show complete draft and obtain explicit write approval. No new UI or production branch.
