@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports colli preselection and non-cancelled coverage exclusion accepted
+
+- User explicitly approves preselecting all eligible collis on the selected Shipment, grouped by Order for selection convenience. Exclude collis already covered by another non-cancelled Import for later partial declarations. Do not broaden this to excluded warehousing-placement procedures or invent repeat-clearance exceptions.
+- A saved pre-submission Import is non-cancelled too: proposed operational consequence is that its saved coverage excludes those collis from other Imports until removed before submission or the draft record is cancelled. Unsaved suggestions must not claim coverage. Explain and confirm this draft distinction next; exclusion's scope across different Shipments also needs clarification before final persistence constraint.
+- Server-side atomic eligibility/concurrency validation, stable submitted coverage through Order splits, parent Shipment cancellation/content changes and minimum submission coverage require consumer tracing before final draft. Do not claim implementation or finalized constraints yet.
+- Step 1 ongoing; no Linear/production changes. Planning pull succeeded; synchronize this checkpoint only, preserving unrelated local work.
+
 ### 2026-11-03 — Imports clearance-only scope and incomplete drafts accepted
 
 - Q23 accepted: initial Import entity covers the clearance workflow already agreed; warehousing-placement declarations are outside this first ticket. Shipment remains the required parent; no independent manually maintained Import-to-Order relationship is introduced.
