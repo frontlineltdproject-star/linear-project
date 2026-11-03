@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Import Shipper required at submission and locked afterward
+
+- Q18 accepted: Shipper may be blank at Awaiting submission; an existing Company selection is required to confirm submission, including initial recording of an already-submitted procedure.
+- Q19 accepted: ordinary Shipper changes allowed before submission, locked afterward. Later changes require a separately specified audited correction operation; that operation is not silently included in this ticket.
+- Fresh FRO-317 access/cancellation contract read, unchanged2026-10-27T10:45:42.148Z, as reference for next decisions. Import role access, record cancellation versus customs withdrawal, editing of other identity/coverage fields and parent Shipment protections remain unresolved. Do not copy Export's Awaiting EAD cancellation boundary to Import without agreement.
+- Step 1 ongoing; no Linear writes, UI or production changes. Planning pull succeeded; task checkpoint only, unrelated files preserved.
+
 ### 2026-11-03 — Import Shipper manual Company selection accepted
 
 - Q17: user confirms no derivation rule; manually assign Shipper from existing Companies. Record a Company reference, not a separate free-text company name; no automatic Supplier/Client/Export-rule derivation. Added Import Shipper glossary entry without changing Export Shipper semantics.
