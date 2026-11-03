@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports editing matrix accepted
+
+- Q22 accepted in full: Shipment fixed from creation; Shipper editable before submission and locked at submission; MRN/date entered at submission, editable until positive customs result (including inspection stages), locked afterward; covered collis editable before submission and locked at submission; files upload/download throughout, removal only before positive result; confirmed events/dates changed only through confirmation operations, not ordinary edits.
+- Positive-result lock applies equally to payment-required and no-payment cases. Pre-submission-only cancellation from Q21 remains unchanged. Do not import Export's late invoice additions into physical colli coverage.
+- Next unresolved coverage questions: whether a warehousing-placement declaration is itself an Import record before successive clearance declarations (affects legitimate repeated coverage), and minimum coverage required for pre-submission records. Whole-colli granularity is still provisional pending department confirmation on sub-colli clearance. No blanket overlap/uniqueness rule for covered goods has been approved.
+- Step 1 continues; no Linear or production changes. Planning pull succeeded; synchronize this checkpoint only and preserve unrelated local work.
+
 ### 2026-11-03 — Imports access/cancellation accepted; editing comparison requested
 
 - Q20 accepted: Frontline operators/managers view, create, edit permitted fields and confirm milestones; managers/system administrators cancel eligible records; external clients/suppliers/agents cannot access Imports or their files.
