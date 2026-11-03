@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 concept-review ticket created and verified
+
+- User explicitly approved writing the displayed concept-review ticket and linking359. Mandatory pull/duplicate search succeeded. Created FRO-360 https://linear.app/front-line-ltd/issue/FRO-360/import-customs-declaration-concept-previews-and-employee-feedback at2026-11-03T09:51:15.386Z.
+- Independent full read matches approved drafts/imports-concept-review-spec.md after issue-chip/link/list normalization. Verified Backlog; Pending_Review/Frontend/Spike; Pre-releases0.0.x; assignee/milestone/parent unset, no priority; empty attachments/documents and no blocking links. Sole related issue359; reverse read of359 confirms360 added alongside its five existing relations.
+- Scope remains previews and employee feedback only, no production implementation/mock branch. No preview built/published, no Cloudflare mutation, no message sent to employees, no Ready promotion. Pages publishing access still unverified (scoped token absent in environment at drafting). Planning receipt synchronized; unrelated files preserved.
+
 ### 2026-11-03 — Imports concept-review ticket drafted; no implementation authorized
 
 - User requests a separate concept-review ticket linked to FRO-359, for previews and employee feedback only; explicitly excludes production implementation and mock branch. Asked how preview will be implemented. Reused accepted creation/details/status exploration scope; styling/directions and detailed related fields remain future review decisions.
