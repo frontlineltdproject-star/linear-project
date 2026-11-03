@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 revised around Export UI pattern
+
+- User approved the recommendation to follow FRO-350/352 rather than keep A–C unchanged. Default local preview now has horizontal page tabs; Overview has Shipment relationship then Import details with embedded customs status/actions and event dates. Additional Shipment context is expandable; creation uses stacked relationship/details/coverage sections. Earlier concepts remain in the reviewer selector.
+- Import-specific rules preserved; no approval of final field set or production implementation implied. Live main still 5c51030; production tabs.tsx read through gh. Mapping and README updated.
+- Standalone render/ordering, 80 language/scenario/tab combinations and advanced creation rendering passed with a DOM stub; syntax/build passed. Browser visual/interaction verification remains pending. User can refresh the same local index.html. No Linear write, public deployment or production/mock branch.
+
 ### 2026-11-03 — FRO-360 local preview files prepared; browser review pending
 
 - User authorized local previews only, no production implementation/mock branch. Three fixture-only concepts and creation/lifecycle scenarios saved in previews/fro360, with live-source component mapping and EN/EL controls. No direction approved yet.
