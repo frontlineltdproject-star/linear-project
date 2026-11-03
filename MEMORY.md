@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports clearance-only scope and incomplete drafts accepted
+
+- Q23 accepted: initial Import entity covers the clearance workflow already agreed; warehousing-placement declarations are outside this first ticket. Shipment remains the required parent; no independent manually maintained Import-to-Order relationship is introduced.
+- Q24 accepted: Shipment required on creation; covered-colli selection may remain empty while Awaiting submission; at least one explicitly selected eligible colli from that Shipment required at submission. Whole-Order selection selects its participating collis, without a second saved Order coverage list. No physical split/unpacking/regime change is implied.
+- User asks to clarify creation: Shipment first, potentially preselect all its Orders, editable for partial clearance. Explain intended flow as Shipment selection -> goods grouped by Order -> proposed preselection of all eligible collis -> deselection of Orders or individual collis for partial clearance; review at submission. Automatic preselection is a proposal, not yet accepted. Previously declared goods eligibility/overlap rules remain unresolved; never silently preselect all Shipment goods for a later partial declaration.
+- Step 1 ongoing; UI layout remains deferred. Planning checkpoint only; no Linear/production writes. Preserve unrelated local work.
+
 ### 2026-11-03 — Imports editing matrix accepted
 
 - Q22 accepted in full: Shipment fixed from creation; Shipper editable before submission and locked at submission; MRN/date entered at submission, editable until positive customs result (including inspection stages), locked afterward; covered collis editable before submission and locked at submission; files upload/download throughout, removal only before positive result; confirmed events/dates changed only through confirmation operations, not ordinary edits.
