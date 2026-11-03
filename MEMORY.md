@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports full structural review draft prepared; write approval pending
+
+- User authorized moving on to draft. Applied frontline-linear-issues (project workflow takes precedence for gh and linked-source reads); source/consumer check consolidated, live main still5c51030680c9d45b3827a7e19b8320c19aa5ed9a. Current labels/status/project and duplicate search verified. Optional agent-context endpoint previously unavailable; ordinary Linear reads work.
+- Complete proposed body: drafts/imports-structural-spec.md. Metadata: Import Customs Declaration — entity & business rules; FRO/Backlog; Story, Backend, Shipment, Pending_Review, Business_Input; Pre-releases 0.0.x, no milestone/assignee/priority/parent. relatedTo317/325/344/322/356, no blockers/attachments. No import label creation. All are proposals pending full-text approval.
+- Draft includes accepted lifecycle, manual Shipper, coverage/exclusion, editing/cancellation matrix, historical participation, shared files/staff access, atomicity/audit, Shipment guards, deferred scopes and AC/read-only checks. Whole-colli assumption explicitly provisional with department confirmation required before Ready. No draft approval is Ready authorization.
+- Review trace/source evidence and metadata recorded in drafts/imports-structural-review.md. UI/preview/production branch skipped by scope; no new ADR earned beyond vocabulary already recorded. No Linear write. Full draft to be shown in chat; wait for explicit write approval. Planning files synchronized separately, preserving unrelated local changes.
+
 ### 2026-11-03 — Imports historical participation preserved; rejection deferred
 
 - Q29 accepted: use recorded colli participation in the linked Shipment. Later movement, Order split or terminal physical disposition does not erase Import coverage, automatically change customs status or alone make historically participating goods ineligible. Preserve permanent identities and Shipment attribution.
