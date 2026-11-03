@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports completion document identified
+
+- User consulted the department: Άδεια Τελωνισθέντων Εμπορευμάτων is issued when import customs processing completes; where duties/taxes are paid, issuance follows payment. Added this office-confirmed term to CONTEXT.md, distinguishing it from a payment receipt. This is user-supplied workflow evidence, not independently verified legal advice.
+- User proposes replacing Awaiting receipt with Awaiting Άδεια Τελωνισθέντων Εμπορευμάτων and using that document as the completion milestone for payable and non-payable cases. Proposed next-round rule: positive result plus explicitly confirmed payment required -> Awaiting payment; confirmed payment -> Awaiting document; positive result plus explicitly confirmed no payment required -> Awaiting document; confirmed document receipt -> Completed. Missing payment information must not imply exemption/no payment. Exact no-payment confirmation and issued-versus-received completion evidence still need acceptance.
+- Payment fact remains separate from document/completion evidence. Do not fabricate a payment event for a no-payment case or automatically mark completion on payment. Attachment/reference requirements are not decided.
+- Q10 accepted: defer exact related-field selection, grouping and totals to employee consultation in the future UI ticket, checking and assigning missing read support then. Keep relationships and source ownership in this structural ticket.
+- Step 1 ongoing, no Linear writes or production changes; synchronize planning files only and preserve unrelated local work.
+
 ### 2026-11-03 — Imports inspection FSM accepted; related-field selection deferred
 
 - Q6 accepted: Awaiting customs result branches to Awaiting payment on positive result, Awaiting documentary inspection or Awaiting physical inspection on the corresponding referral. Inspections are separate, not concurrent. After inspection, return to Awaiting customs result when the result is pending, or advance to Awaiting payment when positive result is confirmed. Inspection completion alone is not positive-result evidence; referral is not automatically a rejection.

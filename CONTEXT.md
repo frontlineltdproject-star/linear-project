@@ -82,6 +82,9 @@ One export customs declaration with its own MRN, belonging to one physical Shipm
 **Import Customs Declaration (Import)**:
 One import customs declaration, including its preparation before submission, linked to one physical Shipment. A Shipment can have several Imports, including successive declarations for partial clearance; it is distinct from the physical movement and warehouse intake.
 
+**Άδεια Τελωνισθέντων Εμπορευμάτων**:
+The document the customs department identifies as issued upon completion of the import customs procedure; where duties/taxes are payable, it follows payment. It is distinct from the payment receipt.
+
 **Export type**:
 The Export's procedure, set by the Invoicing company's tax registration: Greek invoicing company or Foreign invoicing company. It is distinct from a Supplier Invoice's own invoice type.
 
