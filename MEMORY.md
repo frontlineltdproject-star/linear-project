@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports concept-review ticket drafted; no implementation authorized
+
+- User requests a separate concept-review ticket linked to FRO-359, for previews and employee feedback only; explicitly excludes production implementation and mock branch. Asked how preview will be implemented. Reused accepted creation/details/status exploration scope; styling/directions and detailed related fields remain future review decisions.
+- Planning pull succeeded; current359 fetched unchanged with whole-colli question open. Duplicate Import search found no concept-review ticket. Draft at drafts/imports-concept-review-spec.md; proposed FRO/Backlog, Spike/Frontend/Pending_Review, Pre-releases0.0.x, relatedTo359 only, no assignee/milestone/priority/blockers. Full text/write approval still required.
+- Proposed implementation follows embedded workflow: standalone HTML/CSS/JS fixture prototype, live portal design-source/component mapping, 2–3 directions then selected direction, EN/EL/states/notes/new-component markers, local review and isolated Pages publication. No production branch/API/database or real submissions; user shares preview, no messages sent by agent.
+- Node24.13/npm11.6 available. CLOUDFLARE_API_TOKEN and account ID absent from current process environment; no claim that Pages publishing auth is verified, no Cloudflare mutation. Actual preview work not started; publish prerequisites must be checked then. Canvas unavailable fallback can use hand-written static page per workflow.
+- Applied frontline-linear-issues and grilling scope guidance; no new domain term/ADR. Only planning draft/checkpoint written; no Linear change. Preserve unrelated files and synchronize task records.
+
 ### 2026-11-03 — FRO-359 Imports structural ticket created and verified
 
 - User approved the complete displayed draft and metadata with ok. Mandatory planning pull and duplicate search succeeded. Created FRO-359: https://linear.app/front-line-ltd/issue/FRO-359/import-customs-declaration-entity-and-business-rules at2026-11-03T09:38:30.949Z.
