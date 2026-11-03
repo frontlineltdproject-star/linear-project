@@ -22,9 +22,15 @@ Read-only gh inspection of live main `5c51030680c9d45b3827a7e19b8320c19aa5ed9a`.
 | Shipment category | FRO-322 Backlog, updated 2026-10-13T09:01:46.421Z: Import/Export category and Import-specific movement rules unresolved | Do not silently require/implement this category; choose parent Shipment eligibility explicitly | FRO-322 retains movement-category scope |
 | Packing and related UI data | FRO-325 exact participation independent of packing; FRO-299 planned colli measurement read; FRO-300 transport-piece display | Read-only source ownership retained. Exact fields/totals/display deferred by user to UI consultation. Repacking must not alter declaration membership | Existing owners; later UI ticket assigns any missing read support |
 
+## Decisions accepted after trace (Q26–Q28)
+
+- Any non-cancelled Shipment is eligible, including arrived Shipments. Staff identify the relevant import movement; no automatic geography-based eligibility or future category dependency.
+- FRO-322 owns the Shipment Import/Export category. User defers its work until current Shipment implementation completes; no changes to FRO-322 authorized.
+- Shipment cancellation blocked while a non-cancelled Import exists. Removing covered colli from Shipment blocked until explicitly removed from a pre-submission Import; submitted coverage locked. New Shipment goods never auto-expand Import coverage; repacking and Order splits preserve covered identities. The pending safeguards in the trace table above are now accepted; integration with FRO-344 belongs in the new ticket without silently editing that issue.
+- New records, fixtures and manual already-underway recording only. No bulk historical import or reconstruction and no real-data deletion.
+
 ## Pending before final draft
 
-- Shipment eligibility, cancellation/content guards, rollout data scope.
 - Department confirmation about whole-colli coverage; handling of actual customs rejection/withdrawal remains outside agreed happy/inspection paths and must be explicit.
 - Resolve draft eligibility for subsequently terminal goods and stable historical attribution across planned membership edits.
 - Complete event chronology, duplicate/stale operation behavior, initial already-progressed recording, attachment policies and read-only acceptance checks using accepted decisions in MEMORY.md.

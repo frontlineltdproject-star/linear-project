@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports parent eligibility, Shipment safeguards and rollout accepted
+
+- Q26 accepted: any non-cancelled Shipment may receive an Import, including arrived Shipments for already-underway procedures; staff identify the relevant movement. No automatic geography-based customs classification and no dependency on future Import/Export category. User confirms FRO-322 is the appropriate owner for that Shipment category, but explicitly defers its work until current Shipment implementation completes. Do not edit FRO-322 or add category scope here.
+- Q27 accepted: block Shipment cancellation while any non-cancelled Import exists; block removing a covered colli from Shipment until explicitly removed from its pre-submission Import (submitted coverage locked); Shipment additions never auto-expand saved Import coverage; repacking/later Order splits preserve covered colli identities. Integrate guard with FRO-344 planned membership operations, no linked-ticket rewrite authorized.
+- Q28 accepted: new entity, fixtures and manual creation including already-underway procedures; exclude bulk migration/automatic reconstruction from historical spreadsheets, files or retired fields. No real-data deletion authorized.
+- Remaining interview: whole-colli/sub-colli boundary needs department confirmation; actual rejection/withdrawal and later terminal goods need explicit handling/scope; clarify any event chronology or record-correction gaps before complete draft. Step 3 trace continues. No Linear, UI or production writes; synchronize planning checkpoint only.
+
 ### 2026-11-03 — Imports normal-case clarification and consumer trace checkpoint
 
 - Q25 accepted: non-cancelled coverage exclusion is per Shipment + colli, not lifetime colli identity. User confirms normal full-clearance case should remain Shipment-first with all eligible collis preselected and no extra partial mode. User describes partial clearance as rare; do not treat the supplied frequency as measured production data.
