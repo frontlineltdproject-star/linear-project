@@ -87,3 +87,7 @@ Default, loading, empty and error states must be reachable through a visible swi
 ## Round 2 — Export-style arrangement (2026-11-03)
 
 User approved using the Export pattern instead of choosing an unchanged A–C direction. Current FRO-350 and FRO-352 descriptions establish Shipment relationship followed by entity details with embedded customs status; FRO-316 establishes page-level tabs. Read-only main remains 5c51030; src/components/ui/tabs.tsx re-read. Horizontal tab styling mirrors its gap-1, border-bottom, px-3/py-2 and teal active underline; local Arrow/Home/End behavior added. Card/field/status/confirmation controls retain the existing source mapping. Additional Shipment fields are in a disclosure for review. Import-specific lifecycle remains unchanged, with milestone dates shown only for actual sample events (no invented linear progression through inspections/payment). The optional context disclosure is a proposed composition, not a new agreed field contract. No production code changes.
+
+### Customs indicator adaptation
+
+FRO-352 current Customs status block and previews/fro352/app.js customsBlock / base.css step styles supply the numbered, teal, non-clickable stepper pattern. FRO-360 adapts it to five Import stages, marks payment conditional/skipped, and shows the active inspection under Awaiting result. This is a new composition of the established pattern, covered by the status block New component marker; no new backend rule. Mobile stacks steps.

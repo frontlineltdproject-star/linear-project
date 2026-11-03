@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 customs status bar
+
+- User requested the FRO-352 bar presentation. Current FRO-352 status contract and local preview checked. Added a non-clickable five-stage numbered indicator inside Import details; inspection is shown under the result stage, payment is conditional and explicitly Not required when bypassed. Cancelled records have no progression bar. Existing confirmation actions and rules unchanged.
+- EN/EL render assertions cover draft, result, both inspections, no-payment, paid, completed and cancelled; build/syntax passed. Visual review remains pending with user. No production/Linear/deployment changes.
+
 ### 2026-11-03 — FRO-360 Shipment context flattened
 
 - User requested expanded Shipment context inside the existing Shipment relationship card, without a nested card or repeated collapsed fields. Updated the Export-style local preview: disclosure retained; Client, Vessel, physical status, packing and weight appear inline. Shipment number and document type/number appear only in the always-visible row.
