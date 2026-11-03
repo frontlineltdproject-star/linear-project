@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports normal-case clarification and consumer trace checkpoint
+
+- Q25 accepted: non-cancelled coverage exclusion is per Shipment + colli, not lifetime colli identity. User confirms normal full-clearance case should remain Shipment-first with all eligible collis preselected and no extra partial mode. User describes partial clearance as rare; do not treat the supplied frequency as measured production data.
+- Clarified and user acknowledged direct Import links to Shipment + selected collis, derived connected Orders through Shipment attribution, unlike Export's selected Supplier Invoices/paperwork scope. No separately maintained Order coverage list.
+- User asks next step. Consolidated read-only main trace and current linked contracts in drafts/imports-structural-review.md. Fresh FRO-322 remains Backlog/unresolved category, FRO-325 packing/participation planned, FRO-344 owns planned membership editing absent on main. Proposed cancellation/removal safeguards, eligibility and rollout still need user decisions.
+- Step 1 ongoing, step 3 trace started; no UI/preview/production branch or Linear writes. Planning pull succeeded; synchronize these task records only, preserving unrelated local work.
+
 ### 2026-11-03 — Imports colli preselection and non-cancelled coverage exclusion accepted
 
 - User explicitly approves preselecting all eligible collis on the selected Shipment, grouped by Order for selection convenience. Exclude collis already covered by another non-cancelled Import for later partial declarations. Do not broaden this to excluded warehousing-placement procedures or invent repeat-clearance exceptions.
