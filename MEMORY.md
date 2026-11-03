@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — FRO-360 local preview files prepared; browser review pending
+
+- User authorized local previews only, no production implementation/mock branch. Three fixture-only concepts and creation/lifecycle scenarios saved in previews/fro360, with live-source component mapping and EN/EL controls. No direction approved yet.
+- Self-contained index.html built; JavaScript syntax check passed. Browser verification remains pending: Computer Use halted due to inability to determine Chrome URL, and localhost server attempts timed out. Do not describe the localhost link as verified. Added direct-file support (skip history.replaceState on file protocol) and README so index.html can open without a server.
+- No production/Cloudflare changes or Linear write. Employee feedback and whole-colli applicability remain pending. Planning artifacts committed separately from unrelated drafts.
+
 ### 2026-11-03 — FRO-360 concept-review ticket created and verified
 
 - User explicitly approved writing the displayed concept-review ticket and linking359. Mandatory pull/duplicate search succeeded. Created FRO-360 https://linear.app/front-line-ltd/issue/FRO-360/import-customs-declaration-concept-previews-and-employee-feedback at2026-11-03T09:51:15.386Z.
