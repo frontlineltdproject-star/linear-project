@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-03 — Imports access/cancellation accepted; editing comparison requested
+
+- Q20 accepted: Frontline operators/managers view, create, edit permitted fields and confirm milestones; managers/system administrators cancel eligible records; external clients/suppliers/agents cannot access Imports or their files.
+- Q21 accepted: portal-record cancellation only before submission, with reason/actor/time, preserved record/files/history, no hard deletion/reactivation. Post-submission cancellation and actual customs withdrawal require separate rules.
+- Q22 not accepted: user asks to follow FRO-317. Fresh FRO-317 unchanged2026-10-27T10:45:42.148Z: Shipment/fiscal scope/Shipper fixed from creation; MRN/date editable Awaiting EAD then locked; invoices add/remove initially then add-only even Completed; files removal initially only; events/dates never ordinary edits. Import has pre-submission creation and physical declaration coverage, so no exact one-to-one copy.
+- Next proposal for user review: Shipment fixed from creation; retain already-agreed Import Shipper editable pre-submission/locked at submission; MRN/date editable after submission until positive customs result then locked (including no-payment path), inspection stages remain before that lock; covered collis editable pre-submission then locked rather than copying Export late invoice additions; files removable before positive result only, upload/download afterward. All these newly proposed rules remain pending, especially coverage and lock-point mapping. No change to accepted pre-submission cancellation or receipt-based completion.
+- Step 1 continues; no Linear/production edits. Planning checkpoint only; preserve unrelated local files.
+
 ### 2026-11-03 — Import Shipper required at submission and locked afterward
 
 - Q18 accepted: Shipper may be blank at Awaiting submission; an existing Company selection is required to confirm submission, including initial recording of an already-submitted procedure.
