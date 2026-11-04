@@ -119,3 +119,6 @@ An invoice in an Export's Informative List whose linked Order has no collis in t
 
 **Shipment Invoice**:
 A document linked to one Shipment that accompanies its goods and states their declared value, including on import movements. It is independent of the Orders' invoicing-company grouping and distinct from Supplier Invoices and Front Line's client billing.
+
+**Shipment Invoice finalization**:
+The explicit action that freezes a prepared Shipment Invoice's document contents. Before finalization its source invoice rows remain live; printing alone does not finalize it.
