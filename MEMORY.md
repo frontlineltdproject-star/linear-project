@@ -2104,3 +2104,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Q15 accepted: Shipper, Consignee, Agent and Notify are editable multiline document text, locked on finalization. Q16 accepted: packing/weight describe selected goods, manual entry available initially; automatic coverage rules remain dependent on allocation and shared packaging.
 - Latest Q17 explicitly replaces the interrupted answer: user does not know why Partial invoice total is editable while Full is calculated. Do NOT record the earlier statement that only selected rows change as a decision. Purpose of manual partial total, currency relationship, and discount application remain unresolved; do not convert to a computed total or invent a reason.
 - Planning pull succeeded; fresh FRO-244 metadata unchanged. No Linear edits. Propose retaining the known legacy manual field provisionally and marking its business semantics for office confirmation before Ready; that proposal is not yet accepted.
+
+### 2026-11-04 — Shipment Invoice CEO clarification list
+
+- Q18 accepted: partial total purpose remains open for CEO/office confirmation; provisionally retain legacy manual amount/currency, not a settled calculation. Confirm when/why it differs from full total and how discount applies before Ready.
+- Q19 accepted: retain general multiline Notes, editable in preparation and frozen at finalization; printing inclusion belongs to the later print contract.
+- Q20 corrected by user: legacy form has TWO checkboxes, Show sum table and Enable invoice. Both purposes are unknown. User requests grouping both with partial-total questions to ask CEO and return. No approval to remove either, infer default values, or replace Enable invoice with finalization/cancellation.
+- CEO clarification should establish what each checkbox changes on screen/PDF or record behavior, defaults, whether choices are saved per entry or print-time, and interactions with full/partial, HS and discount. Request contrasting examples if available. Keep these as open business questions; no Linear edits or Ready promotion. Other structural discovery can resume independently.
+- Planning pull succeeded; checkpoint only, no production changes. Existing unrelated draft changes preserved.
