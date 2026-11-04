@@ -116,3 +116,6 @@ A hypothetical 24% of a Customs Storage Entry's matching invoice net value, repo
 
 **Paperwork only invoice**:
 An invoice in an Export's Informative List whose linked Order has no collis in that Export's Shipment. It adds its Order to Connected Orders but no physical goods to the Shipment.
+
+**Shipment Invoice**:
+A document linked to one Shipment that accompanies its goods and states their declared value, including on import movements. It is independent of the Orders' invoicing-company grouping and distinct from Supplier Invoices and Front Line's client billing.
