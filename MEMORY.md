@@ -2248,3 +2248,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 cancellation preserves packing attribution
 
 - Q15 accepted: cancellation before departure retains the child Order and the row's confirmed physical allocation. A row confirmed only to its group remains Colli unknown within that child; a known assignment stays with its specific colli. Later movement or contrary information can be handled by correction. Cancellation is not evidence that the goods departed.
+
+### 2026-11-05 — FRO-301 split reconciliation accepted
+
+- Q16 accepted: distinguish confirmed travelling value, confirmed remaining value and value awaiting allocation. Count each source row once across the split, including unresolved rows. On confirmation move the whole row amount from awaiting allocation to the confirmed side. Preserve the original total for reconciliation with the supplier paperwork. Unknown exact colli can coexist with confirmed travelling group.
