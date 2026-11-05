@@ -2231,3 +2231,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 invoice row entry paths
 
 - Q11 accepted: allow staff to enter a whole supplier row as Colli unknown on the Order's Invoice rows tab and assign it later. When the colli is known at entry, staff can add the row directly from that colli on the Collis tab. The Invoice rows tab therefore needs an entry path for unknown rows alongside the Order overview. No Linear write.
+
+### 2026-11-05 — FRO-301 migration deferred
+
+- Q12: defer migration decisions for invoice rows already saved in the new portal when FRO-301 goes live. Suggestion only: preserve each row and its Order, quantity, currency and value, and leave the colli unknown until confirmed. No migration or backfill rule approved. Carry this as a deferred note in the proposed rewrite, outside acceptance criteria. The accepted Colli unknown entry path for new rows stands. No Linear write.
