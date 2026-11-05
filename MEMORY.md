@@ -2235,3 +2235,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 migration deferred
 
 - Q12: defer migration decisions for invoice rows already saved in the new portal when FRO-301 goes live. Suggestion only: preserve each row and its Order, quantity, currency and value, and leave the colli unknown until confirmed. No migration or backfill rule approved. Carry this as a deferred note in the proposed rewrite, outside acceptance criteria. The accepted Colli unknown entry path for new rows stands. No Linear write.
+
+### 2026-11-05 — FRO-301 structural ownership confirmed
+
+- Q13 accepted: FRO-301 owns row allocation, source identity, partial Order splits, confirmation and correction rules, and the data/operations consumed by callers. Order UI tickets implement the agreed known/unknown entry paths. Verified Order Creation FRO-335 and Order Details FRO-326 both expose Collis and Invoice rows tabs. Their current descriptions do not constitute implementation of the revised allocation behavior. No edits to either UI ticket authorized. Skip canvas, preview and production branch for the structural FRO-301 rewrite.
+- Remaining structural distinction: explicit allocation/confirmation during packing versus permission to edit the source row's commercial fields during shipment participation. Resolve this before drafting operation permissions.
