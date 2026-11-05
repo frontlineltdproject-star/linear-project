@@ -2146,3 +2146,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-244 Shipment stage eligibility accepted
 
 - Q26 accepted: staff may create and finalize a Shipment Invoice for any non-cancelled Shipment, including after departure or arrival. This supports late paperwork and replacement invoices. Apply the same Shipment eligibility to both actions alongside the ordinary invoice-specific guards and staff permissions.
+
+### 2026-11-05 — FRO-244 whole-Order invoice-row selection accepted
+
+- Q27 accepted for a whole Order travelling in the linked Shipment: selecting the Order includes all its invoice rows by default. During preparation staff can deselect individual rows. The undiscounted full invoice total sums only the included rows, under the agreed single-currency rule. Partial-shipment allocation remains separate FRO-301 work. Q27 does not decide whether selected rows may overlap across independently saved invoices or how later source-row additions affect an existing draft.
