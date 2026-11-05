@@ -2240,3 +2240,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q13 accepted: FRO-301 owns row allocation, source identity, partial Order splits, confirmation and correction rules, and the data/operations consumed by callers. Order UI tickets implement the agreed known/unknown entry paths. Verified Order Creation FRO-335 and Order Details FRO-326 both expose Collis and Invoice rows tabs. Their current descriptions do not constitute implementation of the revised allocation behavior. No edits to either UI ticket authorized. Skip canvas, preview and production branch for the structural FRO-301 rewrite.
 - Remaining structural distinction: explicit allocation/confirmation during packing versus permission to edit the source row's commercial fields during shipment participation. Resolve this before drafting operation permissions.
+
+### 2026-11-05 — FRO-301 allocation updates during packing
+
+- Q14 accepted: staff may resolve or update physical allocation during packing while the Order has open Shipment participation, including changing Colli unknown to a confirmed specific colli. This is a separate allocation operation. Preserve existing commercial row edit restrictions, including quantity and value. Earlier audited-correction and finalized-document safeguards apply.
