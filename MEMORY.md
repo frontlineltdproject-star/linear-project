@@ -2218,3 +2218,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 correcting a contradicted allocation
 
 - Q9 accepted: when a warehouse finding contradicts an earlier group confirmation, retain the original confirmation and record who corrected the allocation and why. Identify affected Shipment Invoices for review. A finalized invoice that declared goods which stayed behind follows FRO-244 cancellation and linked replacement. The physical finding does not silently rewrite an issued document.
+
+### 2026-11-05 — FRO-301 duplicate colli correction versus genuine removal
+
+- Q10 clarified: preserve the supplier invoice row for a confirmed duplicate colli record. A whole row has at most one assigned colli. If it is already on the surviving record, deleting the other duplicate needs no row operation. If it is on the record selected for removal, preserve the same row by reassigning it to the confirmed surviving colli; the presence of a second colli record does not itself transfer the assignment. No duplicate row, quantity or value. This describes the intended result, not a new automatic duplicate-detection feature.
+- Genuine removal of a colli with assigned goods and no surviving duplicate is a different scenario. Whether its row should be retained or removed is explicitly unresolved. Do not generalize the duplicate decision to real goods removals or to removal of a colli from one Shipment.
