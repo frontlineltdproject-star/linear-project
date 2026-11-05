@@ -2287,3 +2287,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 - Order-first workflow for uncommon splits (discussion)
 
 - User emphasized that splits are uncommon and wants to preserve the familiar Order workflow. Discussed keeping normal Order-level actions and summarizing underlying collis, exposing affected groups when custody/status or action scope differs and inbound AWBs on demand. Distinguish real child Order lineage from separately moving collis. Exact reveal rule and first-receipt flow remain proposals.
+
+### 2026-11-05 - Historical Shipment creation and colli identity (discussion)
+
+- Re-read FRO-343 and FRO-324: inline Order and colli registration persists independently; the later Shipment save writes participation. AWB belongs to Shipment, historical arrival requires the complete eligible Order and stock confirmation is separate. Independent inbound movements for subsets would require revised historical eligibility, custody and stock confirmation, not a mandatory Shipment ID on colli creation. No rule change approved.
