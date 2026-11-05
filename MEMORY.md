@@ -2154,3 +2154,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-244 overlapping invoice rows accepted
 
 - Q28 accepted: separate Shipment Invoices for the same Shipment may include the same source invoice row. Warn staff and identify the other invoice; the warning does not reserve the row or prevent inclusion. This applies to distinct saved documents; print variants still belong to the same entry. No Linear write.
+
+### 2026-11-05 — FRO-244 changes to source rows during preparation
+
+- Q29 accepted: the draft preserves the operator's row selection. Changes to selected source row quantities or prices flow through to draft values and the recalculated full total. Newly added eligible Order rows are offered for explicit selection. Removal of a selected source row requires staff to review the selection before finalization. Finalized base contents follow the previously agreed snapshot rule.
