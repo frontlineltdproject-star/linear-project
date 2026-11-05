@@ -2256,3 +2256,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 unresolved allocation at dispatch
 
 - Q17 accepted: an unresolved invoice-row allocation does not itself block physical dispatch when ordinary Shipment dispatch requirements are met. Include only confirmed selected goods in the Shipment Invoice. Keep unresolved rows visible for later confirmation and count them once in reconciliation; dispatch alone supplies no evidence about which side contains their goods.
+
+### 2026-11-05 — FRO-301 Q18 and structural draft for approval
+
+- Q18 accepted: reconcile travelling, remaining and awaiting-allocation amounts separately per source currency. Draft synthesizes Q1–Q18 in drafts/fro301-invoice-row-allocation.md. New suggested title: Order invoice rows — colli allocation and partial shipments. Body/title only, preserve Backlog, Pending_Review/Order, existing blocks FRO-302 and relatedTo FRO-287, remaining metadata. No Linear write pending explicit approval of exact text. Both Shipment and Order child-creation services call copyTo on live main 5774931. Migration suggestion deferred. No UI or production branch.
