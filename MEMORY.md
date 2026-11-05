@@ -2227,3 +2227,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 manual allocation correction and original removal rule
 
 - Q10 resolved: employees identify duplicate colli records and manually reassign any rows they want to keep before removing the redundant record. No automatic comparison, duplicate detection, merge or row transfer. Keep the existing FRO-301 rule for removal of a colli record: if it still has assigned invoice rows, warn before removal; confirmed removal removes those attached rows with the colli. A row assigned elsewhere is unaffected. This is distinct from removing a colli from a Shipment or moving it to a child Order. Previously agreed finalized Shipment Invoice history/correction rules still apply. No Linear edit.
+
+### 2026-11-05 — FRO-301 invoice row entry paths
+
+- Q11 accepted: allow staff to enter a whole supplier row as Colli unknown on the Order's Invoice rows tab and assign it later. When the colli is known at entry, staff can add the row directly from that colli on the Collis tab. The Invoice rows tab therefore needs an entry path for unknown rows alongside the Order overview. No Linear write.
