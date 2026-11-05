@@ -2129,3 +2129,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q22 accepted: all finalized Shipment Invoices share one continuous printed-number sequence across Clients, import and export movements, all four invoice types and calendar years. Allocation occurs on Finalize under Q21.
 - The legacy portal continues issuing numbers. The office will specify the first number for the new portal later at cutover. Keep this a required rollout input before first live finalization; do not infer it from a sample PDF or today's legacy counter. Historical import scope remains a separate decision. No Linear write.
+
+### 2026-11-05 — FRO-244 rollout scope accepted
+
+- Q23 accepted: FRO-244 covers only Shipment Invoices created in the new portal. Any need to migrate or retrieve legacy Shipment Invoices through the new portal is separate follow-up work. No migration ticket requested. Q22 continuity of numbering at cutover still applies; office supplies the first live number later.
+- Discovery continues with access and lifecycle rules. No Linear write.
