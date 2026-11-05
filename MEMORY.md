@@ -2244,3 +2244,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 allocation updates during packing
 
 - Q14 accepted: staff may resolve or update physical allocation during packing while the Order has open Shipment participation, including changing Colli unknown to a confirmed specific colli. This is a separate allocation operation. Preserve existing commercial row edit restrictions, including quantity and value. Earlier audited-correction and finalized-document safeguards apply.
+
+### 2026-11-05 — FRO-301 cancellation preserves packing attribution
+
+- Q15 accepted: cancellation before departure retains the child Order and the row's confirmed physical allocation. A row confirmed only to its group remains Colli unknown within that child; a known assignment stays with its specific colli. Later movement or contrary information can be handled by correction. Cancellation is not evidence that the goods departed.
