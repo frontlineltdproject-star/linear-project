@@ -2138,3 +2138,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-244 staff access accepted
 
 - Q24 accepted: staff-only access. Front Line operators and managers may view Shipment Invoices, create and edit drafts, and finalize them. Cancelling a finalized Shipment Invoice requires a manager or system administrator and a recorded reason. Draft abandonment and the effect of linked invoices on Shipment cancellation remain separate decisions.
+
+### 2026-11-05 — FRO-244 Shipment cancellation safeguard accepted
+
+- Q25 accepted: before a Shipment can be cancelled, staff must explicitly discard every linked Shipment Invoice draft and cancel every linked finalized Shipment Invoice. Operators or managers can discard a draft; a manager or system administrator cancels a finalized invoice with a recorded reason. Cancelled finalized invoices keep their printed numbers and Shipment references. Once these prerequisites are met, ordinary Shipment cancellation rules still apply.
