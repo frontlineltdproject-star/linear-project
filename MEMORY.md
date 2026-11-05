@@ -2273,3 +2273,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — Shipment Client rule pending office input
 
 - User will ask the office whether all Shipment purposes require one commercial Client, including a shared warehouse transfer. No rule adopted. Verified on production main 5774931: V18__shared_client_vessels.sql and database.md allow one vessel ID to be associated with multiple CLIENT companies (unique client/vessel pair). Orders record their own Client. Common vessel therefore does not establish a common Client; actual occurrence in operational data was not checked. Ask separately about same-vessel deliveries for different commercial Clients and shared transfers before defining scope.
+
+### 2026-11-05 - Shipment membership and multi-origin Orders (discovery)
+
+- Compared the proposed single commercial Order across partial Shipments with production main 5774931 via gh. Shipment content already identifies each colli and its Order at loading; the database separately limits each Order and each colli to one open movement. Confirmed in-stock partial selection puts the selected identities on a same-origin child and retains the balance on the parent.
+- Open business question: should one commercial Order remain intact when different collis are simultaneously at different stages and origins (China and Korea to Japan)? This would require independent physical tracking and review of Order-level warehouse stays, status, documents and FRO-301 allocation. No decision or ticket change.
