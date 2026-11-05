@@ -2283,3 +2283,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - User tentatively expects one Order number across independently moving collis. In the observed third-country case the office first saw the goods already in stock on the agent stock list; paperwork identified different inbound AWBs for collis on the same Order. Transit was not monitored by the office.
 - Reviewed current FRO-326 and production main 5774931. Distinguish confirmed receipt/custody from reconstructed movements, aggregate Order display from action eligibility, and supplier readiness promises before colli identities exist from confirmed readiness of particular goods. Whether recording a receipt should require an inbound Shipment and the necessary detail at receipt remain open. No ticket change.
+
+### 2026-11-05 - Order-first workflow for uncommon splits (discussion)
+
+- User emphasized that splits are uncommon and wants to preserve the familiar Order workflow. Discussed keeping normal Order-level actions and summarizing underlying collis, exposing affected groups when custody/status or action scope differs and inbound AWBs on demand. Distinguish real child Order lineage from separately moving collis. Exact reveal rule and first-receipt flow remain proposals.
