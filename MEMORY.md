@@ -2142,3 +2142,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-244 Shipment cancellation safeguard accepted
 
 - Q25 accepted: before a Shipment can be cancelled, staff must explicitly discard every linked Shipment Invoice draft and cancel every linked finalized Shipment Invoice. Operators or managers can discard a draft; a manager or system administrator cancels a finalized invoice with a recorded reason. Cancelled finalized invoices keep their printed numbers and Shipment references. Once these prerequisites are met, ordinary Shipment cancellation rules still apply.
+
+### 2026-11-05 — FRO-244 Shipment stage eligibility accepted
+
+- Q26 accepted: staff may create and finalize a Shipment Invoice for any non-cancelled Shipment, including after departure or arrival. This supports late paperwork and replacement invoices. Apply the same Shipment eligibility to both actions alongside the ordinary invoice-specific guards and staff permissions.
