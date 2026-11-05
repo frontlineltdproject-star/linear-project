@@ -2198,3 +2198,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 confirmed row follows the travelling child
 
 - Q4 accepted: explicit confirmation that a whole row travelled on a partial Shipment attributes it to the travelling child Order, preserves the original source reference and leaves the exact colli unknown. Exclude it from the remainder's candidates. It follows the travelling group on a later leg when that group travels together. A second partial split within that group is a separate case for Q5.
+
+### 2026-11-05 — FRO-301 confirmation on a later partial split
+
+- Q5 accepted: if a previously confirmed travelling group splits again and the row's exact colli remains unknown, require fresh staff confirmation for the onward subset before including its value on that Shipment Invoice. Until resolved, retain the row within the previously confirmed group. Earlier exclusions of sibling branches still apply. When the entire confirmed group moves together, Q4 applies.
