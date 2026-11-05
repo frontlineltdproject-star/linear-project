@@ -2184,3 +2184,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q1: for now, treat a supplier invoice row as a whole for colli allocation. No quantity or value split across multiple collis in the first version. The user has not observed a real example; revisit if the office encounters one. This is a provisional product scope decision, not a claim that physical contents can never span collis. A colli may still contain several whole rows. The question concerned allocation, not physically splitting a colli or preventing partial Order shipments.
 - Next decision: whether an entire row may be saved with its colli explicitly unknown and assigned later when identified. Unknown-row eligibility during a partial shipment is a later decision. Linear draft/edit pending.
+
+### 2026-11-05 — FRO-301 explicit unknown allocation accepted
+
+- Q2 accepted: staff can save a new whole supplier invoice row as Colli unknown when the package breakdown is unavailable. Keep its full quantity and value; staff can later assign the same row to the identified colli. Unknown is a normal ongoing business case. Added the term to CONTEXT.md.
+- Still open: how a partial shipment exposes relevant unknown rows from the Order family, what evidence permits inclusion in a Shipment Invoice, and how to avoid duplicate quantities or values between sibling movements. No Linear edit.

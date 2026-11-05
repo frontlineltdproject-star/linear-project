@@ -122,3 +122,6 @@ A document linked to one Shipment that accompanies its goods and states their de
 
 **Shipment Invoice finalization**:
 The explicit action that assigns the printed Shipment Invoice number and freezes the document's base contents and undiscounted values. Drafts have an internal ID and live source invoice rows. Printing does not finalize a draft, and print-time discounts do not alter the frozen base values.
+
+**Colli unknown**:
+The office has recorded a whole supplier invoice row and its quantity and value, but has yet to identify the colli containing those goods. Staff can assign the row to its colli when they learn the allocation.
