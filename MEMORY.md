@@ -2210,3 +2210,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 packing changes after group confirmation
 
 - Q7 accepted for draft Shipment Invoices: removing a member of the previously confirmed group requires fresh staff confirmation that the row's goods are still travelling before finalizing a draft that includes the row. Adding other collis or repacking while all confirmed collis stay on the Shipment preserves the original confirmation and its original group. Handling an affected already-finalized invoice remains a separate decision.
+
+### 2026-11-05 — FRO-301 pre-departure removal after invoice finalization
+
+- Q8 accepted: if an invoice includes a row confirmed within collis A/B and staff want to remove B before dispatch, allow removal when staff confirm the goods are in A and the finalized document still describes the departing goods accurately, including its packing details and weight. The finalized document remains frozen. If removal would make it inaccurate, a manager or system administrator must cancel the affected invoice with a reason before removal. Staff can then issue a linked corrected replacement under FRO-244. Where whereabouts are still unknown, the confirmation needed for the first path is missing. No Linear edit authorized at this stage.
