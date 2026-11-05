@@ -2134,3 +2134,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q23 accepted: FRO-244 covers only Shipment Invoices created in the new portal. Any need to migrate or retrieve legacy Shipment Invoices through the new portal is separate follow-up work. No migration ticket requested. Q22 continuity of numbering at cutover still applies; office supplies the first live number later.
 - Discovery continues with access and lifecycle rules. No Linear write.
+
+### 2026-11-05 — FRO-244 staff access accepted
+
+- Q24 accepted: staff-only access. Front Line operators and managers may view Shipment Invoices, create and edit drafts, and finalize them. Cancelling a finalized Shipment Invoice requires a manager or system administrator and a recorded reason. Draft abandonment and the effect of linked invoices on Shipment cancellation remain separate decisions.
