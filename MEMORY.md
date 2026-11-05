@@ -2214,3 +2214,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 pre-departure removal after invoice finalization
 
 - Q8 accepted: if an invoice includes a row confirmed within collis A/B and staff want to remove B before dispatch, allow removal when staff confirm the goods are in A and the finalized document still describes the departing goods accurately, including its packing details and weight. The finalized document remains frozen. If removal would make it inaccurate, a manager or system administrator must cancel the affected invoice with a reason before removal. Staff can then issue a linked corrected replacement under FRO-244. Where whereabouts are still unknown, the confirmation needed for the first path is missing. No Linear edit authorized at this stage.
+
+### 2026-11-05 — FRO-301 correcting a contradicted allocation
+
+- Q9 accepted: when a warehouse finding contradicts an earlier group confirmation, retain the original confirmation and record who corrected the allocation and why. Identify affected Shipment Invoices for review. A finalized invoice that declared goods which stayed behind follows FRO-244 cancellation and linked replacement. The physical finding does not silently rewrite an issued document.
