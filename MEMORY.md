@@ -2179,3 +2179,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Applied the reviewed title and body from drafts/fro244-shipment-invoice-structure.md to FRO-244, Shipment Invoice — entity & business rules. Issue: https://linear.app/front-line-ltd/issue/FRO-244/shipment-invoice-entity-and-business-rules
 - Re-read the saved description and checked it against the reviewed draft after Linear formatting normalization. All four PDF upload IDs, names, paths and sizes match. Linear automatically linked FRO-301 on save. Removed that automatic relation to restore the approved six relations and re-read at 2026-11-05T10:45:36.795Z. Confirmed body, original metadata, Backlog / Pending_Review, Chris and all relations. Structural planning handoff only. FRO-301 and the one-Client idea remain separate follow-ups.
+
+### 2026-11-05 — FRO-301 whole-row allocation for now
+
+- Q1: for now, treat a supplier invoice row as a whole for colli allocation. No quantity or value split across multiple collis in the first version. The user has not observed a real example; revisit if the office encounters one. This is a provisional product scope decision, not a claim that physical contents can never span collis. A colli may still contain several whole rows. The question concerned allocation, not physically splitting a colli or preventing partial Order shipments.
+- Next decision: whether an entire row may be saved with its colli explicitly unknown and assigned later when identified. Unknown-row eligibility during a partial shipment is a later decision. Linear draft/edit pending.
