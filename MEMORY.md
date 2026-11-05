@@ -2119,3 +2119,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Show sum table controls PDF output: unchecked omits the final Total weight / Grand total value summary table. This describes footer visibility only. Default, persistence and any other effects were not established. Preserve this requirement for the future printing ticket.
 - Office instruction for Enable invoice is to always leave it checked, consistent with the existing ticket's checked default. What unchecked does and whether any workflow depends on it remain unknown. No decision to remove it or equate it with Finalize/cancellation. Suggested handling pending review: assume enabled in the ordinary workflow and investigate the legacy unchecked path before implementing a user-facing toggle.
 - Current FRO-244 read: Backlog/Pending_Review. Discovery continues; no Linear write. Next independent decision: when to allocate the continuous printed document number, given the accepted draft/finalized lifecycle and cancellation/replacement rules.
+
+### 2026-11-05 — FRO-244 printed number assigned on finalization
+
+- Q21 accepted after comparing delivery-note preparation and issuance: save the Shipment Invoice draft with its internal ID. Successful explicit Finalize assigns the next printed Shipment Invoice number and freezes base contents together. Saving, abandoning or previewing a draft consumes no printed number. A cancelled finalized record retains its number; a finalized replacement gets a new one.
+- The comparison concerns timing only. No AADE integration or delivery-note numbering series was approved. Scope/reset of the Shipment Invoice sequence and the first number at cutover are still open. No starting number inferred from legacy PDF examples. No Linear write.
