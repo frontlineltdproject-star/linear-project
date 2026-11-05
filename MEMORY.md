@@ -2194,3 +2194,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q3 accepted: offer relevant Colli unknown rows from the split Order family separately from rows assigned to participating collis. Include an unknown row in a partial Shipment Invoice only on explicit staff confirmation that the whole row's goods travelled on that Shipment. This confirmation leaves the colli unknown. An unconfirmed candidate contributes no quantity or value to the document.
 - Next decision: whether a confirmed whole row is attributed to the travelling split child for subsequent sibling eligibility while preserving source identity and allowing later onward legs. Existing FRO-244 permits overlapping documents for the same Shipment with a warning. No Linear write.
+
+### 2026-11-05 — FRO-301 confirmed row follows the travelling child
+
+- Q4 accepted: explicit confirmation that a whole row travelled on a partial Shipment attributes it to the travelling child Order, preserves the original source reference and leaves the exact colli unknown. Exclude it from the remainder's candidates. It follows the travelling group on a later leg when that group travels together. A second partial split within that group is a separate case for Q5.
