@@ -2124,3 +2124,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q21 accepted after comparing delivery-note preparation and issuance: save the Shipment Invoice draft with its internal ID. Successful explicit Finalize assigns the next printed Shipment Invoice number and freezes base contents together. Saving, abandoning or previewing a draft consumes no printed number. A cancelled finalized record retains its number; a finalized replacement gets a new one.
 - The comparison concerns timing only. No AADE integration or delivery-note numbering series was approved. Scope/reset of the Shipment Invoice sequence and the first number at cutover are still open. No starting number inferred from legacy PDF examples. No Linear write.
+
+### 2026-11-05 — FRO-244 shared numbering sequence and starting value
+
+- Q22 accepted: all finalized Shipment Invoices share one continuous printed-number sequence across Clients, import and export movements, all four invoice types and calendar years. Allocation occurs on Finalize under Q21.
+- The legacy portal continues issuing numbers. The office will specify the first number for the new portal later at cutover. Keep this a required rollout input before first live finalization; do not infer it from a sample PDF or today's legacy counter. Historical import scope remains a separate decision. No Linear write.
