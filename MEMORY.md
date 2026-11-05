@@ -2278,3 +2278,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Compared the proposed single commercial Order across partial Shipments with production main 5774931 via gh. Shipment content already identifies each colli and its Order at loading; the database separately limits each Order and each colli to one open movement. Confirmed in-stock partial selection puts the selected identities on a same-origin child and retains the balance on the parent.
 - Open business question: should one commercial Order remain intact when different collis are simultaneously at different stages and origins (China and Korea to Japan)? This would require independent physical tracking and review of Order-level warehouse stays, status, documents and FRO-301 allocation. No decision or ticket change.
+
+### 2026-11-05 - Agent stock lists and colli-level physical status (discovery)
+
+- User tentatively expects one Order number across independently moving collis. In the observed third-country case the office first saw the goods already in stock on the agent stock list; paperwork identified different inbound AWBs for collis on the same Order. Transit was not monitored by the office.
+- Reviewed current FRO-326 and production main 5774931. Distinguish confirmed receipt/custody from reconstructed movements, aggregate Order display from action eligibility, and supplier readiness promises before colli identities exist from confirmed readiness of particular goods. Whether recording a receipt should require an inbound Shipment and the necessary detail at receipt remain open. No ticket change.
