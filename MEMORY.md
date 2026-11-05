@@ -2291,3 +2291,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 - Historical Shipment creation and colli identity (discussion)
 
 - Re-read FRO-343 and FRO-324: inline Order and colli registration persists independently; the later Shipment save writes participation. AWB belongs to Shipment, historical arrival requires the complete eligible Order and stock confirmation is separate. Independent inbound movements for subsets would require revised historical eligibility, custody and stock confirmation, not a mandatory Shipment ID on colli creation. No rule change approved.
+
+### 2026-11-05 - Indicative field impact for partial historical arrivals
+
+- Reviewed main 5774931 database schema and current FRO-324. Proposed explicit stay-to-colli coverage, Order physical summary reads and historical subset validation. Current stay uniqueness is per Order; content already tracks colli, Shipment and Order at loading. Separate decisions for concurrent outgoing movements and readiness. No schema choice or scope approved.
