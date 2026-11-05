@@ -2189,3 +2189,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Q2 accepted: staff can save a new whole supplier invoice row as Colli unknown when the package breakdown is unavailable. Keep its full quantity and value; staff can later assign the same row to the identified colli. Unknown is a normal ongoing business case. Added the term to CONTEXT.md.
 - Still open: how a partial shipment exposes relevant unknown rows from the Order family, what evidence permits inclusion in a Shipment Invoice, and how to avoid duplicate quantities or values between sibling movements. No Linear edit.
+
+### 2026-11-05 — FRO-301 unknown colli on a partial shipment
+
+- Q3 accepted: offer relevant Colli unknown rows from the split Order family separately from rows assigned to participating collis. Include an unknown row in a partial Shipment Invoice only on explicit staff confirmation that the whole row's goods travelled on that Shipment. This confirmation leaves the colli unknown. An unconfirmed candidate contributes no quantity or value to the document.
+- Next decision: whether a confirmed whole row is attributed to the travelling split child for subsequent sibling eligibility while preserving source identity and allowing later onward legs. Existing FRO-244 permits overlapping documents for the same Shipment with a warning. No Linear write.
