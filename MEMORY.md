@@ -1,5 +1,9 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-05 — Import entity label
+
+- Created the FRO team label `import` in the same blue as `export` and added it to FRO-359 and FRO-360. Re-read both issues and verified their complete label sets, descriptions, attachments, statuses and relations against the pre-edit reads.
+
 ### 2026-11-03 — FRO-360 unfinished progress line fixed
 
 - User requested a grey line between unfinished stages. Found the connector used undefined --border-strong; this preview defines --border2 (#d7dce3). Replaced the missing token in the stepper so future connectors and node outlines render light grey on desktop/mobile; reached connectors stay teal.
