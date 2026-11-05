@@ -2158,3 +2158,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-244 changes to source rows during preparation
 
 - Q29 accepted: the draft preserves the operator's row selection. Changes to selected source row quantities or prices flow through to draft values and the recalculated full total. Newly added eligible Order rows are offered for explicit selection. Removal of a selected source row requires staff to review the selection before finalization. Finalized base contents follow the previously agreed snapshot rule.
+
+### 2026-11-05 — FRO-244 required Agent at finalization
+
+- Q30: user added Agent to the required finalization fields. A draft may have a blank Agent; Finalize requires nonblank Agent text, alongside Shipment, Client, invoice type, date, Shipper, Consignee, packing details, total weight and at least one eligible selected row. Notify, Notes and subtitle may be blank. The manual partial total may be blank for a full invoice.
