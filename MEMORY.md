@@ -2202,3 +2202,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 — FRO-301 confirmation on a later partial split
 
 - Q5 accepted: if a previously confirmed travelling group splits again and the row's exact colli remains unknown, require fresh staff confirmation for the onward subset before including its value on that Shipment Invoice. Until resolved, retain the row within the previously confirmed group. Earlier exclusions of sibling branches still apply. When the entire confirmed group moves together, Q4 applies.
+
+### 2026-11-05 — FRO-301 confirmation during packing
+
+- Q6 accepted: staff may confirm before departure that the goods on a whole invoice row are packed in the selected group of collis, while the precise colli remains unknown. The confirmation supports preparation of the accompanying Shipment Invoice. Actual departure remains a separate Shipment dispatch event. Handling later changes to the selected group is still open.
