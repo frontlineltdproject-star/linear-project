@@ -2386,3 +2386,17 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Q6: Allow changing Shipment. If the form contains work, require confirmation; confirmed change clears goods, company selections, party text, packing, weight, partial amount and notes, then applies normal defaults for the new Shipment. Cancel preserves all work.
 - Remaining UI decisions: mixed-currency selection behavior, unsaved-form exit and allocation-page return/refresh. Local layout options follow the interview. No Linear write.
 
+
+### 2026-11-06 - Shipment Invoice create page Q7-Q9 accepted
+
+- Q7: Keep mixed-currency row selections visible, flag conflicting currencies, suppress combined total and disable Create draft until one currency remains. No conversion or silent deselection.
+- Q8: Cancel asks before discarding unsaved changes; return to originating Shipment, else previous page with Shipments-list fallback. Warn before closing/reloading a changed form.
+- Q9: Open the relevant Order allocation interface in a new tab. Refresh eligible rows preserves document fields and still-eligible selection, flags selected rows that lost eligibility, and leaves newly eligible rows unselected.
+- User requested the local HTML preview. Preparing two fixture-only directions using live portal components; canvas-design unavailable so using the AGENTS.md manual HTML fallback. Publication remains deferred; the eventual approved HTML is intended for a downloadable Linear attachment. No Linear write.
+
+
+### 2026-11-06 - Shipment Invoice create local preview delivered
+
+- Created previews/shipment-invoice-create/index.html as a self-contained, fixture-only HTML preview with A stacked cards (recommended) and B compact tabs; component-map.md records live component sources and approximations. EN/EL, seven scenarios, business notes, new-component markers and simulated draft/allocation flows included. No backend connection or persistent save.
+- Headless Edge verified 56 combinations (two widths, two languages, two directions, seven states), without page errors, external requests or document overflow. Verified initially empty selection, mixed-currency blocking, field/selection preservation on refresh, newly eligible rows unselected and stale selected rows removed. Desktop and Greek mobile screenshots inspected.
+- Local preview served on loopback port 8765 and opened in Codex. Awaiting layout feedback; no design approval, Linear write, Cloudflare publication or production branch change. The HTML can be downloaded and opened directly offline.
