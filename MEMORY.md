@@ -2594,3 +2594,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - On explicit user instruction, changed FRO-363 from Backlog to Todo and replaced Pending_Review with Ready; retained Frontend and Story. Confirmed milestone 0.0.12.
 - Re-read verified status, complete labels and milestone. Description, mock handoff, four attachments, assignee, priority, project, parent and relations unchanged, including existing blockers FRO-244/FRO-301/FRO-366. This is developer readiness, not operational activation or deployment.
 - Metadata-only change: no business-rule trace or design round required. Ticket: https://linear.app/front-line-ltd/issue/FRO-363/shipment-invoice-create-page-ui
+
+### 2026-11-06 - FRO-361 published UI handoff added to ticket
+
+- On explicit user instruction, added the published mock/fro-361-delivery-note-details branch, immutable commit 551e2051b5f784dfdbbc814316e25a30807a3a18, base commit, component README and pinned verification evidence links to FRO-361.
+- Handoff records delivered unmounted Details UI, remaining authorized reads/shared saved-draft context/callback wiring/list/routes, verification results, and the user-approved branch-only type/format and unverified-ruleset exceptions. No product behavior changed; no new design or consumer trace required.
+- Re-read confirmed the exact additive description (apart from Linear link normalization), unchanged metadata and relations, all five labels, and all three attachments. Status remains Backlog with Pending_Review. No merge or deployment.
