@@ -1,6 +1,6 @@
 # FRO-366 verified frontend preparation
 
-Prepared for review; production source remains uncommitted at detached HEAD. No production branch, push, PR, route activation, backend change, deployment or Linear modification occurred.
+Published after the user’s go-ahead. See [publication record](fro366-frontend-publication.md) for the verified branch/head, post-commit checks and scoped acceptance of disclosed limitations. The preparation details below record the reviewed state before publication. No PR, route activation, backend change, deployment or Linear modification occurred.
 
 ## Scope and review artifacts
 
