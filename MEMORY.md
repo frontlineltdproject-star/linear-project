@@ -1,5 +1,9 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Repacking entity change deferred
+
+- User has not observed a need to follow the same intact pallet/box across multiple transport legs and accepted retaining the existing Shipment-scoped load-unit model. Revisit persistent packaging/composite-colli structure if an actual operational case emerges. No new ticket or change to FRO-362 authorized or needed for this decision.
+
 ### 2026-11-06 — Repacking as parent colli discussion
 
 - User asks whether a repack should become a new colli pointing to its contents. Read main 5774931 ShipmentLoadUnit, ShipmentLoadUnitContent and repository through gh. Load units already have identity, Shipment owner, type, label, dimensions and weights; content links original colli IDs to an optional load-unit ID. Counts treat an overpack as one transport piece while retaining contained colli identities.
