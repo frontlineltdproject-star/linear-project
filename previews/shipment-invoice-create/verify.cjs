@@ -30,10 +30,11 @@ const path=require('node:path'),assert=require('node:assert/strict'),{pathToFile
  await page.goto(url);
  await page.setViewportSize({width:1440,height:1000});
  await page.screenshot({path:path.join(__dirname,'desktop.png'),fullPage:true});
- await page.goto(`${url}?lang=el&direction=b`);
+ await page.goto(`${url}?lang=el&direction=a`);
  await page.setViewportSize({width:400,height:900});
  await page.screenshot({path:path.join(__dirname,'mobile.png'),fullPage:true});
  assert.deepEqual(errors,[]); assert.deepEqual(requests,[]);
  console.log(JSON.stringify({screens,errors,externalRequests:requests,checks:['empty initial selection','mixed currency blocked','refresh preserves fields and selection','new eligibility unselected','stale selection removed']}));
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
+
