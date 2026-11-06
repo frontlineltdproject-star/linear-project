@@ -2370,3 +2370,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Preflight: authenticated gh read succeeds and repository reports push permission; Linear read succeeds. Wrangler whoami reports broad OAuth, not the prescribed Pages-only token. User explicitly authorized continuing interview and local preview, deferring publication; approved HTML can be attached to the future ticket for others to download. No Cloudflare resource changes or production branch work authorized.
 - Next: interactive create-page decisions, then component-mapped local HTML directions and full ticket approval. No new business decisions, issue creation or preview implementation yet.
 
+
+### 2026-11-06 - Shipment Invoice create page Q1-Q3 accepted
+
+- Q1: Create draft only; success opens the saved Shipment Invoice Details page, where review and finalization belong. The separate Details ticket is a delivery dependency; no finalization or printed-number allocation on the create page.
+- Q2: No Orders or invoice rows initially selected. Explicit Order selection includes all its eligible rows, with individual deselection afterward, preserving FRO-244 ordering and currency rules.
+- Q3: Show unresolved allocation rows separately. Physical allocation confirmation belongs to the Order allocation interface; refresh eligibility on the invoice create page to include subsequently confirmed rows. Track the allocation UI dependency explicitly; no silent allocation writes during invoice preparation.
+- Live main 5774931 reconnaissance found no Shipment Invoice implementation or dedicated Shipment picker. Reuse portal Card/FormField/Textarea/DatePicker/Combobox/Table/Checkbox/Modal/Button primitives. Remote Shipment search and grouped row selection/totals require mapped compositions. No design file or Linear write yet.
+
