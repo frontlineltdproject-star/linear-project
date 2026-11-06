@@ -2641,3 +2641,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - At the user's request, added a prominent direct download link to the existing shipment-invoice-create.html attachment at the start of Design and developer handoff, with instructions to open locally and select layout A, language and scenario.
 - Re-read confirmed the exact addition after link normalization; Ready/Todo, milestone 0.0.12, labels, relations and all four attachments preserved. No hosted preview was published.
+
+### 2026-11-06 — FRO-363 attached interactive HTML published unchanged
+
+- User requested publishing the interactive HTML like the preceding previews. Downloaded current shipment-invoice-create.html from Linear; it matches previews/shipment-invoice-create/index.html. Published those exact bytes using existing Cloudflare OAuth and pinned Wrangler 4.45.0 to new Pages project fro-363-72afd8, deployment caf44176: https://fro-363-72afd8.pages.dev/ .
+- Anonymous HTTP 200 and byte equality verified: attachment/local/public SHA-256 24889121842a233517ba0b4b812df66b306fb10428a0d1b81195e7f2dfdab6a7. Browser opens without sign-in. Scenario selector checked for loading/empty/error/mixed/overlap/stale; loading/error/mixed disable Create. Greek layout at 400px has no page-wide horizontal overflow; console error/warning list empty. No dedicated network-log API available. HTML unchanged, including its offline banner and comparison layout B.
+- Added public current-preview resource and explicit hosted-preview reference to FRO-363, retaining A approved/B comparison-only and download availability. Reworded local-only/no-hosted-preview sentences to distinguish the local download from its hosted copy. Verified expected description with refreshed upload signatures normalized, original four attachments, labels Ready/Frontend/Story, Todo and relations preserved. No production or existing Cloudflare resources modified.
