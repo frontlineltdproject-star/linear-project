@@ -2460,3 +2460,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Concurrent edits/finalization/cancellation block overwriting the newer version. Preserve unsaved input for comparison/copying and offer reload. Backend conflict detection is an explicit dependency; finalized invoices cannot remain editable.
 - Next interview: when replacement persists, explicit review acknowledgement, and navigation/dirty-exit behavior. No Linear write or preview implementation.
 
+
+### 2026-11-06 - Shipment Invoice Details/edit Q10-Q12 accepted
+
+- Create replacement on a cancelled invoice opens a prefilled unsaved form. Explicit Create draft persists it and opens replacement Details with a link to the original; cancelling the form creates nothing.
+- A review panel groups affected goods and copied packing/weight/partial amount. Staff resolve unavailable selections, check values and Confirm reviewed. Incomplete work remains draft-saveable; finalization requires completed review. Further relevant changes require review again. Exact persistence/invalidation contract remains to be traced.
+- Dirty edit exits/navigation require discard confirmation; close/reload uses browser warning. Cancel editing returns to saved Details. Show Shipment link and original/replacement links where applicable.
+- Next: shared create/edit form protections, draft-save validation and Details layout. No Linear write or preview implementation.
+
