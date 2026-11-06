@@ -2588,3 +2588,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - This agent created and owns mock/fro-361-delivery-note-details in Frontline-Forwarding/frontline-forwarding. Commit/head 551e2051b5f784dfdbbc814316e25a30807a3a18, feat(FRO-361): add read-only Delivery Note Details UI mock; nine files, 823 insertions. Explicit same-name push succeeded.
 - Fetched remote branch; remote/local HEAD equal, full diff equal and changed paths exactly match approved manifest. Worktree clean. Prior verified 246 tests, build and 48 browser combinations apply to unchanged diff.
 - Branch: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-361-delivery-note-details. No PR, merge, deployment or new Linear mutation. UI remains unmounted; authorized read API and list/route integration remain delivery dependencies.
+
+### 2026-11-06 - FRO-363 marked Ready for development
+
+- On explicit user instruction, changed FRO-363 from Backlog to Todo and replaced Pending_Review with Ready; retained Frontend and Story. Confirmed milestone 0.0.12.
+- Re-read verified status, complete labels and milestone. Description, mock handoff, four attachments, assignee, priority, project, parent and relations unchanged, including existing blockers FRO-244/FRO-301/FRO-366. This is developer readiness, not operational activation or deployment.
+- Metadata-only change: no business-rule trace or design round required. Ticket: https://linear.app/front-line-ltd/issue/FRO-363/shipment-invoice-create-page-ui
