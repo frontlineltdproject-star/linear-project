@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Independent colli movement Q6 accepted
+
+- User accepted separate Orders for batches requiring separate Customs Storage Entries, even when their customs regime matches. Preserve actual admission coverage; no implicit addition of later goods to a prior Entry. Updated ADR 0005. No Linear change.
+- Next business decision is partial reservation before stock confirmation. Current FRO-325 (In Progress, updated 2026-11-06) and main 5774931 require whole upcoming Orders. Shared supplier readiness remains accepted; partial planning needs its own explicit rule.
+
 ### 2026-11-06 — Independent colli movement Q5 accepted
 
 - Keep customs regime and registration/ΑΛΚ shared across the whole Order. Deliberately separate Orders when different customs arrangements are required. User considers mixed customs arrangements an extreme edge case and will revisit if necessary. Recorded in ADR 0005.
