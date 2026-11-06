@@ -2557,3 +2557,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Plan: drafts/fro361-frontend-plan.md. Three sequential slices: read-only Details composition, navigation/PDF guards, browser verification/handoff. Maps actual components, callback/model interfaces, files, meaningful tests and integration dependencies. Native execution recommended, pending plan agreement and separate implementation-model continuation.
 - Plan scope is unmounted Details UI; list implementation remains in ticket, not in this preparation. Uses existing DeliveryNote type and shared saved-draft helper; no fabricated API, route activation, backend/auth/schema/dependency changes. Frontend README records activation boundaries.
 - No application edits, branch or production commit/push. Ruleset 403 publication blocker persists. Planning artifacts only; full implementation checks have not run.
+
+### 2026-11-06 — FRO-350 public static preview published
+
+- User explicitly authorized the existing Cloudflare OAuth login for this preview, overriding the Pages-only token rule for this deployment only.
+- Created new Pages project fro-350-e25548 and deployed the existing previews/fro350 build unchanged: https://fro-350-e25548.pages.dev/ (deployment 7c1e6cd6).
+- Anonymous curl GET returned HTTP 200 without cookies or authorization. Public and local HTML SHA-256 both 3498cdb9880f0cf5eba570ef15a6880facf87af5f5392d0becc6fc2fd09f7008. Browser opened without login; default/loading/empty/error states rendered, Greek rendering checked at 400px without horizontal page overflow; captured console warning/error list empty. No dedicated browser network-log API was available.
+- Wrangler 4.158.0 unexpectedly delegated pages project create into a Workers static-assets flow. Interrupted after asset upload, before any completed Worker deployment was reported; no claim of verified remote Worker cleanup. Used pinned Wrangler 4.45.0 for successful Pages create, inventory and deployment. Do not use unpinned Wrangler for this workflow without verifying behavior.
+- No Linear description, attachments or metadata changed. Earlier file-attachment request was paused by the user in favor of publication; adding a ticket reference remains pending its review gate.
