@@ -2421,3 +2421,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Inspected live frontend form/component catalogue, theme, localization, test/build configuration, and domain/authorization guidance. Current base has no Shipment Invoice API. Plan uses unmounted real portal components with UI-only presentation interfaces and isolated fixture callbacks, not invented production APIs or business calculations.
 - Plan saved drafts/fro363-frontend-plan.md: three slices (fields/layout, goods/guards, browser verification/handoff); dependency order, exact files, component map, state/locale/viewport test coverage and activation boundary documented. No separate documented Base/Version/Sync workflow found. Dockerfile prescribes pnpm 11.1.3 frozen-lockfile installation; Node standard 22.13.0. Intent list succeeded, no enabled packages before install; repeat after installation.
 - No application implementation, branch, commit or production push. Plan agreement and separate implementation-model checkpoint now pending. Ask user to review plan and check model suitability for implementation, then explicitly continue. Publication enforcement blocker remains unchanged.
+
+### 2026-11-06 - Shipment Invoice edit-page workflow started
+
+- User requested a separate UI ticket for FRO-244 editing while FRO-363 create-page work continues in another chat. Refreshed FRO-244/FRO-363 and searched current issues; no dedicated Shipment Invoice edit UI found in returned results.
+- Planning pull and live gh/Linear read checks passed. Cloudflare uses broad OAuth; user explicitly approved a downloadable local HTML preview instead of hosted publication for this task.
+- Interview pending: draft-edit-only versus combined Details/edit scope, saved draft Shipment reassignment, and save/exit behavior. No product decisions, Linear changes or production changes yet.
+
