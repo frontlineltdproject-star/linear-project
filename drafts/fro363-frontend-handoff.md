@@ -1,4 +1,4 @@
-# FRO-363 frontend mock handoff — local preparation
+# FRO-363 frontend mock handoff — published
 
 [Linear ticket](https://linear.app/front-line-ltd/issue/FRO-363/shipment-invoice-create-page-ui) · [complete proposed diff](fro363-frontend-preparation.patch) · [desktop](fro363-frontend-evidence/react-desktop.png) · [Greek mobile](fro363-frontend-evidence/react-mobile-el.png)
 
@@ -69,3 +69,17 @@ The user explicitly accepted the existing whole-project TypeScript and formattin
 FRO-244/FRO-301 backend contracts and Details/allocation destinations are dependencies for operational activation. They do not block publication of this unmounted UI mock.
 
 Final explicit approval to create, commit and push this exact branch is still required by AGENTS.md step 4e. No production branch, commit, push, PR or deployment has occurred. The completed ticket and four downloadable design attachments remain in Linear; no Linear mutation accompanies this approval package.
+
+## Verified publication — 2026-11-06
+
+The user approved creation, commit and push of the exact reviewed diff. This agent created mock/fro-363-shipment-invoice-create from 5774931b9869247f0247013111a452552403f456 and committed only the 14 approved feature files (1,911 insertions).
+
+- Branch: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-363-shipment-invoice-create
+- Head: 230a90581aa85e611737add554b2b3c6f5912e0e
+- Commit: feat(FRO-363): add Shipment Invoice create UI mock
+- Push succeeded using the exact approved same-name refspec. A subsequent fetch confirmed FETCH_HEAD equals local HEAD.
+- Full remote diff against the approved base contains only the 14 approved new files. Before commit, staged reverse application of the approved patch passed. Patch checksum remained f2772624042ac3b3d9543917dbe6b2d7249a9ba27c17667b4238b41fc0a1ba1a. Worktree is clean.
+- Existing verification evidence and the explicitly accepted FRO-363-only exceptions above apply. No implementation changes were made during publication.
+- No PR, merge, deployment, or Linear write was performed. The unmounted UI still requires the documented backend and Details/allocation integration before activation.
+
+This publication record supersedes the earlier pending-approval status in this document.
