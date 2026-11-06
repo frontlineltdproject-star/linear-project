@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Independent colli movement Q5 accepted
+
+- Keep customs regime and registration/ΑΛΚ shared across the whole Order. Deliberately separate Orders when different customs arrangements are required. User considers mixed customs arrangements an extreme edge case and will revisit if necessary. Recorded in ADR 0005.
+- Re-read FRO-319: it fixes Customs Storage Entry coverage at first qualifying stock admission, one owning Order, and derives matching invoices through that Order. Separate initial admissions under one Order still need an explicit boundary; no assumption that later collis can be appended to an existing admission. No Linear changes.
+
 ### 2026-11-06 — Independent colli movements structural scope accepted
 
 - User accepted Q1 complete movement scope: separate arrivals, warehouse custody and outgoing Shipments within one Order without automatic child creation for movement. Q2 accepted shared Order supplier readiness for this version. UI canvas, preview and mock branch explicitly skipped. Workflow remains at interactive business decisions and consumer tracing before a complete draft and Linear approval.
