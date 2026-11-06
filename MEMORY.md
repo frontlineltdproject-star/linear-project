@@ -2492,3 +2492,12 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Re-read FRO-363 at updatedAt 2026-11-06T14:32:36.621Z: description matches the intended replacement after Linear markup normalization; title, status, complete labels, priority, project, milestone, parent, assignee and relations unchanged. All four original attachments preserved by ID.
 - Current baseline already included related FRO-302/FRO-362; preserved these existing relations without changing dependencies. Backlog / Pending_Review, Frontend, Story and milestone 0.0.12 remain unchanged.
 - Ticket: https://linear.app/front-line-ltd/issue/FRO-363/shipment-invoice-create-page-ui
+
+### 2026-11-06 - Shipment Invoice Details/edit local preview delivered
+
+- User accepted Q13-Q15: reuse create form company/Shipper protections and goods behavior; preserve saved values on open; clear incompatible company on Client change. Incomplete drafts save, mixed currencies block save and suppress full total. Reuse approved stacked cards, with lifecycle identity/actions, review panel and correction links.
+- Created previews/shipment-invoice-details/index.html, self-contained fixture-only HTML, plus component-map.md, README, source/build scripts, verification and screenshots. Live design/component baseline read through gh: 5774931b9869247f0247013111a452552403f456. Manual canvas fallback; approved stacked direction carried forward.
+- Preview includes EN/EL, draft/read/edit, loading/empty/error, source review, mixed currency, overlap, incomplete draft, save failure, concurrent conflict, finalization, manager/admin cancellation and linked replacement simulation. Loopback preview at http://127.0.0.1:8766/?state=edit; downloadable HTML opens offline.
+- Headless Edge verified 56 viewport/language/scenario combinations and lifecycle/input-retention interactions, zero page errors/external requests/document overflow. Desktop and Greek mobile screenshots inspected. Original/replacement navigation also verified. Preview is for design review; no ticket approval/write, hosted publication or production code change.
+- Next: collect preview feedback, complete live consumer/spec trace and backend review/versioning/replacement contracts, then prepare full standalone ticket under frontline-linear-issues for approval. FRO-363 remains independently owned by the other chat.
+

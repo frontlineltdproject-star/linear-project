@@ -1,0 +1,19 @@
+{
+  "screens": 56,
+  "errors": [],
+  "externalRequests": [],
+  "checks": [
+    "refresh retention and new rows unselected",
+    "mixed currency blocks save",
+    "conflict preserves local input",
+    "failed save retry retains input",
+    "required finalization fields",
+    "finalization freezes view",
+    "role-restricted cancellation",
+    "required cancellation reason",
+    "replacement review and draft save",
+    "missing-row review",
+    "dirty cancel protection",
+    "Shipper keep edited text"
+  ]
+}
