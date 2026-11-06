@@ -1,0 +1,127 @@
+[
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx",
+    "sha256": "238b62f34c053038e525be57dff3797d346b991f4e961f86a39738fb3d60b81a",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx",
+    "sha256": "9a17e4254487539402a51531adefa4e88b093296deb3e91bdbf11956a0a1cd9a",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx",
+    "sha256": "221ab03dc8d519195b3ee156e2651a58ca75b012108f461a1c9651952a3b58fd",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.test.tsx",
+    "sha256": "f536aa6f1eed1454359d1344f0510e49e27a3e46bdf7cfd58ef8fa0cc0423fcc",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.tsx",
+    "sha256": "8d3d6bbe7fdb88c2db0f36588f7197e68019ae46de4a5ed21c3a8e16ec4e7d77",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx",
+    "sha256": "536b3db6ee49aa45eac6cb10926789a810e610fb214099394dccd22a3d73bc0a",
+    "provenance": "FRO-363 extended"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx",
+    "sha256": "b14ef3803fc705221c479b8e8b2213b3d00b4497a6e993809b4f8a80b45d4b5a",
+    "provenance": "FRO-363 extended"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-lifecycle-dialog.tsx",
+    "sha256": "b13457a00af5326496ab3ee7ac221cd5a62f03e288604504401e48ca0462ac8a",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-readonly.tsx",
+    "sha256": "251358953c6c2f2ed29e94bf929da45ef09d4c736a14fbed34b5b85a4d01e591",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-review.tsx",
+    "sha256": "613681b89f5e533fdeade38552964907f6fa2838fc2573711aa770615b6fc2c1",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx",
+    "sha256": "1cdac166281e6a7ce3f24da0758cccc905191a99c0024554eeb1d9d230a8d4a7",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts",
+    "sha256": "b65830541b66f5af84472260eb9afd72e48755a4ed6806ec56d4ff64f4848848",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts",
+    "sha256": "c62d0867994f2a8c16bbea10118653cea6960d02f898cc7d0c82814eca12119d",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts",
+    "sha256": "8a486807e7e11356567f524068dcc9de9f7539295f9fc2cc5a43d0c4ae657df6",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/README.md",
+    "sha256": "961b8d66afc071b8e60d9d2274f339c42a12afa0c0cb7ab564a6b0b518e2381d",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts",
+    "sha256": "85ce5a93fbf5c6b9b1bc6cbe9245321165ffa314c94a4226a5d7b197e6cf5e01",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts",
+    "sha256": "4c12b9636c74b4684650d9249037e9db96f8f9223bcd05ce677abb0651184a9f",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/types.ts",
+    "sha256": "06a16cd5f07dbe525058ddd1d94fbb77b2bbcf91082fec4ea6258bacd8e308c8",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts",
+    "sha256": "a381eff0f55d7bdb3dad31595389cc6baa42578b24a994af5dcb8cb2864b0147",
+    "provenance": "FRO-363 unchanged"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/__fixtures__/shipment-invoice-details.ts",
+    "sha256": "87e5642479bb1473cf1a7dc59c55c8db856c9b9b638fbdcbda9769670330fec7",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/labels.ts",
+    "sha256": "897d709b0ee31ce633149eafa2517eb65e5557563e565a63ae5aec11c996242c",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/README.md",
+    "sha256": "23c9231f9c1d1133f2e7d71a7adad30fbd4711993334324c017f6684b2ba256a",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/types.ts",
+    "sha256": "fb39589d90d22dda417a7556247e288aa6cdcd4e52311f9f688cad13f16b4194",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-actions.ts",
+    "sha256": "0d64c327eb27a50c96882b2f993b9e84034f1c80faa2245e9744b0138bfa8511",
+    "provenance": "new FRO-366"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-editor.ts",
+    "sha256": "eb153d41cfce7a16e08dab811f397ecf16f39fe0ce671f257e764211d86c831d",
+    "provenance": "new FRO-366"
+  }
+]

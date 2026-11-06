@@ -1,0 +1,4584 @@
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx
+new file mode 100644
+index 0000000..4d170c4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx
+@@ -0,0 +1,56 @@
++import { Modal } from '#/components/ui/modal'
++import { Button } from '#/components/ui/button'
++import type { InvoiceLabels } from '../create/labels'
++export type Confirmation = {
++  kind: 'shipment' | 'discard' | 'shipper'
++  accept: () => void
++  trigger: HTMLElement | null
++}
++export function ShipmentInvoiceConfirmations({
++  value,
++  close,
++  labels: l,
++}: {
++  value: Confirmation | null
++  close: () => void
++  labels: InvoiceLabels
++}) {
++  return (
++    <Modal
++      open={!!value}
++      onClose={close}
++      title={
++        value?.kind === 'shipper'
++          ? l.confirmShipper
++          : value?.kind === 'shipment'
++            ? l.confirmShipment
++            : l.confirmDiscard
++      }
++      footer={
++        <div className="flex flex-wrap gap-2">
++          <Button
++            type="button"
++            variant="secondary"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            onClick={close}
++          >
++            {value?.kind === 'shipper' ? l.keep : l.no}
++          </Button>
++          <Button
++            type="button"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            onClick={() => {
++              const accept = value?.accept
++              close()
++              accept?.()
++            }}
++          >
++            {value?.kind === 'shipper' ? l.replace : l.confirm}
++          </Button>
++        </div>
++      }
++    >
++      {l.changed}
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx
+new file mode 100644
+index 0000000..352b6a4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx
+@@ -0,0 +1,538 @@
++import {
++  act,
++  cleanup,
++  render,
++  screen,
++  fireEvent,
++  waitFor,
++} from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { ShipmentInvoiceCreateForm } from './shipment-invoice-create-form'
++afterEach(cleanup)
++import type { ShipmentPresentation } from '../create/types'
++const context: ShipmentPresentation = {
++  id: 'S1',
++  label: 'DEMO-SHP-1',
++  eligible: true,
++  clients: [{ id: 'C1', label: 'Demo client' }],
++  companies: [],
++  orders: [],
++}
++const props = () => ({
++  todayAthens: '2026-11-06',
++  initialShipmentId: 'S1',
++  available: true,
++  currencies: ['EUR'],
++  onSearchShipments: vi.fn(async () => [{ id: 'S1', label: 'DEMO-SHP-1' }]),
++  onLoadShipment: vi.fn(async () => context),
++  onEvaluateSelection: vi.fn(async () => ({
++    totalDisplay: '€0.00',
++    mixed: false,
++    overlaps: [] as string[],
++  })),
++  onSubmit: vi.fn(async () => 'draft-1'),
++  onSaved: vi.fn(),
++  onCancel: vi.fn(),
++})
++describe('Shipment Invoice create', () => {
++  it('starts standalone without a selected Shipment or save capability', () => {
++    render(
++      <ShipmentInvoiceCreateForm {...props()} initialShipmentId={undefined} />,
++    )
++    expect(
++      screen.getByRole('heading', { name: 'Create Shipment Invoice' }),
++    ).toBeTruthy()
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(true)
++  })
++  it('uses document defaults and saves incomplete unnumbered drafts', async () => {
++    const p = props()
++    render(<ShipmentInvoiceCreateForm {...p} />)
++    await waitFor(() =>
++      expect(
++        (
++          screen.getByRole('button', {
++            name: 'Create draft',
++          }) as HTMLButtonElement
++        ).disabled,
++      ).toBe(false),
++    )
++    expect((screen.getByLabelText('Subtitle') as HTMLInputElement).value).toBe(
++      'PACKING LIST',
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++    await waitFor(() => expect(p.onSaved).toHaveBeenCalledWith('draft-1'))
++    expect(p.onSubmit).toHaveBeenCalledWith(
++      expect.objectContaining({
++        shipmentId: 'S1',
++        invoiceType: 'Invoice',
++        documentDate: '2026-11-06',
++        consignee: '',
++        packingDetails: '',
++        totalWeightKg: '',
++      }),
++      [],
++    )
++  })
++})
++it('retains edited fields when submit fails and prevents repeat clicks', async () => {
++  const p = props()
++  let rejectSave!: (error: Error) => void
++  p.onSubmit = vi.fn(
++    () =>
++      new Promise<string>((_resolve, reject) => {
++        rejectSave = reject
++      }),
++  )
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep this' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSubmit).toHaveBeenCalledTimes(1))
++  rejectSave(new Error('offline'))
++  await screen.findByText('Draft was not saved. Your work is retained.')
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep this',
++  )
++  expect(p.onSaved).not.toHaveBeenCalled()
++})
++it('asks before discarding changes and preserves them on cancel', async () => {
++  const p = props()
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByText('DEMO-SHP-1')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++  expect(screen.getByRole('dialog')).toBeTruthy()
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect(p.onCancel).not.toHaveBeenCalled()
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++})
++import { demoShipment } from '../create/__fixtures__/shipment-invoice-create'
++it('keeps edited Shipper on company change unless replacement is confirmed', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByText('DEMO-SHP-1042')
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  expect(
++    (screen.getByLabelText('Shipper') as HTMLInputElement).value,
++  ).toContain('DEMO Company One')
++  fireEvent.change(screen.getByLabelText('Shipper'), {
++    target: { value: 'Custom text' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Keep my text' }))
++  expect((screen.getByLabelText('Shipper') as HTMLInputElement).value).toBe(
++    'Custom text',
++  )
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.click(
++    screen.getByRole('button', { name: 'Replace with company details' }),
++  )
++  expect(
++    (screen.getByLabelText('Shipper') as HTMLInputElement).value,
++  ).toContain('DEMO Company One')
++})
++it('blocks mixed currency without deselecting, but permits overlap', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  p.onEvaluateSelection = vi.fn(
++    async (
++      _id?: string,
++      selection?: Array<{ orderId: string; rowIds: string[] }>,
++    ) => ({
++      totalDisplay: '480.00 EUR',
++      mixed: (selection?.length ?? 0) > 1,
++      overlaps: ['DEMO-INV-7'],
++    }),
++  )
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  await screen.findByText(/DEMO-INV-7/)
++  fireEvent.click(screen.getByLabelText('PO-B Maintenance kit'))
++  await screen.findByText(/Selected rows use different currencies/)
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).checked,
++  ).toBe(true)
++  fireEvent.click(screen.getByLabelText('PO-B Maintenance kit'))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++})
++it('refresh preserves fields, removes unavailable selections and leaves new rows unselected', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockResolvedValueOnce({
++      ...demoShipment,
++      orders: [
++        {
++          ...demoShipment.orders[0],
++          rows: [
++            demoShipment.orders[0].rows[1],
++            { ...demoShipment.orders[0].rows[2], ineligibleReason: undefined },
++          ],
++        },
++      ],
++    })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByText(/PO-A \/ r1/)
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++  expect(
++    (screen.getByLabelText('PO-A Pressure sensor') as HTMLInputElement).checked,
++  ).toBe(false)
++})
++it('failed refresh retains work and blocks save until retry succeeds', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockRejectedValueOnce(new Error('offline'))
++    .mockResolvedValue(demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Retain' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByRole('button', { name: 'Retry' })
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).checked,
++  ).toBe(true)
++  fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Retain',
++  )
++})
++it('ignores an older eligibility response and uses the latest selection', async () => {
++  const p = props()
++  let resolveOld!: (value: {
++    totalDisplay: string
++    mixed: boolean
++    overlaps: string[]
++  }) => void
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  p.onEvaluateSelection = vi
++    .fn()
++    .mockResolvedValueOnce({
++      totalDisplay: '0 EUR',
++      mixed: false,
++      overlaps: [] as string[],
++    })
++    .mockImplementationOnce(
++      () => new Promise((resolve) => (resolveOld = resolve)),
++    )
++    .mockResolvedValue({ totalDisplay: '600 EUR', mixed: false, overlaps: [] })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.click(screen.getByLabelText('PO-A Seal kit'))
++  await screen.findByText('600 EUR')
++  resolveOld({ totalDisplay: 'OLD', mixed: true, overlaps: [] })
++  await waitFor(() => expect(screen.queryByText('OLD')).toBeNull())
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(false)
++})
++it('cannot clear a failed eligibility refresh by toggling stale goods', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockRejectedValueOnce(new Error('offline'))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByRole('button', { name: 'Retry' })
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).disabled,
++  ).toBe(true)
++})
++it('prefills the common Client after an initial load error and retry', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockRejectedValueOnce(new Error('offline'))
++    .mockResolvedValue(demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  fireEvent.click(await screen.findByRole('button', { name: 'Retry' }))
++  await screen.findByText('DEMO-SHP-1042')
++  await waitFor(() =>
++    expect(
++      (screen.getByLabelText('Commercial Client') as HTMLSelectElement).value,
++    ).toBe('C1'),
++  )
++})
++it('does not label a saved draft as failed when navigation fails', async () => {
++  const p = props()
++  p.onSaved = vi.fn(() => {
++    throw Error('navigation')
++  })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSaved).toHaveBeenCalled())
++  expect(
++    screen.queryByText('Draft was not saved. Your work is retained.'),
++  ).toBeNull()
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('exposes a host navigation guard that waits for discard confirmation', async () => {
++  const p = props()
++  let guard: ((proceed: () => void) => void) | undefined
++  render(
++    <ShipmentInvoiceCreateForm
++      {...p}
++      {...{
++        registerNavigationGuard: (next: (proceed: () => void) => void) => {
++          guard = next
++          return () => {
++            guard = undefined
++          }
++        },
++      }}
++    />,
++  )
++  await screen.findByText('DEMO-SHP-1')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  expect(guard).toBeTypeOf('function')
++  const navigate = vi.fn()
++  act(() => guard!(navigate))
++  expect(navigate).not.toHaveBeenCalled()
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  expect(navigate).toHaveBeenCalledTimes(1)
++})
++
++it('confirms Shipment change and resets all work only after acceptance', async () => {
++  const p = props()
++  p.onSearchShipments = vi.fn(async () => [
++    { id: 'S1', label: 'DEMO-SHP-1' },
++    { id: 'S2', label: 'DEMO-SHP-2' },
++  ])
++  p.onLoadShipment = vi.fn(async (id?: string) => ({
++    ...demoShipment,
++    id: id ?? 'S1',
++    label: id === 'S2' ? 'DEMO-SHP-2' : 'DEMO-SHP-1',
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Search' }))
++  await screen.findByRole('option', { name: 'DEMO-SHP-2' })
++  fireEvent.change(screen.getByLabelText('Choose Shipment'), {
++    target: { value: 'S2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++  fireEvent.change(screen.getByLabelText('Choose Shipment'), {
++    target: { value: 'S2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  await waitFor(() =>
++    expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(''),
++  )
++  expect((screen.getByLabelText('Subtitle') as HTMLInputElement).value).toBe(
++    'PACKING LIST',
++  )
++})
++it('keeps mixed Client selection explicit without filtering goods', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => ({
++    ...demoShipment,
++    clients: [
++      ...demoShipment.clients,
++      { id: 'C2', label: 'DEMO Other Client' },
++    ],
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  expect(
++    (screen.getByLabelText('Commercial Client') as HTMLInputElement).value,
++  ).toBe('')
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C1' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C2' },
++  })
++  expect(
++    (screen.getByLabelText('Invoicing company') as HTMLInputElement).value,
++  ).toBe('')
++  expect(screen.getByLabelText('PO-A Valve assembly')).toBeTruthy()
++})
++it('preserves selected Client and company across refresh after Shipper prefill', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => ({
++    ...demoShipment,
++    clients: [...demoShipment.clients, { id: 'C2', label: 'Other' }],
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C1' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await waitFor(() => expect(p.onLoadShipment).toHaveBeenCalledTimes(2))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  expect(
++    (screen.getByLabelText('Commercial Client') as HTMLInputElement).value,
++  ).toBe('C1')
++  expect(
++    (screen.getByLabelText('Invoicing company') as HTMLInputElement).value,
++  ).toBe('I1')
++})
++it('allows successful-save navigation through the registered leave guard', async () => {
++  const p = props()
++  let guard: ((proceed: () => void) => void) | undefined
++  const proceed = vi.fn()
++  p.onSaved = vi.fn(() => guard!(proceed))
++  render(
++    <ShipmentInvoiceCreateForm
++      {...p}
++      registerNavigationGuard={(next) => {
++        guard = next
++        return () => {
++          guard = undefined
++        }
++      }}
++    />,
++  )
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Saved work' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSaved).toHaveBeenCalled())
++  expect(proceed).toHaveBeenCalledTimes(1)
++  expect(screen.queryByRole('dialog')).toBeNull()
++})
++it('does not submit the draft while a discard dialog is open', async () => {
++  const p = props()
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Dirty' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++  fireEvent.submit(
++    screen.getByRole('button', { name: 'Create draft' }).closest('form')!,
++  )
++  await Promise.resolve()
++  expect(p.onSubmit).not.toHaveBeenCalled()
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx
+new file mode 100644
+index 0000000..33b8bc3
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx
+@@ -0,0 +1,423 @@
++import { useEffect, useRef, useState } from 'react'
++import { useAppForm } from '#/components/form'
++import { useLocale } from '#/app/providers/labels-provider'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { createDraftDefaults } from '../create/defaults'
++import { labelsFor } from '../create/labels'
++import {
++  reconcileSelection,
++  toggleOrder,
++  toggleRow,
++  type Selection,
++} from '../create/selection'
++import { useDraftGuards } from '../create/use-draft-guards'
++import type {
++  ShipmentInvoiceCreateFormProps,
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++  SelectionEvaluation,
++} from '../create/types'
++import {
++  ShipmentInvoiceDocumentFields,
++  ShipmentInvoicePackingFields,
++} from './shipment-invoice-document-fields'
++import { ShipmentInvoiceShipmentPicker } from './shipment-invoice-shipment-picker'
++import { ShipmentInvoiceGoods } from './shipment-invoice-goods'
++import {
++  ShipmentInvoiceConfirmations,
++  type Confirmation,
++} from './shipment-invoice-confirmations'
++export function ShipmentInvoiceCreateForm(
++  props: ShipmentInvoiceCreateFormProps,
++) {
++  const { locale } = useLocale(),
++    l = labelsFor(locale)
++  const [shipment, setShipment] = useState<ShipmentPresentation | null>(null),
++    [selection, setSelection] = useState<Selection>([]),
++    [evaluation, setEvaluation] = useState<SelectionEvaluation | null>(null)
++  const [reading, setReading] = useState(false),
++    [evaluating, setEvaluating] = useState(false),
++    [saving, setSaving] = useState(false),
++    [dirty, setDirty] = useState(false),
++    [error, setError] = useState<'read' | 'evaluate' | 'save' | null>(null),
++    [removed, setRemoved] = useState<string[]>([]),
++    [confirmation, setConfirmation] = useState<Confirmation | null>(null)
++  const [readValid, setReadValid] = useState(false),
++    [savedId, setSavedId] = useState(''),
++    [navigationError, setNavigationError] = useState(false)
++  const savedIdentity = useRef('')
++  const initializedId = useRef('')
++  const request = useRef(0),
++    evalRequest = useRef(0),
++    pendingSave = useRef(false),
++    shipperEdited = useRef(false),
++    selectionRef = useRef<Selection>([]),
++    currentId = useRef(props.initialShipmentId ?? ''),
++    callbacks = useRef(props)
++  callbacks.current = props
++  const form = useAppForm({
++    defaultValues: createDraftDefaults(props.todayAthens),
++  })
++  useDraftGuards(dirty || saving)
++  const usable =
++    props.available &&
++    !!props.onLoadShipment &&
++    !!props.onEvaluateSelection &&
++    !!props.onSubmit &&
++    !!props.onSaved
++  const eligibleMap = (data: ShipmentPresentation) =>
++    Object.fromEntries(
++      data.orders.map((o) => [
++        o.id,
++        o.rows.filter((r) => !r.ineligibleReason).map((r) => r.id),
++      ]),
++    )
++  function change(key: keyof ShipmentInvoiceDraftValues, value: string) {
++    form.setFieldValue(key, value)
++    setDirty(true)
++    if (key === 'shipper') shipperEdited.current = true
++    if (key === 'clientId') form.setFieldValue('companyId', '')
++  }
++  function select(next: Selection) {
++    selectionRef.current = next
++    setSelection(next)
++  }
++  async function evaluate(id: string, next: Selection) {
++    const token = ++evalRequest.current
++    setEvaluating(true)
++    setEvaluation(null)
++    try {
++      const result = await callbacks.current.onEvaluateSelection?.(id, next)
++      if (token === evalRequest.current && id === currentId.current) {
++        setEvaluation(result ?? null)
++        setError(result ? null : 'evaluate')
++      }
++    } catch {
++      if (token === evalRequest.current && id === currentId.current)
++        setError('evaluate')
++    } finally {
++      if (token === evalRequest.current) setEvaluating(false)
++    }
++  }
++  async function load(id: string, reset: boolean) {
++    const token = ++request.current
++    evalRequest.current++
++    currentId.current = id
++    setReading(true)
++    setReadValid(false)
++    setEvaluation(null)
++    setError(null)
++    if (reset) {
++      form.reset({
++        ...createDraftDefaults(callbacks.current.todayAthens),
++        shipmentId: id,
++      })
++      select([])
++      setShipment(null)
++      setRemoved([])
++      shipperEdited.current = false
++      initializedId.current = ''
++    }
++    try {
++      const data = await callbacks.current.onLoadShipment?.(id)
++      if (token !== request.current) return
++      if (!data || data.id !== id || !data.eligible) {
++        setShipment(null)
++        setError('read')
++        return
++      }
++      setShipment(data)
++      setReadValid(true)
++      form.setFieldValue('shipmentId', id)
++      if (initializedId.current !== id)
++        form.setFieldValue(
++          'clientId',
++          data.clients.length === 1 ? data.clients[0].id : '',
++        )
++      initializedId.current = id
++      const reconciled = reconcileSelection(
++        selectionRef.current,
++        eligibleMap(data),
++      )
++      select(reconciled.selection)
++      if (reconciled.removed.length) {
++        setRemoved((old) => [
++          ...new Set([
++            ...old,
++            ...reconciled.removed.map((r) => `${r.orderId} / ${r.rowId}`),
++          ]),
++        ])
++        setDirty(true)
++      }
++      await evaluate(id, reconciled.selection)
++    } catch {
++      if (token === request.current) setError('read')
++    } finally {
++      if (token === request.current) setReading(false)
++    }
++  }
++  useEffect(() => {
++    if (props.initialShipmentId && props.available)
++      void load(props.initialShipmentId, true)
++    return () => {
++      request.current++
++      evalRequest.current++
++    }
++  }, []) // Entry context is fixed for this form instance; hosts remount for a different entry.
++  function ask(kind: Confirmation['kind'], accept: () => void) {
++    setConfirmation({
++      kind,
++      accept,
++      trigger:
++        document.activeElement instanceof HTMLElement
++          ? document.activeElement
++          : null,
++    })
++  }
++  function close() {
++    const trigger = confirmation?.trigger
++    setConfirmation(null)
++    requestAnimationFrame(() => trigger?.focus())
++  }
++  useEffect(
++    () =>
++      props.registerNavigationGuard?.((proceed) => {
++        if (savedIdentity.current) {
++          proceed()
++          return
++        }
++        if (pendingSave.current) return
++        if (dirty) ask('discard', proceed)
++        else proceed()
++      }),
++    [props.registerNavigationGuard, dirty],
++  )
++  function chooseShipment(id: string) {
++    if (id === currentId.current) return
++    const apply = () => {
++      setDirty(true)
++      void load(id, true)
++    }
++    if (dirty) ask('shipment', apply)
++    else apply()
++  }
++  function company(id: string) {
++    const company = shipment?.companies.find(
++      (c) => c.id === id && c.clientId === form.state.values.clientId,
++    )
++    form.setFieldValue('companyId', company?.id ?? '')
++    setDirty(true)
++    if (!company) return
++    const replace = () => {
++      form.setFieldValue('shipper', company.shipper)
++      shipperEdited.current = false
++    }
++    if (shipperEdited.current) ask('shipper', replace)
++    else replace()
++  }
++  function updateSelection(next: Selection) {
++    select(next)
++    setDirty(true)
++    setError(null)
++    void evaluate(currentId.current, next)
++  }
++  const canSave =
++    usable &&
++    readValid &&
++    !savedId &&
++    !confirmation &&
++    !!shipment?.eligible &&
++    !reading &&
++    !evaluating &&
++    !saving &&
++    !!evaluation &&
++    !evaluation.mixed &&
++    error !== 'read' &&
++    error !== 'evaluate'
++  function navigateSaved(id: string) {
++    try {
++      callbacks.current.onSaved!(id)
++      setNavigationError(false)
++    } catch {
++      setNavigationError(true)
++    }
++  }
++  async function submit() {
++    if (!canSave || pendingSave.current) return
++    pendingSave.current = true
++    setSaving(true)
++    setError(null)
++    try {
++      const id = await callbacks.current.onSubmit!(
++        form.state.values,
++        selectionRef.current,
++      )
++      setDirty(false)
++      savedIdentity.current = id
++      setSavedId(id)
++      navigateSaved(id)
++    } catch {
++      setError('save')
++    } finally {
++      pendingSave.current = false
++      setSaving(false)
++    }
++  }
++  return (
++    <form
++      className="mx-auto w-full max-w-5xl space-y-5 pb-6"
++      noValidate
++      onSubmit={(e) => {
++        e.preventDefault()
++        void submit()
++      }}
++    >
++      <header>
++        <p className="text-caption text-fg-muted">{l.draft}</p>
++        <h1 className="text-title font-semibold">{l.title}</h1>
++        <p className="mt-2 text-body-sm text-fg-muted">{l.intro}</p>
++      </header>
++      {!usable && <Alert tone="warning">{l.unavailable}</Alert>}
++      {navigationError && (
++        <Alert tone="warning">
++          {l.navigationError} {savedId}
++          <Button type="button" onClick={() => navigateSaved(savedId)}>
++            {l.openSaved}
++          </Button>
++        </Alert>
++      )}
++      <fieldset
++        disabled={saving || !!savedId || !props.available}
++        className="min-w-0 space-y-5 border-0 p-0"
++      >
++        <ShipmentInvoiceShipmentPicker
++          value={currentId.current}
++          label={shipment?.label}
++          onChoose={chooseShipment}
++          onSearch={props.onSearchShipments}
++          disabled={saving || !!savedId || !props.available}
++          labels={l}
++        />
++        {reading && <p role="status">{l.loading}</p>}
++        {error && (
++          <Alert tone="danger">
++            {error === 'save' ? l.saveError : l.error}
++            {error !== 'save' && (
++              <Button
++                type="button"
++                variant="ghost"
++                onClick={() =>
++                  error === 'evaluate'
++                    ? void evaluate(currentId.current, selectionRef.current)
++                    : void load(currentId.current, false)
++                }
++              >
++                {l.retry}
++              </Button>
++            )}
++          </Alert>
++        )}
++        <form.Subscribe selector={(state) => state.values}>
++          {(values) => (
++            <ShipmentInvoiceDocumentFields
++              values={values}
++              change={change}
++              chooseCompany={company}
++              shipment={shipment}
++              currencies={props.currencies}
++              labels={l}
++            />
++          )}
++        </form.Subscribe>
++        {shipment && (
++          <ShipmentInvoiceGoods
++            orders={shipment.orders}
++            selection={selection}
++            disabled={reading || saving || !readValid}
++            onRefresh={() => void load(currentId.current, false)}
++            onOrder={(id) =>
++              updateSelection(
++                toggleOrder(
++                  selectionRef.current,
++                  id,
++                  eligibleMap(shipment)[id] ?? [],
++                ),
++              )
++            }
++            onRow={(id, row) =>
++              updateSelection(
++                toggleRow(
++                  selectionRef.current,
++                  id,
++                  row,
++                  eligibleMap(shipment)[id] ?? [],
++                ),
++              )
++            }
++            onAllocation={props.onOpenAllocation}
++            labels={l}
++          />
++        )}
++        {removed.length > 0 && (
++          <Alert tone="warning">
++            {l.removed} {removed.join(', ')} {l.changed}
++          </Alert>
++        )}
++        {evaluation?.mixed && <Alert tone="warning">{l.mixed}</Alert>}
++        {!!evaluation?.overlaps.length && (
++          <Alert tone="warning">
++            {l.overlap} {evaluation.overlaps.join(', ')}
++          </Alert>
++        )}
++        <form.Subscribe selector={(state) => state.values}>
++          {(values) => (
++            <ShipmentInvoicePackingFields
++              values={values}
++              change={change}
++              labels={l}
++              currencies={props.currencies}
++            />
++          )}
++        </form.Subscribe>
++      </fieldset>
++      <footer className="sticky bottom-0 z-[var(--z-sticky)] flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4 shadow-card">
++        <div className="min-w-0">
++          <p className="text-caption text-fg-muted">{l.total}</p>
++          <output className="font-mono font-semibold">
++            {evaluating
++              ? l.loading
++              : evaluation && !evaluation.mixed
++                ? evaluation.totalDisplay
++                : '—'}
++          </output>
++        </div>
++        <div className="flex flex-wrap gap-2">
++          <Button
++            type="button"
++            variant="secondary"
++            disabled={saving}
++            onClick={() =>
++              dirty ? ask('discard', props.onCancel) : props.onCancel()
++            }
++          >
++            {l.cancel}
++          </Button>
++          <Button
++            type="submit"
++            disabled={!canSave}
++            loading={saving}
++            className="h-auto min-h-10 whitespace-normal py-2"
++          >
++            {l.create}
++          </Button>
++        </div>
++      </footer>
++      <ShipmentInvoiceConfirmations
++        value={confirmation}
++        close={close}
++        labels={l}
++      />
++    </form>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.test.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.test.tsx
+new file mode 100644
+index 0000000..1c9ad14
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.test.tsx
+@@ -0,0 +1,788 @@
++import {
++  act,
++  cleanup,
++  fireEvent,
++  render,
++  screen,
++  waitFor,
++} from '@testing-library/react'
++import { afterEach, expect, it, vi } from 'vitest'
++import { ShipmentInvoiceDetails } from './shipment-invoice-details'
++import {
++  InvoiceLifecycle,
++  type InvoiceRecordView,
++  type ShipmentInvoiceDetailsProps,
++} from '../details/types'
++import { createDraftDefaults } from '../create/defaults'
++import { demoShipment } from '../create/__fixtures__/shipment-invoice-create'
++afterEach(cleanup)
++export const record = (): InvoiceRecordView => ({
++  id: 'D1',
++  revision: 'v1',
++  lifecycle: InvoiceLifecycle.Finalized,
++  printedNumber: '1042',
++  shipmentLabel: 'DEMO-SHP-1042',
++  clientLabel: 'Saved client',
++  companyLabel: 'Removed company',
++  values: {
++    ...createDraftDefaults('2026-10-02'),
++    shipmentId: 'S1',
++    clientId: 'C1',
++    companyId: 'gone',
++    shipper: 'Saved custom shipper',
++    agent: 'Saved agent',
++    notes: 'Saved notes',
++  },
++  selection: [{ orderId: 'PO-A', rowIds: ['r2'] }],
++  orders: structuredClone(demoShipment.orders),
++  totalDisplay: 'EUR 120.00 frozen',
++  createdLabel: '02-10-2026',
++  updatedLabel: null,
++  review: {
++    revision: 'review-1',
++    required: false,
++    items: [],
++    canConfirm: true,
++    confirmedRevision: 'review-1',
++  },
++  validationMessages: [],
++  actions: {
++    edit: false,
++    finalize: false,
++    discard: false,
++    cancel: false,
++    replace: false,
++  },
++})
++export const props = (): ShipmentInvoiceDetailsProps => ({
++  state: { kind: 'ready' as const, record: record() },
++  currencies: ['EUR'],
++  todayAthens: '2026-11-06',
++})
++it('renders frozen saved values and only selected rows without live-source controls', () => {
++  const refresh = vi.fn()
++  render(<ShipmentInvoiceDetails {...props()} onRefreshGoods={refresh} />)
++  expect(screen.getByText('EUR 120.00 frozen')).toBeTruthy()
++  expect(screen.getByText('Saved custom shipper')).toBeTruthy()
++  expect(screen.getByText('Removed company')).toBeTruthy()
++  expect(screen.getByText('02-10-2026', { selector: 'dd' })).toBeTruthy()
++  expect(screen.getByText('PC')).toBeTruthy()
++  expect(screen.getByText('Seal kit')).toBeTruthy()
++  expect(screen.queryByText('Valve assembly')).toBeNull()
++  expect(screen.queryByRole('checkbox')).toBeNull()
++  expect(
++    screen.queryByRole('button', { name: /Refresh|Edit draft/ }),
++  ).toBeNull()
++  expect(refresh).not.toHaveBeenCalled()
++})
++it.each(['loading', 'error', 'forbidden', 'missing'] as const)(
++  'distinguishes %s reads from a usable invoice',
++  (kind) => {
++    render(<ShipmentInvoiceDetails {...props()} state={{ kind }} />)
++    expect(screen.getByRole('status').textContent).toBeTruthy()
++    expect(screen.queryByText('Saved custom shipper')).toBeNull()
++  },
++)
++
++const draft = () => ({
++  ...record(),
++  lifecycle: InvoiceLifecycle.Draft,
++  printedNumber: null,
++  actions: {
++    edit: true,
++    finalize: true,
++    discard: true,
++    cancel: false,
++    replace: false,
++  },
++})
++const editable = (): ShipmentInvoiceDetailsProps => ({
++  ...props(),
++  state: { kind: 'ready' as const, record: draft() },
++  onRefreshGoods: vi.fn(async () => ({
++    shipment: structuredClone(demoShipment),
++    review: record().review,
++  })),
++  onEvaluateDraft: vi.fn(async () => ({
++    evaluation: { totalDisplay: 'EUR 120.00', mixed: false, overlaps: [] },
++    review: record().review,
++    validationMessages: [],
++  })),
++  onSave: vi.fn(async () => ({ kind: 'success' as const, record: draft() })),
++})
++async function edit(p = editable()) {
++  const view = render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Edit draft' }))
++  await screen.findByLabelText('Shipper')
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Save changes',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  return { p, ...view }
++}
++it('edits saved values with locked Shipment and permits incomplete draft saving', async () => {
++  const p = editable()
++  await edit(p)
++  expect((screen.getByLabelText('Shipper') as HTMLInputElement).value).toBe(
++    'Saved custom shipper',
++  )
++  expect(screen.queryByRole('button', { name: 'Choose Shipment' })).toBeNull()
++  fireEvent.change(screen.getByLabelText('Agent'), { target: { value: '' } })
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Save changes',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
++  await waitFor(() =>
++    expect(p.onSave).toHaveBeenCalledWith(
++      'D1',
++      expect.objectContaining({
++        values: expect.objectContaining({
++          shipmentId: 'S1',
++          agent: '',
++          shipper: 'Saved custom shipper',
++        }),
++        expectedRevision: 'v1',
++      }),
++    ),
++  )
++})
++it('confirms discarding dirty edits and keeps working when dismissed', async () => {
++  await edit()
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'unsaved' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel editing' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'unsaved',
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel editing' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  expect(screen.getByText('Saved notes')).toBeTruthy()
++  expect(screen.queryByLabelText('Notes')).toBeNull()
++})
++it('refreshes goods without losing text and retains removal warnings across refreshes', async () => {
++  const p = editable()
++  await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'keep this' },
++  })
++  const updated = structuredClone(demoShipment)
++  updated.orders[0].rows = updated.orders[0].rows.filter((r) => r.id !== 'r2')
++  p.onRefreshGoods = vi.fn(async () => ({
++    shipment: updated,
++    review: {
++      ...record().review,
++      revision: 'r2',
++      required: true,
++      confirmedRevision: null,
++    },
++  }))
++  cleanup()
++  await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'keep this' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh goods' }))
++  await waitFor(() => expect(screen.getByText(/PO-A \/ r2/)).toBeTruthy())
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'keep this',
++  )
++  expect(
++    (
++      screen.getByRole('checkbox', {
++        name: 'PO-A Valve assembly',
++      }) as HTMLInputElement
++    ).checked,
++  ).toBe(false)
++})
++it('blocks saving and combined totals for mixed currency', async () => {
++  const p = editable()
++  p.onEvaluateDraft = vi.fn(async () => ({
++    evaluation: { totalDisplay: 'WRONG COMBINED', mixed: true, overlaps: [] },
++    review: record().review,
++    validationMessages: [],
++  }))
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Edit draft' }))
++  await screen.findByText(/Keep one currency before saving/)
++  expect(screen.queryByText('WRONG COMBINED')).toBeNull()
++  expect(
++    (screen.getByRole('button', { name: 'Save changes' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('records acknowledgement only for the reviewed revision and invalidates packing changes', async () => {
++  const p = editable()
++  p.onEvaluateDraft = vi.fn(async () => ({
++    evaluation: { totalDisplay: 'EUR 120', mixed: false, overlaps: [] },
++    review: { ...record().review, required: true, confirmedRevision: null },
++    validationMessages: [],
++  }))
++  await edit(p)
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm reviewed' }))
++  fireEvent.change(screen.getByLabelText('Packing details'), {
++    target: { value: 'different' },
++  })
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Save changes',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
++  await waitFor(() =>
++    expect(p.onSave).toHaveBeenCalledWith(
++      'D1',
++      expect.objectContaining({ reviewRevision: null }),
++    ),
++  )
++})
++
++it('blocks failed goods reads, retaining entered fields until a successful refresh', async () => {
++  const p = editable()
++  const { rerender } = await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'retained' },
++  })
++  p.onRefreshGoods = vi.fn(async () => {
++    throw Error('offline')
++  })
++  rerender(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh goods' }))
++  await screen.findByText(/Goods could not be refreshed/)
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'retained',
++  )
++  expect(
++    (screen.getByRole('button', { name: 'Save changes' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('ignores evaluation results arriving out of order', async () => {
++  const p = editable()
++  const { rerender } = await edit(p)
++  let resolveOld!: (
++    v: Awaited<ReturnType<NonNullable<typeof p.onEvaluateDraft>>>,
++  ) => void
++  p.onEvaluateDraft = vi
++    .fn()
++    .mockImplementationOnce(
++      () =>
++        new Promise((resolve) => {
++          resolveOld = resolve
++        }),
++    )
++    .mockResolvedValue({
++      evaluation: { totalDisplay: 'latest total', mixed: false, overlaps: [] },
++      review: record().review,
++      validationMessages: [],
++    })
++  rerender(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'first' },
++  })
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'second' },
++  })
++  await screen.findByText('latest total')
++  await act(async () =>
++    resolveOld({
++      evaluation: { totalDisplay: 'stale total', mixed: true, overlaps: [] },
++      review: record().review,
++      validationMessages: [],
++    }),
++  )
++  expect(screen.queryByText('stale total')).toBeNull()
++  expect(screen.getByText('latest total')).toBeTruthy()
++})
++it('preserves edited Shipper text when changing company and clears company after Client changes', async () => {
++  await edit()
++  fireEvent.change(screen.getByLabelText('Shipper'), {
++    target: { value: 'my shipper' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Keep my text' }))
++  expect((screen.getByLabelText('Shipper') as HTMLInputElement).value).toBe(
++    'my shipper',
++  )
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: '' },
++  })
++  expect(
++    (screen.getByLabelText('Invoicing company') as HTMLSelectElement).value,
++  ).toBe('')
++})
++it('guards host navigation and browser close while dirty', async () => {
++  const p = editable()
++  let guard!: (proceed: () => void) => void
++  p.registerNavigationGuard = (g) => {
++    guard = g
++    return () => {}
++  }
++  await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'retained' },
++  })
++  const proceed = vi.fn()
++  act(() => guard(proceed))
++  expect(proceed).not.toHaveBeenCalled()
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  const event = new Event('beforeunload', { cancelable: true })
++  window.dispatchEvent(event)
++  expect(event.defaultPrevented).toBe(true)
++})
++it('confirms finalization once and adopts returned frozen number', async () => {
++  const p = editable()
++  let resolve!: (value: import('../details/types').InvoiceActionResult) => void
++  p.onFinalize = vi.fn(
++    () =>
++      new Promise<import('../details/types').InvoiceActionResult>((r) => {
++        resolve = r
++      }),
++  )
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Finalize' }))
++  expect(screen.getByRole('dialog').textContent).toContain('Saved client')
++  expect(screen.getByRole('dialog').textContent).toContain('Seal kit')
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  expect(p.onFinalize).toHaveBeenCalledTimes(1)
++  await act(async () => resolve({ kind: 'success' as const, record: record() }))
++  expect(
++    screen.getByRole('heading', { name: 'Shipment Invoice · 1042' }),
++  ).toBeTruthy()
++  expect(screen.queryByRole('button', { name: 'Edit draft' })).toBeNull()
++})
++it('does not finalize when saved review or required validation is incomplete', () => {
++  const p = editable()
++  p.state = {
++    kind: 'ready' as const,
++    record: {
++      ...draft(),
++      review: { ...record().review, required: true, confirmedRevision: null },
++      validationMessages: ['Agent is required'],
++    },
++  }
++  p.onFinalize = vi.fn()
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Finalize' }))
++  expect(screen.queryByRole('dialog')).toBeNull()
++  expect(screen.getByText('Agent is required')).toBeTruthy()
++  expect(p.onFinalize).not.toHaveBeenCalled()
++})
++it('requires cancellation reason and retains frozen contents after confirmed cancellation', async () => {
++  const p = props()
++  p.state = {
++    kind: 'ready' as const,
++    record: { ...record(), actions: { ...record().actions, cancel: true } },
++  }
++  p.onCancelInvoice = vi.fn(async () => ({
++    kind: 'success' as const,
++    record: {
++      ...record(),
++      lifecycle: InvoiceLifecycle.Cancelled,
++      cancellationReason: 'wrong text',
++    },
++  }))
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel invoice' }))
++  expect(
++    (screen.getByRole('button', { name: 'Confirm' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  fireEvent.change(screen.getByLabelText('Cancellation reason'), {
++    target: { value: 'wrong text' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  await screen.findByText('Cancelled')
++  expect(screen.getByText('EUR 120.00 frozen')).toBeTruthy()
++  expect(p.onCancelInvoice).toHaveBeenCalledWith('D1', 'v1', 'wrong text')
++})
++it('discards only after confirmation and successful response', async () => {
++  const p = editable()
++  p.onDiscard = vi.fn(async () => ({ kind: 'success' as const }))
++  p.onOpenShipment = vi.fn()
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Discard draft' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect(p.onDiscard).not.toHaveBeenCalled()
++  fireEvent.click(screen.getByRole('button', { name: 'Discard draft' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  await waitFor(() => expect(p.onOpenShipment).toHaveBeenCalledWith('S1'))
++})
++it('preserves local input after conflict and blocks a second save', async () => {
++  const p = editable()
++  p.onSave = vi.fn(async () => ({
++    kind: 'conflict' as const,
++    latest: { kind: 'missing' as const },
++  }))
++  await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'copy me' },
++  })
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Save changes',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
++  await screen.findByText(/changed elsewhere/)
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'copy me',
++  )
++  expect(
++    (screen.getByRole('button', { name: 'Save changes' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('does not retry an uncertain finalize before reconciliation', async () => {
++  const p = editable()
++  p.onFinalize = vi.fn(async () => ({ kind: 'uncertain' as const }))
++  p.onReconcile = vi.fn(async () => ({
++    kind: 'ready' as const,
++    record: record(),
++  }))
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Finalize' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
++  await screen.findByText(/result is uncertain/)
++  expect(
++    (screen.getByRole('button', { name: 'Finalize' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  fireEvent.click(screen.getByRole('button', { name: 'Check saved state' }))
++  await screen.findByText('Finalized')
++  expect(p.onFinalize).toHaveBeenCalledTimes(1)
++})
++it('prepares an unsaved replacement then opens created identity without duplicate creation after navigation failure', async () => {
++  const p = props()
++  p.state = {
++    kind: 'ready' as const,
++    record: {
++      ...record(),
++      lifecycle: InvoiceLifecycle.Cancelled,
++      actions: { ...record().actions, replace: true },
++    },
++  }
++  p.onPrepareReplacement = vi.fn(async () => ({
++    values: record().values,
++    selection: record().selection,
++    shipment: structuredClone(demoShipment),
++    review: { ...record().review, required: true, confirmedRevision: null },
++  }))
++  p.onEvaluateDraft = editable().onEvaluateDraft
++  p.onCreateReplacement = vi.fn(async () => ({
++    kind: 'success' as const,
++    id: 'D2',
++  }))
++  p.onOpenInvoice = vi.fn().mockImplementationOnce(() => {
++    throw Error('nav')
++  })
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Create replacement' }))
++  await screen.findByLabelText('Notes')
++  expect(p.onCreateReplacement).not.toHaveBeenCalled()
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Saved notes',
++  )
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await screen.findByText(/navigation failed/)
++  fireEvent.click(screen.getByRole('button', { name: 'Open saved record' }))
++  expect(p.onCreateReplacement).toHaveBeenCalledTimes(1)
++  expect(p.onOpenInvoice).toHaveBeenLastCalledWith('D2')
++})
++
++it('replaces untouched company prefill again without an unnecessary second confirmation', async () => {
++  const p = editable()
++  await edit(p)
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.click(
++    screen.getByRole('button', { name: 'Replace with company details' }),
++  )
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I2' },
++  })
++  expect(screen.queryByRole('dialog')).toBeNull()
++  expect((screen.getByLabelText('Shipper') as HTMLInputElement).value).toBe(
++    'DEMO Company Two\nDemo address',
++  )
++})
++it('keeps renewed review visible after changing checked fields even if an evaluator returns the old acknowledgement', async () => {
++  await edit()
++  fireEvent.change(screen.getByLabelText('Packing details'), {
++    target: { value: 'changed packing' },
++  })
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Save changes',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  expect(screen.getByRole('button', { name: 'Confirm reviewed' })).toBeTruthy()
++})
++it('saves explicit acknowledgement for the current reviewed revision', async () => {
++  const p = editable()
++  p.onEvaluateDraft = vi.fn(async () => ({
++    evaluation: { totalDisplay: 'EUR 120', mixed: false, overlaps: [] },
++    review: { ...record().review, required: true, confirmedRevision: null },
++    validationMessages: [],
++  }))
++  await edit(p)
++  fireEvent.click(screen.getByRole('button', { name: 'Confirm reviewed' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
++  await waitFor(() =>
++    expect(p.onSave).toHaveBeenCalledWith(
++      'D1',
++      expect.objectContaining({ reviewRevision: 'review-1' }),
++    ),
++  )
++})
++it('blocks writes and retains local text when the same record is finalized elsewhere', async () => {
++  const p = editable()
++  const { rerender } = await edit(p)
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'local work' },
++  })
++  rerender(
++    <ShipmentInvoiceDetails
++      {...p}
++      state={{ kind: 'ready', record: { ...record(), revision: 'v2' } }}
++    />,
++  )
++  await screen.findByText(/changed elsewhere/)
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'local work',
++  )
++  expect(
++    (screen.getByRole('button', { name: 'Save changes' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('ignores a previous record refresh after opening a different record', async () => {
++  const p = editable()
++  let resolve!: (result: {
++    shipment: typeof demoShipment
++    review: InvoiceRecordView['review']
++  }) => void
++  p.onRefreshGoods = vi.fn(
++    () =>
++      new Promise<{
++        shipment: typeof demoShipment
++        review: InvoiceRecordView['review']
++      }>((r) => {
++        resolve = r
++      }),
++  )
++  const { rerender } = render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Edit draft' }))
++  rerender(
++    <ShipmentInvoiceDetails
++      {...p}
++      state={{
++        kind: 'ready',
++        record: {
++          ...record(),
++          id: 'D2',
++          values: { ...record().values, shipper: 'Second record' },
++        },
++      }}
++    />,
++  )
++  await act(async () =>
++    resolve({ shipment: demoShipment, review: record().review }),
++  )
++  expect(screen.getByText('Second record')).toBeTruthy()
++  expect(screen.queryByLabelText('Shipper')).toBeNull()
++})
++it('cancels unsaved replacement without invoking its create callback', async () => {
++  const p = props()
++  p.state = {
++    kind: 'ready',
++    record: {
++      ...record(),
++      lifecycle: InvoiceLifecycle.Cancelled,
++      actions: { ...record().actions, replace: true },
++    },
++  }
++  p.onPrepareReplacement = vi.fn(async () => ({
++    values: record().values,
++    selection: record().selection,
++    shipment: demoShipment,
++    review: record().review,
++  }))
++  p.onEvaluateDraft = editable().onEvaluateDraft
++  p.onCreateReplacement = vi.fn()
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Create replacement' }))
++  await screen.findByLabelText('Notes')
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel editing' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  expect(p.onCreateReplacement).not.toHaveBeenCalled()
++  expect(screen.getByText('EUR 120.00 frozen')).toBeTruthy()
++})
++
++it('ignores initial Retry completing after the host opens a different record', async () => {
++  const p = props()
++  let resolve!: (state: import('../details/types').InvoiceViewState) => void
++  p.onReload = vi.fn(
++    () =>
++      new Promise<import('../details/types').InvoiceViewState>((r) => {
++        resolve = r
++      }),
++  )
++  const { rerender } = render(
++    <ShipmentInvoiceDetails {...p} state={{ kind: 'error' }} />,
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++  rerender(
++    <ShipmentInvoiceDetails
++      {...p}
++      state={{
++        kind: 'ready',
++        record: {
++          ...record(),
++          id: 'D2',
++          values: { ...record().values, shipper: 'Newer record' },
++        },
++      }}
++    />,
++  )
++  await act(async () => resolve({ kind: 'ready', record: record() }))
++  expect(screen.getByText('Newer record')).toBeTruthy()
++  expect(screen.queryByText('Saved custom shipper')).toBeNull()
++})
++it.each(['loading', 'error'] as const)(
++  'blocks saved actions when a subsequent read is %s',
++  (kind) => {
++    const p = editable()
++    p.onFinalize = vi.fn()
++    const { rerender } = render(<ShipmentInvoiceDetails {...p} />)
++    rerender(<ShipmentInvoiceDetails {...p} state={{ kind }} />)
++    expect(
++      (screen.getByRole('button', { name: 'Finalize' }) as HTMLButtonElement)
++        .disabled,
++    ).toBe(true)
++    expect(screen.getByRole('status').textContent).toContain(
++      kind === 'loading' ? 'Loading invoice' : 'Unable to load',
++    )
++  },
++)
++
++it('requires reconciliation if a host read invalidates a pending replacement result', async () => {
++  const p = props()
++  const original = {
++    ...record(),
++    lifecycle: InvoiceLifecycle.Cancelled,
++    actions: { ...record().actions, replace: true },
++  }
++  p.state = { kind: 'ready', record: original }
++  p.onPrepareReplacement = vi.fn(async () => ({
++    values: record().values,
++    selection: record().selection,
++    shipment: demoShipment,
++    review: record().review,
++  }))
++  p.onEvaluateDraft = editable().onEvaluateDraft
++  p.onRefreshGoods = editable().onRefreshGoods
++  let resolve!: (value: import('../details/types').InvoiceActionResult) => void
++  p.onCreateReplacement = vi.fn(
++    () =>
++      new Promise<import('../details/types').InvoiceActionResult>((r) => {
++        resolve = r
++      }),
++  )
++  const { rerender } = render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Create replacement' }))
++  await screen.findByLabelText('Notes')
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  rerender(<ShipmentInvoiceDetails {...p} state={{ kind: 'loading' }} />)
++  rerender(
++    <ShipmentInvoiceDetails
++      {...p}
++      state={{ kind: 'ready', record: original }}
++    />,
++  )
++  await act(async () => resolve({ kind: 'success', id: 'D2' }))
++  expect(screen.getByText(/result is uncertain/)).toBeTruthy()
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  expect(p.onCreateReplacement).toHaveBeenCalledTimes(1)
++})
++
++it('identifies replacement as unsaved rather than displaying the original printed identity as its heading', async () => {
++  const p = props()
++  p.state = {
++    kind: 'ready',
++    record: {
++      ...record(),
++      lifecycle: InvoiceLifecycle.Cancelled,
++      actions: { ...record().actions, replace: true },
++    },
++  }
++  p.onPrepareReplacement = vi.fn(async () => ({
++    values: record().values,
++    selection: record().selection,
++    shipment: demoShipment,
++    review: record().review,
++  }))
++  p.onEvaluateDraft = editable().onEvaluateDraft
++  p.onCreateReplacement = vi.fn()
++  render(<ShipmentInvoiceDetails {...p} />)
++  fireEvent.click(screen.getByRole('button', { name: 'Create replacement' }))
++  await screen.findByLabelText('Notes')
++  expect(
++    screen.getByRole('heading', { name: 'Create replacement' }),
++  ).toBeTruthy()
++  expect(
++    screen.getByRole('button', { name: 'Original invoice: 1042' }),
++  ).toBeTruthy()
++  expect(
++    screen.queryByRole('heading', { name: 'Shipment Invoice · 1042' }),
++  ).toBeNull()
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.tsx
+new file mode 100644
+index 0000000..4cf4e77
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-details.tsx
+@@ -0,0 +1,432 @@
++import { useEffect, useRef, useState } from 'react'
++import { useLocale } from '#/app/providers/labels-provider'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { FormField, Textarea } from '#/components/ui/input'
++import { labelsFor } from '../create/labels'
++import { detailsLabelsFor } from '../details/labels'
++import {
++  InvoiceLifecycle,
++  type InvoiceViewState,
++  type InvoiceRecordView,
++  type ShipmentInvoiceDetailsProps,
++} from '../details/types'
++import { useInvoiceActions } from '../details/use-invoice-actions'
++import { ShipmentInvoiceLifecycleDialog } from './shipment-invoice-lifecycle-dialog'
++import { useInvoiceEditor } from '../details/use-invoice-editor'
++import { ShipmentInvoiceReadonly } from './shipment-invoice-readonly'
++import {
++  InvoiceSection,
++  ShipmentInvoiceDocumentFields,
++  ShipmentInvoicePackingFields,
++} from './shipment-invoice-document-fields'
++import { ShipmentInvoiceGoods } from './shipment-invoice-goods'
++import { ShipmentInvoiceConfirmations } from './shipment-invoice-confirmations'
++import { ShipmentInvoiceReview } from './shipment-invoice-review'
++export function ShipmentInvoiceDetails(props: ShipmentInvoiceDetailsProps) {
++  const { locale } = useLocale(),
++    d = detailsLabelsFor(locale),
++    last = useRef<InvoiceRecordView | null>(null)
++  const [loaded, setLoaded] = useState<{
++    source: InvoiceViewState
++    view: InvoiceViewState
++  } | null>(null)
++  const state = loaded?.source === props.state ? loaded.view : props.state
++  const source = useRef(props.state)
++  source.current = props.state
++  const retryGeneration = useRef(0),
++    retryLock = useRef(false)
++  const [retrying, setRetrying] = useState(false),
++    [loadError, setLoadError] = useState(false)
++  useEffect(() => {
++    retryGeneration.current++
++    retryLock.current = false
++    setRetrying(false)
++    setLoadError(false)
++  }, [props.state])
++  useEffect(
++    () => () => {
++      retryGeneration.current++
++    },
++    [],
++  )
++  async function reload() {
++    if (retryLock.current || !props.onReload) return
++    retryLock.current = true
++    setRetrying(true)
++    setLoadError(false)
++    const token = ++retryGeneration.current,
++      requestedSource = props.state
++    try {
++      const result = await props.onReload()
++      if (
++        token === retryGeneration.current &&
++        source.current === requestedSource
++      )
++        setLoaded({ source: requestedSource, view: result })
++    } catch {
++      if (
++        token === retryGeneration.current &&
++        source.current === requestedSource
++      )
++        setLoadError(true)
++    } finally {
++      if (token === retryGeneration.current) {
++        retryLock.current = false
++        setRetrying(false)
++      }
++    }
++  }
++  if (state.kind === 'ready') last.current = state.record
++  if (!last.current)
++    return (
++      <div role="status">
++        {loadError ? d.failed : state.kind !== 'ready' && d[state.kind]}
++        {state.kind === 'error' && props.onReload && (
++          <Button disabled={retrying} onClick={() => void reload()}>
++            {d.retry}
++          </Button>
++        )}
++      </div>
++    )
++  return (
++    <InvoiceDetailsSession
++      key={last.current.id}
++      {...props}
++      state={state}
++      initial={last.current}
++    />
++  )
++}
++function InvoiceDetailsSession(
++  props: ShipmentInvoiceDetailsProps & { initial: InvoiceRecordView },
++) {
++  const { locale } = useLocale(),
++    l = labelsFor(locale),
++    d = detailsLabelsFor(locale),
++    e = useInvoiceEditor(props, props.initial),
++    r = e.record,
++    a = useInvoiceActions(props, e, d)
++  const disabled = a.blocked
++  const goodLabels = {
++    ...l,
++    refresh: d.refresh,
++    mixed: d.mixed,
++    packing: d.packing,
++  }
++  return (
++    <main className="mx-auto flex w-full max-w-5xl min-w-0 flex-col gap-4 p-4 [&_button]:h-auto [&_button]:min-h-10 [&_button]:whitespace-normal [&_button]:py-2">
++      <header className="flex flex-wrap items-start justify-between gap-3">
++        <div className="min-w-0">
++          <h1 className="break-words text-xl font-semibold">
++            {e.replacing
++              ? d.replace
++              : `${d.title} · ${r.printedNumber ?? r.id}`}
++          </h1>
++          <p>
++            {e.replacing || r.lifecycle === InvoiceLifecycle.Draft
++              ? d.draft
++              : r.lifecycle === InvoiceLifecycle.Finalized
++                ? d.finalized
++                : d.cancelled}
++          </p>
++          {!e.replacing && (
++            <p>
++              {d.created}: {r.createdLabel} · {d.updated}:{' '}
++              {r.updatedLabel ?? 'N/A'}
++            </p>
++          )}
++        </div>
++        <Button
++          variant="secondary"
++          disabled={e.busy || !props.onOpenShipment}
++          onClick={() =>
++            e.navigate(() => props.onOpenShipment?.(r.values.shipmentId))
++          }
++        >
++          {l.shipment}: {r.shipmentLabel}
++        </Button>
++      </header>
++      {e.replacing && (
++        <Button variant="secondary" disabled={e.busy} onClick={e.cancel}>
++          {d.original}: {r.printedNumber ?? r.id}
++        </Button>
++      )}
++      {!e.replacing && r.original && (
++        <Button
++          variant="secondary"
++          disabled={e.busy || !props.onOpenInvoice}
++          onClick={() =>
++            e.navigate(() => props.onOpenInvoice?.(r.original!.id))
++          }
++        >
++          {d.original}: {r.original.label}
++        </Button>
++      )}
++      {r.replacement && (
++        <Button
++          variant="secondary"
++          disabled={e.busy || !props.onOpenInvoice}
++          onClick={() =>
++            e.navigate(() => props.onOpenInvoice?.(r.replacement!.id))
++          }
++        >
++          {d.replacement}: {r.replacement.label}
++        </Button>
++      )}
++      {!e.replacing && r.cancellationReason && (
++        <p className="whitespace-pre-wrap break-words">
++          {d.reason}: {r.cancellationReason}
++        </p>
++      )}
++      {e.readState && (
++        <div role="status">
++          {d[e.readState]}
++          {e.readState === 'error' && (
++            <Button disabled={e.busy || !props.onReload} onClick={a.reload}>
++              {d.reload}
++            </Button>
++          )}
++        </div>
++      )}
++      {e.conflict && <Alert tone="warning" title={d.conflict} />}
++      {e.uncertain && (
++        <Alert tone="warning" title={d.uncertain}>
++          <Button disabled={e.busy || !props.onReconcile} onClick={a.reconcile}>
++            {d.reconcile}
++          </Button>
++        </Alert>
++      )}
++      {e.conflict && (
++        <Button disabled={e.busy || !props.onReload} onClick={a.reload}>
++          {d.reload}
++        </Button>
++      )}
++      {a.latest && (
++        <p>
++          {a.latest.kind === 'ready'
++            ? `${a.latest.record.id} · ${a.latest.record.revision} · ${a.latest.record.lifecycle}`
++            : d[a.latest.kind]}
++        </p>
++      )}
++      {a.messages.length > 0 && (
++        <Alert tone="warning" title={d.review}>
++          <ul>
++            {a.messages.map((message) => (
++              <li key={message}>{message}</li>
++            ))}
++          </ul>
++        </Alert>
++      )}
++      {a.destination && (
++        <Alert
++          tone="info"
++          title={a.navigationError ? d.navigationError : d.openSaved}
++        >
++          <Button onClick={() => a.navigateSaved()}>{d.openSaved}</Button>
++        </Alert>
++      )}
++      {e.error && (
++        <Alert
++          tone="danger"
++          title={e.error in d ? d[e.error as keyof typeof d] : e.error}
++        />
++      )}
++      {e.busy && <p role="status">{d.pending}</p>}
++      {e.editing ? (
++        <form
++          onSubmit={(event) => {
++            event.preventDefault()
++            a.save()
++          }}
++          className="flex min-w-0 flex-col gap-4"
++        >
++          <p>{d.locked}</p>
++          {e.replacing && <p>{d.replacementInfo}</p>}
++          <fieldset disabled={disabled} className="flex min-w-0 flex-col gap-4">
++            <e.form.Subscribe selector={(s) => s.values}>
++              {(values) => (
++                <>
++                  <ShipmentInvoiceDocumentFields
++                    values={values}
++                    change={e.change}
++                    labels={goodLabels}
++                    shipment={e.shipment}
++                    currencies={props.currencies}
++                    chooseCompany={e.chooseCompany}
++                    savedReferences={{
++                      clientLabel: r.clientLabel,
++                      companyLabel: r.companyLabel,
++                    }}
++                  />
++                  <ShipmentInvoiceGoods
++                    showRowIdentity
++                    orders={e.shipment?.orders ?? r.orders}
++                    selection={e.selection}
++                    disabled={disabled || e.reading}
++                    onOrder={e.order}
++                    onRow={e.row}
++                    onRefresh={() => void e.refresh()}
++                    onAllocation={
++                      props.onOpenAllocation
++                        ? (id) => e.navigate(() => props.onOpenAllocation?.(id))
++                        : undefined
++                    }
++                    labels={goodLabels}
++                  />
++                  <InvoiceSection title={l.total}>
++                    {e.reading || e.evaluating ? (
++                      <p role="status">{l.loading}</p>
++                    ) : e.evaluation?.evaluation.mixed ? (
++                      <Alert tone="warning" title={d.mixed} />
++                    ) : (
++                      <p className="font-mono">
++                        {e.evaluation?.evaluation.totalDisplay ?? '—'}
++                      </p>
++                    )}
++                    {e.evaluation?.evaluation.overlaps.map((id) => (
++                      <p key={id}>
++                        {l.overlap} {id}
++                      </p>
++                    ))}
++                  </InvoiceSection>
++                  <ShipmentInvoicePackingFields
++                    values={values}
++                    change={e.change}
++                    labels={goodLabels}
++                    currencies={props.currencies}
++                    separateNotes
++                  />
++                  <InvoiceSection title={l.notes}>
++                    <FormField label={l.notes} htmlFor="details-notes">
++                      <Textarea
++                        id="details-notes"
++                        value={values.notes}
++                        onChange={(event) =>
++                          e.change('notes', event.target.value)
++                        }
++                      />
++                    </FormField>
++                  </InvoiceSection>
++                </>
++              )}
++            </e.form.Subscribe>
++            <ShipmentInvoiceReview
++              review={e.review}
++              warnings={e.warnings}
++              ack={e.ack}
++              disabled={disabled || e.reading || e.evaluating || !e.readValid}
++              onConfirm={e.confirmReviewed}
++              labels={d}
++            />
++          </fieldset>
++          <div className="flex flex-wrap gap-2">
++            <Button
++              type="button"
++              variant="secondary"
++              disabled={e.busy}
++              onClick={e.cancel}
++            >
++              {d.cancelEdit}
++            </Button>
++            <Button
++              type="submit"
++              disabled={
++                disabled ||
++                e.reading ||
++                e.evaluating ||
++                !e.readValid ||
++                !e.evaluation ||
++                e.evaluation.evaluation.mixed ||
++                !(e.replacing ? props.onCreateReplacement : props.onSave)
++              }
++            >
++              {e.replacing ? l.create : d.save}
++            </Button>
++          </div>
++        </form>
++      ) : (
++        <>
++          <div className="flex flex-wrap gap-2">
++            {r.lifecycle === InvoiceLifecycle.Draft && r.actions.edit && (
++              <Button
++                disabled={
++                  disabled ||
++                  !props.onRefreshGoods ||
++                  !props.onEvaluateDraft ||
++                  !props.onSave
++                }
++                onClick={e.start}
++              >
++                {d.edit}
++              </Button>
++            )}
++            {r.lifecycle === InvoiceLifecycle.Draft && r.actions.finalize && (
++              <Button
++                disabled={disabled || !props.onFinalize}
++                onClick={() => a.open('finalize')}
++              >
++                {d.finalize}
++              </Button>
++            )}
++            {r.lifecycle === InvoiceLifecycle.Draft && r.actions.discard && (
++              <Button
++                variant="secondary"
++                disabled={disabled || !props.onDiscard}
++                onClick={() => a.open('discard')}
++              >
++                {d.discard}
++              </Button>
++            )}
++            {r.lifecycle === InvoiceLifecycle.Finalized && r.actions.cancel && (
++              <Button
++                variant="secondary"
++                disabled={disabled || !props.onCancelInvoice}
++                onClick={() => a.open('cancel')}
++              >
++                {d.cancelInvoice}
++              </Button>
++            )}
++            {r.lifecycle === InvoiceLifecycle.Cancelled &&
++              r.actions.replace && (
++                <Button
++                  disabled={
++                    disabled ||
++                    !props.onPrepareReplacement ||
++                    !props.onEvaluateDraft ||
++                    !props.onCreateReplacement
++                  }
++                  onClick={() => void a.prepare()}
++                >
++                  {d.replace}
++                </Button>
++              )}
++          </div>
++          <ShipmentInvoiceReadonly record={r} labels={goodLabels} details={d} />
++          <ShipmentInvoiceReview
++            review={r.review}
++            warnings={[]}
++            ack={r.review.confirmedRevision}
++            disabled
++            labels={d}
++          />
++        </>
++      )}
++      <ShipmentInvoiceLifecycleDialog
++        kind={a.dialog}
++        record={r}
++        reason={a.reason}
++        setReason={a.setReason}
++        busy={e.busy}
++        close={a.close}
++        confirm={a.confirm}
++        labels={d}
++      />
++      <ShipmentInvoiceConfirmations
++        value={e.confirmation}
++        close={e.closeConfirmation}
++        labels={l}
++      />
++    </main>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx
+new file mode 100644
+index 0000000..2aa1fd2
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx
+@@ -0,0 +1,213 @@
++import { Card, CardHeader, CardTitle, CardBody } from '#/components/ui/card'
++import { Input, Textarea, FormField } from '#/components/ui/input'
++import { Select } from '#/components/ui/select'
++import { DatePicker } from '#/components/ui/date-picker'
++import { formatIsoDate, parseIsoDate } from '#/lib/date'
++import type { ReactNode } from 'react'
++import type { InvoiceLabels } from '../create/labels'
++import type {
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++} from '../create/types'
++export function InvoiceSection({
++  title,
++  children,
++}: {
++  title: string
++  children: ReactNode
++}) {
++  return (
++    <Card flush>
++      <CardHeader>
++        <CardTitle>{title}</CardTitle>
++      </CardHeader>
++      <CardBody>{children}</CardBody>
++    </Card>
++  )
++}
++export function ShipmentInvoiceDocumentFields({
++  values,
++  change,
++  labels: l,
++  shipment,
++  chooseCompany,
++  savedReferences,
++}: {
++  values: ShipmentInvoiceDraftValues
++  change: (key: keyof ShipmentInvoiceDraftValues, value: string) => void
++  labels: InvoiceLabels
++  shipment: ShipmentPresentation | null
++  currencies: string[]
++  savedReferences?: { clientLabel: string; companyLabel: string }
++  chooseCompany: (id: string) => void
++}) {
++  const text = (key: keyof ShipmentInvoiceDraftValues, multiline = false) => (
++    <FormField
++      key={key}
++      label={l[key as keyof InvoiceLabels]}
++      htmlFor={`invoice-${key}`}
++    >
++      {multiline ? (
++        <Textarea
++          id={`invoice-${key}`}
++          value={values[key]}
++          onChange={(e) => change(key, e.target.value)}
++        />
++      ) : (
++        <Input
++          id={`invoice-${key}`}
++          value={values[key]}
++          onChange={(e) => change(key, e.target.value)}
++        />
++      )}
++    </FormField>
++  )
++  return (
++    <>
++      <InvoiceSection title={l.details}>
++        <div className="grid gap-4 sm:grid-cols-2">
++          <FormField label={l.client} htmlFor="invoice-client">
++            <Select
++              id="invoice-client"
++              value={values.clientId}
++              onChange={(e) => change('clientId', e.target.value)}
++            >
++              <option value="">—</option>
++              {savedReferences &&
++                values.clientId &&
++                !shipment?.clients.some((x) => x.id === values.clientId) && (
++                  <option value={values.clientId}>
++                    {savedReferences.clientLabel || values.clientId}
++                  </option>
++                )}
++              {shipment?.clients.map((x) => (
++                <option key={x.id} value={x.id}>
++                  {x.label}
++                </option>
++              ))}
++            </Select>
++          </FormField>
++          <FormField label={l.company} htmlFor="invoice-company">
++            <Select
++              id="invoice-company"
++              value={values.companyId}
++              disabled={!values.clientId}
++              onChange={(e) => chooseCompany(e.target.value)}
++            >
++              <option value="">—</option>
++              {savedReferences &&
++                values.companyId &&
++                !shipment?.companies.some(
++                  (x) =>
++                    x.id === values.companyId && x.clientId === values.clientId,
++                ) && (
++                  <option value={values.companyId}>
++                    {savedReferences.companyLabel || values.companyId}
++                  </option>
++                )}
++              {shipment?.companies
++                .filter((x) => x.clientId === values.clientId)
++                .map((x) => (
++                  <option key={x.id} value={x.id}>
++                    {x.label}
++                  </option>
++                ))}
++            </Select>
++          </FormField>
++          <FormField label={l.invoiceType} htmlFor="invoice-type">
++            <Select
++              id="invoice-type"
++              value={values.invoiceType}
++              onChange={(e) => change('invoiceType', e.target.value)}
++            >
++              {[
++                'Invoice',
++                'Commercial Invoice',
++                'Pro-forma Invoice',
++                'Shipping Invoice',
++              ].map((x) => (
++                <option key={x}>{x}</option>
++              ))}
++            </Select>
++          </FormField>
++          <FormField label={l.documentDate}>
++            <DatePicker
++              value={parseIsoDate(values.documentDate)}
++              onChange={(d) => change('documentDate', formatIsoDate(d))}
++              format={(d) =>
++                `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
++              }
++            />
++          </FormField>
++          {text('subtitle')}
++          <p className="text-body-sm text-fg-muted">{l.number}</p>
++        </div>
++      </InvoiceSection>
++      <InvoiceSection title={l.parties}>
++        <div className="grid gap-4 sm:grid-cols-2">
++          {(['shipper', 'consignee', 'agent', 'notify'] as const).map((k) =>
++            text(k, true),
++          )}
++        </div>
++      </InvoiceSection>
++    </>
++  )
++}
++export function ShipmentInvoicePackingFields({
++  values,
++  change,
++  labels: l,
++  currencies,
++  separateNotes = false,
++}: {
++  values: ShipmentInvoiceDraftValues
++  change: (key: keyof ShipmentInvoiceDraftValues, value: string) => void
++  labels: InvoiceLabels
++  currencies: string[]
++  separateNotes?: boolean
++}) {
++  return (
++    <InvoiceSection title={l.packing}>
++      <div className="grid gap-4 sm:grid-cols-2">
++        {(
++          ['packingDetails', 'totalWeightKg', 'partialAmount', 'notes'] as const
++        )
++          .filter((key) => !separateNotes || key !== 'notes')
++          .map((key) => (
++            <FormField key={key} label={l[key]} htmlFor={`invoice-${key}`}>
++              {key === 'notes' || key === 'packingDetails' ? (
++                <Textarea
++                  id={`invoice-${key}`}
++                  value={values[key]}
++                  onChange={(e) => change(key, e.target.value)}
++                />
++              ) : (
++                <Input
++                  id={`invoice-${key}`}
++                  inputMode="decimal"
++                  value={values[key]}
++                  onChange={(e) => change(key, e.target.value)}
++                />
++              )}
++            </FormField>
++          ))}
++        <FormField label={l.partialCurrency} htmlFor="invoice-currency">
++          <Select
++            id="invoice-currency"
++            value={values.partialCurrency}
++            onChange={(e) => change('partialCurrency', e.target.value)}
++          >
++            {!currencies.includes(values.partialCurrency) && (
++              <option value={values.partialCurrency}>
++                {values.partialCurrency || '—'}
++              </option>
++            )}
++            {currencies.map((x) => (
++              <option key={x}>{x}</option>
++            ))}
++          </Select>
++        </FormField>
++      </div>
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx
+new file mode 100644
+index 0000000..3415c4c
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx
+@@ -0,0 +1,175 @@
++import { Checkbox } from '#/components/ui/choice'
++import { Table, THead, TBody, TR, TH, TD } from '#/components/ui/table'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import type { InvoiceOrder } from '../create/types'
++import type { Selection } from '../create/selection'
++import type { InvoiceLabels } from '../create/labels'
++export function ShipmentInvoiceGoods({
++  orders,
++  readOnly = false,
++  showRowIdentity = false,
++  selection,
++  disabled,
++  onOrder,
++  onRow,
++  onRefresh,
++  onAllocation,
++  labels: l,
++}: {
++  readOnly?: boolean
++  showRowIdentity?: boolean
++  orders: InvoiceOrder[]
++  selection: Selection
++  disabled: boolean
++  onOrder: (id: string) => void
++  onRow: (order: string, row: string) => void
++  onRefresh: () => void
++  onAllocation?: (id: string) => void
++  labels: InvoiceLabels
++}) {
++  const sorted = [
++    ...selection
++      .map((g) => orders.find((o) => o.id === g.orderId))
++      .filter((o): o is InvoiceOrder => !!o),
++    ...(readOnly
++      ? []
++      : orders.filter((o) => !selection.some((g) => g.orderId === o.id))),
++  ]
++  return (
++    <InvoiceSection title={l.goods}>
++      {!readOnly && (
++        <Button
++          type="button"
++          variant="secondary"
++          disabled={disabled}
++          onClick={onRefresh}
++        >
++          {l.refresh}
++        </Button>
++      )}
++      {!orders.length && <p className="mt-3 text-fg-muted">{l.empty}</p>}
++      {sorted.map((order) => {
++        const selected =
++          selection.find((g) => g.orderId === order.id)?.rowIds ?? []
++        const eligible = order.rows.filter((r) =>
++          readOnly ? selected.includes(r.id) : !r.ineligibleReason,
++        )
++        const unresolved = order.rows.filter((r) => r.ineligibleReason)
++        return (
++          <section
++            key={order.id}
++            className="mt-4 min-w-0 rounded-lg border border-border p-3"
++          >
++            {readOnly ? (
++              <h3 className="font-semibold">{order.id}</h3>
++            ) : (
++              <Checkbox
++                label={order.id}
++                checked={
++                  !!eligible.length &&
++                  eligible.every((r) => selected.includes(r.id))
++                }
++                indeterminate={
++                  selected.length > 0 && selected.length < eligible.length
++                }
++                disabled={disabled || !eligible.length}
++                onChange={() => onOrder(order.id)}
++              />
++            )}
++            <dl className="my-3 grid grid-cols-2 gap-2 text-caption sm:grid-cols-4">
++              {[
++                [l.stock, order.id],
++                [l.client, order.client],
++                [l.supplier, order.supplier],
++                [l.message, order.messageNumber],
++                [l.origin, order.origin],
++                [l.destination, order.destination],
++                [l.status, order.status],
++              ].map(([key, value]) => (
++                <div key={key} className="min-w-0 break-words">
++                  <dt className="text-fg-muted">{key}</dt>
++                  <dd>{value || '—'}</dd>
++                </div>
++              ))}
++            </dl>
++            <div className="overflow-x-auto">
++              <Table>
++                <THead>
++                  <TR>
++                    {!readOnly && <TH>{l.selectGoods}</TH>}
++                    <TH>{l.description}</TH>
++                    <TH>{l.hs}</TH>
++                    <TH>{l.quantity}</TH>
++                    <TH>{l.unit}</TH>
++                    <TH>{l.amount}</TH>
++                    <TH>{l.currency}</TH>
++                  </TR>
++                </THead>
++                <TBody>
++                  {eligible.map((row) => (
++                    <TR key={row.id}>
++                      {!readOnly && (
++                        <TD>
++                          <Checkbox
++                            aria-label={`${order.id} ${row.description}`}
++                            checked={selected.includes(row.id)}
++                            disabled={disabled}
++                            onChange={() => onRow(order.id, row.id)}
++                          />
++                        </TD>
++                      )}
++                      <TD>
++                        {row.description}
++                        {showRowIdentity && (
++                          <span className="block text-caption text-fg-muted">
++                            {row.id}
++                          </span>
++                        )}
++                      </TD>
++                      <TD>{row.hsCode || '—'}</TD>
++                      <TD>{row.quantity}</TD>
++                      <TD>{row.unit}</TD>
++                      <TD className="font-mono">{row.amountDisplay}</TD>
++                      <TD>{row.currency}</TD>
++                    </TR>
++                  ))}
++                </TBody>
++              </Table>
++            </div>
++            {!readOnly && unresolved.length > 0 && (
++              <div className="mt-3">
++                <Alert tone="warning" title={l.unresolved}>
++                  {unresolved.map((row) => (
++                    <div key={row.id}>
++                      <Checkbox
++                        disabled
++                        label={`${row.description} — ${row.ineligibleReason}`}
++                      />
++                    </div>
++                  ))}
++                  <Button
++                    type="button"
++                    variant="secondary"
++                    className="mt-2 h-auto min-h-10 whitespace-normal py-2"
++                    disabled={!onAllocation || disabled}
++                    onClick={() => onAllocation?.(order.id)}
++                  >
++                    {l.allocation}
++                  </Button>
++                  {!onAllocation && <p>{l.allocationUnavailable}</p>}
++                </Alert>
++              </div>
++            )}
++          </section>
++        )
++      })}
++      {!selection.length && (
++        <p className="mt-3 text-body-sm text-fg-muted">
++          {readOnly ? l.empty : l.noRows}
++        </p>
++      )}
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-lifecycle-dialog.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-lifecycle-dialog.tsx
+new file mode 100644
+index 0000000..a85272b
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-lifecycle-dialog.tsx
+@@ -0,0 +1,90 @@
++import { Modal } from '#/components/ui/modal'
++import { Button } from '#/components/ui/button'
++import { FormField, Textarea } from '#/components/ui/input'
++import type { InvoiceRecordView } from '../details/types'
++import type { DetailsLabels } from '../details/labels'
++export function ShipmentInvoiceLifecycleDialog({
++  kind,
++  record: r,
++  reason,
++  setReason,
++  busy,
++  close,
++  confirm,
++  labels: d,
++}: {
++  kind: 'finalize' | 'discard' | 'cancel' | null
++  record: InvoiceRecordView
++  reason: string
++  setReason: (value: string) => void
++  busy: boolean
++  close: () => void
++  confirm: () => void
++  labels: DetailsLabels
++}) {
++  return (
++    <Modal
++      open={!!kind}
++      onClose={close}
++      hideClose={busy}
++      title={
++        kind === 'finalize'
++          ? d.finalize
++          : kind === 'discard'
++            ? d.confirmDiscard
++            : d.confirmCancel
++      }
++      footer={
++        <div className="flex flex-wrap gap-2">
++          <Button variant="secondary" disabled={busy} onClick={close}>
++            {d.back}
++          </Button>
++          <Button
++            disabled={busy || (kind === 'cancel' && !reason.trim())}
++            onClick={confirm}
++          >
++            {d.confirm}
++          </Button>
++        </div>
++      }
++    >
++      <p>
++        {r.printedNumber ?? r.id} · {r.shipmentLabel}
++      </p>
++      {kind === 'finalize' && (
++        <>
++          <p>
++            {r.clientLabel} · {r.companyLabel}
++          </p>
++          <ul>
++            {r.selection.flatMap((group) =>
++              group.rowIds.map((id) => {
++                const row = r.orders
++                  .find((order) => order.id === group.orderId)
++                  ?.rows.find((row) => row.id === id)
++                return (
++                  <li key={`${group.orderId}/${id}`}>
++                    {group.orderId} / {id} · {row?.description ?? id} ·{' '}
++                    {row?.quantity} {row?.unit}
++                  </li>
++                )
++              }),
++            )}
++          </ul>
++          <p className="font-mono">{r.totalDisplay}</p>
++          <p>{d.number}</p>
++        </>
++      )}
++      {kind === 'cancel' && (
++        <FormField label={d.reason} htmlFor="invoice-cancellation-reason">
++          <Textarea
++            id="invoice-cancellation-reason"
++            disabled={busy}
++            value={reason}
++            onChange={(event) => setReason(event.target.value)}
++          />
++        </FormField>
++      )}
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-readonly.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-readonly.tsx
+new file mode 100644
+index 0000000..501bd9f
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-readonly.tsx
+@@ -0,0 +1,80 @@
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import { ShipmentInvoiceGoods } from './shipment-invoice-goods'
++import type { InvoiceRecordView } from '../details/types'
++import type { DetailsLabels } from '../details/labels'
++import type { InvoiceLabels } from '../create/labels'
++export function ShipmentInvoiceReadonly({
++  record: r,
++  labels: l,
++  details: d,
++}: {
++  record: InvoiceRecordView
++  labels: InvoiceLabels
++  details: DetailsLabels
++}) {
++  const v = r.values
++  const fields = (pairs: Array<[string, string]>) => (
++    <dl className="grid gap-4 sm:grid-cols-2">
++      {pairs.map(([label, value]) => (
++        <div key={label} className="min-w-0 break-words">
++          <dt className="text-caption text-fg-muted">{label}</dt>
++          <dd className="whitespace-pre-wrap">{value || '—'}</dd>
++        </div>
++      ))}
++    </dl>
++  )
++  const date = v.documentDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
++  return (
++    <>
++      <InvoiceSection title={l.details}>
++        {fields([
++          [l.client, r.clientLabel || v.clientId],
++          [l.company, r.companyLabel || v.companyId],
++          [l.invoiceType, v.invoiceType],
++          [
++            l.documentDate,
++            date ? `${date[3]}-${date[2]}-${date[1]}` : v.documentDate,
++          ],
++          [l.subtitle, v.subtitle],
++        ])}
++      </InvoiceSection>
++      <InvoiceSection title={l.parties}>
++        {fields([
++          [l.shipper, v.shipper],
++          [l.consignee, v.consignee],
++          [l.agent, v.agent],
++          [l.notify, v.notify],
++        ])}
++      </InvoiceSection>
++      <ShipmentInvoiceGoods
++        showRowIdentity
++        readOnly
++        orders={r.orders}
++        selection={r.selection}
++        disabled
++        onOrder={() => {}}
++        onRow={() => {}}
++        onRefresh={() => {}}
++        labels={l}
++      />
++      <InvoiceSection title={l.total}>
++        <p className="font-mono text-lg">{r.totalDisplay}</p>
++      </InvoiceSection>
++      <InvoiceSection title={d.packing}>
++        {fields([
++          [l.packingDetails, v.packingDetails],
++          [l.totalWeightKg, v.totalWeightKg],
++          [
++            l.partialAmount,
++            v.partialAmount
++              ? [v.partialAmount, v.partialCurrency].filter(Boolean).join(' ')
++              : '',
++          ],
++        ])}
++      </InvoiceSection>
++      <InvoiceSection title={l.notes}>
++        <p className="whitespace-pre-wrap break-words">{v.notes || '—'}</p>
++      </InvoiceSection>
++    </>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-review.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-review.tsx
+new file mode 100644
+index 0000000..44b13e8
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-review.tsx
+@@ -0,0 +1,42 @@
++import { Button } from '#/components/ui/button'
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import type { InvoiceReviewView } from '../details/types'
++import type { DetailsLabels } from '../details/labels'
++export function ShipmentInvoiceReview({
++  review,
++  warnings,
++  ack,
++  disabled,
++  onConfirm,
++  labels: d,
++}: {
++  review: InvoiceReviewView
++  warnings: string[]
++  ack: string | null
++  disabled: boolean
++  onConfirm?: () => void
++  labels: DetailsLabels
++}) {
++  if (!review.required && !warnings.length) return null
++  return (
++    <InvoiceSection title={d.review}>
++      <p>{d.reviewNeeded}</p>
++      <ul className="my-3 list-inside list-disc">
++        {[...new Set([...review.items, ...warnings])].map((item) => (
++          <li key={item} className="break-words">
++            {item}
++          </li>
++        ))}
++      </ul>
++      {onConfirm && (
++        <Button
++          type="button"
++          disabled={disabled || !review.canConfirm || ack === review.revision}
++          onClick={onConfirm}
++        >
++          {ack === review.revision ? d.reviewed : d.confirmReviewed}
++        </Button>
++      )}
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx
+new file mode 100644
+index 0000000..9084622
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx
+@@ -0,0 +1,105 @@
++import { useRef, useState } from 'react'
++import { Input, FormField } from '#/components/ui/input'
++import { Button } from '#/components/ui/button'
++import { Select } from '#/components/ui/select'
++import { Alert } from '#/components/ui/alert'
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import type { Option } from '../create/types'
++import type { InvoiceLabels } from '../create/labels'
++export function ShipmentInvoiceShipmentPicker({
++  label,
++  value,
++  onChoose,
++  onSearch,
++  disabled,
++  labels: l,
++}: {
++  label?: string
++  value: string
++  onChoose: (id: string) => void
++  onSearch?: (query: string) => Promise<Option[]>
++  disabled: boolean
++  labels: InvoiceLabels
++}) {
++  const [query, setQuery] = useState(''),
++    [options, setOptions] = useState<Option[]>([]),
++    [state, setState] = useState('idle')
++  const generation = useRef(0)
++  async function search() {
++    if (!onSearch) return
++    const id = ++generation.current
++    setState('loading')
++    try {
++      const results = await onSearch(query)
++      if (id === generation.current) {
++        setOptions(results)
++        setState('ready')
++      }
++    } catch {
++      if (id === generation.current) setState('error')
++    }
++  }
++  return (
++    <InvoiceSection title={l.shipment}>
++      <div className="flex flex-wrap items-end gap-2">
++        <FormField
++          label={l.search}
++          htmlFor="invoice-shipment-search"
++          className="min-w-0 flex-1"
++        >
++          <Input
++            id="invoice-shipment-search"
++            value={query}
++            disabled={disabled}
++            onChange={(e) => {
++              setQuery(e.target.value)
++              generation.current++
++              setOptions([])
++              setState('idle')
++            }}
++          />
++        </FormField>
++        <Button
++          type="button"
++          variant="secondary"
++          disabled={disabled || !onSearch}
++          onClick={() => void search()}
++        >
++          {l.searchAction}
++        </Button>
++      </div>
++      <div className="mt-3">
++        <FormField label={l.choose} htmlFor="invoice-shipment-choice">
++          <Select
++            id="invoice-shipment-choice"
++            value={value}
++            disabled={disabled || state === 'loading'}
++            onChange={(event) => onChoose(event.target.value)}
++          >
++            <option value="" disabled>
++              {l.choose}
++            </option>
++            {label && !options.some((x) => x.id === value) && (
++              <option value={value}>{label}</option>
++            )}
++            {options.map((x) => (
++              <option key={x.id} value={x.id}>
++                {x.label}
++              </option>
++            ))}
++          </Select>
++        </FormField>
++      </div>
++      {state === 'loading' && <p role="status">{l.loading}</p>}
++      {state === 'error' && (
++        <Alert tone="danger">
++          {l.error}
++          <Button type="button" variant="ghost" onClick={() => void search()}>
++            {l.retry}
++          </Button>
++        </Alert>
++      )}
++      {state === 'ready' && !options.length && <p>{l.empty}</p>}
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts
+new file mode 100644
+index 0000000..41b274e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts
+@@ -0,0 +1,79 @@
++import type { ShipmentPresentation } from '../types'
++export const demoShipment: ShipmentPresentation = {
++  id: 'S1',
++  label: 'DEMO-SHP-1042',
++  eligible: true,
++  clients: [{ id: 'C1', label: 'DEMO Marine Services' }],
++  companies: [
++    {
++      id: 'I1',
++      label: 'DEMO Invoicing One',
++      clientId: 'C1',
++      shipper: 'DEMO Company One\nDemo address',
++    },
++    {
++      id: 'I2',
++      label: 'DEMO Invoicing Two',
++      clientId: 'C1',
++      shipper: 'DEMO Company Two\nDemo address',
++    },
++  ],
++  orders: [
++    {
++      id: 'PO-A',
++      client: 'DEMO Marine Services',
++      supplier: 'DEMO Parts',
++      messageNumber: 'DEMO-MSG-1',
++      origin: 'Greece',
++      destination: 'Singapore',
++      status: 'SHIPPED',
++      rows: [
++        {
++          id: 'r1',
++          description: 'Valve assembly',
++          hsCode: '0848180',
++          quantity: '2',
++          unit: 'SET',
++          amountDisplay: '480.00',
++          currency: 'EUR',
++        },
++        {
++          id: 'r2',
++          description: 'Seal kit',
++          quantity: '4',
++          unit: 'PC',
++          amountDisplay: '120.00',
++          currency: 'EUR',
++        },
++        {
++          id: 'r3',
++          description: 'Pressure sensor',
++          quantity: '1',
++          unit: 'PC',
++          amountDisplay: '85.00',
++          currency: 'EUR',
++          ineligibleReason: 'Unconfirmed allocation',
++        },
++      ],
++    },
++    {
++      id: 'PO-B',
++      client: 'DEMO Marine Services',
++      supplier: 'DEMO Supply',
++      messageNumber: 'DEMO-MSG-2',
++      origin: 'Greece',
++      destination: 'Singapore',
++      status: 'SHIPPED',
++      rows: [
++        {
++          id: 'r4',
++          description: 'Maintenance kit',
++          quantity: '1',
++          unit: 'SET',
++          amountDisplay: '160.00',
++          currency: 'USD',
++        },
++      ],
++    },
++  ],
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts
+new file mode 100644
+index 0000000..71102c4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts
+@@ -0,0 +1,20 @@
++import type { ShipmentInvoiceDraftValues } from './types'
++export const createDraftDefaults = (
++  todayAthens: string,
++): ShipmentInvoiceDraftValues => ({
++  shipmentId: '',
++  clientId: '',
++  companyId: '',
++  invoiceType: 'Invoice',
++  documentDate: todayAthens,
++  subtitle: 'PACKING LIST',
++  shipper: 'FRONT LINE\n67, IROON POLYTECHNIOU\n185 36, PIRAEUS, GREECE',
++  consignee: '',
++  agent: '',
++  notify: '',
++  packingDetails: '',
++  totalWeightKg: '',
++  partialAmount: '',
++  partialCurrency: 'EUR',
++  notes: '',
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts
+new file mode 100644
+index 0000000..79e3efe
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts
+@@ -0,0 +1,142 @@
++const en = {
++  selectGoods: 'Select goods',
++  navigationError: 'Draft saved, but its Details page could not open.',
++  openSaved: 'Open saved draft',
++  title: 'Create Shipment Invoice',
++  intro: 'Prepare the document and select the goods it covers.',
++  shipment: 'Shipment',
++  search: 'Search Shipments',
++  choose: 'Choose Shipment',
++  details: 'Document details',
++  parties: 'Document parties',
++  goods: 'Goods selection',
++  packing: 'Packing & notes',
++  client: 'Commercial Client',
++  company: 'Invoicing company',
++  invoiceType: 'Invoice type',
++  documentDate: 'Document date',
++  subtitle: 'Subtitle',
++  shipper: 'Shipper',
++  consignee: 'Consignee',
++  agent: 'Agent',
++  notify: 'Notify',
++  packingDetails: 'Packing details',
++  totalWeightKg: 'Total weight (kg)',
++  partialAmount: 'Partial invoice total',
++  partialCurrency: 'Partial currency',
++  notes: 'Notes',
++  number: 'Printed number is assigned at finalization.',
++  total: 'Full invoice total',
++  create: 'Create draft',
++  cancel: 'Cancel',
++  refresh: 'Refresh eligibility',
++  loading: 'Loading…',
++  empty: 'No eligible results.',
++  error: 'Unable to complete the request. Your work is retained.',
++  retry: 'Retry',
++  unavailable: 'This integration is unavailable. No document can be saved.',
++  mixed:
++    'Selected rows use different currencies. Keep one currency before creating the draft.',
++  overlap: 'Also included on:',
++  removed: 'Removed from selection; review required:',
++  allocation: 'Open Order allocation',
++  unresolved: 'Allocation required',
++  confirmShipment: 'Change Shipment and discard this work?',
++  confirmDiscard: 'Discard unsaved changes?',
++  confirmShipper: 'Replace your edited Shipper text?',
++  replace: 'Replace with company details',
++  keep: 'Keep my text',
++  confirm: 'Continue',
++  no: 'Keep working',
++  description: 'Description',
++  hs: 'HS code',
++  quantity: 'Quantity',
++  unit: 'Unit',
++  amount: 'Amount',
++  currency: 'Currency',
++  stock: 'Stock List ID',
++  supplier: 'Supplier',
++  message: 'MSG Number',
++  origin: 'Country of Origin',
++  destination: 'Destination',
++  status: 'Status',
++  draft: 'Draft — no printed number',
++  noRows: 'No goods selected. You can save an incomplete draft.',
++  searchAction: 'Search',
++  saveError: 'Draft was not saved. Your work is retained.',
++  changed: 'Review the current selection before finalization.',
++  allocationUnavailable: 'Order allocation interface is not connected.',
++}
++export type InvoiceLabels = typeof en
++const el: InvoiceLabels = {
++  selectGoods: 'Επιλογή ειδών',
++  navigationError: 'Το πρόχειρο αποθηκεύτηκε, αλλά δεν άνοιξε η σελίδα του.',
++  openSaved: 'Άνοιγμα αποθηκευμένου πρόχειρου',
++  title: 'Δημιουργία τιμολογίου αποστολής',
++  intro: 'Προετοιμάστε το έγγραφο και επιλέξτε τα είδη που καλύπτει.',
++  shipment: 'Αποστολή',
++  search: 'Αναζήτηση αποστολών',
++  choose: 'Επιλέξτε αποστολή',
++  details: 'Στοιχεία εγγράφου',
++  parties: 'Συμβαλλόμενοι εγγράφου',
++  goods: 'Επιλογή ειδών',
++  packing: 'Συσκευασία & σημειώσεις',
++  client: 'Εμπορικός πελάτης',
++  company: 'Εταιρεία τιμολόγησης',
++  invoiceType: 'Τύπος τιμολογίου',
++  documentDate: 'Ημερομηνία εγγράφου',
++  subtitle: 'Υπότιτλος',
++  shipper: 'Αποστολέας',
++  consignee: 'Παραλήπτης',
++  agent: 'Πράκτορας',
++  notify: 'Προς ειδοποίηση',
++  packingDetails: 'Στοιχεία συσκευασίας',
++  totalWeightKg: 'Συνολικό βάρος (kg)',
++  partialAmount: 'Μερικό σύνολο τιμολογίου',
++  partialCurrency: 'Νόμισμα μερικού συνόλου',
++  notes: 'Σημειώσεις',
++  number: 'Ο έντυπος αριθμός αποδίδεται κατά την οριστικοποίηση.',
++  total: 'Πλήρες σύνολο τιμολογίου',
++  create: 'Δημιουργία πρόχειρου',
++  cancel: 'Ακύρωση',
++  refresh: 'Ανανέωση επιλεξιμότητας',
++  loading: 'Φόρτωση…',
++  empty: 'Δεν υπάρχουν επιλέξιμα αποτελέσματα.',
++  error: 'Το αίτημα δεν ολοκληρώθηκε. Η εργασία σας διατηρήθηκε.',
++  retry: 'Επανάληψη',
++  unavailable:
++    'Η σύνδεση δεν είναι διαθέσιμη. Δεν μπορεί να αποθηκευτεί έγγραφο.',
++  mixed:
++    'Τα επιλεγμένα είδη έχουν διαφορετικά νομίσματα. Διατηρήστε ένα νόμισμα πριν τη δημιουργία.',
++  overlap: 'Περιλαμβάνεται επίσης στο:',
++  removed: 'Αφαιρέθηκαν από την επιλογή· απαιτείται έλεγχος:',
++  allocation: 'Άνοιγμα κατανομής παραγγελίας',
++  unresolved: 'Απαιτείται κατανομή',
++  confirmShipment: 'Αλλαγή αποστολής και απόρριψη της εργασίας;',
++  confirmDiscard: 'Απόρριψη μη αποθηκευμένων αλλαγών;',
++  confirmShipper: 'Αντικατάσταση του κειμένου αποστολέα;',
++  replace: 'Αντικατάσταση με στοιχεία εταιρείας',
++  keep: 'Διατήρηση κειμένου μου',
++  confirm: 'Συνέχεια',
++  no: 'Συνέχιση επεξεργασίας',
++  description: 'Περιγραφή',
++  hs: 'Κωδικός HS',
++  quantity: 'Ποσότητα',
++  unit: 'Μονάδα',
++  amount: 'Αξία',
++  currency: 'Νόμισμα',
++  stock: 'Κωδικός Stock List',
++  supplier: 'Προμηθευτής',
++  message: 'Αριθμός MSG',
++  origin: 'Χώρα προέλευσης',
++  destination: 'Προορισμός',
++  status: 'Κατάσταση',
++  draft: 'Πρόχειρο — χωρίς έντυπο αριθμό',
++  noRows: 'Δεν έχουν επιλεγεί είδη. Μπορείτε να αποθηκεύσετε ελλιπές πρόχειρο.',
++  searchAction: 'Αναζήτηση',
++  saveError: 'Το πρόχειρο δεν αποθηκεύτηκε. Η εργασία σας διατηρήθηκε.',
++  changed: 'Ελέγξτε την επιλογή πριν την οριστικοποίηση.',
++  allocationUnavailable: 'Η διεπαφή κατανομής παραγγελίας δεν έχει συνδεθεί.',
++}
++export const labelsFor = (locale: 'en' | 'el'): InvoiceLabels =>
++  locale === 'el' ? el : en
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/README.md b/frontline-forwarding-client/src/features/shipment-invoices/create/README.md
+new file mode 100644
+index 0000000..c99023b
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/README.md
+@@ -0,0 +1,39 @@
++# Shipment Invoice create UI — FRO-363
++
++Approved layout A implemented with portal components and TanStack Form. This feature is intentionally **unmounted**. There is no production route, backend adapter, authority definition, API/schema change, or persistent mock service.
++
++## Integration boundary
++
++Import ShipmentInvoiceCreateForm from ../components/shipment-invoice-create-form. Its props are presentation interfaces, not backend schemas. The host supplies authorized Shipment candidates, current eligible rows and reasons, currencies, authoritative evaluated totals/currency conflicts/overlap references, and draft submission. No allocation, money/rounding or exchange-rate algorithm lives here.
++
++- todayAthens must be a YYYY-MM-DD calendar date in Europe/Athens. Do not derive it by slicing UTC ISO time. The portal DatePicker displays dd-mm-yyyy here.
++- initialShipmentId is fixed for one mounted form instance. Remount when changing entry context. User-driven Shipment changes are confirmed in the form.
++- registerNavigationGuard installs the provided callback into the host router/navigation blocker and returns cleanup. Call the callback with a continuation for every internal navigation attempt, including browser Back. Dirty navigation opens confirmation; pending save blocks navigation; successful-save navigation is explicitly allowed. This integration is required before activation. beforeunload protects reload/close independently.
++- onSaved receives the persisted identity and must navigate to the real Details UI. A thrown navigation failure preserves identity and offers retry without another submit.
++- onCancel navigates to originating Shipment, else the previous page with Shipments fallback. The form confirms dirty cancellation before calling it.
++- onOpenAllocation opens the authorized Order allocation UI in a new tab. No route is guessed. Missing callback is visibly unavailable. Refresh is explicit and never writes allocation.
++- available and missing callback handling express host-provided availability only. They are not authorization. FRO-244 must enforce backend access and validation.
++- Async reads/evaluations are generation-guarded. Failed eligibility reads keep work visible but block selection and saving until successful refresh.
++- FRO-244 owns persistence, eligibility, current values, totals and overlap information. FRO-301 owns allocation. Saved Details and allocation UI routes remain delivery dependencies.
++
++## Components and appearance
++
++Uses Card/CardHeader/CardTitle/CardBody; Input/Textarea/FormField; Select; DatePicker; Checkbox; Table primitives; Modal; Alert; Button. Sources are components/ui/\*.tsx, components/form/index.ts and app/providers/labels-provider.tsx. Layout uses existing semantic tokens from styles/theme.css. The containing app owns AppShell, sidebar and topbar; this form does not duplicate navigation.
++
++The Shipment picker composes a search input, Search action and existing Select for returned candidates. The shared Combobox did not commit keyboard choices in local verification; Select preserves keyboard operation without changing the shared primitive. DatePicker is used directly within the form because its format prop supports the approved dd-mm-yyyy requirement, unlike the current DateField wrapper. All values still live in TanStack Form.
++
++Grouped goods selection and totals are new compositions, not new primitives. Unresolved rows are disabled separately. Source identity and group order are retained. HS codes remain text. Totals are supplied by the host, not calculated in UI helpers.
++
++## Local verification
++
++Use Node 22.13.0 and pnpm 11.1.3 with pnpm install --frozen-lockfile, matching the client Dockerfile. No dependency changes required.
++
++- npm test -- src/features/shipment-invoices
++- npm run test
++- npm run build
++- npm run format:check
++- pnpm exec tsc --noEmit
++
++A temporary local Vite host mounts this form with the existing LabelsProvider and ThemeProvider (compact), importing styles/theme.css. Tailwind must include an explicit @source for src when the harness root is outside the usual app root. The host injects fixtures from **fixtures**/shipment-invoice-create.ts. Fixtures are not imported by operational components. A Playwright review exercises EN/EL at 1440px and 400px, read states, failure states and consequential form flows. The temporary host is not in the proposed diff.
++
++The review only proves frontend behavior. Activation requires real adapters, authority checks, pagination/lookup contract, currency reference data, Details/allocation navigation and router leave-blocking. No production calls were made. Full verification evidence is recorded in the planning repository's FRO-363 handoff report.
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts
+new file mode 100644
+index 0000000..4a06e03
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts
+@@ -0,0 +1,35 @@
++import { describe, expect, it } from 'vitest'
++import { toggleOrder, toggleRow, reconcileSelection } from './selection'
++describe('invoice selection identities', () => {
++  it('adds newest order first and deduplicates source rows', () => {
++    expect(
++      toggleOrder([{ orderId: 'A', rowIds: ['a'] }], 'B', ['b', 'b', 'c']),
++    ).toEqual([
++      { orderId: 'B', rowIds: ['b', 'c'] },
++      { orderId: 'A', rowIds: ['a'] },
++    ])
++  })
++  it('deselects a complete order', () => {
++    expect(toggleOrder([{ orderId: 'A', rowIds: ['a'] }], 'A', ['a'])).toEqual(
++      [],
++    )
++  })
++  it('preserves source row order on individual selection', () => {
++    expect(
++      toggleRow([{ orderId: 'A', rowIds: ['b'] }], 'A', 'a', ['a', 'b']),
++    ).toEqual([{ orderId: 'A', rowIds: ['a', 'b'] }])
++  })
++  it('never selects a row outside eligibility', () => {
++    expect(toggleRow([], 'A', 'x', ['a'])).toEqual([])
++  })
++  it('keeps eligible selections and reports removals without adding new rows', () => {
++    expect(
++      reconcileSelection([{ orderId: 'A', rowIds: ['a', 'b'] }], {
++        A: ['b', 'c'],
++      }),
++    ).toEqual({
++      selection: [{ orderId: 'A', rowIds: ['b'] }],
++      removed: [{ orderId: 'A', rowId: 'a' }],
++    })
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts
+new file mode 100644
+index 0000000..91941a2
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts
+@@ -0,0 +1,49 @@
++export type Selection = Array<{ orderId: string; rowIds: string[] }>
++export function toggleOrder(
++  selection: Selection,
++  orderId: string,
++  ids: string[],
++): Selection {
++  const unique = [...new Set(ids)]
++  const current = selection.find((g) => g.orderId === orderId)
++  const rest = selection.filter((g) => g.orderId !== orderId)
++  return !unique.length || unique.every((id) => current?.rowIds.includes(id))
++    ? rest
++    : [{ orderId, rowIds: unique }, ...rest]
++}
++export function toggleRow(
++  selection: Selection,
++  orderId: string,
++  rowId: string,
++  ids: string[],
++): Selection {
++  if (!ids.includes(rowId)) return selection
++  const group = selection.find((g) => g.orderId === orderId)
++  const selected = new Set(group?.rowIds)
++  if (selected.has(rowId)) selected.delete(rowId)
++  else selected.add(rowId)
++  const rowIds = [...new Set(ids)].filter((id) => selected.has(id))
++  if (!group) return [{ orderId, rowIds }, ...selection]
++  return selection
++    .map((g) => (g.orderId === orderId ? { orderId, rowIds } : g))
++    .filter((g) => g.rowIds.length)
++}
++export function reconcileSelection(
++  selection: Selection,
++  eligible: Record<string, string[]>,
++) {
++  const removed: Array<{ orderId: string; rowId: string }> = []
++  return {
++    selection: selection
++      .map((g) => ({
++        ...g,
++        rowIds: g.rowIds.filter((rowId) => {
++          if (eligible[g.orderId]?.includes(rowId)) return true
++          removed.push({ orderId: g.orderId, rowId })
++          return false
++        }),
++      }))
++      .filter((g) => g.rowIds.length),
++    removed,
++  }
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts
+new file mode 100644
+index 0000000..a1a405f
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts
+@@ -0,0 +1,77 @@
++import type { Selection } from './selection'
++export type ShipmentInvoiceSelection = Selection
++export interface ShipmentInvoiceDraftValues {
++  shipmentId: string
++  clientId: string
++  companyId: string
++  invoiceType: string
++  documentDate: string
++  subtitle: string
++  shipper: string
++  consignee: string
++  agent: string
++  notify: string
++  packingDetails: string
++  totalWeightKg: string
++  partialAmount: string
++  partialCurrency: string
++  notes: string
++}
++export interface Option {
++  id: string
++  label: string
++}
++export interface InvoiceRow {
++  id: string
++  description: string
++  hsCode?: string
++  quantity: string
++  unit: string
++  amountDisplay: string
++  currency: string
++  ineligibleReason?: string
++}
++export interface InvoiceOrder {
++  id: string
++  client: string
++  supplier: string
++  messageNumber: string
++  origin: string
++  destination: string
++  status: string
++  rows: InvoiceRow[]
++}
++export interface ShipmentPresentation {
++  id: string
++  label: string
++  eligible: boolean
++  clients: Option[]
++  companies: Array<Option & { clientId: string; shipper: string }>
++  orders: InvoiceOrder[]
++}
++export interface SelectionEvaluation {
++  totalDisplay: string
++  mixed: boolean
++  overlaps: string[]
++}
++/** Presentation boundary only. No API schema, backend authority, or monetary computation. */
++export interface ShipmentInvoiceCreateFormProps {
++  registerNavigationGuard?: (guard: (proceed: () => void) => void) => () => void
++  todayAthens: string
++  initialShipmentId?: string
++  available: boolean
++  currencies: string[]
++  onSearchShipments?: (query: string) => Promise<Option[]>
++  onLoadShipment?: (id: string) => Promise<ShipmentPresentation>
++  onEvaluateSelection?: (
++    shipmentId: string,
++    selection: Selection,
++  ) => Promise<SelectionEvaluation>
++  onSubmit?: (
++    values: ShipmentInvoiceDraftValues,
++    selection: Selection,
++  ) => Promise<string>
++  onSaved?: (id: string) => void
++  onCancel: () => void
++  onOpenAllocation?: (orderId: string) => void
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts
+new file mode 100644
+index 0000000..474d843
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts
+@@ -0,0 +1,13 @@
++import { useEffect } from 'react'
++export function useDraftGuards(dirty: boolean) {
++  useEffect(() => {
++    const guard = (event: BeforeUnloadEvent) => {
++      if (dirty) {
++        event.preventDefault()
++        event.returnValue = ''
++      }
++    }
++    window.addEventListener('beforeunload', guard)
++    return () => window.removeEventListener('beforeunload', guard)
++  }, [dirty])
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/__fixtures__/shipment-invoice-details.ts b/frontline-forwarding-client/src/features/shipment-invoices/details/__fixtures__/shipment-invoice-details.ts
+new file mode 100644
+index 0000000..e491157
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/__fixtures__/shipment-invoice-details.ts
+@@ -0,0 +1,45 @@
++/** Fictional fixtures for isolated local verification; never imported by operational UI. */
++import { demoShipment } from '../../create/__fixtures__/shipment-invoice-create'
++import { createDraftDefaults } from '../../create/defaults'
++import { InvoiceLifecycle, type InvoiceRecordView } from '../types'
++export const demoInvoice = (): InvoiceRecordView => ({
++  id: 'DEMO-DRAFT-1',
++  revision: 'version-1',
++  lifecycle: InvoiceLifecycle.Draft,
++  printedNumber: null,
++  shipmentLabel: demoShipment.label,
++  clientLabel: demoShipment.clients[0].label,
++  companyLabel: demoShipment.companies[0].label,
++  values: {
++    ...createDraftDefaults('2026-11-02'),
++    shipmentId: demoShipment.id,
++    clientId: 'C1',
++    companyId: 'I1',
++    shipper: demoShipment.companies[0].shipper,
++    consignee: 'DEMO Receiving Office\nDemo destination',
++    agent: 'DEMO Agent',
++    packingDetails: 'Two demo packages',
++    totalWeightKg: '25',
++    notes: 'Fictional demonstration only.',
++  },
++  selection: [{ orderId: 'PO-A', rowIds: ['r1', 'r2'] }],
++  orders: structuredClone(demoShipment.orders),
++  totalDisplay: 'EUR 600.00',
++  createdLabel: '02-11-2026 10:00',
++  updatedLabel: null,
++  review: {
++    revision: 'review-1',
++    required: false,
++    items: [],
++    canConfirm: true,
++    confirmedRevision: 'review-1',
++  },
++  validationMessages: [],
++  actions: {
++    edit: true,
++    finalize: true,
++    discard: true,
++    cancel: false,
++    replace: false,
++  },
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/labels.ts b/frontline-forwarding-client/src/features/shipment-invoices/details/labels.ts
+new file mode 100644
+index 0000000..ef2273a
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/labels.ts
+@@ -0,0 +1,113 @@
++const en = {
++  title: 'Shipment Invoice',
++  loading: 'Loading invoice…',
++  error: 'Unable to load this invoice.',
++  forbidden: 'You do not have access to this invoice.',
++  missing: 'This invoice no longer exists.',
++  edit: 'Edit draft',
++  save: 'Save changes',
++  cancelEdit: 'Cancel editing',
++  finalize: 'Finalize',
++  discard: 'Discard draft',
++  cancelInvoice: 'Cancel invoice',
++  replace: 'Create replacement',
++  draft: 'Draft',
++  finalized: 'Finalized',
++  cancelled: 'Cancelled',
++  created: 'Created',
++  updated: 'Last updated',
++  original: 'Original invoice',
++  replacement: 'Replacement invoice',
++  reason: 'Cancellation reason',
++  packing: 'Packing',
++  review: 'Review before finalizing',
++  confirmReviewed: 'Confirm reviewed',
++  reviewed: 'Reviewed — save to retain this acknowledgement.',
++  reviewNeeded:
++    'Review the selected goods and checked document values before finalizing.',
++  refresh: 'Refresh goods',
++  locked: 'Shipment is locked after creation.',
++  mixed:
++    'Selected goods use different currencies. Keep one currency before saving.',
++  failed: 'The request failed. Your work is retained.',
++  uncertain: 'The result is uncertain. Check the saved state before retrying.',
++  reconcile: 'Check saved state',
++  conflict:
++    'This invoice changed elsewhere. Your work is retained for comparison or copying. Reload before continuing.',
++  reload: 'Reload latest invoice',
++  unavailable: 'This action is unavailable until its integration is connected.',
++  frozen: 'Saved, frozen document',
++  number: 'Finalization assigns a number and freezes the document.',
++  confirm: 'Confirm',
++  back: 'Keep working',
++  confirmDiscard: 'Discard this saved draft?',
++  confirmCancel: 'Cancel this finalized invoice?',
++  replacementInfo:
++    'Unsaved replacement — review copied packing, weight and partial total.',
++  navigationError: 'Saved successfully, but navigation failed.',
++  openSaved: 'Open saved record',
++  sourceFailed:
++    'Goods could not be refreshed. Your work is retained; refresh successfully before saving.',
++  empty: 'No goods selected.',
++  retry: 'Retry',
++  pending: 'Request in progress…',
++}
++export type DetailsLabels = typeof en
++const el: DetailsLabels = {
++  title: 'Τιμολόγιο αποστολής',
++  loading: 'Φόρτωση τιμολογίου…',
++  error: 'Δεν ήταν δυνατή η φόρτωση του τιμολογίου.',
++  forbidden: 'Δεν έχετε πρόσβαση σε αυτό το τιμολόγιο.',
++  missing: 'Αυτό το τιμολόγιο δεν υπάρχει πλέον.',
++  edit: 'Επεξεργασία πρόχειρου',
++  save: 'Αποθήκευση αλλαγών',
++  cancelEdit: 'Ακύρωση επεξεργασίας',
++  finalize: 'Οριστικοποίηση',
++  discard: 'Απόρριψη πρόχειρου',
++  cancelInvoice: 'Ακύρωση τιμολογίου',
++  replace: 'Δημιουργία αντικατάστασης',
++  draft: 'Πρόχειρο',
++  finalized: 'Οριστικοποιημένο',
++  cancelled: 'Ακυρωμένο',
++  created: 'Δημιουργήθηκε',
++  updated: 'Τελευταία ενημέρωση',
++  original: 'Αρχικό τιμολόγιο',
++  replacement: 'Τιμολόγιο αντικατάστασης',
++  reason: 'Αιτιολογία ακύρωσης',
++  packing: 'Συσκευασία',
++  review: 'Έλεγχος πριν την οριστικοποίηση',
++  confirmReviewed: 'Επιβεβαίωση ελέγχου',
++  reviewed: 'Ελέγχθηκε — αποθηκεύστε την επιβεβαίωση.',
++  reviewNeeded:
++    'Ελέγξτε τα επιλεγμένα είδη και τα στοιχεία του εγγράφου πριν την οριστικοποίηση.',
++  refresh: 'Ανανέωση ειδών',
++  locked: 'Η αποστολή κλειδώνει μετά τη δημιουργία.',
++  mixed:
++    'Τα επιλεγμένα είδη έχουν διαφορετικά νομίσματα. Διατηρήστε ένα νόμισμα πριν την αποθήκευση.',
++  failed: 'Το αίτημα απέτυχε. Η εργασία σας διατηρήθηκε.',
++  uncertain:
++    'Το αποτέλεσμα είναι αβέβαιο. Ελέγξτε την αποθηκευμένη κατάσταση πριν επαναλάβετε.',
++  reconcile: 'Έλεγχος αποθηκευμένης κατάστασης',
++  conflict:
++    'Το τιμολόγιο άλλαξε αλλού. Η εργασία σας διατηρήθηκε για σύγκριση ή αντιγραφή. Φορτώστε ξανά πριν συνεχίσετε.',
++  reload: 'Φόρτωση τελευταίας έκδοσης',
++  unavailable:
++    'Η ενέργεια δεν είναι διαθέσιμη μέχρι να συνδεθεί η διεπαφή της.',
++  frozen: 'Αποθηκευμένο, κλειδωμένο έγγραφο',
++  number: 'Η οριστικοποίηση αποδίδει αριθμό και κλειδώνει το έγγραφο.',
++  confirm: 'Επιβεβαίωση',
++  back: 'Συνέχιση εργασίας',
++  confirmDiscard: 'Απόρριψη αποθηκευμένου πρόχειρου;',
++  confirmCancel: 'Ακύρωση οριστικοποιημένου τιμολογίου;',
++  replacementInfo:
++    'Μη αποθηκευμένη αντικατάσταση — ελέγξτε συσκευασία, βάρος και μερικό σύνολο.',
++  navigationError: 'Αποθηκεύτηκε, αλλά η πλοήγηση απέτυχε.',
++  openSaved: 'Άνοιγμα αποθηκευμένου εγγράφου',
++  sourceFailed:
++    'Η ανανέωση ειδών απέτυχε. Η εργασία διατηρήθηκε· ανανεώστε επιτυχώς πριν την αποθήκευση.',
++  empty: 'Δεν έχουν επιλεγεί είδη.',
++  retry: 'Επανάληψη',
++  pending: 'Το αίτημα εκτελείται…',
++}
++export const detailsLabelsFor = (locale: 'en' | 'el'): DetailsLabels =>
++  locale === 'el' ? el : en
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/README.md b/frontline-forwarding-client/src/features/shipment-invoices/details/README.md
+new file mode 100644
+index 0000000..7926f9b
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/README.md
+@@ -0,0 +1,49 @@
++# Shipment Invoice Details and draft editor (FRO-366)
++
++Unmounted React UI for the approved Details/edit contract. This feature does not define a backend API, routes, authorization, monetary arithmetic, allocation, number generation, or persisted review state. Do not activate it until FRO-244/FRO-301 and the host integrations below are delivered.
++
++## Reuse and ownership
++
++The dependency is FRO-363 commit `230a90581aa85e611737add554b2b3c6f5912e0e`, prepared against main `5774931b9869247f0247013111a452552403f456`. Its 14 feature files were not on that main baseline. Integrate the create dependency first; this preparation includes its unchanged files at the original paths and compatibility-preserving extensions to the shared document/goods presentation.
++
++- [Document fields](../components/shipment-invoice-document-fields.tsx): existing portal controls, optional saved-reference fallback labels and separate Notes. Default ordinary-create layout remains unchanged.
++- [Goods](../components/shipment-invoice-goods.tsx): existing selection controls plus optional selected-only read mode and source row identity. Frozen reads never expose source refresh/allocation/selection.
++- [Selection](../create/selection.ts): existing identity operations, never financial calculations.
++- [Confirmations](../components/shipment-invoice-confirmations.tsx): existing Shipper and dirty-discard dialogs; lifecycle dialogs are separate.
++- [Details](../components/shipment-invoice-details.tsx): localized saved/read/edit composition over portal primitives. App shell and routing remain host-owned.
++- [Editor](use-invoice-editor.ts): TanStack Form saved values, selection, source/evaluation generation checks and dirty navigation.
++- [Actions](use-invoice-actions.ts): lifecycle, replacement and reconciliation orchestration. Separated from field state to keep action outcome handling reviewable.
++
++## Host contract
++
++[types.ts](types.ts) is a frontend presentation boundary, **not an API schema**. Supply authorized, localized values and authoritative action capabilities. Hidden or disabled buttons do not enforce authorization. No new authority enum has been introduced.
++
++`InvoiceRecordView` represents an authorized saved record. Draft reads must contain current source data and authoritative totals/review/finalization validation. Finalized/cancelled reads contain immutable, frozen fields, party text, selected row identities/values and totals. Supply formatted timestamps; `updatedLabel: null` means N/A. Keep display labels for saved references even when those references are no longer selectable. Dates in document values use ISO and display dd-mm-yyyy. Supply Europe/Athens `todayAthens` from the host; no browser-zone date default is inferred.
++
++Every callback receives or returns the types in `types.ts`; these cannot be wired by guessing an endpoint. Reads, eligibility, evaluation and all actions must enforce staff access/record scope in the backend. `actions.cancel` represents the backend's manager/system-admin decision. No browser role selector belongs in production.
++
++- `onRefreshGoods(id, revision)` supplies current Shipment/reference choices and row eligibility for a draft or replacement. Do not use frozen original rows as current replacement sources. Exclude this invoice from overlap evaluation.
++- `onEvaluateDraft(input)` supplies the full total, mixed-currency result, overlap identities, localized validation and opaque reviewed-state revision. Totals are never computed from formatted strings here. New source/selection/checked-field state must have a different review revision; stale persisted review must not be returned as valid.
++- `onSave(id, input)` permits incomplete otherwise-valid drafts and returns the saved record. Save does not issue a number. The UI excludes number/total/actor claims from the input.
++- `onFinalize(id, expectedRevision, reviewRevision)` must atomically verify required fields (including Agent), Shipment eligibility, selection and saved review; allocate exactly one number and freeze contents. Return the authoritative frozen record. Host `validationMessages` must be complete before the confirmation is available, and the operation must revalidate.
++- `onDiscard` and `onCancelInvoice` enforce lifecycle/permission/version guards. Cancellation requires a trimmed reason and preserves number and frozen contents. Discard success navigates to Shipment Details; cancelling unsaved editing never calls discard.
++- `onPrepareReplacement` is a read-only prefill. Copy approved document/party/manual fields and references, return current eligible rows, retain eligible selection order, identify invalid references and unavailable rows. UI locks the original Shipment and substitutes host-supplied todayAthens. Preparation/cancelling does not create a record.
++- `onCreateReplacement` is the only replacement write. Return the new identity (or record), unnumbered, with backend correction links in both directions; never alter original frozen values. The UI retains a successful destination so failed navigation cannot repeat creation.
++- `onReload` reads latest state. Conflicts retain local values, block commands and require explicit dirty-discard confirmation before reload. `onReconcile` resolves unknown outcomes without retrying mutations. While editing, reconciliation retains local work for comparison and requires reload before further writes.
++- `onOpenShipment` / `onOpenInvoice` supply real routes. Wire FRO-363 `onSaved(id)` to the same Details identity. No route is guessed or mounted here.
++- `onOpenAllocation(orderId)` must open the actual separately delivered Order allocation interface in a **new tab**. This feature never edits allocation. Missing integration leaves the allocation action disabled with an explanation.
++- `registerNavigationGuard` uses the create feature's guard contract. Route/back navigation must call the registered guard and only proceed through its continuation. The feature also guards its own links and browser close/reload while dirty/pending/uncertain.
++
++## Review, errors and concurrency
++
++Opening edit loads saved fields without creation defaults, locks Shipment and refreshes eligibility. New candidates remain unselected. Missing/ineligible saved rows are excluded from selection and identified in persistent local warnings. Fields survive refresh failures; dependent saves remain blocked until successful refresh and evaluation. Generation checks reject obsolete refresh/evaluation results, including after a different record is mounted.
++
++Confirm reviewed sends the current opaque revision with the next save; it never asserts backend persistence. Checked-field, selection and source changes invalidate acknowledgement. A matching saved read is required before finalization. Copied replacement packing, weight and partial amount remain visible for review. Incomplete review does not prevent saving unfinished work.
++
++`InvoiceActionResult` distinguishes known failure, validation, conflict and uncertain results. A thrown mutation is conservatively uncertain. The host must reconcile transport ambiguity, safe retries and duplicate prevention authoritatively. UI pending locks only prevent duplicate clicks in this mounted instance; they are not backend idempotency. Never automatically repeat a consequential operation after a timeout.
++
++## Local validation
++
++Fixtures in [**fixtures**/shipment-invoice-details.ts](__fixtures__/shipment-invoice-details.ts) and create fixtures are fictional and imported only by tests/isolated review hosts. The temporary browser host lives outside the delivered application tree. Use the application's ThemeProvider (compact), LabelsProvider and theme.css to review both EN/EL at 1440px and 400px. Exercise draft edits, source failures/review/mixed currencies/overlap, conflicts, all lifecycle dialogs and replacement identity navigation. Ordinary create regressions run alongside Details tests.
++
++Run the client test script, build, TypeScript check and formatting check under Node 22.13.0. Existing unrelated whole-project failures must be reported separately, never silently waived. No GraphQL/schema/generator source changed, so reference generation is not applicable. Fixture checks prove UI behavior only; they do not prove production authorization, persisted reviews, numbering, allocation or concurrency correctness.
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/types.ts b/frontline-forwarding-client/src/features/shipment-invoices/details/types.ts
+new file mode 100644
+index 0000000..1e13302
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/types.ts
+@@ -0,0 +1,109 @@
++import type {
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++  InvoiceOrder,
++  SelectionEvaluation,
++  ShipmentInvoiceCreateFormProps,
++} from '../create/types'
++import type { Selection } from '../create/selection'
++export enum InvoiceLifecycle {
++  Draft = 'Draft',
++  Finalized = 'Finalized',
++  Cancelled = 'Cancelled',
++}
++export interface InvoiceReviewView {
++  revision: string
++  required: boolean
++  items: string[]
++  canConfirm: boolean
++  confirmedRevision: string | null
++}
++export interface InvoiceRecordView {
++  id: string
++  revision: string
++  lifecycle: InvoiceLifecycle
++  printedNumber: string | null
++  shipmentLabel: string
++  clientLabel: string
++  companyLabel: string
++  values: ShipmentInvoiceDraftValues
++  selection: Selection
++  orders: InvoiceOrder[]
++  totalDisplay: string
++  createdLabel: string
++  updatedLabel: string | null
++  review: InvoiceReviewView
++  validationMessages: string[]
++  actions: {
++    edit: boolean
++    finalize: boolean
++    discard: boolean
++    cancel: boolean
++    replace: boolean
++  }
++  cancellationReason?: string
++  original?: { id: string; label: string }
++  replacement?: { id: string; label: string }
++}
++export type InvoiceViewState =
++  | { kind: 'ready'; record: InvoiceRecordView }
++  | { kind: 'loading' | 'error' | 'forbidden' | 'missing' }
++export interface InvoiceEditorInput {
++  values: ShipmentInvoiceDraftValues
++  selection: Selection
++  expectedRevision: string
++  reviewRevision: string | null
++}
++export type InvoiceActionResult =
++  | { kind: 'success'; record?: InvoiceRecordView; id?: string }
++  | { kind: 'validation'; messages: string[] }
++  | { kind: 'conflict'; latest: InvoiceViewState }
++  | { kind: 'failure'; message: string }
++  | { kind: 'uncertain' }
++export interface InvoiceEvaluation {
++  evaluation: SelectionEvaluation
++  review: InvoiceReviewView
++  validationMessages: string[]
++}
++/** UI host boundary only. Never a production API or authorization contract. */
++export interface ShipmentInvoiceDetailsProps {
++  state: InvoiceViewState
++  currencies: string[]
++  todayAthens: string
++  onReload?: () => Promise<InvoiceViewState>
++  onRefreshGoods?: (
++    id: string,
++    revision: string,
++  ) => Promise<{ shipment: ShipmentPresentation; review: InvoiceReviewView }>
++  onEvaluateDraft?: (input: InvoiceEditorInput) => Promise<InvoiceEvaluation>
++  onSave?: (
++    id: string,
++    input: InvoiceEditorInput,
++  ) => Promise<InvoiceActionResult>
++  onFinalize?: (
++    id: string,
++    revision: string,
++    reviewRevision: string | null,
++  ) => Promise<InvoiceActionResult>
++  onDiscard?: (id: string, revision: string) => Promise<InvoiceActionResult>
++  onCancelInvoice?: (
++    id: string,
++    revision: string,
++    reason: string,
++  ) => Promise<InvoiceActionResult>
++  onPrepareReplacement?: (id: string) => Promise<{
++    values: ShipmentInvoiceDraftValues
++    selection: Selection
++    shipment: ShipmentPresentation
++    review: InvoiceReviewView
++  }>
++  onCreateReplacement?: (
++    id: string,
++    input: InvoiceEditorInput,
++  ) => Promise<InvoiceActionResult>
++  onReconcile?: () => Promise<InvoiceViewState>
++  onOpenInvoice?: (id: string) => void
++  onOpenShipment?: (id: string) => void
++  onOpenAllocation?: (id: string) => void
++  registerNavigationGuard?: ShipmentInvoiceCreateFormProps['registerNavigationGuard']
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-actions.ts b/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-actions.ts
+new file mode 100644
+index 0000000..b8dda12
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-actions.ts
+@@ -0,0 +1,272 @@
++import { useRef, useState } from 'react'
++import type { useInvoiceEditor } from './use-invoice-editor'
++import {
++  InvoiceLifecycle,
++  type InvoiceActionResult,
++  type InvoiceViewState,
++  type ShipmentInvoiceDetailsProps,
++} from './types'
++import { reconcileSelection } from '../create/selection'
++import type { DetailsLabels } from './labels'
++type Action = 'finalize' | 'discard' | 'cancel'
++export function useInvoiceActions(
++  props: ShipmentInvoiceDetailsProps,
++  e: ReturnType<typeof useInvoiceEditor>,
++  d: DetailsLabels,
++) {
++  const [dialog, setDialog] = useState<Action | null>(null),
++    [reason, setReason] = useState(''),
++    [messages, setMessages] = useState<string[]>([])
++  const [destination, setDestination] = useState<{
++      kind: 'invoice' | 'shipment'
++      id: string
++    } | null>(null),
++    [navigationError, setNavigationError] = useState(false),
++    [latest, setLatest] = useState<InvoiceViewState | null>(null)
++  const trigger = useRef<HTMLElement | null>(null)
++  const r = e.record,
++    blocked =
++      e.conflict || e.uncertain || e.busy || !!destination || !!e.readState
++  function close() {
++    if (e.actionLock.current) return
++    setDialog(null)
++    queueMicrotask(() => trigger.current?.focus())
++  }
++  function open(kind: Action) {
++    if (blocked) return
++    setMessages([])
++    e.setError(null)
++    if (kind === 'finalize') {
++      const errors = [...r.validationMessages]
++      if (r.review.required && r.review.confirmedRevision !== r.review.revision)
++        errors.push(d.reviewNeeded)
++      if (errors.length) {
++        setMessages(errors)
++        return
++      }
++    }
++    trigger.current =
++      document.activeElement instanceof HTMLElement
++        ? document.activeElement
++        : null
++    setReason('')
++    setDialog(kind)
++  }
++  function navigateSaved(target = destination) {
++    if (!target) return
++    try {
++      const navigate =
++        target.kind === 'invoice' ? props.onOpenInvoice : props.onOpenShipment
++      if (!navigate) throw Error('unavailable')
++      navigate(target.id)
++      setNavigationError(false)
++    } catch {
++      setNavigationError(true)
++    }
++  }
++  async function run(
++    command: () => Promise<InvoiceActionResult>,
++    kind: Action | 'save' | 'replacement',
++  ) {
++    if (e.actionLock.current || blocked) return
++    e.mutationPending.current = true
++    e.actionLock.current = true
++    e.setBusy(true)
++    e.setError(null)
++    setMessages([])
++    const token = e.generation.current
++    try {
++      const result = await command()
++      if (!e.alive.current || token !== e.generation.current) return
++      setDialog(null)
++      if (result.kind === 'success') {
++        if (kind === 'discard' || kind === 'replacement') {
++          const id =
++            kind === 'discard'
++              ? r.values.shipmentId
++              : (result.record?.id ?? result.id)
++          if (!id) {
++            e.setUncertain(true)
++            return
++          }
++          const target = {
++            kind:
++              kind === 'discard' ? ('shipment' as const) : ('invoice' as const),
++            id,
++          }
++          setDestination(target)
++          e.setDirty(false)
++          e.setEditing(false)
++          e.setReplacing(false)
++          navigateSaved(target)
++        } else if (result.record) e.adopt(result.record)
++        else e.setUncertain(true)
++      } else if (result.kind === 'conflict') {
++        e.setConflict(true)
++        setLatest(result.latest)
++      } else if (result.kind === 'uncertain') e.setUncertain(true)
++      else if (result.kind === 'validation') setMessages(result.messages)
++      else e.setError(result.message)
++    } catch {
++      if (e.alive.current && token === e.generation.current) {
++        e.setUncertain(true)
++        setDialog(null)
++      }
++    } finally {
++      e.mutationPending.current = false
++      e.actionLock.current = false
++      if (e.alive.current) e.setBusy(false)
++    }
++  }
++  function save() {
++    if (
++      !e.readValid ||
++      e.reading ||
++      e.evaluating ||
++      !e.evaluation ||
++      e.evaluation.evaluation.mixed
++    )
++      return
++    const callback = e.replacing ? props.onCreateReplacement : props.onSave
++    if (!callback) return
++    const snapshot = e.input()
++    void run(
++      () => callback(r.id, snapshot),
++      e.replacing ? 'replacement' : 'save',
++    )
++  }
++  function confirm() {
++    if (
++      dialog === 'finalize' &&
++      r.actions.finalize &&
++      r.lifecycle === InvoiceLifecycle.Draft &&
++      props.onFinalize
++    )
++      void run(
++        () => props.onFinalize!(r.id, r.revision, r.review.confirmedRevision),
++        'finalize',
++      )
++    if (
++      dialog === 'discard' &&
++      r.actions.discard &&
++      r.lifecycle === InvoiceLifecycle.Draft &&
++      props.onDiscard
++    )
++      void run(() => props.onDiscard!(r.id, r.revision), 'discard')
++    if (
++      dialog === 'cancel' &&
++      r.actions.cancel &&
++      r.lifecycle === InvoiceLifecycle.Finalized &&
++      reason.trim() &&
++      props.onCancelInvoice
++    )
++      void run(
++        () => props.onCancelInvoice!(r.id, r.revision, reason.trim()),
++        'cancel',
++      )
++  }
++  async function prepare() {
++    if (
++      e.actionLock.current ||
++      blocked ||
++      !r.actions.replace ||
++      r.lifecycle !== InvoiceLifecycle.Cancelled ||
++      !props.onPrepareReplacement
++    )
++      return
++    e.actionLock.current = true
++    e.setBusy(true)
++    e.setError(null)
++    const token = ++e.generation.current
++    try {
++      const result = await props.onPrepareReplacement(r.id)
++      if (!e.alive.current || token !== e.generation.current) return
++      if (
++        result.shipment.id !== r.values.shipmentId ||
++        !result.shipment.eligible
++      )
++        throw Error('source')
++      const eligible = Object.fromEntries(
++        result.shipment.orders.map((o) => [
++          o.id,
++          o.rows.filter((row) => !row.ineligibleReason).map((row) => row.id),
++        ]),
++      )
++      const selected = reconcileSelection(result.selection, eligible)
++      e.form.reset({
++        ...result.values,
++        shipmentId: r.values.shipmentId,
++        documentDate: props.todayAthens,
++      })
++      e.setSelection(selected.selection)
++      e.current.current.selection = selected.selection
++      e.setShipment(result.shipment)
++      e.setReplacing(true)
++      e.setEditing(true)
++      e.setDirty(true)
++      e.setReview({ ...result.review, required: true, confirmedRevision: null })
++      e.setAck(null)
++      e.setReadValid(true)
++      e.setWarnings([
++        ...result.review.items,
++        ...selected.removed.map((row) => `${row.orderId} / ${row.rowId}`),
++        d.replacementInfo,
++      ])
++      await e.evaluate(selected.selection)
++    } catch {
++      if (e.alive.current && token === e.generation.current)
++        e.setError('failed')
++    } finally {
++      e.actionLock.current = false
++      if (e.alive.current) e.setBusy(false)
++    }
++  }
++  async function read(reconcile: boolean) {
++    const callback = reconcile ? props.onReconcile : props.onReload
++    if (!callback || e.actionLock.current) return
++    e.actionLock.current = true
++    e.setBusy(true)
++    const token = e.generation.current
++    try {
++      const result = await callback()
++      if (!e.alive.current || token !== e.generation.current) return
++      setLatest(result)
++      if (reconcile && e.editing) {
++        e.setConflict(true)
++        e.setUncertain(false)
++      } else if (result.kind === 'ready') {
++        e.adopt(result.record)
++        setLatest(null)
++        setMessages([])
++      } else {
++        e.setConflict(true)
++        e.setError(result.kind)
++        e.setUncertain(false)
++      }
++    } catch {
++      if (e.alive.current && token === e.generation.current)
++        e.setError('failed')
++    } finally {
++      e.actionLock.current = false
++      if (e.alive.current) e.setBusy(false)
++    }
++  }
++  return {
++    dialog,
++    reason,
++    setReason,
++    messages,
++    latest,
++    destination,
++    navigationError,
++    navigateSaved,
++    blocked,
++    open,
++    close,
++    confirm,
++    save,
++    prepare,
++    reconcile: () => void read(true),
++    reload: () => e.navigate(() => void read(false)),
++  }
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-editor.ts b/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-editor.ts
+new file mode 100644
+index 0000000..237cba6
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/details/use-invoice-editor.ts
+@@ -0,0 +1,450 @@
++import { useEffect, useRef, useState } from 'react'
++import { useAppForm } from '#/components/form'
++import { useDraftGuards } from '../create/use-draft-guards'
++import {
++  reconcileSelection,
++  toggleOrder,
++  toggleRow,
++  type Selection,
++} from '../create/selection'
++import type {
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++} from '../create/types'
++import type { Confirmation } from '../components/shipment-invoice-confirmations'
++import {
++  InvoiceLifecycle,
++  type InvoiceRecordView,
++  type InvoiceEvaluation,
++  type InvoiceEditorInput,
++  type ShipmentInvoiceDetailsProps,
++} from './types'
++
++export function useInvoiceEditor(
++  props: ShipmentInvoiceDetailsProps,
++  initial: InvoiceRecordView,
++) {
++  const [replacing, setReplacing] = useState(false)
++  const [record, setRecord] = useState(initial),
++    [editing, setEditing] = useState(false),
++    [dirty, setDirty] = useState(false)
++  const [shipment, setShipment] = useState<ShipmentPresentation | null>(null),
++    [selection, setSelection] = useState<Selection>(initial.selection)
++  const [evaluation, setEvaluation] = useState<InvoiceEvaluation | null>(null),
++    [review, setReview] = useState(initial.review),
++    [ack, setAck] = useState<string | null>(initial.review.confirmedRevision)
++  const [warnings, setWarnings] = useState<string[]>([]),
++    [busy, setBusy] = useState(false),
++    [reading, setReading] = useState(false),
++    [evaluating, setEvaluating] = useState(false),
++    [readValid, setReadValid] = useState(false)
++  const [error, setError] = useState<string | null>(null),
++    [conflict, setConflict] = useState(false),
++    [uncertain, setUncertain] = useState(false),
++    [confirmation, setConfirmation] = useState<Confirmation | null>(null)
++  const form = useAppForm({ defaultValues: structuredClone(initial.values) })
++  const mutationPending = useRef(false)
++  const acknowledgedRead = useRef<ShipmentInvoiceDetailsProps['state'] | null>(
++    null,
++  )
++  const readState =
++    props.state.kind !== 'ready' && acknowledgedRead.current !== props.state
++      ? props.state.kind
++      : null
++  const callbacks = useRef(props)
++  callbacks.current = props
++  const current = useRef({
++    record,
++    selection,
++    ack,
++    editing,
++    dirty,
++    busy,
++    conflict,
++    uncertain,
++    readValid,
++  })
++  current.current = {
++    record,
++    selection,
++    ack,
++    editing,
++    dirty,
++    busy,
++    conflict,
++    uncertain,
++    readValid,
++  }
++  const generation = useRef(0),
++    evaluationGeneration = useRef(0),
++    actionLock = useRef(false),
++    alive = useRef(true),
++    externalRevision = useRef(initial.revision)
++  const reviewInvalidated = useRef(false)
++  const localAck = useRef<string | null>(null)
++  const shipperPrefillAccepted = useRef(false)
++  const shipperBaseline = useRef(initial.values.shipper)
++  useDraftGuards(dirty || busy || uncertain)
++  useEffect(() => {
++    alive.current = true
++    return () => {
++      alive.current = false
++      generation.current++
++      evaluationGeneration.current++
++    }
++  }, [])
++  useEffect(() => {
++    if (props.state.kind !== 'ready') {
++      if (mutationPending.current) setUncertain(true)
++      generation.current++
++      evaluationGeneration.current++
++      setReading(false)
++      setEvaluating(false)
++      setReadValid(false)
++    }
++  }, [props.state])
++  useEffect(() => {
++    if (
++      (props.state.kind === 'ready' &&
++        props.state.record.revision !== externalRevision.current) ||
++      props.state.kind === 'missing' ||
++      props.state.kind === 'forbidden'
++    ) {
++      generation.current++
++      evaluationGeneration.current++
++      setConflict(true)
++      setBusy(false)
++      setReading(false)
++      setEvaluating(false)
++      if (props.state.kind === 'ready')
++        externalRevision.current = props.state.record.revision
++    }
++  }, [props.state])
++  function closeConfirmation() {
++    const trigger = confirmation?.trigger
++    setConfirmation(null)
++    queueMicrotask(() => trigger?.focus())
++  }
++  function ask(kind: Confirmation['kind'], accept: () => void) {
++    setConfirmation({
++      kind,
++      accept,
++      trigger:
++        document.activeElement instanceof HTMLElement
++          ? document.activeElement
++          : null,
++    })
++  }
++  function navigate(proceed: () => void) {
++    if (actionLock.current || current.current.busy) return
++    if (current.current.dirty || current.current.uncertain)
++      ask('discard', proceed)
++    else proceed()
++  }
++  useEffect(
++    () => props.registerNavigationGuard?.(navigate),
++    [props.registerNavigationGuard],
++  )
++  const input = (
++    next = selection,
++    reviewRevision = ack,
++  ): InvoiceEditorInput => ({
++    values: structuredClone(form.state.values),
++    selection: structuredClone(next),
++    expectedRevision: record.revision,
++    reviewRevision,
++  })
++  function invalidate() {
++    reviewInvalidated.current = true
++    localAck.current = null
++    setAck(null)
++    setReview((old) => ({ ...old, required: true, confirmedRevision: null }))
++    setDirty(true)
++  }
++  async function evaluate(
++    next: Selection,
++    reviewRevision: string | null = null,
++  ) {
++    const token = ++evaluationGeneration.current
++    setEvaluating(true)
++    setEvaluation(null)
++    try {
++      const result = await callbacks.current.onEvaluateDraft?.(
++        input(next, reviewRevision),
++      )
++      if (!alive.current || token !== evaluationGeneration.current) return
++      if (!result) throw Error('unavailable')
++      setEvaluation(result)
++      setReview({
++        ...result.review,
++        required: result.review.required || reviewInvalidated.current,
++      })
++      setWarnings((old) => [...new Set([...old, ...result.review.items])])
++      setAck(
++        (!reviewInvalidated.current &&
++          result.review.confirmedRevision === result.review.revision) ||
++          localAck.current === result.review.revision
++          ? result.review.revision
++          : null,
++      )
++    } catch {
++      if (alive.current && token === evaluationGeneration.current)
++        setError('failed')
++    } finally {
++      if (alive.current && token === evaluationGeneration.current)
++        setEvaluating(false)
++    }
++  }
++  async function refresh() {
++    if (
++      actionLock.current ||
++      current.current.conflict ||
++      current.current.uncertain
++    )
++      return
++    const token = ++generation.current
++    evaluationGeneration.current++
++    setReading(true)
++    setReadValid(false)
++    setEvaluation(null)
++    setError(null)
++    try {
++      const result = await callbacks.current.onRefreshGoods?.(
++        record.id,
++        record.revision,
++      )
++      if (!alive.current || token !== generation.current) return
++      if (
++        !result ||
++        result.shipment.id !== record.values.shipmentId ||
++        !result.shipment.eligible
++      )
++        throw Error('read')
++      setShipment(result.shipment)
++      const eligible = Object.fromEntries(
++        result.shipment.orders.map((o) => [
++          o.id,
++          o.rows.filter((r) => !r.ineligibleReason).map((r) => r.id),
++        ]),
++      )
++      const reconciled = reconcileSelection(current.current.selection, eligible)
++      setSelection(reconciled.selection)
++      current.current.selection = reconciled.selection
++      setWarnings((old) => [
++        ...new Set([
++          ...old,
++          ...result.review.items,
++          ...reconciled.removed.map((r) => `${r.orderId} / ${r.rowId}`),
++        ]),
++      ])
++      if (
++        result.review.required ||
++        reconciled.removed.length ||
++        result.review.revision !== current.current.ack
++      )
++        invalidate()
++      setReview({
++        ...result.review,
++        required: result.review.required || reviewInvalidated.current,
++      })
++      setReadValid(true)
++      await evaluate(reconciled.selection, current.current.ack)
++    } catch {
++      if (alive.current && token === generation.current)
++        setError('sourceFailed')
++    } finally {
++      if (alive.current && token === generation.current) setReading(false)
++    }
++  }
++  function start() {
++    if (record.lifecycle !== InvoiceLifecycle.Draft || !record.actions.edit)
++      return
++    setEditing(true)
++    void refresh()
++  }
++  function reset() {
++    localAck.current = null
++    reviewInvalidated.current = false
++    shipperPrefillAccepted.current = false
++    shipperBaseline.current = record.values.shipper
++    generation.current++
++    evaluationGeneration.current++
++    form.reset(structuredClone(record.values))
++    setSelection(record.selection)
++    current.current.selection = record.selection
++    setEditing(false)
++    setReplacing(false)
++    setDirty(false)
++    setWarnings([])
++    setReview(record.review)
++    setAck(record.review.confirmedRevision)
++    setError(null)
++    setReading(false)
++    setEvaluating(false)
++  }
++  function cancel() {
++    navigate(reset)
++  }
++  function change(key: keyof ShipmentInvoiceDraftValues, value: string) {
++    if (key === 'shipmentId' || actionLock.current || conflict || uncertain)
++      return
++    form.setFieldValue(key, value)
++    if (key === 'shipper') shipperPrefillAccepted.current = false
++    if (key === 'clientId') form.setFieldValue('companyId', '')
++    setDirty(true)
++    if (
++      [
++        'packingDetails',
++        'totalWeightKg',
++        'partialAmount',
++        'partialCurrency',
++      ].includes(key)
++    )
++      invalidate()
++    if (readValid)
++      void evaluate(
++        selection,
++        [
++          'packingDetails',
++          'totalWeightKg',
++          'partialAmount',
++          'partialCurrency',
++        ].includes(key)
++          ? null
++          : ack,
++      )
++  }
++  function chooseCompany(id: string) {
++    const company = shipment?.companies.find(
++      (c) => c.id === id && c.clientId === form.state.values.clientId,
++    )
++    change('companyId', id)
++    const replace = () => {
++      change('shipper', company?.shipper ?? '')
++      shipperBaseline.current = company?.shipper ?? ''
++      shipperPrefillAccepted.current = true
++    }
++    if (
++      form.state.values.shipper !== shipperBaseline.current ||
++      (!shipperPrefillAccepted.current &&
++        form.state.values.shipper !==
++          shipment?.companies.find((c) => c.id === record.values.companyId)
++            ?.shipper)
++    )
++      ask('shipper', replace)
++    else replace()
++  }
++  function select(next: Selection) {
++    setSelection(next)
++    current.current.selection = next
++    invalidate()
++    void evaluate(next)
++  }
++  function order(id: string) {
++    const rows =
++      shipment?.orders
++        .find((o) => o.id === id)
++        ?.rows.filter((r) => !r.ineligibleReason)
++        .map((r) => r.id) ?? []
++    select(toggleOrder(selection, id, rows))
++  }
++  function row(id: string, rowId: string) {
++    const rows =
++      shipment?.orders
++        .find((o) => o.id === id)
++        ?.rows.filter((r) => !r.ineligibleReason)
++        .map((r) => r.id) ?? []
++    select(toggleRow(selection, id, rowId, rows))
++  }
++  function confirmReviewed() {
++    if (evaluating || reading || !review.canConfirm || !readValid) return
++    localAck.current = review.revision
++    setAck(review.revision)
++    setDirty(true)
++  }
++  function adopt(next: InvoiceRecordView) {
++    generation.current++
++    evaluationGeneration.current++
++    acknowledgedRead.current = callbacks.current.state
++    externalRevision.current = next.revision
++    shipperPrefillAccepted.current = false
++    setRecord(next)
++    form.reset(structuredClone(next.values))
++    setSelection(next.selection)
++    current.current.selection = next.selection
++    setEditing(false)
++    setReplacing(false)
++    setDirty(false)
++    setWarnings([])
++    setReview(next.review)
++    setAck(next.review.confirmedRevision)
++    localAck.current = null
++    reviewInvalidated.current = false
++    setError(null)
++    setConflict(false)
++    setUncertain(false)
++    setReading(false)
++    setEvaluating(false)
++    setBusy(false)
++    shipperBaseline.current = next.values.shipper
++  }
++
++  return {
++    mutationPending,
++    readState,
++    replacing,
++    setReplacing,
++    adopt,
++    record,
++    setRecord,
++    editing,
++    setEditing,
++    dirty,
++    setDirty,
++    shipment,
++    setShipment,
++    selection,
++    setSelection,
++    evaluation,
++    setEvaluation,
++    review,
++    setReview,
++    ack,
++    setAck,
++    warnings,
++    setWarnings,
++    busy,
++    setBusy,
++    reading,
++    evaluating,
++    readValid,
++    setReadValid,
++    error,
++    setError,
++    conflict,
++    setConflict,
++    uncertain,
++    setUncertain,
++    confirmation,
++    closeConfirmation,
++    ask,
++    navigate,
++    form,
++    input,
++    start,
++    cancel,
++    change,
++    chooseCompany,
++    order,
++    row,
++    refresh,
++    confirmReviewed,
++    reset,
++    evaluate,
++    generation,
++    evaluationGeneration,
++    alive,
++    actionLock,
++    current,
++  }
++}

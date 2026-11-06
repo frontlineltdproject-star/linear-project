@@ -1,0 +1,15 @@
+{
+  "combinations": 72,
+  "errors": [],
+  "failed": [],
+  "external": [],
+  "journeys": [
+    "dirty cancel",
+    "refresh retention",
+    "mixed save block",
+    "conflict copy and reload cancel",
+    "finalize and cancel",
+    "replacement identity",
+    "create to Details"
+  ]
+}

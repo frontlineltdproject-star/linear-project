@@ -1,0 +1,58 @@
+[
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx",
+    "sha256": "238b62f34c053038e525be57dff3797d346b991f4e961f86a39738fb3d60b81a"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx",
+    "sha256": "9a17e4254487539402a51531adefa4e88b093296deb3e91bdbf11956a0a1cd9a"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx",
+    "sha256": "221ab03dc8d519195b3ee156e2651a58ca75b012108f461a1c9651952a3b58fd"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx",
+    "sha256": "26f3fead22006aa60a8d060477521dbe6e1cf61d3b8de02eada650ae8668fcff"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx",
+    "sha256": "390220429cd476527f4bcc454eb15692c5b0d85eef72cdb583c480eabbe69af5"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx",
+    "sha256": "1cdac166281e6a7ce3f24da0758cccc905191a99c0024554eeb1d9d230a8d4a7"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/README.md",
+    "sha256": "961b8d66afc071b8e60d9d2274f339c42a12afa0c0cb7ab564a6b0b518e2381d"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts",
+    "sha256": "b65830541b66f5af84472260eb9afd72e48755a4ed6806ec56d4ff64f4848848"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts",
+    "sha256": "c62d0867994f2a8c16bbea10118653cea6960d02f898cc7d0c82814eca12119d"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts",
+    "sha256": "8a486807e7e11356567f524068dcc9de9f7539295f9fc2cc5a43d0c4ae657df6"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts",
+    "sha256": "85ce5a93fbf5c6b9b1bc6cbe9245321165ffa314c94a4226a5d7b197e6cf5e01"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts",
+    "sha256": "4c12b9636c74b4684650d9249037e9db96f8f9223bcd05ce677abb0651184a9f"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/types.ts",
+    "sha256": "06a16cd5f07dbe525058ddd1d94fbb77b2bbcf91082fec4ea6258bacd8e308c8"
+  },
+  {
+    "path": "frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts",
+    "sha256": "a381eff0f55d7bdb3dad31595389cc6baa42578b24a994af5dcb8cb2864b0147"
+  }
+]
