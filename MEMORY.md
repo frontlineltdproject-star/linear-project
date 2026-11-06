@@ -2674,3 +2674,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Wrangler 4.45.0 created Pages project fro-366-0a2f26 and deployed d4f4ba89. Public URL https://fro-366-0a2f26.pages.dev/ . Anonymous HTTP 200; attachment/local/public SHA-256 b1cfdb4b02403fe1862520066550999492b73aaade279d28218fc2f175ef8533. No source edits, production changes or existing Cloudflare-resource changes.
 - Browser opened without sign-in. Checked default/edit/finalized/cancelled/replacement and loading/empty/error/conflict scenarios, respecting the unsaved-change confirmation when switching. Greek default at 400px has no page-wide horizontal overflow. Captured console warning/error list empty; dedicated network-log API unavailable. This verifies the static preview, not production behavior.
 - Added current public preview resource and explicit hosted-preview paragraph in the design section, replacing no-hosted-preview-required wording. Re-read at 2026-11-06T16:27:52.439Z confirmed exact intended description after normalization, original four attachments, relations, Backlog and Pending_Review/Frontend/Story unchanged.
+
+
+### 2026-11-06 — FRO-366 frontend branch resource added
+
+- User explicitly approved adding “Frontend UI mock — FRO-366”. Added the published GitHub branch as a link attachment, ID 9f4ed1b7-b5c9-450e-822a-b542bef2e745.
+- Fresh issue read showed five existing resources, including the public preview added elsewhere. Re-read confirms all five preserved (six total), exact approved link/title, unchanged description, Backlog/Pending_Review/Frontend/Story, priority, assignee, project/milestone, parent and relations. No behavior/spec change; consumer tracing/design/interview steps do not need repeating for this approved resource-only update.

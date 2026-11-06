@@ -44,3 +44,7 @@ Post-commit/pre-push checks: 281 tests pass / 47 files; Vite build passes (exist
 Branch URL: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-366-shipment-invoice-details
 
 No PR, merge, deployment or Linear update. Backend/integration prerequisites remain as documented in the verified handoff. Proposed Linear link attachment above awaits its own approval.
+
+## Linear attachment completed
+
+User explicitly approved the proposed link. Added **Frontend UI mock — FRO-366**, attachment `9f4ed1b7-b5c9-450e-822a-b542bef2e745`. Re-read confirms all five prior resources, description, status, labels and metadata/relations preserved; six resources total.
