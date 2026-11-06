@@ -2436,3 +2436,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Red/Green tests and independent reviewer findings addressed; 23 feature tests, full 249 tests/46 files and build pass. 36 browser combinations (EN/EL,1440/400,9 states) plus key flows passed, zero page errors/external requests/overflow. Feature formatting passes. Whole-project type check still has two known delivery-note-test cast errors; whole-project formatting has pre-existing failures. No unrelated fixes.
 - Handoff drafts/fro363-frontend-handoff.md, full patch drafts/fro363-frontend-preparation.patch, screenshots/logs drafts/fro363-frontend-evidence/. Temporary review harness moved outside production checkout to session root/fro363-review; local React preview at http://127.0.0.1:8766/ opened in Codex and smoke-tested after relocation.
 - Base refreshed unchanged. Review patch contains only 14 new feature files. Production worktree remains detached/uncommitted. Publication blocked by mandatory ruleset enforcement 403 and non-clean required project checks; backend and Details/allocation UI remain activation dependencies. Linear unchanged during implementation; FRO-363 still Backlog/Pending_Review/Story/Frontend in 0.0.12 with four approved attachments.
+
+### 2026-11-06 - Shipment Invoice Details/edit Q1-Q3 accepted
+
+- User accepted combined Details with draft edit mode, providing FRO-363's successful-create destination and a read-only view of finalized invoices. Finalization belongs on Details; printing remains separate.
+- Lock Shipment after draft creation. Correct a wrong Shipment by discarding the draft and creating another. This is a newly agreed UI restriction; check consistency with the backend contract during spec review.
+- Explicit Save changes returns to Details. Cancel confirms discarding unsaved changes. Incomplete drafts remain saveable under FRO-244 draft rules; finalization is separate.
+- Next interview round: finalization confirmation, draft discard, and cancellation/replacement UI ownership. No Linear write or preview implementation yet.
+
