@@ -2600,3 +2600,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - On explicit user instruction, added the published mock/fro-361-delivery-note-details branch, immutable commit 551e2051b5f784dfdbbc814316e25a30807a3a18, base commit, component README and pinned verification evidence links to FRO-361.
 - Handoff records delivered unmounted Details UI, remaining authorized reads/shared saved-draft context/callback wiring/list/routes, verification results, and the user-approved branch-only type/format and unverified-ruleset exceptions. No product behavior changed; no new design or consumer trace required.
 - Re-read confirmed the exact additive description (apart from Linear link normalization), unchanged metadata and relations, all five labels, and all three attachments. Status remains Backlog with Pending_Review. No merge or deployment.
+
+### 2026-11-06 - FRO-366 planning checkpoint accepted; implementation plan ready
+
+- User explicitly continued planning. Resumed existing FRO-366 snapshot with UTF-8: HEAD 5774931, committed fingerprint b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. No issue comments. Read domain guidance, package/Docker setup and published FRO-363 fields/goods/selection/guard/create controller.
+- Plan saved drafts/fro366-frontend-plan.md: main-based detached preparation; import pinned 14 FRO-363 feature files as explicitly recorded uncommitted dependency, extend shared presentation compatibly, build separate saved-record/replacement controller, then lifecycle and browser/audit slices. Reuse must not reset saved fields or unlock Shipment. Backend totals/review/permissions/persistence remain callbacks, no fabricated production schema.
+- Plan includes typed presentation boundaries, files, component map, meaningful tests, EN/EL desktop/mobile journeys, create regression coverage and provenance audit against main and FRO-363. Intent list before install reports no enabled packages; repeat after dependency install. No Base/Version/Sync workflow found; use Node 22.13.0 and pnpm 11.1.3 frozen lockfile per Dockerfile.
+- Plan agreement and separate implementation-model checkpoint pending. No source changes, installs, application test runs, production branch/commit/push or Linear updates. Ruleset HTTP 403 remains publication blocker; FRO-363 exceptions do not apply.
+
