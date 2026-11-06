@@ -1,5 +1,10 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Independent colli movement Q7 accepted
+
+- Partial reservation before receipt is allowed for identified collis, using shared Order supplier readiness and their expected warehouse. Only selected collis are reserved. Shipment readiness and dispatch require every selected colli to be stock-confirmed at the origin; unreceived siblings do not block departure.
+- Read current PurchaseOrderRepository grouping/filtering through gh. Order-level status, inactive classification and warehouse grouping need colli-aware summary/filter contracts. Next discussion concerns mixed physical summaries and warehouse-filtered totals. No Linear change.
+
 ### 2026-11-06 — Independent colli movement Q6 accepted
 
 - User accepted separate Orders for batches requiring separate Customs Storage Entries, even when their customs regime matches. Preserve actual admission coverage; no implicit addition of later goods to a prior Entry. Updated ADR 0005. No Linear change.
