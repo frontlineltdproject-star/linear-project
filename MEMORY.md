@@ -2301,3 +2301,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-05 - Indicative field impact for partial historical arrivals
 
 - Reviewed main 5774931 database schema and current FRO-324. Proposed explicit stay-to-colli coverage, Order physical summary reads and historical subset validation. Current stay uniqueness is per Order; content already tracks colli, Shipment and Order at loading. Separate decisions for concurrent outgoing movements and readiness. No schema choice or scope approved.
+
+### 2026-11-06 - Independent colli movement Q3-Q4 accepted
+
+- Q3 accepted: staff may edit an eligible colli independently while siblings travel, subject to its own reservation/document safeguards and shared-field impact checks.
+- Q4 accepted: retain existing child Orders; user confirms they are mock data. No automatic merge. Future movements use the new scope within their existing Order.
+- Consumer trace identified current DeliveryNoteDraftSourceService expanding participating Orders to all active nonterminal collis. New scope must use Shipment contents. FRO-356 and PurchaseOrderCustomsService assume shared Order customs facts and one occupied warehouse. Customs coverage and separate admission rules require a business decision before the draft is complete.
