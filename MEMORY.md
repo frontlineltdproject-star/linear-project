@@ -2484,3 +2484,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Exact same-name push succeeded. Fetch verified remote head equals local commit; remote diff contains only approved paths, worktree clean.
 - Branch: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-363-shipment-invoice-create
 - FRO-363-only check/ruleset exceptions remain scoped as approved. No PR, merge, deployment or Linear mutation. Activation depends on FRO-244/FRO-301 backend and Details/allocation integration. Full evidence: drafts/fro363-frontend-handoff.md.
+
+### 2026-11-06 - FRO-363 published mock handoff added to Linear
+
+- User explicitly requested adding the mock branch and handoff notes. Replaced the preparation paragraph in Design and developer handoff with published branch/commit/base, immutable feature README, handoff/evidence links, implementation scope, integration/guard requirements, verification results and the accepted ticket-only check/ruleset exceptions.
+- Verified live remote head remains 230a90581aa85e611737add554b2b3c6f5912e0e. No business behavior or activation ownership changed; no new consumer trace or design round needed for this handoff-only update.
+- Re-read FRO-363 at updatedAt 2026-11-06T14:32:36.621Z: description matches the intended replacement after Linear markup normalization; title, status, complete labels, priority, project, milestone, parent, assignee and relations unchanged. All four original attachments preserved by ID.
+- Current baseline already included related FRO-302/FRO-362; preserved these existing relations without changing dependencies. Backlog / Pending_Review, Frontend, Story and milestone 0.0.12 remain unchanged.
+- Ticket: https://linear.app/front-line-ltd/issue/FRO-363/shipment-invoice-create-page-ui
