@@ -2344,3 +2344,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Q3 accepted: staff may edit an eligible colli independently while siblings travel, subject to its own reservation/document safeguards and shared-field impact checks.
 - Q4 accepted: retain existing child Orders; user confirms they are mock data. No automatic merge. Future movements use the new scope within their existing Order.
 - Consumer trace identified current DeliveryNoteDraftSourceService expanding participating Orders to all active nonterminal collis. New scope must use Shipment contents. FRO-356 and PurchaseOrderCustomsService assume shared Order customs facts and one occupied warehouse. Customs coverage and separate admission rules require a business decision before the draft is complete.
+
+### 2026-11-06 - FRO-360 and FRO-359 removed from pre-releases
+
+- At the user's explicit request, cleared the Pre-releases 0.0.x project assignment on FRO-360 and FRO-359. Re-read both issues and verified no project, unchanged descriptions, titles, Backlog status, priorities, assignees, complete label sets, attachments and relations. No product behavior or production changes.
+
