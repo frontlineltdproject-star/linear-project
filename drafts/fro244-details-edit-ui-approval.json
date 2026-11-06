@@ -1,0 +1,22 @@
+{
+  "title": "Shipment Invoice — Details & draft editing UI",
+  "team": "FRO",
+  "state": "Backlog",
+  "labels": ["Story", "Frontend", "Pending_Review"],
+  "project": "Pre-releases 0.0.x",
+  "milestone": "0.0.12",
+  "milestoneId": "00ef3bb7-8240-41af-b187-3def86ea9a49",
+  "parentId": "FRO-244",
+  "priority": 0,
+  "assignee": null,
+  "blockedBy": ["FRO-244", "FRO-301"],
+  "blocks": ["FRO-363"],
+  "descriptionFile": "drafts/fro244-details-edit-ui.md",
+  "attachments": [
+    {"source":"previews/shipment-invoice-details/index.html","title":"shipment-invoice-details.html"},
+    {"source":"previews/shipment-invoice-details/component-map.md","title":"component-map.md"},
+    {"source":"previews/shipment-invoice-details/desktop.png","title":"desktop.png"},
+    {"source":"previews/shipment-invoice-details/mobile.png","title":"mobile.png"}
+  ],
+  "approvalStatus": "Awaiting user approval of full description, metadata, relations and attachments. No Linear write."
+}

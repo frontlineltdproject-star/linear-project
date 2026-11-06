@@ -2501,3 +2501,12 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Headless Edge verified 56 viewport/language/scenario combinations and lifecycle/input-retention interactions, zero page errors/external requests/document overflow. Desktop and Greek mobile screenshots inspected. Original/replacement navigation also verified. Preview is for design review; no ticket approval/write, hosted publication or production code change.
 - Next: collect preview feedback, complete live consumer/spec trace and backend review/versioning/replacement contracts, then prepare full standalone ticket under frontline-linear-issues for approval. FRO-363 remains independently owned by the other chat.
 
+
+### 2026-11-06 - Shipment Invoice Details/edit design approved; full ticket draft ready
+
+- User approved local preview and requested specification check/full ticket for approval. Applied frontline-linear-issues writing skill. Refreshed FRO-244/FRO-301/FRO-363, duplicate search, live labels/statuses/milestone. FRO-363 now has unmounted mock 230a90581aa85e611737add554b2b3c6f5912e0e; read its integration guide/types via gh.
+- Completed live main 5774931 consumer trace (drafts/fro244-details-edit-spec-check.md): Shipment Invoice API/persistence absent; allocation, review/version contracts and actual allocation UI navigation remain explicit activation dependencies. Delivery-note expected-version checks are precedent only; do not import its per-issuer numbering/AADE lifecycle. Preserve Shipment cancellation guard ownership in FRO-244.
+- Corrected preview sample unit PCS to source PC and reran all 56 combinations and lifecycle checks successfully. No layout or approved behavior change.
+- Full standalone draft: drafts/fro244-details-edit-ui.md; metadata/attachment scope: drafts/fro244-details-edit-ui-approval.json. Proposed title Shipment Invoice — Details & draft editing UI; new FRO-244 child, Backlog, Story/Frontend/Pending_Review, Pre-releases 0.0.x / 0.0.12, unassigned/no priority, blocked by FRO-244/FRO-301 and blocks FRO-363. Four resources: shipment-invoice-details.html, component-map.md, desktop.png, mobile.png.
+- Await full ticket/metadata/relations/attachment approval. No Linear mutation, production implementation or branch publication. FRO-363 publication exceptions remain ticket-specific.
+
