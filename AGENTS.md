@@ -70,7 +70,7 @@ This skill decides **what goes in the ticket**. The `frontline-linear-issues` sk
 
 ## How to run it
 
-**Announce the flow and work the steps in order.** Open a todo list with one item per step (0 Preflight · 1 Grill · 2 Canvas · 2b Preview · 3 Spec check · 4 Ticket · 4e UI branch · 5 Memory · 6 Verify), mark each one as you go, and tell the user which step you are on. Skip a step only when its own rule says it does not apply (steps 2, 2b and 4e on a feature with no UI), and say out loud that you are skipping it and why.
+**Announce the flow and work the steps in order.** Open a todo list with one item per step (0 Preflight · 1 Grill · 2 Canvas · 2b Preview · 3 Spec check · 4 Ticket · 4e UI branch · 5 Memory · 6 Verify), mark each one as you go, and tell the user which step you are on. Skip a step only when its own rule says it does not apply (steps 2, 2b and 4e on a feature with no UI), and say out loud that you are skipping it and why. After a direction is picked, every design change follows **Change propagation** (after step 3).
 
 **Three hard gates — the flow stops and waits at each:**
 
@@ -100,6 +100,7 @@ Verify each access with a real operation, not with an assumption.
 - **Linear MCP needs OAuth** and cannot be authorised from a non-interactive session. If the read call fails, say so and ask the user to connect it (`/mcp` in an interactive terminal, or their Claude connector settings), then continue offline: the draft still gets written in chat.
 - **There is no Sentry MCP on this machine.** When a ticket comes from a Sentry issue, ask the user to paste the issue (title, culprit, stack frame, event count). The Sentry↔Linear integration is connected for filing, not for reading from here.
 - **Never ground facts in `FrontLine/Production Portal Files/frontline-forwarding-main.zip`** — it is a stale snapshot. GitHub is the live copy.
+- **Read from a named branch and record its commit.** `gh api …/contents/<path>` without `?ref=` silently reads the default branch. At the start of each ticket task, decide which branch matches the ticket's target (normally `main`), read with `?ref=<branch>`, and record the branch and its commit SHA (`gh api repos/Frontline-Forwarding/frontline-forwarding/commits/<branch> --jq .sha`) in the task notes. When the task continues later, check the SHA again; if the branch moved, re-read the files you depend on.
 
 ## 1. Grill the request
 
@@ -169,8 +170,12 @@ gh api repos/Frontline-Forwarding/frontline-forwarding/contents/docs/reference/d
 - **Always source the UI from the live `Frontline-Forwarding/frontline-forwarding` repository through the authenticated GitHub CLI (`gh`), including when the user has collaborator/invited access rather than repository ownership.** Read `frontline-forwarding-client/DESIGN.md`, `src/styles/theme.css`, the touched screen/form, and its imported `src/components/ui/` components before drawing. Copy the actual tokens, typography, spacing, control styles, and layout from those files. The theme and components are authoritative when documentation differs. Do not use `FrontLine/Portal Code/Portal Design System.md`, the stale ZIP, memory, or the GitHub connector as the UI source. If `gh` access fails, stop and report the missing access instead of substituting an older design.
 - Put **2 or 3 directions** beside the current screen. Each direction gets a note with its trade-off. At least one may try a fresh element, inside the current style.
 - **Mark every element that is not an existing portal component** with a `New component` label — on the element, on the artboard, and in the direction's note with the reason for each one. The user must see at a glance which parts are new.
+- **A new component is the user's decision.** New components are welcome when they serve the screen better than a forced reuse, under two conditions:
+  1. *Agreement.* For each `New component`, ask the user before the design is picked: "Do we add this as a portal component?" Record the answer in the ticket's **Decisions**. Do not carry a new component into the ticket or step 4e without that answer. When the answer is no, build the element from existing components or drop it.
+  2. *Fit.* Build it from the production tokens and the anatomy of the existing components (colours, spacing, type, radii, density), so it reads as part of the current UI. In step 4e it is composed in the client from existing primitives; a missing primitive is resolved with the user first.
 - **Bilingual check.** Every label exists in EN and EL; Greek strings run longer, so nothing may have a rigid height that clips them.
 - The user edits and picks on the canvas. When they save an edit, read the artifact back, tell them what changed, and carry the change into the ticket.
+- **Look at the canvas yourself before you publish it, and again after each change.** Render every artboard and inspect the image: wrapped titles, cut labels, overflow, repeated blocks, and each number and label against its source. A wrapped title, a cut label or a wrong number on an artboard is the agent's fault, not the user's.
 - Tell the user plainly: **the canvas shows the look only. It is not the contract — the ticket description is.**
 - Export the picked direction's screenshots for the ticket, and hand the picked direction to **step 2b**.
 
@@ -188,7 +193,11 @@ The canvas lives in this chat; Grigoris and the dev do not. A Pages deploy turns
 - the **EN / EL toggle**, so Greek label length is judged on the real strings;
 - desktop **and** ~400px both usable.
 
+**No login — by decision.** A preview opens without a password, so a link in the ticket, in Teams or in an email opens the feature directly, also on a phone. The unguessable project name is the only key.
+
 ⚠️ **Fixture data only.** Sample values come from `docs/reference/demo-data.md` or are invented outright. **Never** put a real client name, vessel name, price, MRN or reference on that page — a `pages.dev` URL is public to anyone who has it, and the link travels by email.
+
+⚠️ **A preview that must carry real data gets a lock, or it is not deployed.** The lock is HTTP basic auth inside that preview's own Pages project: a `functions/_middleware.js` in the deploy folder that checks the credentials, with the user name and password stored as secrets of that project only (`npx wrangler pages secret put PREVIEW_USER --project-name="$NAME"`, same for `PREVIEW_PASSWORD`). Never use Cloudflare Access or Zero Trust for this (see the Cloudflare rules below). Keep the credentials out of the repo, the ticket and the chat; give them to the user through a channel the user chooses. Before handing over the link, confirm that the URL without credentials returns `401`. Ask the user before deploying a preview with real data at all.
 
 ### Deploy
 
@@ -204,9 +213,25 @@ npx wrangler pages deploy "<scratchpad>/preview" --project-name="$NAME"
 
 The link is `https://<NAME>.pages.dev` — for example `fro-251-a3f9b1.pages.dev`. The random suffix is the point: the name carries the ticket id so it is findable, and the suffix makes it unguessable.
 
-**Check it before you hand it over.** Open the URL, read the console and the network log — the pass condition is **zero errors and zero failed requests** — open every state, and compare the default state with the direction the user picked. Do not say the preview is ready before all of that passes.
-
 Iterate by re-running `pages deploy` on the same project. Each deploy also gets a `<hash>.<NAME>.pages.dev` URL; **send the project URL, not the per-deploy one**, so the link keeps working as you iterate.
+
+**Send the deep link.** Give the user the project URL with the parameters that open the feature in the state under review (for example `https://<NAME>.pages.dev/?state=default`), not just the bare root.
+
+### Preview check — before you give the URL to anyone
+
+Run this check after **every** deploy. Do not give the URL to anyone, and do not say that the preview is ready, before every item passes.
+
+1. Open the deep link and confirm it lands on the feature.
+2. Read the console and the network log. The pass condition is **zero errors and zero failed requests**.
+3. Open every state: default, `?state=loading`, `?state=empty`, `?state=error`, and any feature-specific state — from the URL and from the visible switcher.
+4. Compare the default state with the direction the user picked, element by element. Each element of the direction is present. Each `New component` marker is present on the element and in the business notes.
+5. Switch EN / EL and confirm no Greek label is clipped or overflows.
+6. Test the desktop width and a ~400px width. The page must not scroll horizontally.
+7. Confirm that each acceptance criterion with a visible outcome can be checked on the preview.
+8. Take one screenshot per state and per width. **Look at every screenshot yourself before you send it**: wrapping, cut text, overflow, repeated blocks, and each number and label against the fixture. A screenshot you did not look at is not a check. Send the screenshots with the deep link, and say which images you looked at.
+9. Report each item as pass or fail. Fix a failure, redeploy and repeat the whole check. When a failure remains, say so together with the URL.
+
+The check compares presence and position, not pixels; the copied tokens guard the pixels.
 
 ### ⚠️ Cloudflare rules — this account runs the live company
 
@@ -296,6 +321,21 @@ A design round changes rules, not only pixels. A new control, a removed column, 
 
 ⚠️ The canvas and the preview are the contract for the look. **The ticket description is the contract for the computation.** A design change that reaches the preview but not the description is a hidden spec change, and the dev builds the old rule.
 
+## Change propagation — update every surface
+
+Once the user has picked a direction, a later design change is a ticket change, and it is not done when only one place is patched. Before you start the change, list the surfaces that show the design, and tick each one when it holds the change:
+
+1. the canvas (artboards and notes, then republish) and the canvas self-check;
+2. the Cloudflare Pages preview (redeploy) and the full preview check;
+3. the screenshots on the ticket (new upload, behind the step 4c gate);
+4. the ticket description, with the change integrated into the relevant sections and its decision in **Decisions** (behind the step 4c gate);
+5. the mock branch from step 4e, when it exists (code change, re-verification, fresh push approval);
+6. the session comment on the ticket, when one is used (behind the step 4c gate);
+7. `CONTEXT.md`, when a term changes;
+8. `MEMORY.md` and, for a reusable lesson, `WORKFLOW_LEARNINGS.md`.
+
+⚠️ A surface that keeps the old design is a second spec. Report each surface as done, or say which one you left and why.
+
 ## 4. Linear ticket — show it, then ask
 
 Invoke **`frontline-linear-issues`** and follow it for archetype, voice, tables, typed fields and labels.
@@ -310,6 +350,10 @@ Invoke **`frontline-linear-issues`** and follow it for archetype, voice, tables,
 - the canvas link, the screenshots, and the **preview URL with its Pages project name** (`https://fro-<id>-<hex6>.pages.dev`), when there was a design round — the project name is what lets anyone find and delete it later;
 - **`## Context for agents`** — each fact with the repo file it came from, and each gotcha the work turned up;
 - **`## Post-deployment verification`** — each acceptance criterion rewritten as one concrete **read-only** check an agent can run: a page to open, a value to compare, a read-only GraphQL/REST/MCP call. Never a write call.
+
+**The three layers of a ticket.** The description is the truth, the attachments are the evidence, the comments are the history. On a conflict, the description wins. Process narrative and revision history go to comments, never into the description.
+
+**Session record (optional, per ticket).** When the user wants one, export the session as a readable Markdown file (the messages plus one-line tool markers), scrub credentials, tokens and passwords, and attach it as `<ticket-id>-session-<YYYY-MM-DD>.md` — one file per session. At the end of each later session that touches the ticket, draft one short session comment (what was done, what was decided, what stays open) and attach that session's record. Both the attachment and the comment text pass the step 4c gate before they reach Linear. The record is evidence, not the spec.
 
 **Board workflow:** a fresh draft carries the `Pending_Review` label (status Backlog); it flips to `Ready` (Todo) only when the user approves it for the dev.
 
@@ -365,10 +409,10 @@ Prepare this step for an approved UI ticket; branch creation, committing and pub
 1. **Refresh the pilot Base Branch.** Fetch `main` from the verified `github` remote and record the exact base SHA. Read root/client `AGENTS.md`, current package scripts and any documented Base Branch, Version and Sync workflow. Run the documented Sync for the current Version before preparing the mock branch. Do not invent a Sync command or version system: if the repository has no such workflow, report that and use its documented dependency/codegen preparation; generated preparation output is not automatically eligible for the UI diff. Preserve existing work. Prepare changes at a detached HEAD in the isolated checkout so branch creation still follows verification and explicit approval.
 2. **Map components before the first implementation file.** Name the Catalogue Component and source path for every element in the picked direction, including the app's existing Screen Parts. Discover the actual catalogue, exports and import aliases from the live client. Use `@ui` if the app defines it; otherwise use its real alias/import paths. Reuse these real components, screen parts and theme tokens; do not hand-roll replacement controls or styles. Where the design needs a new composition, identify it explicitly and compose existing primitives within the approved design; resolve a missing primitive before implementing it.
 3. **Implement only approved frontend/UI changes.** Every changed path must be inside `frontline-forwarding-client/`, and every change must serve presentation or UI interaction: components, layouts, styles using the design system, translations, UI assets and relevant tests. A client path alone is not sufficient. Exclude backend/domain computations, API or schema contract changes, generated API files, authorization changes, database/migration work, server code, infrastructure/CI/deployment configuration and dependency changes. Consume existing APIs and preserve behavior and existing screen features. Backend requirements stay in the ticket; identify blocked behavior and never ship fixtures or fabricated responses as a working integration. If existing contracts cannot support meaningful UI implementation and verification, report the dependency and block publication.
-4. **Verify before creating the branch.** Run required frontend checks from current package scripts: applicable lint, type checking, tests and production build. Compare the implemented screen with the approved design and criteria in EN/EL, at desktop and approximately 400px, including default/loading/empty/error states and affected existing features. Use isolated test data; production remains read-only. Record commands and results. Failed or unavailable required checks block publication.
-5. **Audit the complete diff.** Review `git diff --name-status <base-sha>`, `git diff <base-sha>` and all intended untracked files for both path and content compliance. Stage explicit eligible paths only. Exclude secrets, session files, standalone preview artifacts and unrelated edits. Fetch `main` again; if it advanced, refresh the base, rerun Sync/preparation and affected checks, and repeat the full audit before approval.
-6. **Ask, then create and push.** Show the proposed `mock/<ticket-id>-<slug>` name, destination, exact push command, base SHA, complete audited UI diff, verification results, ruleset enforcement evidence and backend dependencies. Ask explicitly whether to create, commit and push this branch, and wait for a clear yes. If declined, retain local work without creating the branch. If the diff or destination changes, reverify and obtain fresh approval. Only after approval, create the new branch from the verified base, commit only audited UI changes, record branch ownership and push using the explicit refspec above. If there are no changes, report that instead of publishing an empty branch.
-7. **Verify the remote handoff.** Fetch the published branch, confirm its head SHA matches the verified local commit, and review its entire diff against the recorded base to confirm only approved frontend/UI changes. Return its URL, name, base/head SHAs, changed-file summary, checks and backend dependencies. A push failure or remote mismatch means an incomplete handoff. Record evidence in step 5. Adding a link/comment to Linear still requires step 4c approval.
+4. **Verify before creating the branch.** Run required frontend checks from current package scripts: applicable lint, type checking, tests and production build. Compare the implemented screen with the approved design and criteria in EN/EL, at desktop and approximately 400px, including default/loading/empty/error states and affected existing features. Use isolated test data; production remains read-only. Confirm that each acceptance criterion with a visible outcome can be checked against the branch. Look at every screenshot of every state and width yourself (wrapping, cut text, overflow, repeated blocks, numbers against the test data) and say which images you looked at. Record commands and results. Failed or unavailable required checks block publication.
+5. **Audit the complete diff.** Review `git diff --name-status <base-sha>`, `git diff <base-sha>` and all intended untracked files for both path and content compliance. **Audit hand-rolled elements:** list every raw element the branch adds with visual classes or styles (a styled `div`, `span`, `ul`/`li`, a raw `button`/`input`/`select`/`textarea`, a panel or menu that opens from a component, a new UI-library import) and give each one a verdict — `layout` or `Component needed`. An element that copies the look of a component is a new component in disguise. Show the list with its verdicts in the step 6 approval request; no item may stay `Component needed` — replace it with the real component, or take it through the new-component agreement of step 2. Stage explicit eligible paths only. Exclude secrets, session files, standalone preview artifacts and unrelated edits. Fetch `main` again; if it advanced, refresh the base, rerun Sync/preparation and affected checks, and repeat the full audit before approval.
+6. **Ask, then create and push.** Show the proposed `mock/<ticket-id>-<slug>` name, destination, exact push command, base SHA, complete audited UI diff, verification results, ruleset enforcement evidence and backend dependencies. Ask explicitly whether to create, commit and push this branch, and wait for a clear yes. If declined, retain local work without creating the branch. If the diff or destination changes, reverify and obtain fresh approval. Only after approval, create the new branch from the verified base, commit only audited UI changes, rerun the required checks and the hand-rolled audit on the committed state **directly before the push** (a later commit can bring a problem back; do not push with a failed check), record branch ownership and push using the explicit refspec above. If there are no changes, report that instead of publishing an empty branch.
+7. **Verify the remote handoff.** Fetch the published branch, confirm its head SHA matches the verified local commit, and review its entire diff against the recorded base to confirm only approved frontend/UI changes. Return its URL, name, base/head SHAs, changed-file summary, checks and backend dependencies. A push failure or remote mismatch means an incomplete handoff. Record evidence in step 5. Then draft adding the branch URL to the ticket as a **link attachment** (Linear usually links the branch by its name; the attachment is the fallback) — it reaches Linear only after step 4c approval, like any other link or comment.
 
 ## 5. Record the session
 
@@ -376,6 +420,8 @@ Append a dated entry to MEMORY.md: approved decisions, deliverables,
 issue ownership and unresolved questions. Treat recorded board state
 as historical context. Record reusable process lessons in
 WORKFLOW_LEARNINGS.md according to that file's maintenance rules.
+Keep learnings only; do not store transcripts in this repository (a
+session record, when used, is a Linear attachment — see step 4a).
 
 ⚠️ Never push the `FrontLine` working folder to GitHub — its remote is dead and it holds plaintext API-key files. The nested repos (`Font Line Helper`, the marketing site) are pushed individually, and only when the user asks.
 
