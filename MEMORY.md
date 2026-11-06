@@ -2550,3 +2550,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Mandatory planning-model checkpoint now pending: remind user to check model suitability, wait for explicit continue before drafting plan. Separate implementation checkpoint follows plan agreement. Next: resume existing snapshot, read relevant domain docs/current comments, inspect FRO-363 reusable components and determine main-based reuse preparation; do not silently base branch on the create mock.
 - Ruleset inspection again returned HTTP 403 (GitHub plan restriction); required write-identity enforcement unverified. Publication blocked. FRO-363 exceptions do not carry over. No source changes, implementation plan, dependency install, production branch/commit/push, PR or Linear changes.
 
+
+### 2026-11-06 - FRO-361 implementation plan prepared
+
+- User explicitly continued past planning-model checkpoint. Resumed committed playbook snapshot on main 5774931, same b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc fingerprint. Current FRO-361 unchanged since approved write, comments empty.
+- Plan: drafts/fro361-frontend-plan.md. Three sequential slices: read-only Details composition, navigation/PDF guards, browser verification/handoff. Maps actual components, callback/model interfaces, files, meaningful tests and integration dependencies. Native execution recommended, pending plan agreement and separate implementation-model continuation.
+- Plan scope is unmounted Details UI; list implementation remains in ticket, not in this preparation. Uses existing DeliveryNote type and shared saved-draft helper; no fabricated API, route activation, backend/auth/schema/dependency changes. Frontend README records activation boundaries.
+- No application edits, branch or production commit/push. Ruleset 403 publication blocker persists. Planning artifacts only; full implementation checks have not run.
