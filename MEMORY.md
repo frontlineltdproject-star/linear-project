@@ -2349,3 +2349,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - At the user's explicit request, cleared the Pre-releases 0.0.x project assignment on FRO-360 and FRO-359. Re-read both issues and verified no project, unchanged descriptions, titles, Backlog status, priorities, assignees, complete label sets, attachments and relations. No product behavior or production changes.
 
+
+### 2026-11-06 - Milestone 0.0.12 alignment and child-Order impact review
+
+- User requested alignment of FRO-244 and FRO-301 with FRO-362, then scheduling when ready; accepted grouping all three structural tickets in 0.0.12. No milestone or Linear mutation yet; exact drafts and Ready metadata remain to be reviewed.
+- Cancellation of FRO-302 proposed but NOT approved. User asked whether FRO-362 removes child Orders generally and raised dependent-ticket impact. FRO-362 removes automatic movement-driven children only; existing children/history and deliberate separation remain. Live FRO-330 lineage display and FRO-319/355 inherited admission coverage still have valid consumers. FRO-325/344 automatic split behavior and FRO-341 partial-selection UI need coordinated adaptation; 325/344 now Done, 341 Todo. Do not interpret Done as deployment or silently rewrite completed tickets.
+- Live main 5774931 confirmed via gh: both Shipment partial-child creation and deliberate Order splitting call invoice-row copyTo with full quantity/value. Alignment must preserve stable source rows and deliberate separation without duplicated commercial amounts. FRO-244 must consume exact Shipment colli coverage plus allocation. Pending FRO-302 disposition and consumer alignment scope before readiness.
+
