@@ -2444,3 +2444,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Explicit Save changes returns to Details. Cancel confirms discarding unsaved changes. Incomplete drafts remain saveable under FRO-244 draft rules; finalization is separate.
 - Next interview round: finalization confirmation, draft discard, and cancellation/replacement UI ownership. No Linear write or preview implementation yet.
 
+
+### 2026-11-06 - Shipment Invoice Details/edit Q4-Q6 accepted
+
+- Finalize belongs on saved Details and opens a confirmation showing Shipment, Client/invoicing company, selected goods and total. Explain printed-number assignment and freezing. Missing requirements are actionable; save or cancel edits first.
+- Include Discard draft with a confirmation identifying draft and Shipment, distinct from Cancel editing. Successful discard returns to Shipment Details.
+- Include manager/system-administrator cancellation with required reason and retained number/frozen contents. Separate Create replacement starts a linked draft; inheritance and interaction details remain pending. Printing remains separate.
+- Next interview: replacement inheritance, live-source refresh presentation, and concurrent edits. No Linear write or preview implementation.
+
