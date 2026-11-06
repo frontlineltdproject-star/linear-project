@@ -1,0 +1,9 @@
+
+ RUN  v4.1.6 C:/Users/Giorgos/.codex/visualizations/2026/11/06/01a1b157-f4aa-77b3-ab01-1dc2d0c938d7/fro361-frontend/frontline-forwarding-client
+
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  17:21:01
+   Duration  5.78s (transform 868ms, setup 0ms, import 2.81s, tests 2.39s, environment 4.84s)
+

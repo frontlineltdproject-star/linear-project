@@ -1,0 +1,896 @@
+diff --git a/frontline-forwarding-client/src/app/providers/labels-provider.tsx b/frontline-forwarding-client/src/app/providers/labels-provider.tsx
+index 44c16ec..c9e4ece 100644
+--- a/frontline-forwarding-client/src/app/providers/labels-provider.tsx
++++ b/frontline-forwarding-client/src/app/providers/labels-provider.tsx
+@@ -261,6 +261,27 @@ export interface Labels {
+     vesselsDescription: string
+   }
+   deliveryNotesText: {
++    detailTitle: string
++    detailsTab: string
++    documentSection: string
++    movementSection: string
++    goodsSection: string
++    documentNumber: string
++    awaitingNumber: string
++    status: string
++    issueDate: string
++    invoiceCompany: string
++    shipment: string
++    recipient: string
++    movementStart: string
++    order: string
++    grossWeight: string
++    total: string
++    noGoods: string
++    openShipment: string
++    unavailable: string
++    loadFailed: string
++    saveMovementFirst: string
+     title: string
+     description: string
+     prepare: string
+@@ -611,6 +632,27 @@ export const defaultLabels: Labels = {
+     vesselsDescription: 'Client-company vessel registry.',
+   },
+   deliveryNotesText: {
++    detailTitle: 'Delivery Note',
++    detailsTab: 'Details',
++    documentSection: 'Document',
++    movementSection: 'Movement',
++    goodsSection: 'Goods covered',
++    documentNumber: 'Delivery Note number',
++    awaitingNumber: 'Awaiting number',
++    status: 'Status',
++    issueDate: 'Issue date',
++    invoiceCompany: 'Invoicing company',
++    shipment: 'Shipment',
++    recipient: 'Recipient',
++    movementStart: 'Movement start',
++    order: 'Order',
++    grossWeight: 'Gross weight',
++    total: 'Total',
++    noGoods: 'No goods recorded.',
++    openShipment: 'Open Shipment',
++    unavailable: 'Delivery note unavailable.',
++    loadFailed: 'Could not load the delivery note.',
++    saveMovementFirst: 'Save the draft’s movement details in Shipment first',
+     title: 'Delivery notes',
+     description: 'One fiscal draft per invoicing company in this shipment.',
+     prepare: 'Prepare delivery notes',
+@@ -1010,6 +1052,28 @@ export const elLabels: Labels = {
+     vesselsDescription: 'Μητρώο πλοίων εταιρείας πελάτη.',
+   },
+   deliveryNotesText: {
++    detailTitle: 'Δελτίο αποστολής',
++    detailsTab: 'Στοιχεία',
++    documentSection: 'Παραστατικό',
++    movementSection: 'Διακίνηση',
++    goodsSection: 'Εμπορεύματα δελτίου',
++    documentNumber: 'Αριθμός δελτίου',
++    awaitingNumber: 'Αναμονή αρίθμησης',
++    status: 'Κατάσταση',
++    issueDate: 'Ημερομηνία έκδοσης',
++    invoiceCompany: 'Εταιρεία τιμολόγησης',
++    shipment: 'Αποστολή',
++    recipient: 'Παραλήπτης',
++    movementStart: 'Έναρξη διακίνησης',
++    order: 'Παραγγελία',
++    grossWeight: 'Μικτό βάρος',
++    total: 'Σύνολο',
++    noGoods: 'Δεν έχουν καταχωριστεί εμπορεύματα.',
++    openShipment: 'Άνοιγμα αποστολής',
++    unavailable: 'Το δελτίο δεν είναι διαθέσιμο.',
++    loadFailed: 'Αδυναμία φόρτωσης του δελτίου αποστολής.',
++    saveMovementFirst:
++      'Αποθηκεύστε πρώτα τα στοιχεία διακίνησης του πρόχειρου δελτίου στην Αποστολή',
+     title: 'Δελτία αποστολής',
+     description:
+       'Ένα φορολογικό προσχέδιο ανά εταιρεία τιμολόγησης της αποστολής.',
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/README.md b/frontline-forwarding-client/src/features/delivery-notes/README.md
+new file mode 100644
+index 0000000..d08cd7c
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/README.md
+@@ -0,0 +1,39 @@
++# Delivery Note Details — FRO-361
++
++Unmounted read-only UI composition. Import DeliveryNoteDetails from components/delivery-note-details.tsx. This is UI preparation, not a live page or completed FRO-361 delivery.
++
++## Host contract
++
++Pass a discriminated state: loading, unavailable, error, or ready with DeliveryNoteDetailsModel. Non-ready states render no record data. Host must clear the old model while fetching a different identity or when access is lost.
++
++The model contains the existing DeliveryNote type, explicit shipmentReference and invoicingCompanyName display values, canOpenShipment, and hasSavedDraft. Display values are not invented API fields. Use the dedicated authorized single-note read once delivered; the existing Shipment list read excludes cancelled notes and is not a substitute.
++
++For a draft, hasSavedDraft must preserve the Shipment screen's shared saved-movement check across its current-note set, not merely the selected note. Supply false until that context is known. The component reuses canPreviewDeliveryNotePdf with isDirty/isSaving false because it has no editor. This boolean is UI state, not a new persisted field.
++
++onBack/onRetry belong to the host. onOpenShipment receives the selected note's Shipment ID only when canOpenShipment. onPreviewPdf receives Shipment ID and note ID as strings; integrate DeliveryNoteService.previewPdf without changing its authenticated GET or identity checks. No create/update/issue/cancel callbacks exist.
++
++PDF is absent for SUBMISSION_PENDING; DRAFT is disabled with the approved EN/EL explanation if movement details are unsaved; the four other statuses permit preview. A synchronous guard prevents repeat requests. Actions reset only on document/Shipment identity changes, preserving in-flight work across refreshes of the same note. Late completion after unmount cannot display an old error. Preview failure uses localized text rather than raw response contents.
++
++## Components and presentation
++
++Existing Breadcrumbs, Heading/Text, StatusPill, Button, Tabs/TabList/Tab/TabPanel, Card/CardHeader/CardBody, Table primitives, Spinner/EmptyState and Alert are used from src/components/ui. Locale comes from LabelsProvider. Heading size classes are repeated at the call site because the current cn/tailwind-merge combination drops the shared Heading's size class when text-fg follows it. No shared component change is included.
++
++Document → Movement → Goods covered; one Details tab. Render stored note lines and totals directly; never rebuild them from current Shipment goods. Recipient and addresses are the note's stored values. Fiscal number/date do not determine status. Preserve absent optional values and numeric zero. Status colors and movement-purpose/date formatting reuse current portal conventions. Fields/actions wrap for Greek and narrow screens.
++
++## Activation and ownership
++
++Before mounting, FRO-361 needs its authorized standalone read (including cancelled records), Shipment/company display data, shared saved-state context, and backend-enforced record access. UI booleans are not authorization. The list/main-navigation/search work remains outside this Details preparation and is still required by FRO-361.
++
++Do not mount the Shipment DeliveryNotesCard: it contains automatic draft preparation and mutation hooks. Do not import testing fixtures into runtime routes. Current route configuration, GraphQL documents, generated files, backend, database, theme and dependencies are unchanged.
++
++## Verification
++
++Use Node 22.13.0 and the repository dependency setup. From frontline-forwarding-client:
++
++- pnpm exec vitest run src/features/delivery-notes
++- pnpm test (lower worker concurrency may be used to diagnose machine-contention timeouts)
++- pnpm run build
++- pnpm run format:check
++- pnpm exec tsc --noEmit
++
++Tests cover layout/identity/zero values, all statuses, disabled shared draft state in EN/EL, double clicks, PDF failures/retry, stale completions, navigation and unavailable-state clearing. Fixture-only browser verification is performed outside the production tree at desktop/mobile widths. It establishes UI behavior, not live backend integration. Exact results and known baseline failures live in the planning handoff. No API/schema changes mean no reference generation is needed.
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.test.tsx b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.test.tsx
+new file mode 100644
+index 0000000..3539eee
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.test.tsx
+@@ -0,0 +1,192 @@
++import type { DeliveryNoteStatus } from '#/graphql/generated/graphql'
++import { afterEach, beforeEach, expect, it, vi } from 'vitest'
++import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import { DeliveryNoteDetails } from './delivery-note-details'
++import { makeDetailsModel } from '../testing/delivery-note-details-fixtures'
++import type { DeliveryNoteDetailsProps } from '../types'
++afterEach(cleanup)
++beforeEach(() => localStorage.clear())
++function setup(status: DeliveryNoteStatus = 'ISSUED', saved = true) {
++  const model = makeDetailsModel()
++  model.note.status = status
++  model.hasSavedDraft = saved
++  const p: DeliveryNoteDetailsProps = {
++    state: { kind: 'ready', model },
++    onBack: vi.fn(),
++    onRetry: vi.fn(),
++    onOpenShipment: vi.fn(),
++    onPreviewPdf: vi.fn().mockResolvedValue(undefined),
++  }
++  const view = (props: DeliveryNoteDetailsProps) => (
++    <LabelsProvider>
++      <DeliveryNoteDetails {...props} />
++    </LabelsProvider>
++  )
++  return { p, model, view }
++}
++it.each([
++  'DRAFT',
++  'SUBMISSION_FAILED',
++  'ISSUED',
++  'CANCELLATION_PENDING',
++  'CANCELLED',
++] as const)('previews %s using selected IDs', async (status) => {
++  const { p, view } = setup(status)
++  render(view(p))
++  await act(async () =>
++    fireEvent.click(screen.getByRole('button', { name: 'Preview PDF' })),
++  )
++  expect(p.onPreviewPdf).toHaveBeenCalledExactlyOnceWith('41', '103')
++})
++it('omits PDF during submission pending', () => {
++  const { p, view } = setup('SUBMISSION_PENDING')
++  render(view(p))
++  expect(screen.queryByRole('button', { name: 'Preview PDF' })).toBeNull()
++  expect(p.onPreviewPdf).not.toHaveBeenCalled()
++})
++it.each(['en', 'el'])(
++  'blocks unsaved shared movement state with visible %s explanation',
++  (locale) => {
++    localStorage.setItem('frontline.locale', locale)
++    const { p, view } = setup('DRAFT', false)
++    render(view(p))
++    const b = screen.getByRole('button', {
++      name: locale === 'en' ? 'Preview PDF' : 'Προεπισκόπηση PDF',
++    }) as HTMLButtonElement
++    expect(b.disabled).toBe(true)
++    fireEvent.click(b)
++    expect(p.onPreviewPdf).not.toHaveBeenCalled()
++    expect(
++      screen.getByText(
++        locale === 'en'
++          ? 'Save the draft’s movement details in Shipment first'
++          : 'Αποθηκεύστε πρώτα τα στοιχεία διακίνησης του πρόχειρου δελτίου στην Αποστολή',
++      ),
++    ).toBeTruthy()
++    const ship = screen.getByRole('button', {
++      name: locale === 'en' ? 'Open Shipment' : 'Άνοιγμα αποστολής',
++    }) as HTMLButtonElement
++    expect(ship.disabled).toBe(false)
++  },
++)
++it('prevents double preview, reports localized failure and permits retry', async () => {
++  const { p, view } = setup()
++  let reject!: (e: Error) => void
++  p.onPreviewPdf = vi
++    .fn()
++    .mockImplementationOnce(
++      () =>
++        new Promise<void>((_, r) => {
++          reject = r
++        }),
++    )
++    .mockResolvedValue(undefined)
++  render(view(p))
++  const b = screen.getByRole('button', { name: 'Preview PDF' })
++  act(() => {
++    fireEvent.click(b)
++    fireEvent.click(b)
++  })
++  expect(p.onPreviewPdf).toHaveBeenCalledTimes(1)
++  expect(
++    (
++      screen.getByRole('button', {
++        name: 'Preparing PDF…',
++      }) as HTMLButtonElement
++    ).disabled,
++  ).toBe(true)
++  await act(async () => reject(new Error('private raw error')))
++  expect(
++    screen.getByText('The delivery note PDF could not be generated.'),
++  ).toBeTruthy()
++  expect(screen.queryByText('private raw error')).toBeNull()
++  await act(async () =>
++    fireEvent.click(screen.getByRole('button', { name: 'Preview PDF' })),
++  )
++  expect(p.onPreviewPdf).toHaveBeenCalledTimes(2)
++})
++it('ignores late rejection after note identity changes', async () => {
++  const { p, model, view } = setup()
++  let reject!: (e: Error) => void
++  p.onPreviewPdf = vi.fn(
++    () =>
++      new Promise<void>((_, r) => {
++        reject = r
++      }),
++  )
++  const r = render(view(p))
++  fireEvent.click(screen.getByRole('button', { name: 'Preview PDF' }))
++  const next = {
++    ...model,
++    note: { ...model.note, id: '104', shipmentId: '42' },
++  }
++  r.rerender(view({ ...p, state: { kind: 'ready', model: next } }))
++  expect(
++    (screen.getByRole('button', { name: 'Preview PDF' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(false)
++  await act(async () => reject(new Error('old failure')))
++  expect(
++    screen.queryByText('The delivery note PDF could not be generated.'),
++  ).toBeNull()
++})
++it('navigates with selected Shipment and back callback, respects missing Shipment access', () => {
++  const { p, model, view } = setup()
++  const r = render(view(p))
++  fireEvent.click(screen.getByRole('button', { name: 'Open Shipment' }))
++  expect(p.onOpenShipment).toHaveBeenCalledExactlyOnceWith('41')
++  fireEvent.click(screen.getByRole('button', { name: 'Delivery notes' }))
++  expect(p.onBack).toHaveBeenCalledOnce()
++  r.rerender(
++    view({
++      ...p,
++      state: { kind: 'ready', model: { ...model, canOpenShipment: false } },
++    }),
++  )
++  expect(screen.queryByRole('button', { name: 'Open Shipment' })).toBeNull()
++})
++it('retry is explicit and never triggers PDF', () => {
++  const { p, view } = setup()
++  render(view({ ...p, state: { kind: 'error' } }))
++  fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
++  expect(p.onRetry).toHaveBeenCalledOnce()
++  expect(p.onPreviewPdf).not.toHaveBeenCalled()
++})
++
++it('keeps the in-flight guard when the same note is refreshed', async () => {
++  const { p, model, view } = setup()
++  let resolve!: () => void
++  p.onPreviewPdf = vi.fn(
++    () =>
++      new Promise<void>((r) => {
++        resolve = r
++      }),
++  )
++  const result = render(view(p))
++  fireEvent.click(screen.getByRole('button', { name: 'Preview PDF' }))
++  result.rerender(
++    view({
++      ...p,
++      state: {
++        kind: 'ready',
++        model: {
++          ...model,
++          hasSavedDraft: false,
++          note: { ...model.note, version: '2' },
++        },
++      },
++    }),
++  )
++  const button = screen.getByRole('button', {
++    name: /PDF/,
++  }) as HTMLButtonElement
++  expect(button.disabled).toBe(true)
++  fireEvent.click(button)
++  expect(p.onPreviewPdf).toHaveBeenCalledTimes(1)
++  await act(async () => resolve())
++  expect(
++    (screen.getByRole('button', { name: 'Preview PDF' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(false)
++})
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.tsx b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.tsx
+new file mode 100644
+index 0000000..52aa07a
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.tsx
+@@ -0,0 +1,93 @@
++import { useEffect, useId, useRef, useState } from 'react'
++import { useLabels } from '#/app/providers/labels-provider'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { canPreviewDeliveryNotePdf } from '#/features/shipments/components/delivery-note-form-validation'
++import type {
++  DeliveryNoteDetailsModel,
++  DeliveryNoteDetailsProps,
++} from '../types'
++type Props = Pick<
++  DeliveryNoteDetailsProps,
++  'onOpenShipment' | 'onPreviewPdf'
++> & { model: DeliveryNoteDetailsModel }
++// Parent keys by identity only: refreshing the same note must preserve in-flight work.
++export function DeliveryNoteDetailsActions({
++  model,
++  onOpenShipment,
++  onPreviewPdf,
++}: Props) {
++  const text = useLabels().deliveryNotesText
++  const [pending, setPending] = useState(false)
++  const [failed, setFailed] = useState(false)
++  const inFlight = useRef(false)
++  const active = useRef(true)
++  const explanationId = useId()
++  useEffect(() => {
++    active.current = true
++    return () => {
++      active.current = false
++    }
++  }, [])
++  const draft = model.note.status === 'DRAFT'
++  const unsaved = draft && !model.hasSavedDraft
++  const visible = model.note.status !== 'SUBMISSION_PENDING'
++  const allowed =
++    visible &&
++    (draft
++      ? canPreviewDeliveryNotePdf({
++          hasSavedDraft: model.hasSavedDraft,
++          isDirty: false,
++          isSaving: false,
++          isPreviewing: pending,
++        })
++      : !pending)
++  async function preview() {
++    if (!allowed || inFlight.current) return
++    inFlight.current = true
++    setPending(true)
++    setFailed(false)
++    try {
++      await onPreviewPdf(String(model.note.shipmentId), String(model.note.id))
++    } catch {
++      if (active.current) setFailed(true)
++    } finally {
++      inFlight.current = false
++      if (active.current) setPending(false)
++    }
++  }
++  return (
++    <div className="min-w-0 max-w-full space-y-3">
++      <div className="flex flex-wrap gap-2">
++        {model.canOpenShipment && (
++          <Button
++            type="button"
++            variant="secondary"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            onClick={() => onOpenShipment(String(model.note.shipmentId))}
++          >
++            {text.openShipment}
++          </Button>
++        )}
++        {visible && (
++          <Button
++            type="button"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            disabled={!allowed}
++            loading={pending}
++            onClick={preview}
++            aria-describedby={unsaved ? explanationId : undefined}
++          >
++            {pending ? text.previewingPdf : text.previewPdf}
++          </Button>
++        )}
++      </div>
++      {unsaved && (
++        <div id={explanationId}>
++          <Alert>{text.saveMovementFirst}</Alert>
++        </div>
++      )}
++      {failed && <Alert tone="danger">{text.pdfPreviewFailed}</Alert>}
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-sections.tsx b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-sections.tsx
+new file mode 100644
+index 0000000..f164a41
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-sections.tsx
+@@ -0,0 +1,157 @@
++import type { ReactNode } from 'react'
++import { useLabels, useLocale } from '#/app/providers/labels-provider'
++import { Card, CardHeader, CardBody } from '#/components/ui/card'
++import { Heading } from '#/components/ui/typography'
++import { Table, THead, TBody, TR, TH, TD } from '#/components/ui/table'
++import { StatusPill } from '#/components/ui/badge'
++import { Alert } from '#/components/ui/alert'
++import { formatDateTime } from '#/lib/date'
++import type { DeliveryNoteDetailsModel } from '../types'
++export function NoteStatus({ status }: { status: string }) {
++  const text = useLabels().deliveryNotesText
++  return (
++    <StatusPill
++      tone={
++        status === 'SUBMISSION_FAILED'
++          ? 'danger'
++          : status === 'DRAFT'
++            ? 'warning'
++            : 'info'
++      }
++      className="max-w-full leading-normal"
++    >
++      {text.statusLabels[status] ?? status}
++    </StatusPill>
++  )
++}
++function Fields({ entries }: { entries: Array<[string, ReactNode]> }) {
++  return (
++    <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
++      {entries.map(([label, value]) => (
++        <div key={label} className="min-w-0">
++          <dt className="text-caption text-fg-muted">{label}</dt>
++          <dd className="mt-1 break-words [overflow-wrap:anywhere]">
++            {value ?? '—'}
++          </dd>
++        </div>
++      ))}
++    </dl>
++  )
++}
++function Section({ title, children }: { title: string; children: ReactNode }) {
++  return (
++    <Card flush className="min-w-0">
++      <CardHeader>
++        <Heading level={2} className="text-heading">
++          {title}
++        </Heading>
++      </CardHeader>
++      <CardBody>{children}</CardBody>
++    </Card>
++  )
++}
++export function DeliveryNoteDetailsSections({
++  model,
++}: {
++  model: DeliveryNoteDetailsModel
++}) {
++  const text = useLabels().deliveryNotesText
++  const { locale } = useLocale()
++  const n = model.note
++  const address = (a: typeof n.loadingAddress | null) =>
++    a
++      ? [a.street, a.number, a.postalCode, a.city].filter(Boolean).join(', ') ||
++        '—'
++      : '—'
++  const time = (v: typeof n.issuedAt) =>
++    v ? formatDateTime(String(v), locale) : '—'
++  const purpose = n.movementPurpose
++    ? (text.movementPurposeLabels[n.movementPurpose] ?? n.movementPurpose)
++    : '—'
++  return (
++    <div className="mt-4 space-y-4">
++      <Section title={text.documentSection}>
++        <Fields
++          entries={[
++            [
++              text.documentNumber,
++              n.fiscalNumber == null
++                ? text.awaitingNumber
++                : `${n.series} ${n.fiscalNumber}`,
++            ],
++            [text.status, <NoteStatus status={n.status} />],
++            [text.issueDate, time(n.issuedAt)],
++            [text.invoiceCompany, model.invoicingCompanyName],
++            [text.shipment, model.shipmentReference],
++            ...(n.mark ? [[text.mark, n.mark] as [string, ReactNode]] : []),
++          ]}
++        />
++        {n.status === 'SUBMISSION_FAILED' && n.submissionError && (
++          <div className="mt-4 break-words [overflow-wrap:anywhere]">
++            <Alert tone="danger" title={text.submissionFailureDetails}>
++              {n.submissionError}
++            </Alert>
++          </div>
++        )}
++      </Section>
++      <Section title={text.movementSection}>
++        <Fields
++          entries={[
++            [text.recipient, n.recipient.name],
++            [text.loadingAddress, address(n.loadingAddress)],
++            [text.destinationAddress, address(n.destinationAddress)],
++            [text.movementStart, time(n.movementStartAt)],
++            [text.vehicleNumber, n.vehicleNumber || '—'],
++            [
++              text.movementPurpose,
++              n.movementPurpose === 'OTHER_MOVEMENTS' &&
++              n.otherMovementPurposeTitle
++                ? `${purpose} — ${n.otherMovementPurposeTitle}`
++                : purpose,
++            ],
++          ]}
++        />
++      </Section>
++      <Section title={text.goodsSection}>
++        {n.lines.length === 0 && (
++          <p className="mb-3 text-fg-muted">{text.noGoods}</p>
++        )}
++        <Table className="table-fixed" aria-label={text.goodsSection}>
++          <THead>
++            <TR>
++              <TH scope="col" className="w-1/2 break-words">
++                {text.order}
++              </TH>
++              <TH scope="col" className="break-words">
++                {text.collis}
++              </TH>
++              <TH scope="col" className="break-words">
++                {text.grossWeight}
++              </TH>
++            </TR>
++          </THead>
++          <TBody>
++            {n.lines.map((line) => (
++              <TR key={String(line.id)}>
++                <TD className="break-words font-mono [overflow-wrap:anywhere]">
++                  {String(line.stockId)}
++                </TD>
++                <TD className="break-words font-mono">{line.colliQuantity}</TD>
++                <TD className="break-words font-mono">
++                  {line.grossWeightKg} kg
++                </TD>
++              </TR>
++            ))}
++            <TR>
++              <TH scope="row">{text.total}</TH>
++              <TD className="font-mono">{n.totalCollis}</TD>
++              <TD className="break-words font-mono">
++                {n.totalGrossWeightKg} kg
++              </TD>
++            </TR>
++          </TBody>
++        </Table>
++      </Section>
++    </div>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.test.tsx b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.test.tsx
+new file mode 100644
+index 0000000..f90381a
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.test.tsx
+@@ -0,0 +1,97 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
++import { cleanup, render, screen, within } from '@testing-library/react'
++import { LabelsProvider } from '#/app/providers/labels-provider'
++import { DeliveryNoteDetails } from './delivery-note-details'
++import { makeDetailsModel } from '../testing/delivery-note-details-fixtures'
++import type { DeliveryNoteDetailsProps } from '../types'
++afterEach(cleanup)
++beforeEach(() => localStorage.clear())
++function props(): DeliveryNoteDetailsProps {
++  return {
++    state: { kind: 'ready', model: makeDetailsModel() },
++    onBack: vi.fn(),
++    onRetry: vi.fn(),
++    onOpenShipment: vi.fn(),
++    onPreviewPdf: vi.fn().mockResolvedValue(undefined),
++  }
++}
++function view(p: DeliveryNoteDetailsProps) {
++  return (
++    <LabelsProvider>
++      <DeliveryNoteDetails {...p} />
++    </LabelsProvider>
++  )
++}
++describe('DeliveryNoteDetails', () => {
++  it('renders section order and only selected note with stored totals', () => {
++    const p = props()
++    if (p.state.kind === 'ready') p.state.model.note.totalGrossWeightKg = 99
++    render(view(p))
++    expect(
++      screen.getAllByRole('heading', { level: 2 }).map((e) => e.textContent),
++    ).toEqual(['Document', 'Movement', 'Goods covered'])
++    expect(screen.getAllByRole('tab')).toHaveLength(1)
++    expect(screen.getByRole('tab').textContent).toBe('Details')
++    expect(screen.getByText('DEMO-PO-12')).toBeTruthy()
++    expect(screen.queryByText('DEMO-PO-99')).toBeNull()
++    expect(screen.getByText('99 kg')).toBeTruthy()
++    expect(screen.queryByRole('textbox')).toBeNull()
++    expect(
++      screen.queryByRole('button', {
++        name: /issue delivery|cancel delivery|save|edit/i,
++      }),
++    ).toBeNull()
++  })
++  it('renders unnumbered draft and missing date without inventing values, preserving zero totals', () => {
++    const p = props()
++    if (p.state.kind === 'ready')
++      Object.assign(p.state.model.note, {
++        status: 'DRAFT',
++        fiscalNumber: null,
++        issuedAt: null,
++        totalCollis: 0,
++        totalGrossWeightKg: 0,
++        lines: [],
++      })
++    render(view(p))
++    expect(screen.getAllByText('Awaiting number').length).toBeGreaterThan(0)
++    expect(screen.queryByText('DN 103')).toBeNull()
++    expect(screen.getByText('No goods recorded.')).toBeTruthy()
++    expect(screen.getByText('0 kg')).toBeTruthy()
++    const dt = screen.getByText('Issue date')
++    expect(dt.nextElementSibling?.textContent).toBe('—')
++  })
++  it.each(['unavailable', 'loading', 'error'] as const)(
++    'clears previous document in %s state',
++    (kind) => {
++      const p = props()
++      const r = render(view(p))
++      r.rerender(view({ ...p, state: { kind } }))
++      expect(screen.queryByText('DEMO-PO-12')).toBeNull()
++      expect(screen.queryByText('DEMO-MARK')).toBeNull()
++      expect(screen.queryByRole('button', { name: 'Preview PDF' })).toBeNull()
++    },
++  )
++  it('renders submission errors as text, not executable markup', () => {
++    const p = props()
++    if (p.state.kind === 'ready')
++      Object.assign(p.state.model.note, {
++        status: 'SUBMISSION_FAILED',
++        submissionError: '<img src=x onerror=alert(1)>',
++      })
++    const r = render(view(p))
++    expect(screen.getByText('<img src=x onerror=alert(1)>')).toBeTruthy()
++    expect(r.container.querySelector('img')).toBeNull()
++  })
++  it('renders Greek labels with the same section content', () => {
++    localStorage.setItem('frontline.locale', 'el')
++    render(view(props()))
++    expect(screen.getByRole('tab').textContent).toBe('Στοιχεία')
++    expect(
++      screen.getByRole('heading', { name: 'Εμπορεύματα δελτίου' }),
++    ).toBeTruthy()
++    expect(
++      within(screen.getByRole('table')).getByText('DEMO-PO-12'),
++    ).toBeTruthy()
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.tsx b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.tsx
+new file mode 100644
+index 0000000..93f72ca
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.tsx
+@@ -0,0 +1,91 @@
++import { useLabels } from '#/app/providers/labels-provider'
++import { Breadcrumbs } from '#/components/ui/navigation'
++import { Heading, Text } from '#/components/ui/typography'
++import { Button } from '#/components/ui/button'
++import { Tabs, TabList, Tab, TabPanel } from '#/components/ui/tabs'
++import { Spinner, EmptyState } from '#/components/ui/feedback'
++import type { DeliveryNoteDetailsProps } from '../types'
++import {
++  DeliveryNoteDetailsSections,
++  NoteStatus,
++} from './delivery-note-details-sections'
++import { DeliveryNoteDetailsActions } from './delivery-note-details-actions'
++export function DeliveryNoteDetails(props: DeliveryNoteDetailsProps) {
++  const text = useLabels().deliveryNotesText
++  if (props.state.kind !== 'ready')
++    return (
++      <div className="space-y-4">
++        <Breadcrumbs
++          items={[
++            { label: text.title, onClick: props.onBack },
++            { label: text.detailsTab },
++          ]}
++        />
++        {props.state.kind === 'loading' ? (
++          <Spinner label={text.loading} />
++        ) : (
++          <EmptyState
++            title={
++              props.state.kind === 'error' ? text.loadFailed : text.unavailable
++            }
++            action={
++              props.state.kind === 'error' ? (
++                <Button onClick={props.onRetry}>{text.retry}</Button>
++              ) : undefined
++            }
++          />
++        )}
++      </div>
++    )
++  const model = props.state.model
++  const n = model.note
++  const identity =
++    n.fiscalNumber == null
++      ? text.awaitingNumber
++      : `${n.series} ${n.fiscalNumber}`
++  return (
++    <article className="min-w-0 space-y-4">
++      <Breadcrumbs
++        items={[
++          { label: text.title, onClick: props.onBack },
++          { label: identity },
++        ]}
++      />
++      <div className="flex flex-wrap items-start justify-between gap-4">
++        <div className="min-w-0">
++          <div className="flex flex-wrap items-center gap-3">
++            <Heading
++              level={1}
++              className="text-title break-words [overflow-wrap:anywhere]"
++            >
++              {text.detailTitle}
++              {n.fiscalNumber != null ? ' ' + identity : ''}
++            </Heading>
++            <NoteStatus status={n.status} />
++          </div>
++          <Text
++            as="p"
++            tone="muted"
++            className="mt-1 break-words [overflow-wrap:anywhere]"
++          >
++            {model.shipmentReference} · {model.invoicingCompanyName}
++          </Text>
++        </div>
++        <DeliveryNoteDetailsActions
++          key={`${n.shipmentId}:${n.id}`}
++          model={model}
++          onOpenShipment={props.onOpenShipment}
++          onPreviewPdf={props.onPreviewPdf}
++        />
++      </div>
++      <Tabs defaultValue="details">
++        <TabList>
++          <Tab value="details">{text.detailsTab}</Tab>
++        </TabList>
++        <TabPanel value="details">
++          <DeliveryNoteDetailsSections model={model} />
++        </TabPanel>
++      </Tabs>
++    </article>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/testing/delivery-note-details-fixtures.ts b/frontline-forwarding-client/src/features/delivery-notes/testing/delivery-note-details-fixtures.ts
+new file mode 100644
+index 0000000..bbf455e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/testing/delivery-note-details-fixtures.ts
+@@ -0,0 +1,72 @@
++import type { DeliveryNoteDetailsModel } from '../types'
++export function makeDetailsModel(): DeliveryNoteDetailsModel {
++  return {
++    shipmentReference: 'DEMO-041',
++    invoicingCompanyName: 'Demo Beta',
++    hasSavedDraft: true,
++    canOpenShipment: true,
++    note: {
++      id: '103',
++      shipmentId: '41',
++      invoiceCompanyId: '7',
++      status: 'ISSUED',
++      series: 'DN',
++      fiscalNumber: '103',
++      issuePlace: 'Demo port',
++      movementStartAt: '2026-11-05T09:00:00Z',
++      vehicleNumber: 'DEMO-01',
++      movementPurpose: 'SALE',
++      otherMovementPurposeTitle: null,
++      loadingAddress: {
++        street: 'Demo',
++        number: '10',
++        postalCode: '10000',
++        city: 'Athens',
++      },
++      destinationAddress: {
++        street: 'Demo',
++        number: '20',
++        postalCode: '10001',
++        city: 'Piraeus',
++      },
++      recipient: {
++        name: 'Demo Recipient',
++        profession: null,
++        address: 'Demo 20',
++        city: 'Piraeus',
++        postalCode: '10001',
++        vatNumber: 'DEMO-VAT',
++        taxOffice: null,
++      },
++      totalCollis: 3,
++      totalGrossWeightKg: 25,
++      issuedAt: '2026-11-05T08:00:00Z',
++      mark: 'DEMO-MARK',
++      uid: null,
++      qrUrl: null,
++      cancellationMark: null,
++      submissionError: null,
++      version: '1',
++      notes: null,
++      relatedDocumentNumber: null,
++      lines: [
++        {
++          id: '1',
++          lineNumber: 1,
++          purchaseOrderId: '12',
++          stockId: 'DEMO-PO-12',
++          colliQuantity: 2,
++          grossWeightKg: 18,
++        },
++        {
++          id: '2',
++          lineNumber: 2,
++          purchaseOrderId: '14',
++          stockId: 'DEMO-PO-14',
++          colliQuantity: 1,
++          grossWeightKg: 7,
++        },
++      ],
++    },
++  }
++}
+diff --git a/frontline-forwarding-client/src/features/delivery-notes/types.ts b/frontline-forwarding-client/src/features/delivery-notes/types.ts
+new file mode 100644
+index 0000000..0c44f94
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/delivery-notes/types.ts
+@@ -0,0 +1,18 @@
++import type { DeliveryNote } from '#/features/shipments/services/delivery-note-service'
++export interface DeliveryNoteDetailsModel {
++  note: DeliveryNote
++  shipmentReference: string
++  invoicingCompanyName: string
++  hasSavedDraft: boolean
++  canOpenShipment: boolean
++}
++export type DeliveryNoteDetailsState =
++  | { kind: 'loading' | 'unavailable' | 'error' }
++  | { kind: 'ready'; model: DeliveryNoteDetailsModel }
++export interface DeliveryNoteDetailsProps {
++  state: DeliveryNoteDetailsState
++  onBack: () => void
++  onRetry: () => void
++  onOpenShipment: (shipmentId: string) => void
++  onPreviewPdf: (shipmentId: string, noteId: string) => Promise<void>
++}

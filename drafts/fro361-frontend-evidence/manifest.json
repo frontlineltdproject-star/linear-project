@@ -1,0 +1,15 @@
+{
+  "base": "5774931b9869247f0247013111a452552403f456",
+  "files": [
+    "frontline-forwarding-client/src/app/providers/labels-provider.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/README.md",
+    "frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.test.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-actions.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details-sections.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.test.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/components/delivery-note-details.tsx",
+    "frontline-forwarding-client/src/features/delivery-notes/testing/delivery-note-details-fixtures.ts",
+    "frontline-forwarding-client/src/features/delivery-notes/types.ts"
+  ],
+  "patchSha256": "8f185f8f4bb458bd12dd65605e0df19200129b972b74ea574a9614642cf8169b"
+}

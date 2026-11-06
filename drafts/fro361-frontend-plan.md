@@ -14,7 +14,7 @@
 
 - Repository: Frontline-Forwarding/frontline-forwarding; detached main 5774931b9869247f0247013111a452552403f456.
 - Checkout: C:/Users/Giorgos/.codex/visualizations/2026/11/06/01a1b157-f4aa-77b3-ab01-1dc2d0c938d7/fro361-frontend.
-- Playbook resumed, committed SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Planning checkpoint accepted. Plan agreement and separate implementation-model checkpoint remain pending.
+- Playbook resumed, committed SHA-256 b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc. Planning checkpoint accepted. Plan agreement and implementation-model checkpoint accepted; implementation completed locally.
 - Prepare all slices uncommitted at detached HEAD. Planning AGENTS.md requires final diff approval before production branch creation/commit/push. Proposed eventual name: mock/fro-361-delivery-note-details; verify no name collision before approval.
 - Ruleset verification returned HTTP 403. Publication stays blocked; do not reuse exceptions granted for other tickets.
 
@@ -29,10 +29,10 @@
 
 ## Preparation
 
-- [ ] Confirm clean detached checkout, remote and base; read nested AGENTS files under affected paths.
-- [ ] Use Node 22.13.0 standard and documented pnpm 11.1.3 frozen-lockfile installation. An existing dependency directory may be reused only after matching package/lock files. Do not use npm install to repair lockfiles.
-- [ ] Run npx @tanstack/intent@latest list and load the most specific applicable local skill before substantial implementation. Record missing/unavailable skills explicitly.
-- [ ] No separate Base/Version/Sync command has been established. Use documented dependency preparation; do not invent a Sync step. GraphQL generation is unnecessary because documents remain unchanged.
+- [x] Confirm clean detached checkout, remote and base; read nested AGENTS files under affected paths.
+- [x] Use Node 22.13.0 standard and documented pnpm 11.1.3 frozen-lockfile installation. An existing dependency directory may be reused only after matching package/lock files. Do not use npm install to repair lockfiles.
+- [x] Run npx @tanstack/intent@latest list and load the most specific applicable local skill before substantial implementation. Record missing/unavailable skills explicitly.
+- [x] No separate Base/Version/Sync command has been established. Use documented dependency preparation; do not invent a Sync step. GraphQL generation is unnecessary because documents remain unchanged.
 
 ## Component map
 
@@ -84,33 +84,33 @@ Page props: { state: DeliveryNoteDetailsState; onBack: () => void; onRetry: () =
 
 ## Slice 1 — Read-only Details composition
 
-- [ ] Add focused failing tests: rendersSectionOrder, showsOnlySelectedNoteAndStoredTotals, rendersUnnumberedDraftAndMissingDate, clearsDataWhenUnavailable, rendersSubmissionErrorAsText. Assert a single Details tab and absence of editing/lifecycle controls.
-- [ ] Run pnpm exec vitest run src/features/delivery-notes/components/delivery-note-details.test.tsx; establish behavioral failure, not tooling failure.
-- [ ] Implement model/state interfaces and sections with catalogue components. Show number/status independently; MARK only when present; failed-submission error when present; empty goods display does not manufacture rows. Use current locale/date formatting conventions.
-- [ ] Add EN/EL labels to LabelsProvider, including the exact approved unsaved-draft explanation. Ensure keyboard-readable headings/table and wrapping field values.
-- [ ] Rerun focused test, inspect initial desktop/mobile rendering; document composition map and host inputs in README. Review slice diff; leave uncommitted.
+- [x] Add focused failing tests: rendersSectionOrder, showsOnlySelectedNoteAndStoredTotals, rendersUnnumberedDraftAndMissingDate, clearsDataWhenUnavailable, rendersSubmissionErrorAsText. Assert a single Details tab and absence of editing/lifecycle controls.
+- [x] Run pnpm exec vitest run src/features/delivery-notes/components/delivery-note-details.test.tsx; establish behavioral failure, not tooling failure.
+- [x] Implement model/state interfaces and sections with catalogue components. Show number/status independently; MARK only when present; failed-submission error when present; empty goods display does not manufacture rows. Use current locale/date formatting conventions.
+- [x] Add EN/EL labels to LabelsProvider, including the exact approved unsaved-draft explanation. Ensure keyboard-readable headings/table and wrapping field values.
+- [x] Rerun focused test, inspect initial desktop/mobile rendering; document composition map and host inputs in README. Review slice diff; leave uncommitted.
 
 Acceptance: approved Direction A contents and sequence, accurate per-note fields/totals, one tab, no hidden record content in non-ready states, no mutating hooks.
 
 ## Slice 2 — Navigation and PDF interactions
 
-- [ ] Add failing tests for all six statuses: DRAFT uses canPreviewDeliveryNotePdf with shared hasSavedDraft and false dirty/saving; SUBMISSION_PENDING omits action; other four statuses permit it. Unsaved draft shows disabled button and exact explanation; Open Shipment remains available when permitted.
-- [ ] Add tests: doubleClickStartsOnePreview; previewFailureShowsLocalizedErrorAndAllowsRetry; lateCompletionDoesNotChangeNewNote; openShipmentUsesSelectedShipmentId; backUsesHostCallback. Assert disabled/hidden actions never call callbacks.
-- [ ] Run focused action tests to establish Red.
-- [ ] Implement action composition using existing canPreviewDeliveryNotePdf helper. Use a synchronous in-flight guard as well as disabled UI. Key/reset request state by note identity and ignore stale completion after identity change/unmount. Do not expose raw backend error text as the generic PDF failure message.
-- [ ] Wire to page through callbacks only. Test loading/error/unavailable states have no preview action; rendering and retry never trigger auto-preparation.
-- [ ] Rerun both test files; record exact service handoff and shared saved-state dependency in README. Review diff; leave uncommitted.
+- [x] Add failing tests for all six statuses: DRAFT uses canPreviewDeliveryNotePdf with shared hasSavedDraft and false dirty/saving; SUBMISSION_PENDING omits action; other four statuses permit it. Unsaved draft shows disabled button and exact explanation; Open Shipment remains available when permitted.
+- [x] Add tests: doubleClickStartsOnePreview; previewFailureShowsLocalizedErrorAndAllowsRetry; lateCompletionDoesNotChangeNewNote; openShipmentUsesSelectedShipmentId; backUsesHostCallback. Assert disabled/hidden actions never call callbacks.
+- [x] Run focused action tests to establish Red.
+- [x] Implement action composition using existing canPreviewDeliveryNotePdf helper. Use a synchronous in-flight guard as well as disabled UI. Key/reset request state by note identity and ignore stale completion after identity change/unmount. Do not expose raw backend error text as the generic PDF failure message.
+- [x] Wire to page through callbacks only. Test loading/error/unavailable states have no preview action; rendering and retry never trigger auto-preparation.
+- [x] Rerun both test files; record exact service handoff and shared saved-state dependency in README. Review diff; leave uncommitted.
 
 Acceptance: selected IDs reach callbacks exactly once; existing PDF status rules preserved; no create/update/issue/cancel requests; no stale error from previous note.
 
 ## Slice 3 — Browser verification and developer handoff
 
-- [ ] Build a temporary local harness outside the production diff, importing real feature components/providers and controlled fixtures/callbacks. Do not mount fixture routes in production or modify routeTree.gen.ts.
-- [ ] Exercise EN/EL at desktop 1440px and mobile 400px: saved/unsaved draft, submission pending, issued, failed, cancellation pending, cancelled, loading, unavailable/access denied, load error, PDF pending and PDF error. Include multi-note identity changes, missing optional fields, empty goods, long text and keyboard actions.
-- [ ] Assert no document overflow/clipping, correct tab/field labels, visible disabled explanation, correct action IDs/counts and no external/live requests. Compare screenshot layout to attached Direction A and approved disabled-draft addition.
-- [ ] Run pnpm test, pnpm run build, pnpm run format:check, pnpm exec tsc --noEmit and git diff --check. Run scoped formatting checks too. Report pre-existing failures separately; they still block publication unless explicitly accepted for FRO-361.
-- [ ] Stop harness and verify its port/process no longer writes generated files. Audit tracked and untracked files against base. Keep screenshots/logs in planning evidence, not production source.
-- [ ] Write planning handoff with exact checks, full patch, changed-file list, base SHA and remaining integration work. Refresh main before final approval; reverify if it moved. No publication until ruleset requirement is resolved and user approves the complete concrete diff.
+- [x] Build a temporary local harness outside the production diff, importing real feature components/providers and controlled fixtures/callbacks. Do not mount fixture routes in production or modify routeTree.gen.ts.
+- [x] Exercise EN/EL at desktop 1440px and mobile 400px: saved/unsaved draft, submission pending, issued, failed, cancellation pending, cancelled, loading, unavailable/access denied, load error, PDF pending and PDF error. Include multi-note identity changes, missing optional fields, empty goods, long text and keyboard actions.
+- [x] Assert no document overflow/clipping, correct tab/field labels, visible disabled explanation, correct action IDs/counts and no external/live requests. Compare screenshot layout to attached Direction A and approved disabled-draft addition.
+- [x] Run pnpm test, pnpm run build, pnpm run format:check, pnpm exec tsc --noEmit and git diff --check. Run scoped formatting checks too. Report pre-existing failures separately; they still block publication unless explicitly accepted for FRO-361.
+- [x] Stop harness and verify its port/process no longer writes generated files. Audit tracked and untracked files against base. Keep screenshots/logs in planning evidence, not production source.
+- [x] Write planning handoff with exact checks, full patch, changed-file list, base SHA and remaining integration work. Refresh main before final approval; reverify if it moved. No publication until ruleset requirement is resolved and user approves the complete concrete diff.
 
 ## Activation dependencies and coverage
 
@@ -125,3 +125,6 @@ Documentation: feature README plus planning evidence. No business/schema/API cha
 ## Execution handoff
 
 Recommend native execution in this chat because the three slices share one small feature composition. Obtain plan agreement and the separate implementation-model continuation before writing application code. Independent review may follow the completed implementation within the chosen execution workflow. Production branch/commit/push remains a later explicit gate; planning-repository commits/pushes follow its standing instructions.
+
+
+Completion evidence: see fro361-frontend-handoff.md. All preparation slices completed; publication and live integration remain blocked as documented. Preview harness was stopped for audit and restarted separately for user review.

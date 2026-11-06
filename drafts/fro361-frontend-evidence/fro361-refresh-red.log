@@ -1,0 +1,33 @@
+
+ RUN  v4.1.6 C:/Users/Giorgos/.codex/visualizations/2026/11/06/01a1b157-f4aa-77b3-ab01-1dc2d0c938d7/fro361-frontend/frontline-forwarding-client
+
+ ❯ src/features/delivery-notes/components/delivery-note-details-actions.test.tsx (13 tests | 1 failed) 1326ms
+   × keeps the in-flight guard when the same note is refreshed 99ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/delivery-notes/components/delivery-note-details-actions.test.tsx > keeps the in-flight guard when the same note is refreshed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/delivery-notes/components/delivery-note-details-actions.test.tsx:167:27
+    165|   } } }))
+    166|   const button = screen.getByRole('button', { name: /PDF/ }) as HTMLBu…
+    167|   expect(button.disabled).toBe(true)
+       |                           ^
+    168|   fireEvent.click(button)
+    169|   expect(p.onPreviewPdf).toHaveBeenCalledTimes(1)
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  17:20:34
+   Duration  5.30s (transform 389ms, setup 0ms, import 1.21s, tests 1.33s, environment 2.27s)
+
