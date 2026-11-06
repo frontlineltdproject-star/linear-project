@@ -63,3 +63,16 @@ Publication is blocked by the required ruleset enforcement check (GitHub HTTP 40
 
 Proposed later branch: mock/fro-361-delivery-note-details (remote name was unused when checked). Proposed commit: feat(FRO-361): add read-only Delivery Note Details UI mock. Only after blockers are resolved and the final diff is explicitly approved may this branch be created, committed and pushed with the exact same-name refspec.
 
+
+## Published handoff — 2026-11-06
+
+The user accepted the existing type/format failures and granted a one-time FRO-361 ruleset-enforcement exception, then explicitly authorized publication of the exact reviewed diff.
+
+- Branch: https://github.com/Frontline-Forwarding/frontline-forwarding/tree/mock/fro-361-delivery-note-details
+- Commit/head: 551e2051b5f784dfdbbc814316e25a30807a3a18
+- Base: 5774931b9869247f0247013111a452552403f456
+- Commit: feat(FRO-361): add read-only Delivery Note Details UI mock
+- Nine files, 823 insertions; reviewed patch checksum unchanged.
+- Same-name push succeeded; fetched remote equals local HEAD, full diff matches, worktree clean.
+
+The publication blockers above were accepted for this ticket only. No global rules were weakened. No PR, merge, deployment or additional Linear write was performed. Backend/route/list activation dependencies remain.
