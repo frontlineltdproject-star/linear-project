@@ -2468,3 +2468,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Dirty edit exits/navigation require discard confirmation; close/reload uses browser warning. Cancel editing returns to saved Details. Show Shipment link and original/replacement links where applicable.
 - Next: shared create/edit form protections, draft-save validation and Details layout. No Linear write or preview implementation.
 
+
+### 2026-11-06 - FRO-363 final diff and scoped publication exceptions
+
+- User accepted existing whole-project TypeScript/formatting failures and granted a one-time exception to the ruleset enforcement requirement for FRO-363 only. Ruleset enforcement remains unverified (GitHub HTTP 403); no global policy or permissions changed.
+- Refreshed production main remains 5774931b9869247f0247013111a452552403f456. Proposed mock/fro-363-shipment-invoice-create name is available locally and remotely.
+- Complete 14-file patch is unchanged and matches the detached worktree byte-for-byte; SHA-256 f2772624042ac3b3d9543917dbe6b2d7249a9ba27c17667b4238b41fc0a1ba1a. Final reverse-applicability/whitespace checks passed; 23 focused tests and feature formatting passed again.
+- Final approval package: drafts/fro363-frontend-handoff.md and drafts/fro363-frontend-preparation.patch. Proposed commit: feat(FRO-363): add Shipment Invoice create UI mock. Exact push: git push github mock/fro-363-shipment-invoice-create:mock/fro-363-shipment-invoice-create.
+- Await explicit approval to create, commit and push that exact production mock branch. No branch/commit/push/PR/deployment or Linear mutation performed. Activation still depends on FRO-244/FRO-301 and Details/allocation integration.

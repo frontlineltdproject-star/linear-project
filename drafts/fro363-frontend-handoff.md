@@ -15,7 +15,7 @@ Local preview: http://127.0.0.1:8766/ while the local review server runs. The te
 - Worktree: C:/Users/Giorgos/.codex/visualizations/2026/11/06/01a1b0de-d032-7e31-a043-531adf58aa3a/fro363-frontend.
 - Committed playbook SHA-256: b1a66b227355e92a45dc1cafa04530b915516bd4f5baa38d3ac7f81a7556d7dc.
 - Planning and implementation model checkpoints accepted. No production branch, commit, push, PR or deployment. Linear remains as approved: Backlog / Pending_Review, Frontend, Story, milestone 0.0.12; no status or description changes in this implementation turn.
-- Proposed branch, if gates are resolved and approved: mock/fro-363-shipment-invoice-create. Complete same-name push command would be git push github mock/fro-363-shipment-invoice-create:mock/fro-363-shipment-invoice-create. Not executed or requested for approval while publication is blocked.
+- Proposed branch pending final approval: mock/fro-363-shipment-invoice-create. Exact push command: git push github mock/fro-363-shipment-invoice-create:mock/fro-363-shipment-invoice-create. Not executed.
 
 ## Behavior verified
 
@@ -53,10 +53,19 @@ Full logs and screenshots are in fro363-frontend-evidence/. Production was not a
 - Screens remain unmounted. AppShell is owned by the eventual host; no sidebar item or operational save entry point is activated. This is necessary because FRO-244/FRO-301 operations and future Details/allocation UI are not present on main.
 - Preserve all production files unrelated to this task. Build-generated route-tree line-ending noise was restored after confirming no content diff. Temporary scripts and screenshots moved out of the production checkout.
 
-## Publication blockers
+## Final publication approval package — 2026-11-06
 
-1. Planning AGENTS.md step 4e requires repository/identity enforcement evidence. GitHub ruleset inspection returned HTTP 403 (feature unavailable for this private repository/account plan), so this cannot be verified. No repository permission changes attempted.
-2. Required whole-project type and formatting checks are not clean, with pre-existing failures reported above. These were not silently expanded into FRO-363 fixes.
-3. FRO-244/FRO-301 backend and Details/allocation UI dependencies must be resolved before operational activation. The mock demonstrates frontend interactions only.
+The user explicitly accepted the existing whole-project TypeScript and formatting failures and granted a one-time exception to the ruleset enforcement requirement for FRO-363. This does not change AGENTS.md or authorize other branches. Enforcement remains unverified: GitHub ruleset inspection returned HTTP 403 because the feature is unavailable for this private repository/account plan. No repository-wide permissions were changed.
 
-Review the complete local diff before any branch/commit decision. Publication is not requested until the mandatory blockers are resolved. The completed ticket and its original four downloadable design attachments are already in Linear.
+- Destination: Frontline-Forwarding/frontline-forwarding, verified remote github.
+- Refreshed main/base: 5774931b9869247f0247013111a452552403f456; unchanged.
+- New branch: mock/fro-363-shipment-invoice-create. Local and remote name checks found no collision.
+- Proposed commit: feat(FRO-363): add Shipment Invoice create UI mock
+- Exact push: git push github mock/fro-363-shipment-invoice-create:mock/fro-363-shipment-invoice-create
+- Complete diff: fro363-frontend-preparation.patch; 14 new feature files. Reconstructed working-tree patch matched the saved patch byte-for-byte.
+- Patch SHA-256: f2772624042ac3b3d9543917dbe6b2d7249a9ba27c17667b4238b41fc0a1ba1a
+- Final refresh: reverse patch applicability and whitespace checks passed. Focused Vitest rerun passed all 23 tests in 2 files; feature Prettier passed. Full-suite/build/browser evidence above remains applicable to the identical patch and base.
+
+FRO-244/FRO-301 backend contracts and Details/allocation destinations are dependencies for operational activation. They do not block publication of this unmounted UI mock.
+
+Final explicit approval to create, commit and push this exact branch is still required by AGENTS.md step 4e. No production branch, commit, push, PR or deployment has occurred. The completed ticket and four downloadable design attachments remain in Linear; no Linear mutation accompanies this approval package.
