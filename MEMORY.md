@@ -2356,3 +2356,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Cancellation of FRO-302 proposed but NOT approved. User asked whether FRO-362 removes child Orders generally and raised dependent-ticket impact. FRO-362 removes automatic movement-driven children only; existing children/history and deliberate separation remain. Live FRO-330 lineage display and FRO-319/355 inherited admission coverage still have valid consumers. FRO-325/344 automatic split behavior and FRO-341 partial-selection UI need coordinated adaptation; 325/344 now Done, 341 Todo. Do not interpret Done as deployment or silently rewrite completed tickets.
 - Live main 5774931 confirmed via gh: both Shipment partial-child creation and deliberate Order splitting call invoice-row copyTo with full quantity/value. Alignment must preserve stable source rows and deliberate separation without duplicated commercial amounts. FRO-244 must consume exact Shipment colli coverage plus allocation. Pending FRO-302 disposition and consumer alignment scope before readiness.
 
+
+### 2026-11-06 - FRO-301 and FRO-244 ready in 0.0.12; FRO-362 deferred
+
+- Supersedes the earlier three-ticket milestone proposal. User explicitly approved FRO-301 and FRO-244 only for developer handoff under the existing child-Order model. Created Pre-releases 0.0.x milestone 0.0.12 (00ef3bb7-8240-41af-b187-3def86ea9a49), with allocation first and Shipment Invoice integration afterward. UI/printing remain separate; existing-row migration and first live invoice number remain activation/cutover inputs.
+- Set both issues to Todo and replaced Pending_Review with Ready, preserving other labels (FRO-301: Order/Ready; FRO-244: Ready), descriptions, embedded templates, assignees, priorities, attachments and relations. Re-read verified project/milestone and unchanged fields. Chris remains assigned to FRO-244; FRO-301 remains unassigned.
+- FRO-362 stays deferred in Backlog/Pending_Review with no project/milestone. FRO-302 remains unchanged, including its FRO-301 dependency. Verified both updatedAt values unchanged. No alignment to FRO-362, cancellation, production code or deployment performed.
+
