@@ -2452,3 +2452,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Include manager/system-administrator cancellation with required reason and retained number/frozen contents. Separate Create replacement starts a linked draft; inheritance and interaction details remain pending. Printing remains separate.
 - Next interview: replacement inheritance, live-source refresh presentation, and concurrent edits. No Linear write or preview implementation.
 
+
+### 2026-11-06 - Shipment Invoice Details/edit Q7-Q9 accepted
+
+- Replacement keeps the locked Shipment, copies document fields/party text, defaults date to today and carries still-eligible row selections using current source values. Flag unavailable rows. Copy packing, weight and partial amount, highlighting these for review against corrected goods. No printed number until finalized; cancelled original unchanged.
+- Refresh goods on draft opening and explicit Refresh goods. Preserve document input and eligible selections; show changed quantities/values and removed/ineligible selections; new eligible rows remain unselected. Affected selections require review before finalization.
+- Concurrent edits/finalization/cancellation block overwriting the newer version. Preserve unsaved input for comparison/copying and offer reload. Backend conflict detection is an explicit dependency; finalized invoices cannot remain editable.
+- Next interview: when replacement persists, explicit review acknowledgement, and navigation/dirty-exit behavior. No Linear write or preview implementation.
+
