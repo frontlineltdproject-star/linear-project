@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — FRO-362 approved, created and verified
+
+- Created FRO-362, Order & Shipment — independent colli custody and movements, after explicit approval of the complete draft and metadata. https://linear.app/front-line-ltd/issue/FRO-362/order-and-shipment-independent-colli-custody-and-movements
+- Re-read saved issue and verified description exactly against drafts/independent-colli-movements.md after normalizing Linear issue chips. Verified Backlog; complete labels Epic, Backend, Order, Shipment, Pending_Review; no project, milestone, assignee or attachments. All 14 approved related issues present, no blocking relations.
+- Existing ticket descriptions/statuses were not edited. UI, preview and mock-branch work skipped as requested. Structural implementation and later deployment verification remain developer work. ADR 0005 and Q1-Q8 decisions are captured in this planning repository.
+
 ### 2026-11-06 — Independent colli movement Q8 and complete draft
 
 - Q8 accepted mixed physical summaries, colli-aware stock filters, matching versus overall counts, one ungrouped row per Order and distinct overall Order counts across warehouse groups.
