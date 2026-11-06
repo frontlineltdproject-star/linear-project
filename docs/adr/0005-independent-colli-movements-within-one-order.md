@@ -1,0 +1,5 @@
+# Independent colli movements within one Order
+
+Accepted for structural ticket planning on 6 November 2026. One commercial Order may retain collis that arrive separately, occupy different warehouses and depart on different Shipments, without creating child Orders solely for those movements. Supplier readiness remains shared across the Order for this version, and the ordinary employee workflow continues to operate on the Order with explicit subset handling when needed.
+
+The observed case involved goods from China and Korea on one Greek supplier's Order, first reported in an agent's stock list under different AWBs. Keeping one Order supports that commercial identity and avoids requiring uncommon physical splits to multiply office records. This requires colli-specific custody and movement eligibility, coordinated adaptation of existing Order-level consumers, and an Order physical summary. Schema design, migration, document coverage and remaining operational rules are still under review. This decision records intended behavior and does not assert implementation or authorize a Linear write.

@@ -43,6 +43,9 @@ The office's stock-list item, also called a purchase order. These names refer to
 **Colli**:
 An individually identified physical handling unit belonging to an Order. A shipment load unit may group multiple collis without replacing their identities.
 
+**Supplier readiness**:
+The supplier's readiness information for an Order, including its expected readiness date and confirmation that the goods are ready for collection. It is separate from warehouse receipt, stock confirmation and Shipment packing readiness.
+
 **Damaged Packing**:
 A flag describing damaged packaging, not damaged goods. It is distinct from the terminal Damaged disposition of a colli.
 

@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Independent colli movements structural scope accepted
+
+- User accepted Q1 complete movement scope: separate arrivals, warehouse custody and outgoing Shipments within one Order without automatic child creation for movement. Q2 accepted shared Order supplier readiness for this version. UI canvas, preview and mock branch explicitly skipped. Workflow remains at interactive business decisions and consumer tracing before a complete draft and Linear approval.
+- Recorded architectural direction in docs/adr/0005-independent-colli-movements-within-one-order.md and supplier-readiness vocabulary in CONTEXT.md. Schema, migration and document coverage remain unsettled.
+- Main remains 5774931. FRO-325 and FRO-344 are In Progress with whole-Order reservations, automatic child creation and Order-level readiness guards. FRO-323 consumes those rules; FRO-302 Backlog still requests child creation. Live services also restrict colli edits when any Order participation is open. New scope needs coordinated consumer requirements and ownership; no linked issue changed.
+
 ### 2026-11-05 — Import entity label
 
 - Created the FRO team label `import` in the same blue as `export` and added it to FRO-359 and FRO-360. Re-read both issues and verified their complete label sets, descriptions, attachments, statuses and relations against the pre-edit reads.
