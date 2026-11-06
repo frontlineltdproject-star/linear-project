@@ -2608,3 +2608,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Plan includes typed presentation boundaries, files, component map, meaningful tests, EN/EL desktop/mobile journeys, create regression coverage and provenance audit against main and FRO-363. Intent list before install reports no enabled packages; repeat after dependency install. No Base/Version/Sync workflow found; use Node 22.13.0 and pnpm 11.1.3 frozen lockfile per Dockerfile.
 - Plan agreement and separate implementation-model checkpoint pending. No source changes, installs, application test runs, production branch/commit/push or Linear updates. Ruleset HTTP 403 remains publication blocker; FRO-363 exceptions do not apply.
 
+
+### 2026-11-06 - FRO-361 marked Ready for development
+
+- On explicit user instruction, moved FRO-361 from Backlog to Todo and replaced Pending_Review with Ready. Retained delivery note, Shipment, Frontend and Story.
+- Re-read verified the status and complete labels; description, published UI handoff, all three attachments, priority, assignee, project, milestone, parent and relations were preserved.
+- Metadata-only readiness change; no business-rule trace, canvas or preview changes required. No merge or deployment authorized or performed.
