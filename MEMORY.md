@@ -2614,3 +2614,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - On explicit user instruction, moved FRO-361 from Backlog to Todo and replaced Pending_Review with Ready. Retained delivery note, Shipment, Frontend and Story.
 - Re-read verified the status and complete labels; description, published UI handoff, all three attachments, priority, assignee, project, milestone, parent and relations were preserved.
 - Metadata-only readiness change; no business-rule trace, canvas or preview changes required. No merge or deployment authorized or performed.
+
+### 2026-11-06 — FRO-352 unchanged public preview published and linked
+
+- User explicitly authorized existing Cloudflare OAuth login, unchanged HTML publication, anonymous-access verification and an explicit current-preview ticket reference. Built existing previews/fro352 without source changes; syntax check passed and fictional fixtures inspected.
+- Pinned Wrangler 4.45.0 created Pages project fro-352-5a09a0 and deployed f1ce161d. Public URL: https://fro-352-5a09a0.pages.dev/ . Anonymous curl returned HTTP 200 without cookies/authorization. Local/public SHA-256 match: ceb63ae443d63132fd7ec35f10b19e186b73cb9fde4dc494b1046866ee63bfd3.
+- Browser opened without sign-in; default, loading, error, notfound and denied states rendered. Greek default at 400px had no page-wide horizontal overflow. Captured warning/error console list empty; dedicated browser network-log API unavailable. No production or existing Cloudflare resource modified.
+- Added Current UI preview — public, no sign-in (FRO-352) resource and explicit current-preview paragraph before the historical-preview paragraph. Re-read at 2026-11-06T15:47:45.186Z verified exact insertion (URL normalization only), original attachments, labels export/Pending_Review/Frontend/Story, Todo and all relations unchanged. Existing historical link retained. No business-rule change or Ready promotion.
