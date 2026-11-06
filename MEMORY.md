@@ -2526,3 +2526,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Re-read confirms approved full description after normalizing Linear issue chips/table/bullet formatting, all metadata and relation directions. Four Resources: shipment-invoice-details.html, component-map.md, desktop.png, mobile.png. Downloaded each and verified SHA-256 equality with approved local source.
 - Ticket: https://linear.app/front-line-ltd/issue/FRO-366/shipment-invoice-details-and-draft-editing-ui. Draft/approval files retained. No Ready promotion, production implementation, branch publication or deployment. Backend review/versioning contracts and allocation destination remain explicit activation dependencies.
 
+
+### 2026-11-06 - FRO-361 draft PDF decision accepted
+
+- User accepted disabled Preview PDF with explanation when saved movement details are missing; Open Shipment remains available. No new lifecycle behavior or editing on Details.
+- Complete proposed description saved in drafts/fro361-details-review.md. Preserves list and existing requirements, makes single Details tab explicit, adds EN/EL disabled-draft message and verification, records existing PDF status/saved-state behavior and source read limitations. Existing three attachments remain unchanged; draft explicitly identifies prototype coverage limitation for this state.
+- Await complete description approval before Linear update. Preserve all metadata and relations. No Ready promotion or production preparation/publication authorized. Existing shared Shipment saved-state guard is retained, not replaced with a selected-note-only check.
