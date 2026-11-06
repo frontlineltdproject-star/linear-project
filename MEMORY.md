@@ -2636,3 +2636,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - FRO-354: project fro-354-97f526, deployment 90be68dd, https://fro-354-97f526.pages.dev/ . Anonymous HTTP 200; local/public SHA-256 739ac96b2e424edcba242385b3090415ee254b15eecf2fb5322ee87cab86caf7.
 - Both opened in browser without sign-in. Default, relevant loading/error/not-found/denied scenarios and Greek rendering checked; FRO-353 lookup loading/error verified by opening the picker. FRO-354 Greek at 400px had no page-wide overflow. Console warning/error lists empty; no dedicated browser network-log API available. Source/UI unchanged; no production or existing Cloudflare resource modified.
 - Each issue has a Current UI preview resource and explicit implementation-review paragraph before the prepared branch. Replaced obsolete not-published sentence with source location. Original historical links retained. Preserved Todo, entry note/Ready/Frontend/Story, attachments and relations; removed only auto-added related links after saves (353: 317/321/356/348; 354: 356/347/317/350/321).
+
+### 2026-11-06 - FRO-363 explicit HTML preview link
+
+- At the user's request, added a prominent direct download link to the existing shipment-invoice-create.html attachment at the start of Design and developer handoff, with instructions to open locally and select layout A, language and scenario.
+- Re-read confirmed the exact addition after link normalization; Ready/Todo, milestone 0.0.12, labels, relations and all four attachments preserved. No hosted preview was published.
