@@ -2378,3 +2378,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Q3: Show unresolved allocation rows separately. Physical allocation confirmation belongs to the Order allocation interface; refresh eligibility on the invoice create page to include subsequently confirmed rows. Track the allocation UI dependency explicitly; no silent allocation writes during invoice preparation.
 - Live main 5774931 reconnaissance found no Shipment Invoice implementation or dedicated Shipment picker. Reuse portal Card/FormField/Textarea/DatePicker/Combobox/Table/Checkbox/Modal/Button primitives. Remote Shipment search and grouped row selection/totals require mapped compositions. No design file or Linear write yet.
 
+
+### 2026-11-06 - Shipment Invoice create page Q4-Q6 accepted
+
+- Q4: Invoice type defaults to Invoice and document date to today, both editable. PACKING LIST subtitle and EUR for the optional partial amount retain FRO-244 defaults. Packing details and weight remain blank for manual entry.
+- Q5: Changing invoicing company replaces untouched Shipper prefill automatically. If Shipper text was edited, offer Replace with company details or Keep my text; never silently overwrite edits.
+- Q6: Allow changing Shipment. If the form contains work, require confirmation; confirmed change clears goods, company selections, party text, packing, weight, partial amount and notes, then applies normal defaults for the new Shipment. Cancel preserves all work.
+- Remaining UI decisions: mixed-currency selection behavior, unsaved-form exit and allocation-page return/refresh. Local layout options follow the interview. No Linear write.
+
