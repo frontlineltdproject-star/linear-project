@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Repacking as parent colli discussion
+
+- User asks whether a repack should become a new colli pointing to its contents. Read main 5774931 ShipmentLoadUnit, ShipmentLoadUnitContent and repository through gh. Load units already have identity, Shipment owner, type, label, dimensions and weights; content links original colli IDs to an optional load-unit ID. Counts treat an overpack as one transport piece while retaining contained colli identities.
+- Current FRO-325 (In Progress) adds saved versus confirmed packing and historical arrangements, supports mixed-Order overpacks and one overpack per colli. FRO-323 (Todo) takes historical colli identities into onward selection without carrying the earlier packing arrangement. These planned contracts are distinct from verified main implementation.
+- Open discovery question: is persistent identification of an intact pallet/box across warehouse stays and later Shipments required? That would justify investigating a durable packaging entity or composite handling unit; no architecture decision or ticket modification approved. Keep FRO-362 scope separate pending a decision.
+
 ### 2026-11-06 — FRO-362 approved, created and verified
 
 - Created FRO-362, Order & Shipment — independent colli custody and movements, after explicit approval of the complete draft and metadata. https://linear.app/front-line-ltd/issue/FRO-362/order-and-shipment-independent-colli-custody-and-movements
