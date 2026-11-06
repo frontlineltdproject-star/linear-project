@@ -46,6 +46,9 @@ An individually identified physical handling unit belonging to an Order. A shipm
 **Supplier readiness**:
 The supplier's readiness information for an Order, including its expected readiness date and confirmation that the goods are ready for collection. It is separate from warehouse receipt, stock confirmation and Shipment packing readiness.
 
+**Order physical summary**:
+The breakdown of an Order's collis by their actual physical stages and locations. Warehouse-filtered counts describe the matching collis separately from the Order's overall contents.
+
 **Damaged Packing**:
 A flag describing damaged packaging, not damaged goods. It is distinct from the terminal Damaged disposition of a colli.
 

@@ -1,5 +1,11 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-06 — Independent colli movement Q8 and complete draft
+
+- Q8 accepted mixed physical summaries, colli-aware stock filters, matching versus overall counts, one ungrouped row per Order and distinct overall Order counts across warehouse groups.
+- Complete proposed structural draft prepared in drafts/independent-colli-movements.md. Proposed title: Order & Shipment — independent colli custody and movements. Proposed Backlog with Epic, Backend, Order, Shipment and Pending_Review; related links only to the named consumer owners. No Linear write pending review of the complete text.
+- Consumer trace includes Order grouping/status filters, singular custody reads, StockListPdfService/ModelFactory's one-warehouse/document assumptions and DeliveryNoteDraftSourceService's all-Order-colli expansion. Draft includes compatibility/activation and evidence-based migration requirements; actual historical coverage, source/destination storage layout and supported mixed-summary API implementation must be verified by the developer. Existing children are mock data and retain identities/history per Q4.
+
 ### 2026-11-06 — Independent colli movement Q7 accepted
 
 - Partial reservation before receipt is allowed for identified collis, using shared Order supplier readiness and their expected warehouse. Only selected collis are reserved. Shipment readiness and dispatch require every selected colli to be stock-confirmed at the origin; unreceived siblings do not block departure.
