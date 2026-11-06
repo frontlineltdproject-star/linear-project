@@ -2363,3 +2363,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Set both issues to Todo and replaced Pending_Review with Ready, preserving other labels (FRO-301: Order/Ready; FRO-244: Ready), descriptions, embedded templates, assignees, priorities, attachments and relations. Re-read verified project/milestone and unchanged fields. Chris remains assigned to FRO-244; FRO-301 remains unassigned.
 - FRO-362 stays deferred in Backlog/Pending_Review with no project/milestone. FRO-302 remains unchanged, including its FRO-301 dependency. Verified both updatedAt values unchanged. No alignment to FRO-362, cancellation, production code or deployment performed.
 
+
+### 2026-11-06 - Shipment Invoice create-page workflow started
+
+- User requested a new UI ticket for the FRO-244 create page using AGENTS.md. Existing FRO-244/FRO-301 remain Ready in 0.0.12 under the child-Order model; FRO-362 stays deferred. Duplicate search found no dedicated Shipment Invoice create-page issue.
+- Preflight: authenticated gh read succeeds and repository reports push permission; Linear read succeeds. Wrangler whoami reports broad OAuth, not the prescribed Pages-only token. User explicitly authorized continuing interview and local preview, deferring publication; approved HTML can be attached to the future ticket for others to download. No Cloudflare resource changes or production branch work authorized.
+- Next: interactive create-page decisions, then component-mapped local HTML directions and full ticket approval. No new business decisions, issue creation or preview implementation yet.
+
