@@ -1,0 +1,1995 @@
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx
+new file mode 100644
+index 0000000..4d170c4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-confirmations.tsx
+@@ -0,0 +1,56 @@
++import { Modal } from '#/components/ui/modal'
++import { Button } from '#/components/ui/button'
++import type { InvoiceLabels } from '../create/labels'
++export type Confirmation = {
++  kind: 'shipment' | 'discard' | 'shipper'
++  accept: () => void
++  trigger: HTMLElement | null
++}
++export function ShipmentInvoiceConfirmations({
++  value,
++  close,
++  labels: l,
++}: {
++  value: Confirmation | null
++  close: () => void
++  labels: InvoiceLabels
++}) {
++  return (
++    <Modal
++      open={!!value}
++      onClose={close}
++      title={
++        value?.kind === 'shipper'
++          ? l.confirmShipper
++          : value?.kind === 'shipment'
++            ? l.confirmShipment
++            : l.confirmDiscard
++      }
++      footer={
++        <div className="flex flex-wrap gap-2">
++          <Button
++            type="button"
++            variant="secondary"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            onClick={close}
++          >
++            {value?.kind === 'shipper' ? l.keep : l.no}
++          </Button>
++          <Button
++            type="button"
++            className="h-auto min-h-10 whitespace-normal py-2"
++            onClick={() => {
++              const accept = value?.accept
++              close()
++              accept?.()
++            }}
++          >
++            {value?.kind === 'shipper' ? l.replace : l.confirm}
++          </Button>
++        </div>
++      }
++    >
++      {l.changed}
++    </Modal>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx
+new file mode 100644
+index 0000000..352b6a4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.test.tsx
+@@ -0,0 +1,538 @@
++import {
++  act,
++  cleanup,
++  render,
++  screen,
++  fireEvent,
++  waitFor,
++} from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { ShipmentInvoiceCreateForm } from './shipment-invoice-create-form'
++afterEach(cleanup)
++import type { ShipmentPresentation } from '../create/types'
++const context: ShipmentPresentation = {
++  id: 'S1',
++  label: 'DEMO-SHP-1',
++  eligible: true,
++  clients: [{ id: 'C1', label: 'Demo client' }],
++  companies: [],
++  orders: [],
++}
++const props = () => ({
++  todayAthens: '2026-11-06',
++  initialShipmentId: 'S1',
++  available: true,
++  currencies: ['EUR'],
++  onSearchShipments: vi.fn(async () => [{ id: 'S1', label: 'DEMO-SHP-1' }]),
++  onLoadShipment: vi.fn(async () => context),
++  onEvaluateSelection: vi.fn(async () => ({
++    totalDisplay: '€0.00',
++    mixed: false,
++    overlaps: [] as string[],
++  })),
++  onSubmit: vi.fn(async () => 'draft-1'),
++  onSaved: vi.fn(),
++  onCancel: vi.fn(),
++})
++describe('Shipment Invoice create', () => {
++  it('starts standalone without a selected Shipment or save capability', () => {
++    render(
++      <ShipmentInvoiceCreateForm {...props()} initialShipmentId={undefined} />,
++    )
++    expect(
++      screen.getByRole('heading', { name: 'Create Shipment Invoice' }),
++    ).toBeTruthy()
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(true)
++  })
++  it('uses document defaults and saves incomplete unnumbered drafts', async () => {
++    const p = props()
++    render(<ShipmentInvoiceCreateForm {...p} />)
++    await waitFor(() =>
++      expect(
++        (
++          screen.getByRole('button', {
++            name: 'Create draft',
++          }) as HTMLButtonElement
++        ).disabled,
++      ).toBe(false),
++    )
++    expect((screen.getByLabelText('Subtitle') as HTMLInputElement).value).toBe(
++      'PACKING LIST',
++    )
++    fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++    await waitFor(() => expect(p.onSaved).toHaveBeenCalledWith('draft-1'))
++    expect(p.onSubmit).toHaveBeenCalledWith(
++      expect.objectContaining({
++        shipmentId: 'S1',
++        invoiceType: 'Invoice',
++        documentDate: '2026-11-06',
++        consignee: '',
++        packingDetails: '',
++        totalWeightKg: '',
++      }),
++      [],
++    )
++  })
++})
++it('retains edited fields when submit fails and prevents repeat clicks', async () => {
++  const p = props()
++  let rejectSave!: (error: Error) => void
++  p.onSubmit = vi.fn(
++    () =>
++      new Promise<string>((_resolve, reject) => {
++        rejectSave = reject
++      }),
++  )
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep this' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSubmit).toHaveBeenCalledTimes(1))
++  rejectSave(new Error('offline'))
++  await screen.findByText('Draft was not saved. Your work is retained.')
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep this',
++  )
++  expect(p.onSaved).not.toHaveBeenCalled()
++})
++it('asks before discarding changes and preserves them on cancel', async () => {
++  const p = props()
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByText('DEMO-SHP-1')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++  expect(screen.getByRole('dialog')).toBeTruthy()
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect(p.onCancel).not.toHaveBeenCalled()
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++})
++import { demoShipment } from '../create/__fixtures__/shipment-invoice-create'
++it('keeps edited Shipper on company change unless replacement is confirmed', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByText('DEMO-SHP-1042')
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  expect(
++    (screen.getByLabelText('Shipper') as HTMLInputElement).value,
++  ).toContain('DEMO Company One')
++  fireEvent.change(screen.getByLabelText('Shipper'), {
++    target: { value: 'Custom text' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Keep my text' }))
++  expect((screen.getByLabelText('Shipper') as HTMLInputElement).value).toBe(
++    'Custom text',
++  )
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.click(
++    screen.getByRole('button', { name: 'Replace with company details' }),
++  )
++  expect(
++    (screen.getByLabelText('Shipper') as HTMLInputElement).value,
++  ).toContain('DEMO Company One')
++})
++it('blocks mixed currency without deselecting, but permits overlap', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  p.onEvaluateSelection = vi.fn(
++    async (
++      _id?: string,
++      selection?: Array<{ orderId: string; rowIds: string[] }>,
++    ) => ({
++      totalDisplay: '480.00 EUR',
++      mixed: (selection?.length ?? 0) > 1,
++      overlaps: ['DEMO-INV-7'],
++    }),
++  )
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  await screen.findByText(/DEMO-INV-7/)
++  fireEvent.click(screen.getByLabelText('PO-B Maintenance kit'))
++  await screen.findByText(/Selected rows use different currencies/)
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).checked,
++  ).toBe(true)
++  fireEvent.click(screen.getByLabelText('PO-B Maintenance kit'))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++})
++it('refresh preserves fields, removes unavailable selections and leaves new rows unselected', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockResolvedValueOnce({
++      ...demoShipment,
++      orders: [
++        {
++          ...demoShipment.orders[0],
++          rows: [
++            demoShipment.orders[0].rows[1],
++            { ...demoShipment.orders[0].rows[2], ineligibleReason: undefined },
++          ],
++        },
++      ],
++    })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByText(/PO-A \/ r1/)
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++  expect(
++    (screen.getByLabelText('PO-A Pressure sensor') as HTMLInputElement).checked,
++  ).toBe(false)
++})
++it('failed refresh retains work and blocks save until retry succeeds', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockRejectedValueOnce(new Error('offline'))
++    .mockResolvedValue(demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Retain' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByRole('button', { name: 'Retry' })
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).checked,
++  ).toBe(true)
++  fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Retain',
++  )
++})
++it('ignores an older eligibility response and uses the latest selection', async () => {
++  const p = props()
++  let resolveOld!: (value: {
++    totalDisplay: string
++    mixed: boolean
++    overlaps: string[]
++  }) => void
++  p.onLoadShipment = vi.fn(async () => demoShipment)
++  p.onEvaluateSelection = vi
++    .fn()
++    .mockResolvedValueOnce({
++      totalDisplay: '0 EUR',
++      mixed: false,
++      overlaps: [] as string[],
++    })
++    .mockImplementationOnce(
++      () => new Promise((resolve) => (resolveOld = resolve)),
++    )
++    .mockResolvedValue({ totalDisplay: '600 EUR', mixed: false, overlaps: [] })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByLabelText('PO-A Valve assembly'))
++  fireEvent.click(screen.getByLabelText('PO-A Seal kit'))
++  await screen.findByText('600 EUR')
++  resolveOld({ totalDisplay: 'OLD', mixed: true, overlaps: [] })
++  await waitFor(() => expect(screen.queryByText('OLD')).toBeNull())
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(false)
++})
++it('cannot clear a failed eligibility refresh by toggling stale goods', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockResolvedValueOnce(demoShipment)
++    .mockRejectedValueOnce(new Error('offline'))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await screen.findByRole('button', { name: 'Retry' })
++  expect(
++    (screen.getByLabelText('PO-A Valve assembly') as HTMLInputElement).disabled,
++  ).toBe(true)
++})
++it('prefills the common Client after an initial load error and retry', async () => {
++  const p = props()
++  p.onLoadShipment = vi
++    .fn()
++    .mockRejectedValueOnce(new Error('offline'))
++    .mockResolvedValue(demoShipment)
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  fireEvent.click(await screen.findByRole('button', { name: 'Retry' }))
++  await screen.findByText('DEMO-SHP-1042')
++  await waitFor(() =>
++    expect(
++      (screen.getByLabelText('Commercial Client') as HTMLSelectElement).value,
++    ).toBe('C1'),
++  )
++})
++it('does not label a saved draft as failed when navigation fails', async () => {
++  const p = props()
++  p.onSaved = vi.fn(() => {
++    throw Error('navigation')
++  })
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSaved).toHaveBeenCalled())
++  expect(
++    screen.queryByText('Draft was not saved. Your work is retained.'),
++  ).toBeNull()
++  expect(
++    (screen.getByRole('button', { name: 'Create draft' }) as HTMLButtonElement)
++      .disabled,
++  ).toBe(true)
++})
++it('exposes a host navigation guard that waits for discard confirmation', async () => {
++  const p = props()
++  let guard: ((proceed: () => void) => void) | undefined
++  render(
++    <ShipmentInvoiceCreateForm
++      {...p}
++      {...{
++        registerNavigationGuard: (next: (proceed: () => void) => void) => {
++          guard = next
++          return () => {
++            guard = undefined
++          }
++        },
++      }}
++    />,
++  )
++  await screen.findByText('DEMO-SHP-1')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  expect(guard).toBeTypeOf('function')
++  const navigate = vi.fn()
++  act(() => guard!(navigate))
++  expect(navigate).not.toHaveBeenCalled()
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  expect(navigate).toHaveBeenCalledTimes(1)
++})
++
++it('confirms Shipment change and resets all work only after acceptance', async () => {
++  const p = props()
++  p.onSearchShipments = vi.fn(async () => [
++    { id: 'S1', label: 'DEMO-SHP-1' },
++    { id: 'S2', label: 'DEMO-SHP-2' },
++  ])
++  p.onLoadShipment = vi.fn(async (id?: string) => ({
++    ...demoShipment,
++    id: id ?? 'S1',
++    label: id === 'S2' ? 'DEMO-SHP-2' : 'DEMO-SHP-1',
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Keep' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Search' }))
++  await screen.findByRole('option', { name: 'DEMO-SHP-2' })
++  fireEvent.change(screen.getByLabelText('Choose Shipment'), {
++    target: { value: 'S2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Keep working' }))
++  expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(
++    'Keep',
++  )
++  fireEvent.change(screen.getByLabelText('Choose Shipment'), {
++    target: { value: 'S2' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
++  await waitFor(() =>
++    expect((screen.getByLabelText('Notes') as HTMLInputElement).value).toBe(''),
++  )
++  expect((screen.getByLabelText('Subtitle') as HTMLInputElement).value).toBe(
++    'PACKING LIST',
++  )
++})
++it('keeps mixed Client selection explicit without filtering goods', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => ({
++    ...demoShipment,
++    clients: [
++      ...demoShipment.clients,
++      { id: 'C2', label: 'DEMO Other Client' },
++    ],
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  expect(
++    (screen.getByLabelText('Commercial Client') as HTMLInputElement).value,
++  ).toBe('')
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C1' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C2' },
++  })
++  expect(
++    (screen.getByLabelText('Invoicing company') as HTMLInputElement).value,
++  ).toBe('')
++  expect(screen.getByLabelText('PO-A Valve assembly')).toBeTruthy()
++})
++it('preserves selected Client and company across refresh after Shipper prefill', async () => {
++  const p = props()
++  p.onLoadShipment = vi.fn(async () => ({
++    ...demoShipment,
++    clients: [...demoShipment.clients, { id: 'C2', label: 'Other' }],
++  }))
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await screen.findByLabelText('PO-A Valve assembly')
++  fireEvent.change(screen.getByLabelText('Commercial Client'), {
++    target: { value: 'C1' },
++  })
++  fireEvent.change(screen.getByLabelText('Invoicing company'), {
++    target: { value: 'I1' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' }))
++  await waitFor(() => expect(p.onLoadShipment).toHaveBeenCalledTimes(2))
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  expect(
++    (screen.getByLabelText('Commercial Client') as HTMLInputElement).value,
++  ).toBe('C1')
++  expect(
++    (screen.getByLabelText('Invoicing company') as HTMLInputElement).value,
++  ).toBe('I1')
++})
++it('allows successful-save navigation through the registered leave guard', async () => {
++  const p = props()
++  let guard: ((proceed: () => void) => void) | undefined
++  const proceed = vi.fn()
++  p.onSaved = vi.fn(() => guard!(proceed))
++  render(
++    <ShipmentInvoiceCreateForm
++      {...p}
++      registerNavigationGuard={(next) => {
++        guard = next
++        return () => {
++          guard = undefined
++        }
++      }}
++    />,
++  )
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Saved work' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Create draft' }))
++  await waitFor(() => expect(p.onSaved).toHaveBeenCalled())
++  expect(proceed).toHaveBeenCalledTimes(1)
++  expect(screen.queryByRole('dialog')).toBeNull()
++})
++it('does not submit the draft while a discard dialog is open', async () => {
++  const p = props()
++  render(<ShipmentInvoiceCreateForm {...p} />)
++  await waitFor(() =>
++    expect(
++      (
++        screen.getByRole('button', {
++          name: 'Create draft',
++        }) as HTMLButtonElement
++      ).disabled,
++    ).toBe(false),
++  )
++  fireEvent.change(screen.getByLabelText('Notes'), {
++    target: { value: 'Dirty' },
++  })
++  fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
++  fireEvent.submit(
++    screen.getByRole('button', { name: 'Create draft' }).closest('form')!,
++  )
++  await Promise.resolve()
++  expect(p.onSubmit).not.toHaveBeenCalled()
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx
+new file mode 100644
+index 0000000..33b8bc3
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-create-form.tsx
+@@ -0,0 +1,423 @@
++import { useEffect, useRef, useState } from 'react'
++import { useAppForm } from '#/components/form'
++import { useLocale } from '#/app/providers/labels-provider'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { createDraftDefaults } from '../create/defaults'
++import { labelsFor } from '../create/labels'
++import {
++  reconcileSelection,
++  toggleOrder,
++  toggleRow,
++  type Selection,
++} from '../create/selection'
++import { useDraftGuards } from '../create/use-draft-guards'
++import type {
++  ShipmentInvoiceCreateFormProps,
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++  SelectionEvaluation,
++} from '../create/types'
++import {
++  ShipmentInvoiceDocumentFields,
++  ShipmentInvoicePackingFields,
++} from './shipment-invoice-document-fields'
++import { ShipmentInvoiceShipmentPicker } from './shipment-invoice-shipment-picker'
++import { ShipmentInvoiceGoods } from './shipment-invoice-goods'
++import {
++  ShipmentInvoiceConfirmations,
++  type Confirmation,
++} from './shipment-invoice-confirmations'
++export function ShipmentInvoiceCreateForm(
++  props: ShipmentInvoiceCreateFormProps,
++) {
++  const { locale } = useLocale(),
++    l = labelsFor(locale)
++  const [shipment, setShipment] = useState<ShipmentPresentation | null>(null),
++    [selection, setSelection] = useState<Selection>([]),
++    [evaluation, setEvaluation] = useState<SelectionEvaluation | null>(null)
++  const [reading, setReading] = useState(false),
++    [evaluating, setEvaluating] = useState(false),
++    [saving, setSaving] = useState(false),
++    [dirty, setDirty] = useState(false),
++    [error, setError] = useState<'read' | 'evaluate' | 'save' | null>(null),
++    [removed, setRemoved] = useState<string[]>([]),
++    [confirmation, setConfirmation] = useState<Confirmation | null>(null)
++  const [readValid, setReadValid] = useState(false),
++    [savedId, setSavedId] = useState(''),
++    [navigationError, setNavigationError] = useState(false)
++  const savedIdentity = useRef('')
++  const initializedId = useRef('')
++  const request = useRef(0),
++    evalRequest = useRef(0),
++    pendingSave = useRef(false),
++    shipperEdited = useRef(false),
++    selectionRef = useRef<Selection>([]),
++    currentId = useRef(props.initialShipmentId ?? ''),
++    callbacks = useRef(props)
++  callbacks.current = props
++  const form = useAppForm({
++    defaultValues: createDraftDefaults(props.todayAthens),
++  })
++  useDraftGuards(dirty || saving)
++  const usable =
++    props.available &&
++    !!props.onLoadShipment &&
++    !!props.onEvaluateSelection &&
++    !!props.onSubmit &&
++    !!props.onSaved
++  const eligibleMap = (data: ShipmentPresentation) =>
++    Object.fromEntries(
++      data.orders.map((o) => [
++        o.id,
++        o.rows.filter((r) => !r.ineligibleReason).map((r) => r.id),
++      ]),
++    )
++  function change(key: keyof ShipmentInvoiceDraftValues, value: string) {
++    form.setFieldValue(key, value)
++    setDirty(true)
++    if (key === 'shipper') shipperEdited.current = true
++    if (key === 'clientId') form.setFieldValue('companyId', '')
++  }
++  function select(next: Selection) {
++    selectionRef.current = next
++    setSelection(next)
++  }
++  async function evaluate(id: string, next: Selection) {
++    const token = ++evalRequest.current
++    setEvaluating(true)
++    setEvaluation(null)
++    try {
++      const result = await callbacks.current.onEvaluateSelection?.(id, next)
++      if (token === evalRequest.current && id === currentId.current) {
++        setEvaluation(result ?? null)
++        setError(result ? null : 'evaluate')
++      }
++    } catch {
++      if (token === evalRequest.current && id === currentId.current)
++        setError('evaluate')
++    } finally {
++      if (token === evalRequest.current) setEvaluating(false)
++    }
++  }
++  async function load(id: string, reset: boolean) {
++    const token = ++request.current
++    evalRequest.current++
++    currentId.current = id
++    setReading(true)
++    setReadValid(false)
++    setEvaluation(null)
++    setError(null)
++    if (reset) {
++      form.reset({
++        ...createDraftDefaults(callbacks.current.todayAthens),
++        shipmentId: id,
++      })
++      select([])
++      setShipment(null)
++      setRemoved([])
++      shipperEdited.current = false
++      initializedId.current = ''
++    }
++    try {
++      const data = await callbacks.current.onLoadShipment?.(id)
++      if (token !== request.current) return
++      if (!data || data.id !== id || !data.eligible) {
++        setShipment(null)
++        setError('read')
++        return
++      }
++      setShipment(data)
++      setReadValid(true)
++      form.setFieldValue('shipmentId', id)
++      if (initializedId.current !== id)
++        form.setFieldValue(
++          'clientId',
++          data.clients.length === 1 ? data.clients[0].id : '',
++        )
++      initializedId.current = id
++      const reconciled = reconcileSelection(
++        selectionRef.current,
++        eligibleMap(data),
++      )
++      select(reconciled.selection)
++      if (reconciled.removed.length) {
++        setRemoved((old) => [
++          ...new Set([
++            ...old,
++            ...reconciled.removed.map((r) => `${r.orderId} / ${r.rowId}`),
++          ]),
++        ])
++        setDirty(true)
++      }
++      await evaluate(id, reconciled.selection)
++    } catch {
++      if (token === request.current) setError('read')
++    } finally {
++      if (token === request.current) setReading(false)
++    }
++  }
++  useEffect(() => {
++    if (props.initialShipmentId && props.available)
++      void load(props.initialShipmentId, true)
++    return () => {
++      request.current++
++      evalRequest.current++
++    }
++  }, []) // Entry context is fixed for this form instance; hosts remount for a different entry.
++  function ask(kind: Confirmation['kind'], accept: () => void) {
++    setConfirmation({
++      kind,
++      accept,
++      trigger:
++        document.activeElement instanceof HTMLElement
++          ? document.activeElement
++          : null,
++    })
++  }
++  function close() {
++    const trigger = confirmation?.trigger
++    setConfirmation(null)
++    requestAnimationFrame(() => trigger?.focus())
++  }
++  useEffect(
++    () =>
++      props.registerNavigationGuard?.((proceed) => {
++        if (savedIdentity.current) {
++          proceed()
++          return
++        }
++        if (pendingSave.current) return
++        if (dirty) ask('discard', proceed)
++        else proceed()
++      }),
++    [props.registerNavigationGuard, dirty],
++  )
++  function chooseShipment(id: string) {
++    if (id === currentId.current) return
++    const apply = () => {
++      setDirty(true)
++      void load(id, true)
++    }
++    if (dirty) ask('shipment', apply)
++    else apply()
++  }
++  function company(id: string) {
++    const company = shipment?.companies.find(
++      (c) => c.id === id && c.clientId === form.state.values.clientId,
++    )
++    form.setFieldValue('companyId', company?.id ?? '')
++    setDirty(true)
++    if (!company) return
++    const replace = () => {
++      form.setFieldValue('shipper', company.shipper)
++      shipperEdited.current = false
++    }
++    if (shipperEdited.current) ask('shipper', replace)
++    else replace()
++  }
++  function updateSelection(next: Selection) {
++    select(next)
++    setDirty(true)
++    setError(null)
++    void evaluate(currentId.current, next)
++  }
++  const canSave =
++    usable &&
++    readValid &&
++    !savedId &&
++    !confirmation &&
++    !!shipment?.eligible &&
++    !reading &&
++    !evaluating &&
++    !saving &&
++    !!evaluation &&
++    !evaluation.mixed &&
++    error !== 'read' &&
++    error !== 'evaluate'
++  function navigateSaved(id: string) {
++    try {
++      callbacks.current.onSaved!(id)
++      setNavigationError(false)
++    } catch {
++      setNavigationError(true)
++    }
++  }
++  async function submit() {
++    if (!canSave || pendingSave.current) return
++    pendingSave.current = true
++    setSaving(true)
++    setError(null)
++    try {
++      const id = await callbacks.current.onSubmit!(
++        form.state.values,
++        selectionRef.current,
++      )
++      setDirty(false)
++      savedIdentity.current = id
++      setSavedId(id)
++      navigateSaved(id)
++    } catch {
++      setError('save')
++    } finally {
++      pendingSave.current = false
++      setSaving(false)
++    }
++  }
++  return (
++    <form
++      className="mx-auto w-full max-w-5xl space-y-5 pb-6"
++      noValidate
++      onSubmit={(e) => {
++        e.preventDefault()
++        void submit()
++      }}
++    >
++      <header>
++        <p className="text-caption text-fg-muted">{l.draft}</p>
++        <h1 className="text-title font-semibold">{l.title}</h1>
++        <p className="mt-2 text-body-sm text-fg-muted">{l.intro}</p>
++      </header>
++      {!usable && <Alert tone="warning">{l.unavailable}</Alert>}
++      {navigationError && (
++        <Alert tone="warning">
++          {l.navigationError} {savedId}
++          <Button type="button" onClick={() => navigateSaved(savedId)}>
++            {l.openSaved}
++          </Button>
++        </Alert>
++      )}
++      <fieldset
++        disabled={saving || !!savedId || !props.available}
++        className="min-w-0 space-y-5 border-0 p-0"
++      >
++        <ShipmentInvoiceShipmentPicker
++          value={currentId.current}
++          label={shipment?.label}
++          onChoose={chooseShipment}
++          onSearch={props.onSearchShipments}
++          disabled={saving || !!savedId || !props.available}
++          labels={l}
++        />
++        {reading && <p role="status">{l.loading}</p>}
++        {error && (
++          <Alert tone="danger">
++            {error === 'save' ? l.saveError : l.error}
++            {error !== 'save' && (
++              <Button
++                type="button"
++                variant="ghost"
++                onClick={() =>
++                  error === 'evaluate'
++                    ? void evaluate(currentId.current, selectionRef.current)
++                    : void load(currentId.current, false)
++                }
++              >
++                {l.retry}
++              </Button>
++            )}
++          </Alert>
++        )}
++        <form.Subscribe selector={(state) => state.values}>
++          {(values) => (
++            <ShipmentInvoiceDocumentFields
++              values={values}
++              change={change}
++              chooseCompany={company}
++              shipment={shipment}
++              currencies={props.currencies}
++              labels={l}
++            />
++          )}
++        </form.Subscribe>
++        {shipment && (
++          <ShipmentInvoiceGoods
++            orders={shipment.orders}
++            selection={selection}
++            disabled={reading || saving || !readValid}
++            onRefresh={() => void load(currentId.current, false)}
++            onOrder={(id) =>
++              updateSelection(
++                toggleOrder(
++                  selectionRef.current,
++                  id,
++                  eligibleMap(shipment)[id] ?? [],
++                ),
++              )
++            }
++            onRow={(id, row) =>
++              updateSelection(
++                toggleRow(
++                  selectionRef.current,
++                  id,
++                  row,
++                  eligibleMap(shipment)[id] ?? [],
++                ),
++              )
++            }
++            onAllocation={props.onOpenAllocation}
++            labels={l}
++          />
++        )}
++        {removed.length > 0 && (
++          <Alert tone="warning">
++            {l.removed} {removed.join(', ')} {l.changed}
++          </Alert>
++        )}
++        {evaluation?.mixed && <Alert tone="warning">{l.mixed}</Alert>}
++        {!!evaluation?.overlaps.length && (
++          <Alert tone="warning">
++            {l.overlap} {evaluation.overlaps.join(', ')}
++          </Alert>
++        )}
++        <form.Subscribe selector={(state) => state.values}>
++          {(values) => (
++            <ShipmentInvoicePackingFields
++              values={values}
++              change={change}
++              labels={l}
++              currencies={props.currencies}
++            />
++          )}
++        </form.Subscribe>
++      </fieldset>
++      <footer className="sticky bottom-0 z-[var(--z-sticky)] flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4 shadow-card">
++        <div className="min-w-0">
++          <p className="text-caption text-fg-muted">{l.total}</p>
++          <output className="font-mono font-semibold">
++            {evaluating
++              ? l.loading
++              : evaluation && !evaluation.mixed
++                ? evaluation.totalDisplay
++                : '—'}
++          </output>
++        </div>
++        <div className="flex flex-wrap gap-2">
++          <Button
++            type="button"
++            variant="secondary"
++            disabled={saving}
++            onClick={() =>
++              dirty ? ask('discard', props.onCancel) : props.onCancel()
++            }
++          >
++            {l.cancel}
++          </Button>
++          <Button
++            type="submit"
++            disabled={!canSave}
++            loading={saving}
++            className="h-auto min-h-10 whitespace-normal py-2"
++          >
++            {l.create}
++          </Button>
++        </div>
++      </footer>
++      <ShipmentInvoiceConfirmations
++        value={confirmation}
++        close={close}
++        labels={l}
++      />
++    </form>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx
+new file mode 100644
+index 0000000..5db589e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-document-fields.tsx
+@@ -0,0 +1,185 @@
++import { Card, CardHeader, CardTitle, CardBody } from '#/components/ui/card'
++import { Input, Textarea, FormField } from '#/components/ui/input'
++import { Select } from '#/components/ui/select'
++import { DatePicker } from '#/components/ui/date-picker'
++import { formatIsoDate, parseIsoDate } from '#/lib/date'
++import type { ReactNode } from 'react'
++import type { InvoiceLabels } from '../create/labels'
++import type {
++  ShipmentInvoiceDraftValues,
++  ShipmentPresentation,
++} from '../create/types'
++export function InvoiceSection({
++  title,
++  children,
++}: {
++  title: string
++  children: ReactNode
++}) {
++  return (
++    <Card flush>
++      <CardHeader>
++        <CardTitle>{title}</CardTitle>
++      </CardHeader>
++      <CardBody>{children}</CardBody>
++    </Card>
++  )
++}
++export function ShipmentInvoiceDocumentFields({
++  values,
++  change,
++  labels: l,
++  shipment,
++  chooseCompany,
++}: {
++  values: ShipmentInvoiceDraftValues
++  change: (key: keyof ShipmentInvoiceDraftValues, value: string) => void
++  labels: InvoiceLabels
++  shipment: ShipmentPresentation | null
++  currencies: string[]
++  chooseCompany: (id: string) => void
++}) {
++  const text = (key: keyof ShipmentInvoiceDraftValues, multiline = false) => (
++    <FormField
++      key={key}
++      label={l[key as keyof InvoiceLabels]}
++      htmlFor={`invoice-${key}`}
++    >
++      {multiline ? (
++        <Textarea
++          id={`invoice-${key}`}
++          value={values[key]}
++          onChange={(e) => change(key, e.target.value)}
++        />
++      ) : (
++        <Input
++          id={`invoice-${key}`}
++          value={values[key]}
++          onChange={(e) => change(key, e.target.value)}
++        />
++      )}
++    </FormField>
++  )
++  return (
++    <>
++      <InvoiceSection title={l.details}>
++        <div className="grid gap-4 sm:grid-cols-2">
++          <FormField label={l.client} htmlFor="invoice-client">
++            <Select
++              id="invoice-client"
++              value={values.clientId}
++              onChange={(e) => change('clientId', e.target.value)}
++            >
++              <option value="">—</option>
++              {shipment?.clients.map((x) => (
++                <option key={x.id} value={x.id}>
++                  {x.label}
++                </option>
++              ))}
++            </Select>
++          </FormField>
++          <FormField label={l.company} htmlFor="invoice-company">
++            <Select
++              id="invoice-company"
++              value={values.companyId}
++              disabled={!values.clientId}
++              onChange={(e) => chooseCompany(e.target.value)}
++            >
++              <option value="">—</option>
++              {shipment?.companies
++                .filter((x) => x.clientId === values.clientId)
++                .map((x) => (
++                  <option key={x.id} value={x.id}>
++                    {x.label}
++                  </option>
++                ))}
++            </Select>
++          </FormField>
++          <FormField label={l.invoiceType} htmlFor="invoice-type">
++            <Select
++              id="invoice-type"
++              value={values.invoiceType}
++              onChange={(e) => change('invoiceType', e.target.value)}
++            >
++              {[
++                'Invoice',
++                'Commercial Invoice',
++                'Pro-forma Invoice',
++                'Shipping Invoice',
++              ].map((x) => (
++                <option key={x}>{x}</option>
++              ))}
++            </Select>
++          </FormField>
++          <FormField label={l.documentDate}>
++            <DatePicker
++              value={parseIsoDate(values.documentDate)}
++              onChange={(d) => change('documentDate', formatIsoDate(d))}
++              format={(d) =>
++                `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
++              }
++            />
++          </FormField>
++          {text('subtitle')}
++          <p className="text-body-sm text-fg-muted">{l.number}</p>
++        </div>
++      </InvoiceSection>
++      <InvoiceSection title={l.parties}>
++        <div className="grid gap-4 sm:grid-cols-2">
++          {(['shipper', 'consignee', 'agent', 'notify'] as const).map((k) =>
++            text(k, true),
++          )}
++        </div>
++      </InvoiceSection>
++    </>
++  )
++}
++export function ShipmentInvoicePackingFields({
++  values,
++  change,
++  labels: l,
++  currencies,
++}: {
++  values: ShipmentInvoiceDraftValues
++  change: (key: keyof ShipmentInvoiceDraftValues, value: string) => void
++  labels: InvoiceLabels
++  currencies: string[]
++}) {
++  return (
++    <InvoiceSection title={l.packing}>
++      <div className="grid gap-4 sm:grid-cols-2">
++        {(
++          ['packingDetails', 'totalWeightKg', 'partialAmount', 'notes'] as const
++        ).map((key) => (
++          <FormField key={key} label={l[key]} htmlFor={`invoice-${key}`}>
++            {key === 'notes' || key === 'packingDetails' ? (
++              <Textarea
++                id={`invoice-${key}`}
++                value={values[key]}
++                onChange={(e) => change(key, e.target.value)}
++              />
++            ) : (
++              <Input
++                id={`invoice-${key}`}
++                inputMode="decimal"
++                value={values[key]}
++                onChange={(e) => change(key, e.target.value)}
++              />
++            )}
++          </FormField>
++        ))}
++        <FormField label={l.partialCurrency} htmlFor="invoice-currency">
++          <Select
++            id="invoice-currency"
++            value={values.partialCurrency}
++            onChange={(e) => change('partialCurrency', e.target.value)}
++          >
++            {currencies.map((x) => (
++              <option key={x}>{x}</option>
++            ))}
++          </Select>
++        </FormField>
++      </div>
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx
+new file mode 100644
+index 0000000..3fe2b61
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-goods.tsx
+@@ -0,0 +1,150 @@
++import { Checkbox } from '#/components/ui/choice'
++import { Table, THead, TBody, TR, TH, TD } from '#/components/ui/table'
++import { Button } from '#/components/ui/button'
++import { Alert } from '#/components/ui/alert'
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import type { InvoiceOrder } from '../create/types'
++import type { Selection } from '../create/selection'
++import type { InvoiceLabels } from '../create/labels'
++export function ShipmentInvoiceGoods({
++  orders,
++  selection,
++  disabled,
++  onOrder,
++  onRow,
++  onRefresh,
++  onAllocation,
++  labels: l,
++}: {
++  orders: InvoiceOrder[]
++  selection: Selection
++  disabled: boolean
++  onOrder: (id: string) => void
++  onRow: (order: string, row: string) => void
++  onRefresh: () => void
++  onAllocation?: (id: string) => void
++  labels: InvoiceLabels
++}) {
++  const sorted = [
++    ...selection
++      .map((g) => orders.find((o) => o.id === g.orderId))
++      .filter((o): o is InvoiceOrder => !!o),
++    ...orders.filter((o) => !selection.some((g) => g.orderId === o.id)),
++  ]
++  return (
++    <InvoiceSection title={l.goods}>
++      <Button
++        type="button"
++        variant="secondary"
++        disabled={disabled}
++        onClick={onRefresh}
++      >
++        {l.refresh}
++      </Button>
++      {!orders.length && <p className="mt-3 text-fg-muted">{l.empty}</p>}
++      {sorted.map((order) => {
++        const selected =
++          selection.find((g) => g.orderId === order.id)?.rowIds ?? []
++        const eligible = order.rows.filter((r) => !r.ineligibleReason)
++        const unresolved = order.rows.filter((r) => r.ineligibleReason)
++        return (
++          <section
++            key={order.id}
++            className="mt-4 min-w-0 rounded-lg border border-border p-3"
++          >
++            <Checkbox
++              label={order.id}
++              checked={
++                !!eligible.length &&
++                eligible.every((r) => selected.includes(r.id))
++              }
++              indeterminate={
++                selected.length > 0 && selected.length < eligible.length
++              }
++              disabled={disabled || !eligible.length}
++              onChange={() => onOrder(order.id)}
++            />
++            <dl className="my-3 grid grid-cols-2 gap-2 text-caption sm:grid-cols-4">
++              {[
++                [l.stock, order.id],
++                [l.client, order.client],
++                [l.supplier, order.supplier],
++                [l.message, order.messageNumber],
++                [l.origin, order.origin],
++                [l.destination, order.destination],
++                [l.status, order.status],
++              ].map(([key, value]) => (
++                <div key={key} className="min-w-0 break-words">
++                  <dt className="text-fg-muted">{key}</dt>
++                  <dd>{value || '—'}</dd>
++                </div>
++              ))}
++            </dl>
++            <div className="overflow-x-auto">
++              <Table>
++                <THead>
++                  <TR>
++                    <TH>{l.selectGoods}</TH>
++                    <TH>{l.description}</TH>
++                    <TH>{l.hs}</TH>
++                    <TH>{l.quantity}</TH>
++                    <TH>{l.unit}</TH>
++                    <TH>{l.amount}</TH>
++                    <TH>{l.currency}</TH>
++                  </TR>
++                </THead>
++                <TBody>
++                  {eligible.map((row) => (
++                    <TR key={row.id}>
++                      <TD>
++                        <Checkbox
++                          aria-label={`${order.id} ${row.description}`}
++                          checked={selected.includes(row.id)}
++                          disabled={disabled}
++                          onChange={() => onRow(order.id, row.id)}
++                        />
++                      </TD>
++                      <TD>{row.description}</TD>
++                      <TD>{row.hsCode || '—'}</TD>
++                      <TD>{row.quantity}</TD>
++                      <TD>{row.unit}</TD>
++                      <TD className="font-mono">{row.amountDisplay}</TD>
++                      <TD>{row.currency}</TD>
++                    </TR>
++                  ))}
++                </TBody>
++              </Table>
++            </div>
++            {unresolved.length > 0 && (
++              <div className="mt-3">
++                <Alert tone="warning" title={l.unresolved}>
++                  {unresolved.map((row) => (
++                    <div key={row.id}>
++                      <Checkbox
++                        disabled
++                        label={`${row.description} — ${row.ineligibleReason}`}
++                      />
++                    </div>
++                  ))}
++                  <Button
++                    type="button"
++                    variant="secondary"
++                    className="mt-2 h-auto min-h-10 whitespace-normal py-2"
++                    disabled={!onAllocation || disabled}
++                    onClick={() => onAllocation?.(order.id)}
++                  >
++                    {l.allocation}
++                  </Button>
++                  {!onAllocation && <p>{l.allocationUnavailable}</p>}
++                </Alert>
++              </div>
++            )}
++          </section>
++        )
++      })}
++      {!selection.length && (
++        <p className="mt-3 text-body-sm text-fg-muted">{l.noRows}</p>
++      )}
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx
+new file mode 100644
+index 0000000..9084622
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/components/shipment-invoice-shipment-picker.tsx
+@@ -0,0 +1,105 @@
++import { useRef, useState } from 'react'
++import { Input, FormField } from '#/components/ui/input'
++import { Button } from '#/components/ui/button'
++import { Select } from '#/components/ui/select'
++import { Alert } from '#/components/ui/alert'
++import { InvoiceSection } from './shipment-invoice-document-fields'
++import type { Option } from '../create/types'
++import type { InvoiceLabels } from '../create/labels'
++export function ShipmentInvoiceShipmentPicker({
++  label,
++  value,
++  onChoose,
++  onSearch,
++  disabled,
++  labels: l,
++}: {
++  label?: string
++  value: string
++  onChoose: (id: string) => void
++  onSearch?: (query: string) => Promise<Option[]>
++  disabled: boolean
++  labels: InvoiceLabels
++}) {
++  const [query, setQuery] = useState(''),
++    [options, setOptions] = useState<Option[]>([]),
++    [state, setState] = useState('idle')
++  const generation = useRef(0)
++  async function search() {
++    if (!onSearch) return
++    const id = ++generation.current
++    setState('loading')
++    try {
++      const results = await onSearch(query)
++      if (id === generation.current) {
++        setOptions(results)
++        setState('ready')
++      }
++    } catch {
++      if (id === generation.current) setState('error')
++    }
++  }
++  return (
++    <InvoiceSection title={l.shipment}>
++      <div className="flex flex-wrap items-end gap-2">
++        <FormField
++          label={l.search}
++          htmlFor="invoice-shipment-search"
++          className="min-w-0 flex-1"
++        >
++          <Input
++            id="invoice-shipment-search"
++            value={query}
++            disabled={disabled}
++            onChange={(e) => {
++              setQuery(e.target.value)
++              generation.current++
++              setOptions([])
++              setState('idle')
++            }}
++          />
++        </FormField>
++        <Button
++          type="button"
++          variant="secondary"
++          disabled={disabled || !onSearch}
++          onClick={() => void search()}
++        >
++          {l.searchAction}
++        </Button>
++      </div>
++      <div className="mt-3">
++        <FormField label={l.choose} htmlFor="invoice-shipment-choice">
++          <Select
++            id="invoice-shipment-choice"
++            value={value}
++            disabled={disabled || state === 'loading'}
++            onChange={(event) => onChoose(event.target.value)}
++          >
++            <option value="" disabled>
++              {l.choose}
++            </option>
++            {label && !options.some((x) => x.id === value) && (
++              <option value={value}>{label}</option>
++            )}
++            {options.map((x) => (
++              <option key={x.id} value={x.id}>
++                {x.label}
++              </option>
++            ))}
++          </Select>
++        </FormField>
++      </div>
++      {state === 'loading' && <p role="status">{l.loading}</p>}
++      {state === 'error' && (
++        <Alert tone="danger">
++          {l.error}
++          <Button type="button" variant="ghost" onClick={() => void search()}>
++            {l.retry}
++          </Button>
++        </Alert>
++      )}
++      {state === 'ready' && !options.length && <p>{l.empty}</p>}
++    </InvoiceSection>
++  )
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts
+new file mode 100644
+index 0000000..41b274e
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/__fixtures__/shipment-invoice-create.ts
+@@ -0,0 +1,79 @@
++import type { ShipmentPresentation } from '../types'
++export const demoShipment: ShipmentPresentation = {
++  id: 'S1',
++  label: 'DEMO-SHP-1042',
++  eligible: true,
++  clients: [{ id: 'C1', label: 'DEMO Marine Services' }],
++  companies: [
++    {
++      id: 'I1',
++      label: 'DEMO Invoicing One',
++      clientId: 'C1',
++      shipper: 'DEMO Company One\nDemo address',
++    },
++    {
++      id: 'I2',
++      label: 'DEMO Invoicing Two',
++      clientId: 'C1',
++      shipper: 'DEMO Company Two\nDemo address',
++    },
++  ],
++  orders: [
++    {
++      id: 'PO-A',
++      client: 'DEMO Marine Services',
++      supplier: 'DEMO Parts',
++      messageNumber: 'DEMO-MSG-1',
++      origin: 'Greece',
++      destination: 'Singapore',
++      status: 'SHIPPED',
++      rows: [
++        {
++          id: 'r1',
++          description: 'Valve assembly',
++          hsCode: '0848180',
++          quantity: '2',
++          unit: 'SET',
++          amountDisplay: '480.00',
++          currency: 'EUR',
++        },
++        {
++          id: 'r2',
++          description: 'Seal kit',
++          quantity: '4',
++          unit: 'PC',
++          amountDisplay: '120.00',
++          currency: 'EUR',
++        },
++        {
++          id: 'r3',
++          description: 'Pressure sensor',
++          quantity: '1',
++          unit: 'PC',
++          amountDisplay: '85.00',
++          currency: 'EUR',
++          ineligibleReason: 'Unconfirmed allocation',
++        },
++      ],
++    },
++    {
++      id: 'PO-B',
++      client: 'DEMO Marine Services',
++      supplier: 'DEMO Supply',
++      messageNumber: 'DEMO-MSG-2',
++      origin: 'Greece',
++      destination: 'Singapore',
++      status: 'SHIPPED',
++      rows: [
++        {
++          id: 'r4',
++          description: 'Maintenance kit',
++          quantity: '1',
++          unit: 'SET',
++          amountDisplay: '160.00',
++          currency: 'USD',
++        },
++      ],
++    },
++  ],
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts
+new file mode 100644
+index 0000000..71102c4
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/defaults.ts
+@@ -0,0 +1,20 @@
++import type { ShipmentInvoiceDraftValues } from './types'
++export const createDraftDefaults = (
++  todayAthens: string,
++): ShipmentInvoiceDraftValues => ({
++  shipmentId: '',
++  clientId: '',
++  companyId: '',
++  invoiceType: 'Invoice',
++  documentDate: todayAthens,
++  subtitle: 'PACKING LIST',
++  shipper: 'FRONT LINE\n67, IROON POLYTECHNIOU\n185 36, PIRAEUS, GREECE',
++  consignee: '',
++  agent: '',
++  notify: '',
++  packingDetails: '',
++  totalWeightKg: '',
++  partialAmount: '',
++  partialCurrency: 'EUR',
++  notes: '',
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts
+new file mode 100644
+index 0000000..79e3efe
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/labels.ts
+@@ -0,0 +1,142 @@
++const en = {
++  selectGoods: 'Select goods',
++  navigationError: 'Draft saved, but its Details page could not open.',
++  openSaved: 'Open saved draft',
++  title: 'Create Shipment Invoice',
++  intro: 'Prepare the document and select the goods it covers.',
++  shipment: 'Shipment',
++  search: 'Search Shipments',
++  choose: 'Choose Shipment',
++  details: 'Document details',
++  parties: 'Document parties',
++  goods: 'Goods selection',
++  packing: 'Packing & notes',
++  client: 'Commercial Client',
++  company: 'Invoicing company',
++  invoiceType: 'Invoice type',
++  documentDate: 'Document date',
++  subtitle: 'Subtitle',
++  shipper: 'Shipper',
++  consignee: 'Consignee',
++  agent: 'Agent',
++  notify: 'Notify',
++  packingDetails: 'Packing details',
++  totalWeightKg: 'Total weight (kg)',
++  partialAmount: 'Partial invoice total',
++  partialCurrency: 'Partial currency',
++  notes: 'Notes',
++  number: 'Printed number is assigned at finalization.',
++  total: 'Full invoice total',
++  create: 'Create draft',
++  cancel: 'Cancel',
++  refresh: 'Refresh eligibility',
++  loading: 'Loading…',
++  empty: 'No eligible results.',
++  error: 'Unable to complete the request. Your work is retained.',
++  retry: 'Retry',
++  unavailable: 'This integration is unavailable. No document can be saved.',
++  mixed:
++    'Selected rows use different currencies. Keep one currency before creating the draft.',
++  overlap: 'Also included on:',
++  removed: 'Removed from selection; review required:',
++  allocation: 'Open Order allocation',
++  unresolved: 'Allocation required',
++  confirmShipment: 'Change Shipment and discard this work?',
++  confirmDiscard: 'Discard unsaved changes?',
++  confirmShipper: 'Replace your edited Shipper text?',
++  replace: 'Replace with company details',
++  keep: 'Keep my text',
++  confirm: 'Continue',
++  no: 'Keep working',
++  description: 'Description',
++  hs: 'HS code',
++  quantity: 'Quantity',
++  unit: 'Unit',
++  amount: 'Amount',
++  currency: 'Currency',
++  stock: 'Stock List ID',
++  supplier: 'Supplier',
++  message: 'MSG Number',
++  origin: 'Country of Origin',
++  destination: 'Destination',
++  status: 'Status',
++  draft: 'Draft — no printed number',
++  noRows: 'No goods selected. You can save an incomplete draft.',
++  searchAction: 'Search',
++  saveError: 'Draft was not saved. Your work is retained.',
++  changed: 'Review the current selection before finalization.',
++  allocationUnavailable: 'Order allocation interface is not connected.',
++}
++export type InvoiceLabels = typeof en
++const el: InvoiceLabels = {
++  selectGoods: 'Επιλογή ειδών',
++  navigationError: 'Το πρόχειρο αποθηκεύτηκε, αλλά δεν άνοιξε η σελίδα του.',
++  openSaved: 'Άνοιγμα αποθηκευμένου πρόχειρου',
++  title: 'Δημιουργία τιμολογίου αποστολής',
++  intro: 'Προετοιμάστε το έγγραφο και επιλέξτε τα είδη που καλύπτει.',
++  shipment: 'Αποστολή',
++  search: 'Αναζήτηση αποστολών',
++  choose: 'Επιλέξτε αποστολή',
++  details: 'Στοιχεία εγγράφου',
++  parties: 'Συμβαλλόμενοι εγγράφου',
++  goods: 'Επιλογή ειδών',
++  packing: 'Συσκευασία & σημειώσεις',
++  client: 'Εμπορικός πελάτης',
++  company: 'Εταιρεία τιμολόγησης',
++  invoiceType: 'Τύπος τιμολογίου',
++  documentDate: 'Ημερομηνία εγγράφου',
++  subtitle: 'Υπότιτλος',
++  shipper: 'Αποστολέας',
++  consignee: 'Παραλήπτης',
++  agent: 'Πράκτορας',
++  notify: 'Προς ειδοποίηση',
++  packingDetails: 'Στοιχεία συσκευασίας',
++  totalWeightKg: 'Συνολικό βάρος (kg)',
++  partialAmount: 'Μερικό σύνολο τιμολογίου',
++  partialCurrency: 'Νόμισμα μερικού συνόλου',
++  notes: 'Σημειώσεις',
++  number: 'Ο έντυπος αριθμός αποδίδεται κατά την οριστικοποίηση.',
++  total: 'Πλήρες σύνολο τιμολογίου',
++  create: 'Δημιουργία πρόχειρου',
++  cancel: 'Ακύρωση',
++  refresh: 'Ανανέωση επιλεξιμότητας',
++  loading: 'Φόρτωση…',
++  empty: 'Δεν υπάρχουν επιλέξιμα αποτελέσματα.',
++  error: 'Το αίτημα δεν ολοκληρώθηκε. Η εργασία σας διατηρήθηκε.',
++  retry: 'Επανάληψη',
++  unavailable:
++    'Η σύνδεση δεν είναι διαθέσιμη. Δεν μπορεί να αποθηκευτεί έγγραφο.',
++  mixed:
++    'Τα επιλεγμένα είδη έχουν διαφορετικά νομίσματα. Διατηρήστε ένα νόμισμα πριν τη δημιουργία.',
++  overlap: 'Περιλαμβάνεται επίσης στο:',
++  removed: 'Αφαιρέθηκαν από την επιλογή· απαιτείται έλεγχος:',
++  allocation: 'Άνοιγμα κατανομής παραγγελίας',
++  unresolved: 'Απαιτείται κατανομή',
++  confirmShipment: 'Αλλαγή αποστολής και απόρριψη της εργασίας;',
++  confirmDiscard: 'Απόρριψη μη αποθηκευμένων αλλαγών;',
++  confirmShipper: 'Αντικατάσταση του κειμένου αποστολέα;',
++  replace: 'Αντικατάσταση με στοιχεία εταιρείας',
++  keep: 'Διατήρηση κειμένου μου',
++  confirm: 'Συνέχεια',
++  no: 'Συνέχιση επεξεργασίας',
++  description: 'Περιγραφή',
++  hs: 'Κωδικός HS',
++  quantity: 'Ποσότητα',
++  unit: 'Μονάδα',
++  amount: 'Αξία',
++  currency: 'Νόμισμα',
++  stock: 'Κωδικός Stock List',
++  supplier: 'Προμηθευτής',
++  message: 'Αριθμός MSG',
++  origin: 'Χώρα προέλευσης',
++  destination: 'Προορισμός',
++  status: 'Κατάσταση',
++  draft: 'Πρόχειρο — χωρίς έντυπο αριθμό',
++  noRows: 'Δεν έχουν επιλεγεί είδη. Μπορείτε να αποθηκεύσετε ελλιπές πρόχειρο.',
++  searchAction: 'Αναζήτηση',
++  saveError: 'Το πρόχειρο δεν αποθηκεύτηκε. Η εργασία σας διατηρήθηκε.',
++  changed: 'Ελέγξτε την επιλογή πριν την οριστικοποίηση.',
++  allocationUnavailable: 'Η διεπαφή κατανομής παραγγελίας δεν έχει συνδεθεί.',
++}
++export const labelsFor = (locale: 'en' | 'el'): InvoiceLabels =>
++  locale === 'el' ? el : en
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/README.md b/frontline-forwarding-client/src/features/shipment-invoices/create/README.md
+new file mode 100644
+index 0000000..c99023b
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/README.md
+@@ -0,0 +1,39 @@
++# Shipment Invoice create UI — FRO-363
++
++Approved layout A implemented with portal components and TanStack Form. This feature is intentionally **unmounted**. There is no production route, backend adapter, authority definition, API/schema change, or persistent mock service.
++
++## Integration boundary
++
++Import ShipmentInvoiceCreateForm from ../components/shipment-invoice-create-form. Its props are presentation interfaces, not backend schemas. The host supplies authorized Shipment candidates, current eligible rows and reasons, currencies, authoritative evaluated totals/currency conflicts/overlap references, and draft submission. No allocation, money/rounding or exchange-rate algorithm lives here.
++
++- todayAthens must be a YYYY-MM-DD calendar date in Europe/Athens. Do not derive it by slicing UTC ISO time. The portal DatePicker displays dd-mm-yyyy here.
++- initialShipmentId is fixed for one mounted form instance. Remount when changing entry context. User-driven Shipment changes are confirmed in the form.
++- registerNavigationGuard installs the provided callback into the host router/navigation blocker and returns cleanup. Call the callback with a continuation for every internal navigation attempt, including browser Back. Dirty navigation opens confirmation; pending save blocks navigation; successful-save navigation is explicitly allowed. This integration is required before activation. beforeunload protects reload/close independently.
++- onSaved receives the persisted identity and must navigate to the real Details UI. A thrown navigation failure preserves identity and offers retry without another submit.
++- onCancel navigates to originating Shipment, else the previous page with Shipments fallback. The form confirms dirty cancellation before calling it.
++- onOpenAllocation opens the authorized Order allocation UI in a new tab. No route is guessed. Missing callback is visibly unavailable. Refresh is explicit and never writes allocation.
++- available and missing callback handling express host-provided availability only. They are not authorization. FRO-244 must enforce backend access and validation.
++- Async reads/evaluations are generation-guarded. Failed eligibility reads keep work visible but block selection and saving until successful refresh.
++- FRO-244 owns persistence, eligibility, current values, totals and overlap information. FRO-301 owns allocation. Saved Details and allocation UI routes remain delivery dependencies.
++
++## Components and appearance
++
++Uses Card/CardHeader/CardTitle/CardBody; Input/Textarea/FormField; Select; DatePicker; Checkbox; Table primitives; Modal; Alert; Button. Sources are components/ui/\*.tsx, components/form/index.ts and app/providers/labels-provider.tsx. Layout uses existing semantic tokens from styles/theme.css. The containing app owns AppShell, sidebar and topbar; this form does not duplicate navigation.
++
++The Shipment picker composes a search input, Search action and existing Select for returned candidates. The shared Combobox did not commit keyboard choices in local verification; Select preserves keyboard operation without changing the shared primitive. DatePicker is used directly within the form because its format prop supports the approved dd-mm-yyyy requirement, unlike the current DateField wrapper. All values still live in TanStack Form.
++
++Grouped goods selection and totals are new compositions, not new primitives. Unresolved rows are disabled separately. Source identity and group order are retained. HS codes remain text. Totals are supplied by the host, not calculated in UI helpers.
++
++## Local verification
++
++Use Node 22.13.0 and pnpm 11.1.3 with pnpm install --frozen-lockfile, matching the client Dockerfile. No dependency changes required.
++
++- npm test -- src/features/shipment-invoices
++- npm run test
++- npm run build
++- npm run format:check
++- pnpm exec tsc --noEmit
++
++A temporary local Vite host mounts this form with the existing LabelsProvider and ThemeProvider (compact), importing styles/theme.css. Tailwind must include an explicit @source for src when the harness root is outside the usual app root. The host injects fixtures from **fixtures**/shipment-invoice-create.ts. Fixtures are not imported by operational components. A Playwright review exercises EN/EL at 1440px and 400px, read states, failure states and consequential form flows. The temporary host is not in the proposed diff.
++
++The review only proves frontend behavior. Activation requires real adapters, authority checks, pagination/lookup contract, currency reference data, Details/allocation navigation and router leave-blocking. No production calls were made. Full verification evidence is recorded in the planning repository's FRO-363 handoff report.
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts
+new file mode 100644
+index 0000000..4a06e03
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.test.ts
+@@ -0,0 +1,35 @@
++import { describe, expect, it } from 'vitest'
++import { toggleOrder, toggleRow, reconcileSelection } from './selection'
++describe('invoice selection identities', () => {
++  it('adds newest order first and deduplicates source rows', () => {
++    expect(
++      toggleOrder([{ orderId: 'A', rowIds: ['a'] }], 'B', ['b', 'b', 'c']),
++    ).toEqual([
++      { orderId: 'B', rowIds: ['b', 'c'] },
++      { orderId: 'A', rowIds: ['a'] },
++    ])
++  })
++  it('deselects a complete order', () => {
++    expect(toggleOrder([{ orderId: 'A', rowIds: ['a'] }], 'A', ['a'])).toEqual(
++      [],
++    )
++  })
++  it('preserves source row order on individual selection', () => {
++    expect(
++      toggleRow([{ orderId: 'A', rowIds: ['b'] }], 'A', 'a', ['a', 'b']),
++    ).toEqual([{ orderId: 'A', rowIds: ['a', 'b'] }])
++  })
++  it('never selects a row outside eligibility', () => {
++    expect(toggleRow([], 'A', 'x', ['a'])).toEqual([])
++  })
++  it('keeps eligible selections and reports removals without adding new rows', () => {
++    expect(
++      reconcileSelection([{ orderId: 'A', rowIds: ['a', 'b'] }], {
++        A: ['b', 'c'],
++      }),
++    ).toEqual({
++      selection: [{ orderId: 'A', rowIds: ['b'] }],
++      removed: [{ orderId: 'A', rowId: 'a' }],
++    })
++  })
++})
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts
+new file mode 100644
+index 0000000..91941a2
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/selection.ts
+@@ -0,0 +1,49 @@
++export type Selection = Array<{ orderId: string; rowIds: string[] }>
++export function toggleOrder(
++  selection: Selection,
++  orderId: string,
++  ids: string[],
++): Selection {
++  const unique = [...new Set(ids)]
++  const current = selection.find((g) => g.orderId === orderId)
++  const rest = selection.filter((g) => g.orderId !== orderId)
++  return !unique.length || unique.every((id) => current?.rowIds.includes(id))
++    ? rest
++    : [{ orderId, rowIds: unique }, ...rest]
++}
++export function toggleRow(
++  selection: Selection,
++  orderId: string,
++  rowId: string,
++  ids: string[],
++): Selection {
++  if (!ids.includes(rowId)) return selection
++  const group = selection.find((g) => g.orderId === orderId)
++  const selected = new Set(group?.rowIds)
++  if (selected.has(rowId)) selected.delete(rowId)
++  else selected.add(rowId)
++  const rowIds = [...new Set(ids)].filter((id) => selected.has(id))
++  if (!group) return [{ orderId, rowIds }, ...selection]
++  return selection
++    .map((g) => (g.orderId === orderId ? { orderId, rowIds } : g))
++    .filter((g) => g.rowIds.length)
++}
++export function reconcileSelection(
++  selection: Selection,
++  eligible: Record<string, string[]>,
++) {
++  const removed: Array<{ orderId: string; rowId: string }> = []
++  return {
++    selection: selection
++      .map((g) => ({
++        ...g,
++        rowIds: g.rowIds.filter((rowId) => {
++          if (eligible[g.orderId]?.includes(rowId)) return true
++          removed.push({ orderId: g.orderId, rowId })
++          return false
++        }),
++      }))
++      .filter((g) => g.rowIds.length),
++    removed,
++  }
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts
+new file mode 100644
+index 0000000..a1a405f
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/types.ts
+@@ -0,0 +1,77 @@
++import type { Selection } from './selection'
++export type ShipmentInvoiceSelection = Selection
++export interface ShipmentInvoiceDraftValues {
++  shipmentId: string
++  clientId: string
++  companyId: string
++  invoiceType: string
++  documentDate: string
++  subtitle: string
++  shipper: string
++  consignee: string
++  agent: string
++  notify: string
++  packingDetails: string
++  totalWeightKg: string
++  partialAmount: string
++  partialCurrency: string
++  notes: string
++}
++export interface Option {
++  id: string
++  label: string
++}
++export interface InvoiceRow {
++  id: string
++  description: string
++  hsCode?: string
++  quantity: string
++  unit: string
++  amountDisplay: string
++  currency: string
++  ineligibleReason?: string
++}
++export interface InvoiceOrder {
++  id: string
++  client: string
++  supplier: string
++  messageNumber: string
++  origin: string
++  destination: string
++  status: string
++  rows: InvoiceRow[]
++}
++export interface ShipmentPresentation {
++  id: string
++  label: string
++  eligible: boolean
++  clients: Option[]
++  companies: Array<Option & { clientId: string; shipper: string }>
++  orders: InvoiceOrder[]
++}
++export interface SelectionEvaluation {
++  totalDisplay: string
++  mixed: boolean
++  overlaps: string[]
++}
++/** Presentation boundary only. No API schema, backend authority, or monetary computation. */
++export interface ShipmentInvoiceCreateFormProps {
++  registerNavigationGuard?: (guard: (proceed: () => void) => void) => () => void
++  todayAthens: string
++  initialShipmentId?: string
++  available: boolean
++  currencies: string[]
++  onSearchShipments?: (query: string) => Promise<Option[]>
++  onLoadShipment?: (id: string) => Promise<ShipmentPresentation>
++  onEvaluateSelection?: (
++    shipmentId: string,
++    selection: Selection,
++  ) => Promise<SelectionEvaluation>
++  onSubmit?: (
++    values: ShipmentInvoiceDraftValues,
++    selection: Selection,
++  ) => Promise<string>
++  onSaved?: (id: string) => void
++  onCancel: () => void
++  onOpenAllocation?: (orderId: string) => void
++}
+diff --git a/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts b/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts
+new file mode 100644
+index 0000000..474d843
+--- /dev/null
++++ b/frontline-forwarding-client/src/features/shipment-invoices/create/use-draft-guards.ts
+@@ -0,0 +1,13 @@
++import { useEffect } from 'react'
++export function useDraftGuards(dirty: boolean) {
++  useEffect(() => {
++    const guard = (event: BeforeUnloadEvent) => {
++      if (dirty) {
++        event.preventDefault()
++        event.returnValue = ''
++      }
++    }
++    window.addEventListener('beforeunload', guard)
++    return () => window.removeEventListener('beforeunload', guard)
++  }, [dirty])
++}

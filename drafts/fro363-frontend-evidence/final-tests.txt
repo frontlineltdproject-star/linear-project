@@ -1,0 +1,13 @@
+
+> test
+> vitest run
+
+
+ RUN  v4.1.6 C:/Users/Giorgos/.codex/visualizations/2026/11/06/01a1b0de-d032-7e31-a043-531adf58aa3a/fro363-frontend/frontline-forwarding-client
+
+
+ Test Files  46 passed (46)
+      Tests  249 passed (249)
+   Start at  16:12:20
+   Duration  44.28s (transform 15.23s, setup 0ms, import 80.85s, tests 85.76s, environment 323.56s)
+
