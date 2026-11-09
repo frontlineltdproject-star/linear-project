@@ -68,6 +68,9 @@ The physical packages presented for transport: individually shipped collis plus 
 **Order Invoice company**:
 The invoicing company selected for an individual Order, also labelled Invoice to. It is distinct from the Client and from the recipient recorded on an issued delivery note.
 
+**Supplier Invoice**:
+A supplier's invoice document recorded against exactly one Order; an Order may have several. It records the invoice's identity, amounts, documents and applicable exemption progress. It is distinct from the Order's invoice rows, a Shipment Invoice and Front Line's client billing.
+
 
 **Delivery note (δελτίο αποστολής)**:
 Front Line's goods-movement document for a Shipment departing a Frontline-operated warehouse in Greece, regardless of destination or Shipment purpose. Departures from associated-agent warehouses and foreign warehouses are outside this workflow; the document is distinct from the Shipment and Export Customs Declaration.

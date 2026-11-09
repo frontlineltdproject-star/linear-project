@@ -2,6 +2,34 @@
 
 These are investigation harnesses, not production code or installed portal tests. Baseline: `Frontline-Forwarding/frontline-forwarding` commit `6aa259553cd9c86a8aaa157902088aa9a6bca83e`.
 
+## Supplier Invoice review — QA-SI-01–07
+
+See [the flow](../flows/supplier-invoice.md), [28 scenarios](../scenarios/supplier-invoice.md) and [review report](../runs/2026-11-09-supplier-invoice.md). These tests **observe the faulty behavior** and include controls; passing reproduces a finding rather than proving a fix.
+
+Use an isolated copy of the pinned client with dependencies and the existing [audit Vitest configuration](warehouse-vitest.config.ts). Place:
+
+- [supplier-invoice-create-qa.test.tsx](supplier-invoice-create-qa.test.tsx) at `src/features/supplier-invoices/components/supplier-invoice-create-qa.test.tsx`.
+- [supplier-invoice-details-qa.test.tsx](supplier-invoice-details-qa.test.tsx) at `src/features/supplier-invoices/supplier-invoice-details-qa.test.tsx`.
+
+From that client directory:
+
+```text
+node node_modules/vitest/vitest.mjs run --configLoader runner src/features/supplier-invoices/components/supplier-invoice-create-qa.test.tsx src/features/supplier-invoices/supplier-invoice-details-qa.test.tsx
+```
+
+Parent independently reran each file: creation 4/4 (9.56 s), Details 9/9 (13.13 s), both exit 0. Actual controllers/store/hooks/components run with mocked service/navigation/auth boundaries and blocked network. The creation test remounts pages to model leaving/reopening; real browser/router navigation is not exercised. Details tests inspect registered blocker predicates, not a browser unload dialog. Fixture server responses are synthetic.
+
+All 562 original client source files matched the pinned archive; dependencies were reused locally (Node 24.13.0 / Vitest 4.1.6), not freshly installed from the lockfile. The nine existing Supplier Invoice test files separately passed 71/71 in 80.71 s. First sandbox baseline startup hit linked-cache EPERM; the escalated local rerun passed.
+
+For QA-SI-07, run [supplier-invoice-backend-qa-repro.py](supplier-invoice-backend-qa-repro.py):
+
+```text
+python supplier-invoice-backend-qa-repro.py <absolute-pinned-repository-root>
+```
+
+Requires Python and Java 11 on PATH for this harness; generates Java in a cleaned temporary directory by default. Optional `--output-dir` retains generated evidence in an explicitly chosen directory. It extracts the unchanged comparison methods and no-op branch from SupplierInvoiceService, runs them with synthetic DTO/vessel lookup stand-ins and a persistence-continuation sentinel, and blocks network. Seven checks passed in the parent's independent run. It does not run Java 25/Spring, SQL, real authorization or transaction rollback. The separate source trace establishes schema reachability and what the real persistence branch writes.
+
+
 ## Origin change — QA-OS-01
 
 Files: [test](warehouse-reproduction.test.tsx) and [Vitest configuration](warehouse-vitest.config.ts).

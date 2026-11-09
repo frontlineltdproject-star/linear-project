@@ -11,6 +11,9 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [First review and findings — 9 November 2026](runs/2026-11-09-order-to-arrival.md) | Evidence, findings, unresolved questions and execution status |
 | [Second review and proposed ticket groups — 9 November 2026](runs/2026-11-09-order-to-arrival-second-pass.md) | Nine additional findings, independent reproductions, coverage and grouping proposal |
 | [Five created bug tickets — FRO-373–FRO-377](../../drafts/order-to-arrival-bugs/README.md) | Approved descriptions, Linear links and finding-to-ticket mapping; all carry the Flow QA label |
+| [Supplier Invoice flow](flows/supplier-invoice.md) | Expected Order-to-invoice capture, documents, corrections and guarded cancellation |
+| [Supplier Invoice scenarios](scenarios/supplier-invoice.md) | 28 prioritized normal, failure, concurrency and ownership cases |
+| [Supplier Invoice review — 9 November 2026](runs/2026-11-09-supplier-invoice.md) | Seven findings, isolated evidence and accepted full-split exception; ticket grouping not yet decided |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 
