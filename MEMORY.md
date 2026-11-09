@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Next review recommendation: Export and linked VAT-exemption paperwork
+
+- After Supplier Invoice tickets were created, user asked which flow to review next. Recommend Export creation → EAD receipt → positive IE599/Customs Completed, followed by linked Υ.Δ. protocol/printing and invoice-owned dispatch for stamping → stamped return → paperwork sent to recipient. This connects the already-reviewed Shipment and Supplier Invoice flows; it is a recommendation, not an approved new audit or completed flow map.
+- Suggested two review passes within this connected flow: first creation/grouping/eligible invoice membership/MRN/documents/Customs transitions and guarded edits/cancellation; then protocol, Υ.Δ. output and individual/bulk stamping/recovery. Map expected behavior before defect testing; distinguish Customs completion from invoice exemption and keep physical cargo separate from paperwork-only invoice links. FRO-319 is a storage-relationship boundary for the future review, not a completed audit here.
+- Current full FRO-317/350/352 read Done; FRO-368 remains Backlog for Export list/search/menu. Existing route-only navigation must be distinguished from that pending work. Production main rechecked at 6aa259553cd9c86a8aaa157902088aa9a6bca83e; read export-customs-declaration workflow, current Create route/service, ExportEditingService customs transitions and ExportStampingService invoice/bulk guards. Older ticket Context-for-agents absence claims are historical, not current main.
+- Scope recommendation only: no new bug findings, application runs, Linear changes, production mutations, previews or source changes. Planning pull succeeded; preserve unrelated local draft/patch/.wrangler changes when synchronizing this note.
+
 ### 2026-11-09 — Three Supplier Invoice Flow QA tickets approved, created and verified
 
 - User approved the complete three drafts and explicitly requested creating them with the proposed priorities and labels, including Flow QA. D1 → FRO-378 (creation ownership/recovery, High); D2 → FRO-379 (Details editing/cancellation, High); D3 → FRO-380 (vessel identity/activity, Medium). All seven findings retain their approved owners. URLs and full saved metadata are in [the package index](drafts/supplier-invoice-bugs/README.md).
