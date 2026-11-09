@@ -27,7 +27,7 @@ All ten findings below are **demonstrated in isolated current-source UI tests**.
 | QA-CSE-09 | Medium | Preselection transport failure appears as missing/inaccessible Order; selected-Order draft failure leaves blank facts/disabled Create without error or Retry. | 008, 009 |
 | QA-CSE-10 | Medium | Confirm an Order in stock: Order status refreshes, but the independently cached entry shortcut still says Not admitted and keeps Create disabled. | 001, 004 |
 
-Finding IDs identify defects, not ten proposed tickets. At the initial review, grouping, priorities/labels and Linear writes had not been approved. Subsequent accepted grouping and draft status are recorded below.
+Finding IDs identify defects, not ten proposed tickets. At the initial review, grouping, priorities/labels and Linear writes had not been approved. Subsequent accepted grouping and verified ticket creation are recorded below.
 
 ### QA-CSE-01 — silent creation-owner change
 
@@ -101,17 +101,17 @@ A conditional Create test injects INHERITED coverage after an initially eligible
 
 | Area | Supported outcome / ownership |
 | --- | --- |
-| Create and Details draft/recovery | QA-CSE-01–09; entry corrections to discuss after review |
-| Order shortcut after admission | QA-CSE-10; entry integration correction, no expansion of general Order mutation policy |
+| Create and Details draft/recovery | QA-CSE-01–06/09: FRO-391; warehouse/coverage QA-CSE-07/08: FRO-392 |
+| Order shortcut after admission | QA-CSE-10: FRO-392; no expansion of general Order mutation policy |
 | Backend entry rules and guards | Actual-source controls plus source traces; no separate backend defect confirmed within executed checks |
 | Admission SQL, counter/row locks, atomic rollback, authenticated HTTP/GraphQL | Source-reviewed, runtime integration unverified |
 | Export/Customs/VAT writes, Stock List printing and FRO-358 work | Preserved, excluded, existing/separate owners |
 
-Current Bug searches for Customs Storage and Entry returned existing neighboring corrections, not an exact entry correction owner. No duplicate or ownership change is inferred merely from similar recovery symptoms. Existing tickets remain unchanged.
+Before correction creation, Bug searches for Customs Storage and Entry returned existing neighboring corrections, not an exact entry correction owner. No duplicate or ownership change is inferred merely from similar recovery symptoms. Existing reference tickets retain their descriptions and metadata; approved related links are recorded below.
 
-## Accepted correction groups and drafts
+## Approved correction tickets
 
-After discussing all ten findings, the user accepted two correction tickets and requested full drafts: [D1 draft/save recovery](../../../drafts/customs-storage-entry-bugs/01-drafts-and-save-recovery.md), High, owns QA-CSE-01–06/09; [D2 Order relationships/admission actions](../../../drafts/customs-storage-entry-bugs/02-order-relationships-and-admission-actions.md), Medium, owns QA-CSE-07/08/10. The [draft index](../../../drafts/customs-storage-entry-bugs/README.md) records all metadata, consumer ownership and 16 acceptance/verification pairs. Draft text and creation remain pending approval. Existing tickets are references only, not reopened, expanded or blocking owners. FRO-358 list/register/Excel/print/recipient-copy work, Export and VAT stamping remain excluded. No Linear or production writes and no new fix-test result are implied.
+After discussing all ten findings and reviewing the complete drafts, the user explicitly approved creating [FRO-391 — draft/save recovery](https://linear.app/front-line-ltd/issue/FRO-391), High, owning QA-CSE-01–06/09, and [FRO-392 — Order relationships/admission actions](https://linear.app/front-line-ltd/issue/FRO-392), Medium, owning QA-CSE-07/08/10. Both were created in FRO Backlog with Story, Bug, Frontend, Pending_Review, Flow QA and entry note; FRO-392 also has Order. The [approved description/verification index](../../../drafts/customs-storage-entry-bugs/README.md) records metadata, consumer ownership, all 16 acceptance/verification pairs and full readback checks. Existing tickets are references only, not reopened, expanded or blocking owners. FRO-358 remains unchanged and unlinked; its list/register/Excel/print/recipient-copy work, Export and VAT stamping remain excluded. No production change or new fix-test result is implied.
 
 ## Source references
 

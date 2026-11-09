@@ -1,19 +1,24 @@
-# Customs Storage Entry — two correction drafts
+# Customs Storage Entry — correction tickets FRO-391 and FRO-392
 
-The user accepted the two-ticket grouping and requested complete drafts on 9 November 2026. **Drafts for review only; no Linear writes authorized or performed.** These descriptions correct the existing implementation. They do not commission pending Customs Storage outputs or reopen existing requirement tickets.
+The user reviewed the complete drafts and explicitly approved creating both tickets with the proposed priorities and labels, including Flow QA, on 9 November 2026. **Created and re-read as FRO-391 and FRO-392.** The numbered description files are unchanged from reviewed commit `296b99a`. Existing tickets remain references only and FRO-358 stays out of scope.
 
-## Proposed metadata
+## Approved descriptions and saved metadata
 
-Both: **Front Line LTD (FRO) · Backlog**. No project, milestone, assignee, parent, cycle, due date, estimate, attachments or documents. Related references only; no blocks, blockedBy or duplicate relation, and no blocking dependency between the correction tickets. Creation and the exact descriptions still require approval.
+Both: **Front Line LTD (FRO) · Backlog**. No project, milestone, assignee, parent, cycle, due date, estimate, attachments or documents. Related references only; no blocks, blockedBy or duplicate relation, and no blocking dependency between the correction tickets. All metadata verified after creation.
 
-| Draft / title | Priority | Complete label set | Related references only | Findings |
+| Approved description / title | Priority | Complete saved label set | Related references only | Findings |
 | --- | --- | --- | --- | --- |
 | [D1 — Customs Storage Entry — protect drafts and recover creation/save outcomes](01-drafts-and-save-recovery.md) | High | Story, Bug, Frontend, Pending_Review, Flow QA, entry note | FRO-319, FRO-353, FRO-354 | QA-CSE-01, QA-CSE-02, QA-CSE-03, QA-CSE-04, QA-CSE-05, QA-CSE-06, QA-CSE-09 |
 | [D2 — Customs Storage Entry — correct Order relationships, warehouse warnings and admission actions](02-order-relationships-and-admission-actions.md) | Medium | Story, Bug, Frontend, Pending_Review, Flow QA, entry note, Order | FRO-319, FRO-354, FRO-355 | QA-CSE-07, QA-CSE-08, QA-CSE-10 |
 
+| Description | Created and verified issue | Priority / status |
+| --- | --- | --- |
+| D1 | [FRO-391 — draft and save recovery](https://linear.app/front-line-ltd/issue/FRO-391/customs-storage-entry-protect-drafts-and-recover-creationsave-outcomes) | High / Backlog |
+| D2 | [FRO-392 — Order relationships and admission actions](https://linear.app/front-line-ltd/issue/FRO-392/customs-storage-entry-correct-order-relationships-warehouse-warnings) | Medium / Backlog |
+
 Priority follows the accepted grouping: D1 can send the wrong owner/values or lose work; D2 gives incomplete warnings or incorrect relationship/action information. It is a severity assessment, not a measured production incident rate. Story is the single Type and Frontend the single Area. All listed labels and Backlog were freshly verified; no new labels or Ready/Todo promotion.
 
-The two numbered files are the exact proposed Linear description bodies. Metadata, consumer ownership and review history stay in this index, outside those bodies. FRO-358 is named only here and in the review: its list/menu, active-register/Excel/print and recipient copies are expressly excluded in both bodies without adding it to the related-reference set. No new Invoice/Export links from FRO-370 are included.
+The two numbered files are the exact approved Linear description bodies. Full readbacks match after only Linear Markdown/issue-chip presentation normalization. Metadata, consumer ownership and verification receipts stay in this index, outside those bodies. FRO-358 is named only here and in the review: its list/menu, active-register/Excel/print and recipient copies are expressly excluded in both bodies without adding it to the related-reference set. No new Invoice/Export links from FRO-370 are included. D1 maps to FRO-391 and D2 to FRO-392 throughout the coverage tables.
 
 ## Consumer trace and ownership
 
@@ -57,4 +62,13 @@ All 16 acceptance criteria have individual read-only post-deployment verificatio
 - Retained baseline: [full findings](../../docs/qa/runs/2026-11-09-customs-storage-entry.md), [flow](../../docs/qa/flows/customs-storage-entry.md), [30 scenarios](../../docs/qa/scenarios/customs-storage-entry.md), [evidence guide](../../docs/qa/evidence/customs-storage-entry-evidence.md). Previously executed: 115 existing UI tests; 27 added UI checks (10 controls, 16 observations, one excluded conditional case); 155 extracted-source backend controls. These are not newly executed fix tests or proof of deployed correctness.
 - No duplicate persisted entry, production overwrite or separate backend defect was demonstrated. Native Java25/Gradle/Testcontainers, real SQL/admission/locks/rollback/concurrency and deployed/authenticated browser behavior remain unverified. D1 does not assume the Shipment Invoice request-ID replay contract exists for Customs Storage Entry.
 - Existing presentation contracts are reused; no new components or design directions are proposed. Canvas/preview are skipped and production branch work is excluded by the draft-only request and read-only boundary. No vocabulary/ADR or process-learning update is needed.
-- Save and verify these planning files, record the accepted grouping and pending draft approval in MEMORY.md, and commit/push only this task's changes. Preserve unrelated patches and other-chat work. Full descriptions are presented in chat; creation is a later explicit approval step.
+- Creation preflight repeated mandatory pull, authenticated main verification, current labels/statuses, full reference reads and a current Bug search; no exact existing correction owner found. No new application tests were needed for this approved-text creation task.
+
+## Creation verification — 9 November 2026
+
+- Full FRO-391/392 readbacks match the approved descriptions after normalizing table separators, bullet markers, whitespace/bold presentation and verified Linear issue chips/link wrappers. All ten findings and all 16 acceptance/check pairs remain present. No description rewrite was needed.
+- Verified exact titles, High/Medium priorities, FRO Backlog, complete label sets including Flow QA, unset assignment/project/parent/milestone/cycle/date/estimate, and empty attachments/documents. No Ready promotion, blocking/duplicate relations or FRO-358 reference added.
+- FRO-391 relates exactly to FRO-319/353/354. FRO-392 relates exactly to FRO-319/354/355. Before/after full reads show reference descriptions, titles, priorities, complete labels/statuses, assignment/project/parent metadata, attachments and existing blocking relations preserved. Only approved reciprocal related links were added. FRO-353's five attachment identities/titles/targets are unchanged; Linear re-signed URL query parameters.
+- FRO-358 remains Backlog with identical description, metadata, attachments and relations; it has no relation to either correction. Existing requirement tickets remain Done. Export/VAT and other chat's Stock List scopes remain separate.
+- Approved normalized-LF UTF-8 body SHA-256: D1 `45d1bf52af75d04a71340ed5180e2f9911b77299e8030d3954443c27491b9a97`; D2 `8922e5c9033bc387091145eee49a7564c02d839608b1830b5bd6a5cb5ab92c93`. Both files remain byte-equivalent to reviewed commit `296b99a` after newline normalization.
+- Updated planning memory and QA links only. No production source, portal/database/AADE/email write, branch, preview, vocabulary or ADR. Synchronize only this task's records and preserve concurrent/unrelated work.

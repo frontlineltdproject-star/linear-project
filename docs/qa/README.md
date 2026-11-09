@@ -30,7 +30,7 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Customs Storage Entry flow](flows/customs-storage-entry.md) | Expected admission/coverage, Create, Details, Change Order and derived facts; Export/VAT/FRO-358 outputs excluded |
 | [Customs Storage Entry scenarios](scenarios/customs-storage-entry.md) | 30 prioritized normal, failure, recovery and boundary checks |
 | [Customs Storage Entry review — 9 November 2026](runs/2026-11-09-customs-storage-entry.md) | Ten isolated UI findings, parallel reviews, parent reruns and explicit backend/database limits |
-| [Two Customs Storage Entry correction drafts](../../drafts/customs-storage-entry-bugs/README.md) | Accepted grouping: draft/save recovery (High) and Order relationships/admission actions (Medium); full drafts pending approval, references only |
+| [Two Customs Storage Entry correction tickets — FRO-391–FRO-392](../../drafts/customs-storage-entry-bugs/README.md) | Approved descriptions and verified creation: draft/save recovery (High), Order relationships/admission actions (Medium); both with Flow QA and existing tickets as references only |
 | [Stock List selection and printing](flows/stock-list-selection-printing.md) | Expected filtering, shared selection, complete Start shipment handoff and fixed PDF, reconciled against later tickets |
 | [Stock List scenarios](scenarios/stock-list-selection-printing.md) | 28 complete-flow cases plus finding-specific regression variations |
 | [Stock List review — 9 November 2026](runs/2026-11-09-stock-list-selection-printing.md) | Eleven bounded findings, two separate clarification items, retained UI/model/PDF evidence; no ticket grouping agreed yet |

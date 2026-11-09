@@ -56,6 +56,6 @@ All 30 full portal journeys remain **Not run**. The [review](../runs/2026-11-09-
 
 Observation assertions reproduce defects; their passing result is not a scenario Pass. The injected inherited-lookup-during-Create branch has no established reachable sequence and is excluded from findings.
 
-## Correction draft coverage
+## Correction ticket coverage
 
-The accepted [two-ticket grouping and full drafts](../../../drafts/customs-storage-entry-bugs/README.md) assign every finding once: D1 owns QA-CSE-01–06/09 (10 acceptance/check pairs), D2 owns QA-CSE-07/08/10 (6 pairs). Both remain drafts awaiting approval, with existing tickets as references only and FRO-358/Export/VAT excluded. Drafting does not change any execution status above.
+The approved [two correction tickets](../../../drafts/customs-storage-entry-bugs/README.md) assign every finding once: D1 / [FRO-391](https://linear.app/front-line-ltd/issue/FRO-391) owns QA-CSE-01–06/09 (10 acceptance/check pairs), D2 / [FRO-392](https://linear.app/front-line-ltd/issue/FRO-392) owns QA-CSE-07/08/10 (6 pairs). Both were created and re-read, with existing tickets as references only and FRO-358/Export/VAT excluded. Creation does not change any execution status above.
