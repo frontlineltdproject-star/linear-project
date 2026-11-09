@@ -116,11 +116,11 @@ P:250–256 unconditionally installs a response in shared cache and excludes det
 
 All 30 complete portal scenarios remain **Not run**; the isolated evidence above supports specific portions only. Evidence reproductions and commands are retained in [the evidence guide](../evidence/README.md). No source fixes, new ticket metadata or grouping decisions are implied.
 
-The user has now reviewed all nine findings through simple examples and requested a small ticket grouping. The following is a proposal awaiting agreement, not approved ticket scope or metadata.
+The user reviewed all nine findings through simple examples, accepted the three groups below and requested full drafts before Linear creation. [Complete drafts and metadata](../../../drafts/vat-paperwork-bugs/README.md) are ready for review; no Linear issues have been created or modified.
 
-## Proposed grouping — awaiting agreement
+## Agreed grouping — draft text and metadata under review
 
-| Group | Proposed ticket purpose | Finding ownership | Suggested priority |
+| Group | Agreed ticket purpose | Finding ownership | Proposed priority |
 | --- | --- | --- | --- |
 | V1 | Print ΥΔ — preserve intended selection and isolate each print attempt | QA-VAT-01, QA-VAT-02 and the printing portion of QA-VAT-03 | Medium |
 | V2 | VAT stamping — protect reviewed confirmations, date input and current progress | QA-VAT-04, QA-VAT-05, QA-VAT-09 and the bulk-stamping portion of QA-VAT-03 | High |
@@ -138,4 +138,4 @@ Three groups keep printing independent and give uncertain-save recovery its own 
 
 Fresh full FRO-317/321/348/352 remain Done with unchanged descriptions. FRO-379/385 remain Backlog with unchanged scopes (Supplier Invoice correction/cancellation; Export editing/Customs/cancellation); FRO-385 explicitly excludes detailed VAT printing/stamping. Current Bug searches for stamping/Print returned FRO-384/385 only; FRO-384 is creation/files and excludes this scope. Recommend related references and reuse of shared fixes where applicable, without silently expanding existing tickets. No duplicate VAT-specific owner was found in these searches.
 
-Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. This grouping step adds no source change or test run; the earlier evidence and limits remain. Full descriptions, labels and creation still follow user agreement and draft review. No Linear write, new vocabulary, ADR, canvas/preview or production branch.
+Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Grouping and drafting add no source change or test run; earlier evidence and limits remain. Current statuses/labels verified; the draft package maps all nine findings to acceptance criteria and each criterion to read-only verification. Full text/metadata await review before creation. No Linear write, new vocabulary, ADR, canvas/preview or production branch.

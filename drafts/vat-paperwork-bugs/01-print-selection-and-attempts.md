@@ -1,0 +1,47 @@
+**Print ΥΔ** must keep the intended invoice selection and template together, and apply each result or error only to the print attempt that produced it.
+
+## Problems to fix
+
+| Case | Reproduction and current result |
+| --- | --- |
+| QA-VAT-01 — newer selection lost | Generate for invoice A, then select B while waiting. A's response replaces the form and loses B. Changing the template too can combine the old invoice group with the newer template when opening the PDF. |
+| QA-VAT-02 — old PDF error | Open A's PDF, close results and reopen Print ΥΔ. A's delayed failure appears in the new dialog; during another generation it can unlock controls and permit overlapping attempts whose results replace each other. |
+| QA-VAT-03 — print selection | At Awaiting EAD, refresh after selected invoice A is removed from the Export. Its row disappears but the count and Generate request still include A. |
+
+Isolated UI tests demonstrate state and outgoing arguments. Displayed invoice IDs matched the PDF request; actual PDF content and production behavior were not verified.
+
+## Acceptance criteria
+
+1. **Pending generation:** capture the Export, selected invoice IDs and template on Generate. Disable selection/template changes and duplicate Generate while pending; preserve existing pending dismissal protection. Completion must not erase newer work or affect another dialog session.
+2. **Result ownership:** displayed groups and Open PDF use their originating selection/template. Late generation/PDF success or failure must not change a reopened dialog, unlock another pending request or replace newer results. Keep generation errors separate from PDF-opening errors.
+3. **Current selection:** on refreshed saved membership/eligibility, remove invalid IDs from the editable print selection, update count/checkboxes and explain the change. Validate the current selection before generating; never send invisible stale IDs. Do not reinterpret an already submitted attempt as the changed selection.
+4. **Failure and retry:** preserve the originating valid choices after generation failure. PDF failure preserves its result and offers retry for that document. A retry uses that attempt's inputs; a new attempt starts explicitly. Changed eligibility requires review.
+5. **Preservation:** keep the three supplied templates, saved-invoice grouping by Invoicing company and Supplier, maximum five invoices per document, current saved-data rendering and authorized printing at every active Customs stage. Printing changes no invoice event/status, Export membership, Customs state or protocol. Print and stamping selections remain independent.
+6. **Verification:** cover selection/template edits during delays, close/reopen and out-of-order PDF failures, membership refresh, normal failures/retries and all three templates. Verify displayed groups against captured requests and actual isolated PDF output; retain backend selection/access and no-write controls.
+
+## Decisions and scope
+
+One ticket owns Generate → results → Open PDF because these share one print attempt. Reuse existing Print ΥΔ controls; pending choices are disabled to avoid accepting changes the in-flight request cannot include. No template redesign, new document type, stamping mutation or protocol-allocation change. QA-VAT-03's bulk-stamping selection belongs to the companion stamping-confirmation ticket.
+
+## Context for agents
+
+Baseline main: 6aa259553cd9c86a8aaa157902088aa9a6bca83e.
+
+- Client `src/features/exports/details/components/export-detail-page.tsx:453–498,932–964`: current choices and returned groups are merged; shared PDF error overrides another pending outcome. Adjacent `export-detail-print-dialog.tsx`: inputs lack pending guards.
+- Client `src/features/exports/services/export-service.ts:185–209`: exportYdDocuments and GET /api/v1/exports/{id}/yd-documents/pdf forward selected IDs/template.
+- App `src/main/java/com/frontline/forwarding/domain/exports/ExportYdService.java` validates saved membership/type and grouping; `web/exports/service/ExportYdPdfService.java` and `src/main/resources/templates/export-yd.html` render saved facts. Preserve these contracts.
+
+## Post-deployment verification
+
+Read-only inspection of existing records and isolated evidence; no production mutations. Missing evidence remains Unverified.
+
+| Criterion | Check |
+| --- | --- |
+| 1 | Inspect delayed-generation recordings and requests for locked choices and unchanged submitted inputs. |
+| 2 | Compare each result/PDF request with its originating attempt through reopen/out-of-order recordings. |
+| 3 | Inspect membership-refresh evidence for removed IDs, corrected count and the next request. |
+| 4 | Inspect generation/PDF failure and retry recordings for retained choices and correct ownership. |
+| 5 | Compare template/group/output samples and before/after record snapshots for preserved facts and access. |
+| 6 | Match isolated UI/browser/backend/PDF results and their source SHA to the deployed build. |
+
+**Reference:** [FRO-317](https://linear.app/front-line-ltd/issue/FRO-317) · [FRO-352](https://linear.app/front-line-ltd/issue/FRO-352) · [Source baseline](https://github.com/Frontline-Forwarding/frontline-forwarding/tree/6aa259553cd9c86a8aaa157902088aa9a6bca83e) · [Print evidence](https://github.com/frontlineltdproject-star/linear-project/blob/08bdf90/docs/qa/evidence/vat-print-qa.test.tsx).

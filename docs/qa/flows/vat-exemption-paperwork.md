@@ -79,3 +79,5 @@ Trace expected behavior before observations. Run relevant existing tests and foc
 ## First review
 
 [9 November 2026 review](../runs/2026-11-09-vat-exemption-paperwork.md): nine findings across printing, refreshed selections, reviewed versions, pending date input, recovery and stale response display. Shared manifestations are consolidated; they are not nine proposed tickets. 154 frontend observations/controls and 40 isolated backend controls passed; observation assertions demonstrate current defects. No full browser/database/PDF-generation pass is claimed. The combined Recorded/already-recorded UI count remains a clarification, not a confirmed defect.
+
+The user accepted three correction groups. [Complete ticket drafts](../../../drafts/vat-paperwork-bugs/README.md) cover printing, confirmation accuracy/current progress and uncertain-attempt recovery. QA-VAT-03 splits by print/stamping consumer. Full descriptions and metadata await review; no Linear creation or source fix.

@@ -45,4 +45,4 @@ The [review report](../runs/2026-11-09-vat-exemption-paperwork.md) maps QA-VAT-0
 - Backend extracted controls: date/stage/replay/version/per-item guards and selected Υ.Δ. grouping, max-five split and no printing writes. Stand-in authorization/repositories do not verify HTTP permissions, SQL, actual concurrency or rollback.
 - Actual PDF rendering/long-value layout, native browser behavior, persisted history and deployment equivalence remain pending. Do not mark VAT-004/025/026/029 or any full flow passed from these isolated checks.
 
-The audit report will link each finding to these stable IDs and record separately which isolated tests were executed, with their source/environment limitations.
+The [draft package](../../../drafts/vat-paperwork-bugs/README.md) maps all nine findings to the three agreed correction groups and their acceptance/verification criteria. Full draft text and metadata await review before Linear creation. Scenario execution statuses and evidence limits above remain unchanged.
