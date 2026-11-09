@@ -1,0 +1,48 @@
+**Shipment** creation and Details must preserve the operator's unfinished work when warehouse data loads, another card saves or the operator changes tabs.
+
+## Problems to fix
+
+| Case | Reproduction and current result |
+| --- | --- |
+| 1. Origin change | Start Shipment creation from a stocked Order, enter a Note, then select an origin whose eligible-goods data is not already loaded. The form disappears, returns to the original origin and loses the Note. Changing origin country so no warehouse is selected can leave it loading indefinitely. |
+| 2. Independent Notes | Open Internal and External Notes. Start saving Internal, then type more in External before the response arrives. Completing Internal Save restores the older External draft and discards the later typing. |
+| 3. Arrival draft | On a dispatched launch-station Shipment, enter recipient name/address, Received by and proof reference. After a refused arrival attempt, visit Overview and return to Available actions. The entries and error disappear. |
+
+Evidence: QA-OS-01/07/08 were reproduced using actual client components with controlled network results. The origin finding establishes reset/freeze behavior; a literal exception in the reported live incident remains unverified.
+
+## Acceptance criteria
+
+1. **Origin:** changing origin warehouse/country keeps the form usable through loading, empty and failed lookup results. Clearing origin leaves its controls available. The original Order-link preselection never overrides later choices.
+2. **Creation draft:** preserve unrelated entered values. Re-evaluate eligible cargo and explain incompatible selections; do not retain invalid cargo just to preserve the draft. Changing origin creates no Shipment, reservation or split.
+3. **Notes:** a successful save closes only its own editor and preserves the latest text in other open drafts, including typing during the request. Test both save directions and failure. Cancel remains scoped to its own draft.
+4. **Arrival:** tab/language changes preserve the same Shipment's unfinished handover fields. Refused submissions retain recoverable inputs and actionable feedback; returning to the tab does not silently reset them. Verify each applicable handover form.
+5. Cover all three cases with focused regressions. Preserve existing permissions, EN/EL presentation, explicit cancellation and successful-save behavior. Drafts must not leak into another Shipment.
+
+## Decisions and scope
+
+Keep the existing screens and per-card save boundaries. Preserve local unfinished work without changing eligibility or lifecycle rules. Browser-reload/cross-device autosave, saved-version conflict handling and comment retry identity are outside this ticket.
+
+## Context for agents
+
+Reviewed production `main` at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. A source revision is not proof of the deployed version.
+
+Affected system: `frontline-forwarding-client`.
+- Origin: `src/features/shipments/hooks/use-shipment-creation.ts` and `src/routes/secured/shipments/new.tsx` replace the form while candidate data loads, then reuse the initial seed.
+- Notes: `src/features/shipments/components/details/shipment-notes-card.tsx`, `shipment-overview-tab.tsx` and `shipment-details-prepared-page.tsx` merge an async completion into an older whole-draft snapshot.
+- Arrival: `src/features/shipments/components/details/shipment-arrival-form.tsx` owns local fields while `src/components/ui/tabs.tsx` unmounts inactive panels.
+
+Use QA scenarios **OS-010/029/030**. The existing evidence assertions demonstrate faulty behavior; replace them with the required outcomes for fix regressions. Backend mutation contracts remain unchanged.
+
+## Post-deployment verification
+
+| Criterion | Read-only check |
+| --- | --- |
+| 1 | Compare the deployed creation source/build with the uncached, empty-origin and failed-lookup results for OS-010. |
+| 2 | Inspect OS-010's preserved-input and cargo-eligibility results, including evidence of no creation/reservation writes. |
+| 3 | Review OS-029's delayed-save results in both directions and its failure/cancel controls. |
+| 4 | Inspect an existing dispatched Shipment's arrival controls; review OS-030 results for tab/language changes and refused handover. |
+| 5 | Review permission, record-switch and successful-save regression results against the deployed build. |
+
+These checks are read-only. Use existing records and isolated test evidence; do not submit live saves, uploads or lifecycle actions. Missing evidence remains Unverified.
+
+**Reference:** [FRO-316](https://linear.app/front-line-ltd/issue/FRO-316) · [FRO-341](https://linear.app/front-line-ltd/issue/FRO-341) · [Source baseline](https://github.com/Frontline-Forwarding/frontline-forwarding/tree/6aa259553cd9c86a8aaa157902088aa9a6bca83e) · [QA evidence](https://github.com/frontlineltdproject-star/linear-project/blob/4ec2ce7ce41b875695a5336612e92f4176ecc3dd/docs/qa/runs/2026-11-09-order-to-arrival-second-pass.md).

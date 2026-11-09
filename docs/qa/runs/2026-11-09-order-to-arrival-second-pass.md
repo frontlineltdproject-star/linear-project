@@ -141,9 +141,11 @@ Ruled out: nullable Order-header fields are explicitly echoed by colli, invoice-
 
 Other controls: upcoming reservation/cancellation remains possible in the inspected states; stock confirmation selects PREPARED_FOR_SHIPMENT when reserved; packing Save does not itself append physical LOADED events; referenced removed units are retired; server same-ID comment replay is implemented. These source checks do not certify every concurrency case.
 
-## Proposed ticket grouping — awaiting user decision
+## Original ticket grouping — superseded by the accepted five groups
 
-Recommend **nine tickets**, with the two stale-review risks kept separate because they have different editor implementations and failure sequences. Group only the two local draft-retention fixes and the two backend packing-preservation fixes. Priorities below are proposals, not Linear metadata writes.
+After the bug-by-bug explanation, the user accepted [five groups with complete drafts for review](../../../drafts/order-to-arrival-bugs/README.md). The nine-group table below records the original proposal only. It does not define the current ticket count. No Linear issues have been created.
+
+The original proposal separated both stale-review fixes and grouped only the local draft-retention and backend packing-preservation defects. Its priorities were proposals, not Linear metadata writes.
 
 | Group | Proposed scope | Findings | Priority proposal / reason |
 | --- | --- | --- | --- |
@@ -161,7 +163,7 @@ Every runtime finding from both passes is assigned above. Keep QA-OS-03 (contrad
 
 Duplicate search: current FRO issues searched for shipment, readiness, stale, upload and colli, with all returned pages inspected. No open issue matching these exact defect scopes was identified. Read FRO-278 in full: it is a Done fix for the old ShipmentComposer subscription loop, a different cause from QA-OS-01. FRO-365 remains Backlog for inapplicable AWAITING_IMPORT readiness buttons; do not duplicate it. Backlog FRO-362/367 and other planned UI entities are not evidence of regressions.
 
-These are proposed bundles, not final ticket descriptions or approved requirements. Next: settle grouping, prepare complete standalone descriptions with reproduction/expected/actual/evidence/acceptance criteria and current metadata, then obtain approval before writing Linear. This pass changes no ticket.
+The current five-group structure is agreed. The linked descriptions and metadata still await user review before any Linear write. No existing ticket was changed by the review or drafting work.
 
 ## Scenario ledger
 

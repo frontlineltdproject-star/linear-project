@@ -1,0 +1,53 @@
+**Order and normal Shipment creation** must allow an authorised user to stage a valid attachment and create the record with that file. Diagnose the reported **Refused: Request refused (401)** response and fix its demonstrated cause.
+
+## Reported problem and established evidence
+
+Selecting a file starts staging before Create: open a private creation context, then upload the bytes. A refusal leaves the selected file rejected and blocks creation until resolved or explicitly removed.
+
+The real server cause is unresolved. Injecting 401 at either context opening or file upload reproduces the exact client message and Create blocking. This does not prove why the deployed server returned 401. The inspected REST upload service supplies the same authorization-header helper as GraphQL; missing credentials or incorrect user permissions are not established causes.
+
+## Investigation and acceptance criteria
+
+1. Identify the failing stage and record reproducible evidence: method/endpoint, timestamp, status, redirects and deployed client/server versions. Correlate the refusal with the component producing it, including the first backend exception where applicable; a proxy/authentication refusal may never reach the application. Check header presence without recording token values. Distinguish authentication, endpoint configuration and storage/error handling from one another.
+2. Resolve the evidenced cause. In an isolated compatible environment, verify both paths separately: stage a valid file, create one Order; repeat for one normal Shipment. List/download each associated file and compare bytes and metadata. If refusal was valid for the tested identity, document why and prove the authorised workflow works without weakening permissions.
+3. Preserve security: current identity, authority and creator/entity/context ownership remain enforced. Foreign, expired, removed or incomplete upload references remain rejected; do not bypass access checks to suppress 401.
+4. Failures retain the form and identify the affected file. No creation with unresolved selected uploads. Explicit removal excludes that file without erasing unrelated inputs; no partial business record or attachment association on failure.
+5. Lost upload/create responses recover or replay the original operation and result without duplicate records/files. Test successful staging, rejected staging, storage failure, expiry and lost responses. Creating without files remains supported.
+6. Record the resolution of both contract clarifications below. Do not close this issue based only on reproducing the error message, assuming a permissions fix or removing attachments from the workflow.
+
+## Contract clarifications
+
+| Finding | Required treatment |
+| --- | --- |
+| QA-OS-03 | Use FRO-342's staged-before-Create, atomic-association contract. Propose the matching correction to contradictory post-create wording in FRO-336; no silent change to the agreed upload behavior. |
+| QA-OS-04 | FRO-335 requires a creation context even without files; the inspected Order form can submit a null context before any upload. Confirm whether to align that path or obtain an explicit owning-contract amendment. Record the decision and recovery tests. This discrepancy is not proof of duplicate creation or the 401 cause. |
+
+## Decisions and scope
+
+Keep diagnosis and the resulting fix in one ticket, with completion tied to successful upload/creation evidence. No permission-model redesign, fiscal/email integration change or historical-arrival/inline-Order upload expansion. Amendments to other ticket descriptions remain separately reviewed.
+
+## Context for agents
+
+Reviewed production `main` at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. A source revision is not proof of the deployed version.
+
+Affected consumers: client staging and Create guards, backend creation contexts/storage, creation association and outcome recovery.
+- `frontline-forwarding-client/src/features/creation-uploads/creation-upload-service.ts` opens context by PUT and uploads by POST; `use-staged-files.ts` classifies refusal.
+- `frontline-forwarding-client/src/features/purchase-orders/components/creation/purchase-order-creation-form.tsx` blocks unresolved files; `frontline-forwarding-client/src/app/config/env.ts` allows separate REST/GraphQL destinations.
+- Under `frontline-forwarding-app/src/main/java/com/frontline/forwarding/`: `web/creationuploads/service/CreationContextsApiService.java`, `system/config/SecurityConfig.java` and `system/storage/DisabledSystemFileStorageService.java` are investigation points, not established faulty components.
+
+QA scenarios: **OS-005/006**. The injected-client harness proves message/guard behavior only; use real isolated HTTP/storage integration for diagnosis.
+
+## Post-deployment verification
+
+| Criterion | Read-only check |
+| --- | --- |
+| 1 | Inspect the correlated refusal trace, producing component and deployed configuration/build; exclude credential values. |
+| 2 | Review successful isolated Order and Shipment receipts; inspect existing authorised attachment metadata/downloads where available. |
+| 3 | Review identity, authority and creator/context rejection results for the deployed version. |
+| 4 | Inspect failure/removal request captures and rollback evidence showing retained drafts and no partial creation. |
+| 5 | Compare upload/create attempt IDs and resulting record/file identities in recovery, expiry and no-file controls. |
+| 6 | Read both recorded contract resolutions and any separately approved wording correction. |
+
+These checks are read-only. Use existing records and isolated test evidence; do not submit live saves, uploads or lifecycle actions. Missing evidence remains Unverified.
+
+**Reference:** [FRO-335](https://linear.app/front-line-ltd/issue/FRO-335) · [FRO-336](https://linear.app/front-line-ltd/issue/FRO-336) · [FRO-341](https://linear.app/front-line-ltd/issue/FRO-341) · [FRO-342](https://linear.app/front-line-ltd/issue/FRO-342) · [Source baseline](https://github.com/Frontline-Forwarding/frontline-forwarding/tree/6aa259553cd9c86a8aaa157902088aa9a6bca83e) · [QA evidence](https://github.com/frontlineltdproject-star/linear-project/blob/4ec2ce7ce41b875695a5336612e92f4176ecc3dd/docs/qa/runs/2026-11-09-order-to-arrival.md).

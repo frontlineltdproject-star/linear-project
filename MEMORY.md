@@ -1,5 +1,15 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Five bug groups accepted; complete ticket drafts prepared
+
+- After reviewing simple examples one by one, user explicitly accepted five groups and requested complete drafts for review before Linear creation. This supersedes the earlier nine-ticket proposal; approval covers the grouping and local drafting, not the final descriptions/metadata or a Linear write.
+- Drafts in drafts/order-to-arrival-bugs/: D1 Shipment unfinished work (QA-OS-01/07/08); D2 Order colli forms/stock panel (09/11); D3 safe saves and retries (05/06/10); D4 packing data/history (12/13); D5 upload 401 investigation/fix (02), retaining contract clarifications 03/04. README contains full finding coverage and metadata; each numbered .md contains the complete proposed description.
+- Proposed all FRO Backlog, Story + Bug + Pending_Review, no project/assignee/parent/milestone. D1/D2/D3 Area Frontend, D4 Backend, D5 Integration. Entity labels and related owner tickets specified in draft index; no blockers. Proposed High D1/D3/D5, Medium D2/D4. Metadata was fetched fresh; labels respect one Type/Area. No Linear changes.
+- Planning pull succeeded; production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e through authenticated gh. Current full FRO-316/325/326/335/336/341/342/344/345/346 descriptions remain Done and unchanged. Fresh draft/packing/retry/401/colli duplicate searches found no exact open duplicate. Keep source findings distinct from deployed evidence.
+- Drafts preserve existing contracts and include reproductions, acceptance criteria, scope/decisions, implementation sources and read-only post-deployment checks. No new design/preview or production branch. No application tests rerun for documentation-only drafting; prior evidence remains explicitly bounded. Historical-journey runtime verification and real upload cause remain open. D5 explicitly requires resolving the no-file-context contract rather than guessing it; other issue wording edits need separate review.
+- Updated the QA index/report to point to the accepted five groups while retaining the original nine-group proposal as history. No new glossary or ADR decision. Preserve unrelated FRO-326 files, other draft patches and .wrangler during synchronization.
+- Draft validation: five saved descriptions matched prepared text; all 13 findings assigned once; labels/related owners verified; 19 local links and eight explicit source paths checked. Independent review tightened omitted net/notes scope, refusal evidence without a backend exception, and upload success on both entity paths. Read-only checks map every acceptance criterion. Descriptions remain pending user review.
+
 ### 2026-11-09 — Order-to-arrival second pass and proposed bug grouping
 
 - User requested continued independent bug review of this flow, then a decision on ticket grouping. Re-pulled planning main successfully; authenticated production main remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Current core Linear descriptions re-read unchanged; FRO-362 remains Backlog. No production/portal/database/email/fiscal writes or Linear changes.
