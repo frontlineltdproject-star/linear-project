@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Two Export bug groups proposed after example review
+
+- User reviewed all six Export findings through simple examples, then requested grouping without too many tickets. Proposed G1 creation/drafts/pending submission/files (QA-EX-01/02/03) and G2 saved Details editing/reviewed versions/confirmation recovery (04/05/06). Full scope and rationale in [the review report](docs/qa/runs/2026-11-09-export-to-customs-completion.md#proposed-ticket-grouping--awaiting-user-agreement). Awaiting user agreement; no full drafts, metadata decisions or Linear writes.
+- Each finding retains its reproduction and acceptance checks. G2 includes Details, invoice membership, EAD/IE599 and cancellation where affected; G1 spans draft → attempt → result → upload recovery. Grouping is by a coherent operation lifecycle, not a claim of one root cause/fix or an effort estimate. No blocking dependency established. Proposed requirement links: G1 FRO-317/350, G2 FRO-317/352.
+- Planning pull succeeded. Current full FRO-317/350/352 descriptions re-read unchanged, Done; authenticated production main remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Export + Bug search returned only Supplier Invoice scopes. Full FRO-378/379 re-read; preserve their existing entity boundaries, do not expand them. Flow QA label verified active for eventual reuse.
+- Existing presentation contracts reused; no new UI design/preview or production branch. Detailed VAT printing/stamping, pending list/Entry links and the ruled-out family-aggregation interpretation stay excluded. No new source changes, application execution, vocabulary or ADR; evidence limits remain unchanged. Updated report/catalogue only; preserve unrelated drafts/patches/.wrangler when synchronizing.
+
 ### 2026-11-09 — Export creation to Customs completion mapped and reviewed
 
 - User approved this next flow, explicitly map first then investigate. Saved [FLOW-EX](docs/qa/flows/export-to-customs-completion.md) and [28 scenarios](docs/qa/scenarios/export-to-customs-completion.md) before defect testing; [report](docs/qa/runs/2026-11-09-export-to-customs-completion.md) records six isolated UI findings. Detailed Υ.Δ. printing/stamping stays next pass; protocol allocation and preserving invoice VAT events are current boundary checks.
