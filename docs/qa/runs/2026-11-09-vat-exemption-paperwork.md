@@ -6,7 +6,7 @@ User requested the expected flow first, then investigation using existing ticket
 
 - Current full FRO-317/321/348/352 read: all Done; current comments empty. FRO-241 is only the historical supplied-form source. FRO-379/385 were read for overlap: Supplier Invoice correction/cancellation and Export editors/Customs/cancellation respectively, not automatic owners of this paperwork scope.
 - Production main authenticated through gh before and after review: 6aa259553cd9c86a8aaa157902088aa9a6bca83e, source version 0.0.13. Deployment equivalence unverified. No production source, portal or database writes.
-- Planning pull succeeded before work. Existing UI contracts reused; no new design, canvas, preview, production branch, Linear change or ticket draft. Findings await discussion and grouping.
+- Planning pull succeeded before work. Existing UI contracts reused; no new design, canvas, preview or production branch. The initial investigation made no Linear changes; approved correction tickets were subsequently created as recorded below.
 - The archive has no Git metadata; the policy loader failed at git rev-parse. Root/client/app and relevant policy files were read directly. No successful policy-loader snapshot/fingerprint is claimed.
 - Three focused agents investigated print UI, individual stamping and bulk stamping. Parent reviewed their evidence and source, reran all retained UI tests, investigated backend guards/grouping and inspected supplied forms. All 562 original client source files still SHA-256 match the pinned archive.
 
@@ -114,13 +114,13 @@ P:250–256 unconditionally installs a response in shared cache and excludes det
 
 ## Handoff and next step
 
-All 30 complete portal scenarios remain **Not run**; the isolated evidence above supports specific portions only. Evidence reproductions and commands are retained in [the evidence guide](../evidence/README.md). No source fixes, new ticket metadata or grouping decisions are implied.
+All 30 complete portal scenarios remain **Not run**; the isolated evidence above supports specific portions only. Evidence reproductions and commands are retained in [the evidence guide](../evidence/README.md). No source fixes or deployment verification are implied by ticket creation.
 
-The user reviewed all nine findings through simple examples, accepted the three groups below and requested full drafts before Linear creation. [Complete drafts and metadata](../../../drafts/vat-paperwork-bugs/README.md) are ready for review; no Linear issues have been created or modified.
+The user reviewed all nine findings through simple examples, accepted the three groups below, reviewed their complete drafts and explicitly approved creation. [Approved descriptions and verified metadata](../../../drafts/vat-paperwork-bugs/README.md) record FRO-388–FRO-390. Implementation and subsequent verification remain pending.
 
-## Agreed grouping — draft text and metadata under review
+## Approved grouping — tickets created and verified
 
-| Group | Agreed ticket purpose | Finding ownership | Proposed priority |
+| Group | Agreed ticket purpose | Finding ownership | Saved priority |
 | --- | --- | --- | --- |
 | V1 | Print ΥΔ — preserve intended selection and isolate each print attempt | QA-VAT-01, QA-VAT-02 and the printing portion of QA-VAT-03 | Medium |
 | V2 | VAT stamping — protect reviewed confirmations, date input and current progress | QA-VAT-04, QA-VAT-05, QA-VAT-09 and the bulk-stamping portion of QA-VAT-03 | High |
@@ -134,8 +134,12 @@ V3 owns pending/unknown attempt continuity and reconciliation on both individual
 
 QA-VAT-03 appears in two rows because it has separate print and stamping consumers. Each manifestation has one owner: print selection in V1, stamping selection in V2. V2 owns the reviewed/submitted snapshot and normal pending input; V3 preserves and reconciles that same attempt if its outcome becomes uncertain. Shared implementation must be coordinated without duplicating requirements or inventing a blocking dependency.
 
-Three groups keep printing independent and give uncertain-save recovery its own testable outcome across both entry points. All nine findings remain tracked; each concrete reproduction and its evidence limit must appear in the later drafts. No omnibus cross-entity refactor, forced ticket-per-bug split or Shipment Invoice scope is proposed.
+Three groups keep printing independent and give uncertain-save recovery its own testable outcome across both entry points. All nine findings and their evidence limits are retained in the approved descriptions. No omnibus cross-entity refactor, forced ticket-per-bug split or Shipment Invoice scope is included.
 
-Fresh full FRO-317/321/348/352 remain Done with unchanged descriptions. FRO-379/385 remain Backlog with unchanged scopes (Supplier Invoice correction/cancellation; Export editing/Customs/cancellation); FRO-385 explicitly excludes detailed VAT printing/stamping. Current Bug searches for stamping/Print returned FRO-384/385 only; FRO-384 is creation/files and excludes this scope. Recommend related references and reuse of shared fixes where applicable, without silently expanding existing tickets. No duplicate VAT-specific owner was found in these searches.
+Fresh full FRO-317/321/348/352 remain Done with unchanged descriptions. FRO-379/385 remain Backlog with unchanged scopes (Supplier Invoice correction/cancellation; Export editing/Customs/cancellation); FRO-385 explicitly excludes detailed VAT printing/stamping. Pre-creation Bug searches for stamping/Print returned FRO-384/385 and the separate Shipment Invoice corrections FRO-386/387, with no exact VAT-specific duplicate. Existing requirements and correction tickets are related references only; their scopes remain unchanged.
 
-Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Grouping and drafting add no source change or test run; earlier evidence and limits remain. Current statuses/labels verified; the draft package maps all nine findings to acceptance criteria and each criterion to read-only verification. Full text/metadata await review before creation. No Linear write, new vocabulary, ADR, canvas/preview or production branch.
+Created [FRO-388](https://linear.app/front-line-ltd/issue/FRO-388) (V1, Medium), [FRO-389](https://linear.app/front-line-ltd/issue/FRO-389) (V2, High) and [FRO-390](https://linear.app/front-line-ltd/issue/FRO-390) (V3, High) after explicit approval. All are FRO Backlog with Story, Bug, Pending_Review, Flow QA, Frontend and export; V2/V3 also have supplier invoice. No assignment, project, milestone, parent, cycle, due date, estimate, attachments, documents or blocking/duplicate relations. The [ticket package](../../../drafts/vat-paperwork-bugs/README.md) records the exact related sets and verified creation receipt.
+
+Full readbacks matched the descriptions approved from aa8cc87, allowing only Linear Markdown/issue-chip formatting. Titles, priorities, complete labels, status/team and relations verified. Existing reference issues retain their content, metadata and attachment identities/targets; only approved reciprocal related links were added. All nine findings and 20 read-only acceptance/verification pairs are covered.
+
+Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Grouping, drafting and creation add no source change or application test run; earlier evidence and limits remain. All 30 full portal scenarios remain Not run. No new vocabulary, ADR, canvas/preview or production branch.

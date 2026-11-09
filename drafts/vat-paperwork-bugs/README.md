@@ -1,20 +1,26 @@
 # VAT paperwork: three agreed ticket groups
 
-The user accepted V1/V2/V3 on 9 November 2026 and requested complete drafts before Linear creation. The three numbered files contain the complete proposed descriptions. This index holds planning metadata and review evidence outside those descriptions. No issue has been created or modified; full text and metadata await review.
+The user approved the complete descriptions and metadata on 9 November 2026 and explicitly requested creation. Created and verified FRO-388, FRO-389 and FRO-390. The three numbered files retain the approved descriptions from planning commit aa8cc87; this index holds saved metadata and review evidence outside those descriptions.
 
-## Proposed metadata
+## Saved metadata
 
 All three: **Front Line LTD (FRO) · Backlog**. No project, milestone, assignee, parent, cycle, due date, estimate, attachments or documents. Related references only; no blocking dependency or Ready promotion.
 
-| Draft / literal title | Priority | Complete label set | Related issues |
+| Approved description / literal title | Priority | Complete label set | Related issues |
 | --- | --- | --- | --- |
 | [V1 — Print ΥΔ — protect selections and print attempts](01-print-selection-and-attempts.md) | Medium | Story, Bug, Pending_Review, Flow QA, Frontend, export | FRO-317, FRO-352 |
 | [V2 — VAT stamping — protect reviewed confirmations, dates and displayed progress](02-stamping-confirmations-and-progress.md) | High | Story, Bug, Pending_Review, Flow QA, Frontend, export, supplier invoice | FRO-317, FRO-321, FRO-348, FRO-352, FRO-379, FRO-385 |
 | [V3 — VAT stamping — preserve and reconcile uncertain attempts](03-uncertain-stamping-recovery.md) | High | Story, Bug, Pending_Review, Flow QA, Frontend, export, supplier invoice | FRO-317, FRO-321, FRO-348, FRO-352, FRO-379, FRO-385 |
 
-V1 is Medium because the demonstrated effects are temporary printing state and misleading errors; no incorrect physical print or persisted business change was observed. V2/V3 are High because confirmations, displayed operational progress and recovery can misrepresent the intended or saved event. These are proposed priorities, not deployed incident measurements.
+| Group | Created ticket | Verified status |
+| --- | --- | --- |
+| V1 | [FRO-388 — Print ΥΔ — protect selections and print attempts](https://linear.app/front-line-ltd/issue/FRO-388/print-yd-protect-selections-and-print-attempts) | Backlog |
+| V2 | [FRO-389 — VAT stamping — protect reviewed confirmations, dates and displayed progress](https://linear.app/front-line-ltd/issue/FRO-389/vat-stamping-protect-reviewed-confirmations-dates-and-displayed) | Backlog |
+| V3 | [FRO-390 — VAT stamping — preserve and reconcile uncertain attempts](https://linear.app/front-line-ltd/issue/FRO-390/vat-stamping-preserve-and-reconcile-uncertain-attempts) | Backlog |
 
-Current status/label catalogues confirm Backlog and all labels above exist and are active. Story is the single Type, Frontend the single Area. Reuse Flow QA (06ea4564-06f3-40c4-b546-404049f66151). The entity tags are ordinary labels. Approval to create later does not imply Todo/Ready promotion or a source-code change.
+V1 is Medium because the demonstrated effects are temporary printing state and misleading errors; no incorrect physical print or persisted business change was observed. V2/V3 are High because confirmations, displayed operational progress and recovery can misrepresent the intended or saved event. These are approved priorities, not deployed incident measurements.
+
+Current status/label catalogues confirmed Backlog and all labels above exist and are active. Story is the single Type, Frontend the single Area. Reused Flow QA (06ea4564-06f3-40c4-b546-404049f66151). The entity tags are ordinary labels. Creation did not change readiness or production source.
 
 ## Consumer trace and ownership
 
@@ -54,12 +60,12 @@ Each of the six V1 and seven V2/V3 criteria maps to a separate read-only post-de
 
 ## Decisions, preparation and limits
 
-- Accepted grouping: printing; safe confirmations/current progress; uncertain-attempt recovery. Drafts propose explicit pending-control locks using existing controls. Text/metadata remain under review.
-- Current full FRO-317/321/348/352 remain Done, unchanged. FRO-379/385 remain Backlog, unchanged. Current Bug searches for stamping and Print return FRO-384/385 only; their creation/Customs scopes explicitly exclude this workflow. FRO-384 was fully checked during grouping. No exact VAT-specific correction ticket found in these searches.
+- Approved grouping: printing; safe confirmations/current progress; uncertain-attempt recovery. Approved descriptions require explicit pending-control locks using existing controls.
+- Current full FRO-317/321/348/352 remain Done; FRO-379/385 remain Backlog. Before/after reads verified their descriptions, metadata and attachment identities/targets unchanged, apart from approved reciprocal related links. Re-signed attachment query parameters are presentation changes. Pre-creation Bug searches for stamping/Print returned FRO-384/385 and the separate Shipment Invoice corrections FRO-386/387; no exact VAT-specific correction owner was found. FRO-384 was fully checked during grouping; its creation scope and FRO-385's Customs scope exclude this workflow.
 - Mandatory planning pull and authenticated gh check passed. Production main remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Relevant client and backend consumers were reread from the authenticated pinned archive before writing these drafts.
-- Prior evidence: 154 frontend observations/controls and 40 extracted Java method controls. Passing observations reproduce bugs, not fixes. No new application tests were run for documentation-only drafting.
+- Prior evidence: 154 frontend observations/controls and 40 extracted Java method controls. Passing observations reproduce bugs, not fixes. No new application tests were run for drafting or ticket creation.
 - Runtime boundaries: mocked UI services; Java17 with stand-in repositories/authorization rather than Java25/Spring/PostgreSQL. Actual SQL/rollback/concurrency/HTTP permissions, authenticated browser journey, current PDF rendering and deployment equivalence remain unverified. All 30 full portal scenarios remain Not run. Source-loader archive limitation remains in the review report; no policy snapshot claimed.
 - Reuse existing UI contracts; no canvas/preview or production branch. No production source/portal/database/AADE/email mutations, new vocabulary/ADR or Shipment Invoice scope. Aggregate Recorded/replay copy and conditional fixtures remain qualifications, not extra bugs.
-- Full descriptions and complete metadata are for review before any Linear write. Later creation must recheck duplicates/current metadata and reread saved descriptions, complete labels, relations and attachments. Linked issue mentions may automatically add related relations; the proposed related sets above include them.
+- Creation receipt: FRO-388/389/390 were reread in full. Approved descriptions match after only Linear Markdown formatting and issue-chip normalization. Verified exact titles, priorities, status/team, complete label sets, approved related sets, empty blocking/duplicate relations and empty optional assignment/project/attachment fields. All nine findings and 20 acceptance/verification pairs remain covered. No changes to the approved description files.
 
 **Review sources:** [Findings](../../docs/qa/runs/2026-11-09-vat-exemption-paperwork.md) · [Flow](../../docs/qa/flows/vat-exemption-paperwork.md) · [Scenarios](../../docs/qa/scenarios/vat-exemption-paperwork.md) · [Evidence guide](../../docs/qa/evidence/README.md).
