@@ -19,6 +19,9 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Export-to-Customs scenarios](scenarios/export-to-customs-completion.md) | 28 prioritized normal, failure, concurrency and ownership cases |
 | [Export-to-Customs review — 9 November 2026](runs/2026-11-09-export-to-customs-completion.md) | Six isolated UI findings, evidence limits and two accepted ticket groups |
 | [Two Export bug tickets — FRO-384–FRO-385](../../drafts/export-bugs/README.md) | Approved descriptions, Linear links and finding-to-ticket mapping for all six findings; both High and carrying Flow QA |
+| [Shipment Invoice flow](flows/shipment-invoice.md) | Expected creation, review, finalization, frozen history, cancellation and replacement |
+| [Shipment Invoice scenarios](scenarios/shipment-invoice.md) | 31 prioritized normal, failure, recovery and boundary cases |
+| [Shipment Invoice review — 9 November 2026](runs/2026-11-09-shipment-invoice.md) | Eight isolated findings; three parallel reviews, parent reruns and explicit backend/database limits |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 
