@@ -208,6 +208,81 @@ Run mutation/failure-injection cases only in an authorized, isolated environment
 - **Contract:** FRO-356; reported note #1.
 - **Record:** build/role/fixture IDs, actual result, evidence and Pass / Fail / Blocked / Not run.
 
+## OS-027 — Packing review retains its reviewed version (P0)
+
+- **Given:** Preparing Shipment with a saved 120 cm load unit; two sessions.
+- **When:** Open review in A. B saves 200 cm; refresh A before confirming. Separately test a conflict followed by refresh/retry.
+- **Then:** Preserve A's draft, but never submit its old plan under B's version or attest an obsolete arrangement. Require reconciliation/review; stale requests change no data/history/readiness.
+- **Contract / finding:** FRO-325/344/316; QA-OS-05.
+- **Evidence:** Two actual frontend request paths reproduced; backend overwrite not executed. Full scenario **Not run**.
+
+## OS-028 — Comment retry survives unrelated Shipment refresh (P1)
+
+- **Given:** Saved Shipment; isolated transport can lose a committed response.
+- **When:** Submit a comment, lose its response, advance Shipment version elsewhere, refresh and retry. Compare no-refresh retry and an intentional new comment with identical text.
+- **Then:** The unresolved attempt keeps its request ID and returns one comment. Intentional new comments remain distinct.
+- **Contract / finding:** FRO-345/316; QA-OS-06.
+- **Evidence:** Actual request IDs and ID-keyed mock reproduced; database duplicate not executed. Full scenario **Not run**.
+
+## OS-029 — One Notes save preserves later typing in another (P1)
+
+- **Given:** Shipment with Internal and External Notes both open for editing.
+- **When:** Delay Internal save, keep editing External, then complete Internal. Repeat with roles reversed and a failure.
+- **Then:** Only the submitted draft saves/closes. The other keeps its latest text; Cancel discards only its own draft.
+- **Contract / finding:** FRO-316; QA-OS-07.
+- **Evidence:** Internal-success/External-draft loss reproduced; additional branches await execution. Full scenario **Not run**.
+
+## OS-030 — Arrival draft survives tabs and refusal (P1)
+
+- **Given:** Dispatched launch-station Shipment; recipient, address, Received by and proof entered.
+- **When:** Switch tabs before submission; repeat after a refusal. Check agent/vessel forms separately.
+- **Then:** Preserve entered fields across tabs and after refusal. Navigation creates no arrival. Explicit cancellation/success governs draft disposal.
+- **Contract / finding:** FRO-316; QA-OS-08.
+- **Evidence:** Failed launch-station submission and tab round-trip reproduced; other forms await execution. Full scenario **Not run**.
+
+## OS-031 — Stock-entry draft accommodates added collis (P0)
+
+- **Given:** Ready Order with stock-entry panel open; test empty and populated initial colli sets.
+- **When:** Enter position/measurements; add and save a colli on the Collis tab or in another session, then refresh.
+- **Then:** No render exception. Preserve existing edits; initialize the new colli. Block submission until the complete current nonterminal set is valid.
+- **Contract / finding:** FRO-326/336; QA-OS-09.
+- **Evidence:** Both initial sets produced a TypeError in the mounted component with refreshed props; no real colli save. Full scenario **Not run**.
+
+## OS-032 — Renewed Order review cannot adopt an unreviewed version (P0)
+
+- **Given:** Order Details draft at version 7 whose first save has received a conflict.
+- **When:** Refresh to version 8 and reopen review. B changes another header field to version 9; refresh A while review stays open, then confirm.
+- **Then:** Use the reviewed version or invalidate/rebuild review. Never submit version 9 with an unreviewed old field. Preserve first-save protection and saved data/audit on rejection.
+- **Contract / finding:** FRO-346/326; QA-OS-10.
+- **Evidence:** Old Supplier reference plus version 9 reproduced in request; database overwrite not executed. Full scenario **Not run**.
+
+## OS-033 — Colli numeric validation agrees at Save boundaries (P1)
+
+- **Given:** Valid creation draft; separately a saved editable Order.
+- **When:** Try dimensions 1.5/2/3, 0/2/3, incomplete triples and gross zero at row Save and final submission. Compare optional blanks, positive whole dimensions, decimal gross and net zero.
+- **Then:** Keep invalid rows open with actionable errors before submission. Preserve valid optional/weight cases. No accepted local row fails because its number shape was already API-invalid.
+- **Contract / finding:** FRO-335/326; QA-OS-11.
+- **Evidence:** Fractional Create request/scalar rejection and zero validator cases reproduced; full saved-editor/backend matrix pending. Full scenario **Not run**.
+
+## OS-034 — Omitted net survives clearing gross (P1)
+
+- **Given:** Retained load unit, gross 80 and net 70, otherwise valid packing.
+- **When:** Save and Confirm with gross null/net omitted. Compare gross90/net omitted, gross null/net70 explicit, and both explicitly null.
+- **Then:** Omitted net stays70, making null gross invalid: reject without changed weights/version/history/readiness. Gross90 retains70; deliberately clearing both remains valid.
+- **Contract / finding:** FRO-325; QA-OS-12.
+- **Evidence:** Extracted production Java reproduces implicit nulling; full adapters/transactions pending. Full scenario **Not run**.
+
+## OS-035 — Repacking preserves earlier journey context (P1)
+
+- **Given:** Confirmed PALLET/PALLET-A with captured LOADED event.
+- **When:** Save new type/label CARDBOARD_BOX/BOX-B on the retained unit without confirming packing; reread the same event. Compare removed-unit retirement and later confirmation.
+- **Then:** Earlier physical facts retain their recorded meaning. New plan stays distinct; plan save alone records no physical movement. Preserve existing removed-unit history protection.
+- **Contract / finding:** FRO-325; QA-OS-13.
+- **Evidence:** Write/read/SQL trace only; database before/after comparison pending. Full scenario **Not run**.
+
+For each execution record build/role/fixture IDs, actual result and evidence. These cases link to [the second-pass findings and proposed ticket groups](../runs/2026-11-09-order-to-arrival-second-pass.md); isolated observations do not mark a complete scenario Pass.
+
+
 ## Existing automated-test starting points
 
 Paths below are relative to the pinned production source in the run ledger. These files were inspected for relevant coverage; the backend and complete frontend suites were not run by this catalogue review. Unit/component tests with mocked services do not prove deployed HTTP authentication, storage, or a complete browser journey.

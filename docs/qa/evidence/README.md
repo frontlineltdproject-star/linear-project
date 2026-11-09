@@ -47,3 +47,27 @@ This is a client-path demonstration, **not** a reproduction of the backend's rea
 The five unchanged Shipment client files listed in the run report produced 54 passing tests. Two React `act` warnings appeared in an existing form test. This subset did not catch the mounted-route refetch defect.
 
 No source fix was made. Full frontend/backend suites and the complete deployed Order-to-arrival journey remain unexecuted.
+
+## Second-pass Order and Shipment evidence — QA-OS-05–13
+
+See [the second-pass report](../runs/2026-11-09-order-to-arrival-second-pass.md) for triggers, source references, limits and ticket-group proposals.
+
+Copy [order-flow-audit.test.tsx](order-flow-audit.test.tsx) and [shipment-flow-audit.test.tsx](shipment-flow-audit.test.tsx) to the same isolated pinned client root used above. Reuse the existing [Vitest configuration](warehouse-vitest.config.ts) as vitest.config.ts. They use actual components, services and mappings with fixture data and blocked/mocked network boundaries. Run:
+
+```text
+node node_modules/vitest/vitest.mjs run --config vitest.config.ts --configLoader runner order-flow-audit.test.tsx shipment-flow-audit.test.tsx
+```
+
+Parent independent single-file runs: Order 9/9, Shipment 7/7, both exit 0. Node 24.13.0 / Vitest 4.1.6; existing local dependencies, not a clean lockfile install. The tests capture faulty payloads/state and controls; **passing reproduces defects, not fixes**. Actual backend persistence is mocked, including the comment recipient's ID-keyed replay.
+
+For packing omission, [shipment-backend-repro.py](shipment-backend-repro.py) takes the pinned repository root and a Java 11 executable:
+
+```text
+python shipment-backend-repro.py <absolute-pinned-repository-root> <absolute-java-11-executable>
+```
+
+It extracts the exact production Java resolution statements and helpers into a temporary source-file test. DTO/ArgumentValue stand-ins provide getters; only Nullable type annotations are removed. It changes no production source. Python/Java networking is blocked. The generated Java file is temporary and cleaned up; no artifacts are written into the source checkout or this planning repository.
+
+Parent reran the saved portable script: five weight behavior checks plus the active network guard passed, exit 0. It also checks the actual history write/read and SQL guard statements. **Those static assertions do not execute the historical journey or database.** Full Java 25/Spring/PostgreSQL integration remains pending. The source checksums printed by the script are evidence fingerprints, not a successful policy-loader fingerprint.
+
+QA-OS-13 remains source-established pending integration; QA-OS-05–12 have the narrower runtime evidence described in the report. No browser/deployed-build or full-flow pass is claimed.
