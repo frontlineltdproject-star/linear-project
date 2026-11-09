@@ -116,4 +116,26 @@ P:250–256 unconditionally installs a response in shared cache and excludes det
 
 All 30 complete portal scenarios remain **Not run**; the isolated evidence above supports specific portions only. Evidence reproductions and commands are retained in [the evidence guide](../evidence/README.md). No source fixes, new ticket metadata or grouping decisions are implied.
 
-Review the nine findings with simple examples, beginning with pending print selection loss, then agree a small set of tickets. Shared recovery/input/selection roots may justify grouping, but existing FRO-379/385 must not be silently expanded and Shipment Invoice work remains separate.
+The user has now reviewed all nine findings through simple examples and requested a small ticket grouping. The following is a proposal awaiting agreement, not approved ticket scope or metadata.
+
+## Proposed grouping — awaiting agreement
+
+| Group | Proposed ticket purpose | Finding ownership | Suggested priority |
+| --- | --- | --- | --- |
+| V1 | Print ΥΔ — preserve intended selection and isolate each print attempt | QA-VAT-01, QA-VAT-02 and the printing portion of QA-VAT-03 | Medium |
+| V2 | VAT stamping — protect reviewed confirmations, date input and current progress | QA-VAT-04, QA-VAT-05, QA-VAT-09 and the bulk-stamping portion of QA-VAT-03 | High |
+| V3 | VAT stamping — retain and correctly reconcile uncertain attempts | QA-VAT-06, QA-VAT-07 and QA-VAT-08 | High |
+
+V1 owns the read-only Generate/Open PDF interaction: pending choices, current eligible print selection and correctly scoped late success/failure. It introduces no new form content, PDF redesign, template or exemption event.
+
+V2 owns review and submission plus successful-response freshness: preserve the individually reviewed invoice version, keep single/bulk date input consistent with the submitted action, remove stale bulk selections visibly, and prevent old bulk success from replacing newer displayed invoice facts. Preserve server eligibility/replay/date/history protections; no new bulk-version API is assumed.
+
+V3 owns pending/unknown attempt continuity and reconciliation on both individual and bulk screens: retain original invoice(s), action/date and reviewed context across dismissal/navigation/stage refresh; distinguish uncertain from rejected; check the original facts rather than any recorded date; preserve recovery after failed/missing reads; require review before a changed request. It does not authorize overwriting a different recorded event or claim duplicate persisted events were observed.
+
+QA-VAT-03 appears in two rows because it has separate print and stamping consumers. Each manifestation has one owner: print selection in V1, stamping selection in V2. V2 owns the reviewed/submitted snapshot and normal pending input; V3 preserves and reconciles that same attempt if its outcome becomes uncertain. Shared implementation must be coordinated without duplicating requirements or inventing a blocking dependency.
+
+Three groups keep printing independent and give uncertain-save recovery its own testable outcome across both entry points. All nine findings remain tracked; each concrete reproduction and its evidence limit must appear in the later drafts. No omnibus cross-entity refactor, forced ticket-per-bug split or Shipment Invoice scope is proposed.
+
+Fresh full FRO-317/321/348/352 remain Done with unchanged descriptions. FRO-379/385 remain Backlog with unchanged scopes (Supplier Invoice correction/cancellation; Export editing/Customs/cancellation); FRO-385 explicitly excludes detailed VAT printing/stamping. Current Bug searches for stamping/Print returned FRO-384/385 only; FRO-384 is creation/files and excludes this scope. Recommend related references and reuse of shared fixes where applicable, without silently expanding existing tickets. No duplicate VAT-specific owner was found in these searches.
+
+Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. This grouping step adds no source change or test run; the earlier evidence and limits remain. Full descriptions, labels and creation still follow user agreement and draft review. No Linear write, new vocabulary, ADR, canvas/preview or production branch.

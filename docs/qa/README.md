@@ -21,7 +21,7 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Two Export bug tickets — FRO-384–FRO-385](../../drafts/export-bugs/README.md) | Approved descriptions, Linear links and finding-to-ticket mapping for all six findings; both High and carrying Flow QA |
 | [VAT-exemption paperwork](flows/vat-exemption-paperwork.md) | Expected Υ.Δ. printing, dispatch for stamping, stamped return and onward sending |
 | [VAT-paperwork scenarios](scenarios/vat-exemption-paperwork.md) | 30 normal, failure, recovery, concurrency and document checks |
-| [VAT-paperwork review — 9 November 2026](runs/2026-11-09-vat-exemption-paperwork.md) | Nine findings; individual/bulk/print reproductions, grouping controls and explicit integration limits |
+| [VAT-paperwork review — 9 November 2026](runs/2026-11-09-vat-exemption-paperwork.md) | Nine findings, three proposed ticket groups, retained evidence and explicit integration limits |
 | [Shipment Invoice flow](flows/shipment-invoice.md) | Expected creation, review, finalization, frozen history, cancellation and replacement |
 | [Shipment Invoice scenarios](scenarios/shipment-invoice.md) | 31 prioritized normal, failure, recovery and boundary cases |
 | [Shipment Invoice review — 9 November 2026](runs/2026-11-09-shipment-invoice.md) | Eight isolated findings, two proposed correction groups, parallel reviews, parent reruns and explicit backend/database limits |
