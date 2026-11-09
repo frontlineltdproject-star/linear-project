@@ -41,7 +41,7 @@ Ownership: FRO-247 lifecycle; replacement-policy decisions overlap FRO-283. A sc
 
 `DeliveryNoteIssuanceService:43–47,77` recognizes pending status, validates its version and queries transmitted documents without resending. `delivery-notes-card.tsx:924,953` supplies draft/failed actions and fiscal actions for issued/cancelling/cancelled, but none for pending. No background reconciler was identified in the inspected call path.
 
-**Existing owner FRO-284**, aligned with FRO-285. Its description still says all transport failures become SUBMISSION_FAILED, unlike current main. Update/reconcile existing scope before proposing a duplicate ticket. Unresolved backend submissions must never be retried as new documents.
+FRO-284 is a future recovery reference, aligned with FRO-285. Its description still says all transport failures become SUBMISSION_FAILED, unlike current main. The user-approved current-behavior correction is owned by draft D2 below; FRO-284 remains unchanged and is not a dependency. Unresolved backend submissions must never be retried as new documents.
 
 ## QA-DN-04 — XML and PDF can describe different movement dates/times
 
@@ -57,17 +57,17 @@ Owner: FRO-247 document generation; no exact duplicate identified in the deliver
 
 **Source-supported risk, not executed backend reproduction.** `DeliveryNoteCancellationService:48–49` catches every runtime exception from the cancellation call and invokes `lifecycle.fail`; repository `failCancellation` unconditionally moves pending cancellation back to ISSUED. `RestAadeMyDataClient.cancelInvoice` wraps transport errors too. Therefore, if AADE accepts cancellation but its response is lost, the local status returns to ISSUED despite an unknown external outcome. Conversely, failure persisting an accepted response can leave CANCELLATION_PENDING, and `prepare` only accepts ISSUED.
 
-Current documentation describes the return-to-ISSUED behavior, so its recovery policy needs explicit review. The source establishes the branch; it does not establish that this incident occurred or how AADE handles a repeated cancellation. FRO-283/285 own related lifecycle decisions; do not assume FRO-284's initial-submission design covers cancellation automatically. Next evidence needed: isolated accepted-but-response-lost and accepted-but-local-save-failed tests, with no external calls.
+Current documentation describes the return-to-ISSUED behavior. The source establishes the branch; it does not establish that this incident occurred or how AADE handles a repeated cancellation. Draft D2 owns the proposed correction for current cancellation behavior; FRO-283/285 retain their broader future scope. Do not assume initial-submission reconciliation provides cancellation lookup. Next evidence needed: isolated accepted-but-response-lost and accepted-but-local-save-failed tests, with no external calls.
 
 ## Consumer and ownership trace
 
 | Consumer/area | Current behavior/evidence | Required outcome and owner |
 | --- | --- | --- |
-| Shared draft form and query refresh | QA-DN-01 reproduced | Retain accepted local work; FRO-307 / new scoped bug only after approval |
-| Per-company replacement beside protected siblings | QA-DN-02 UI reproduced, source chain checked | Usable replacement without changing sibling fiscal records; FRO-247 + FRO-283 decision |
-| Pending submission UI and issuance service | QA-DN-03 reproduced UI, backend source | Reach safe reconciliation; existing FRO-284/285 |
-| Movement serialization, XML, PDF | QA-DN-04 expression reproduction | Same business date/time, isolated persistence verification required; FRO-247 |
-| Cancellation adapter/service/repository | QA-DN-05 source only | Preserve uncertainty, reconcile external result; FRO-283/285 decision |
+| Shared draft form and query refresh | QA-DN-01 reproduced | Retain accepted local work; D1 correction draft |
+| Per-company replacement beside protected siblings | QA-DN-02 UI reproduced, source chain checked | Usable replacement without changing sibling fiscal records; D2 correction draft |
+| Pending submission UI and issuance service | QA-DN-03 reproduced UI, backend source | Reach safe reconciliation; D2 correction draft, FRO-284 reference only |
+| Movement serialization, XML, PDF | QA-DN-04 expression reproduction | Same business date/time, isolated persistence verification required; D3 correction draft |
+| Cancellation adapter/service/repository | QA-DN-05 source only | Preserve uncertainty and authoritative confirmation; D2 correction draft, no cancellation lookup assumed |
 | Grouping, quantities, recipient snapshots | Planner/repository source inspected | Preserve; no new finding or integration-pass claim |
 | Number counter, XML retention, state/version writes | Transaction/CAS source inspected | Preserve identity/history; real concurrency and database tests outstanding |
 | Address lookup/create/link | Source + existing helper/service tests | Preserve Client scope and immutable copied values; database matrix outstanding |
@@ -76,7 +76,7 @@ Current documentation describes the return-to-ISSUED behavior, so its recovery p
 
 ## Evidence and next review
 
-### Proposed ticket grouping — awaiting user agreement
+### Earlier grouping proposal — superseded
 
 After reviewing all five examples, the user requested grouping with few new tickets and reuse of recovery work. Fresh full reads of FRO-283/284/285/373 and a Delivery Note issue search confirm the following proposal. Production main remains unchanged. This grouping does not approve final text, metadata, Linear writes or unresolved recovery decisions.
 
@@ -89,11 +89,23 @@ After reviewing all five examples, the user requested grouping with few new tick
 
 Recommendation: **two new tickets, two existing tickets revised**, with every finding assigned once. FRO-285 stays the Phase B umbrella/reference rather than receiving duplicate acceptance criteria. FRO-283/284 are currently Business_Input/Spike tickets; this proposal does not change their type/status, silently discard existing scope, or promise that later implementation splitting will never be needed. Prefer complete reviewable rewrites of those tickets after decisions rather than appending a contradictory bug list.
 
-No new tests or production changes during grouping. Proposed new titles and ownership are not final ticket drafts. User agreement on the grouping is pending.
+No new tests or production changes during that grouping proposal. The user subsequently clarified that FRO-283/284 are unimplemented and requested correction tickets for existing behavior; the accepted grouping follows.
+
+### Accepted grouping — three new correction drafts
+
+The user approved three correction groups and requested complete drafts for review. No Linear writes or implementation are authorized by that drafting request. FRO-283/284 remain unchanged references only, with no blocking dependency.
+
+| Draft | Current-behavior correction | Findings |
+| --- | --- | --- |
+| [D1](../../../drafts/delivery-note-bugs/01-preserve-movement-drafts.md) | Preserve unsaved movement details across refreshed versions and delayed saves | QA-DN-01, both cases |
+| [D2](../../../drafts/delivery-note-bugs/02-cancellation-replacement-and-recovery.md) | Usable per-company replacement, pending-submission UI check and safe uncertain-cancellation handling | QA-DN-02/03/05 |
+| [D3](../../../drafts/delivery-note-bugs/03-consistent-movement-time.md) | Consistent movement date/time in XML and PDF | QA-DN-04 |
+
+[Complete metadata, consumer trace and evidence limits](../../../drafts/delivery-note-bugs/README.md). Each description includes acceptance criteria and matching read-only verification. The existing individual-draft API avoids weakening the common all-DRAFT rule. The current AADE adapter has no cancellation-status lookup; D2 does not invent one. Evidence and deployment limits remain unchanged; no application tests were rerun during drafting.
 
 - [UI observations](../evidence/delivery-note-qa.test.tsx): run in a scratch copy of the pinned client with its normal providers and cached dependencies. All fetch/XHR calls are blocked; service responses use synthetic fixtures.
 - [Timestamp observations](../evidence/delivery-note-time-repro.py): run with the pinned repository root as its argument. Source checks ensure the tested formatting expressions still exist.
 - Frontend command: `node node_modules/vitest/vitest.mjs run delivery-note-qa.test.tsx src/features/shipments/components/delivery-note-address-sources.test.ts src/features/shipments/components/delivery-note-form-validation.test.ts src/features/shipments/components/delivery-notes-card.test.ts src/features/shipments/services/delivery-note-service.test.ts --config vitest.config.ts`.
 - Scratch config uses jsdom, `#` alias to `src`, threads/maxWorkers=1 and a local cache directory. No package install or source change was needed.
 
-This is the completed initial mapped review, not certification of the whole flow. Review QA-DN-02 with the user first because it blocks the existing replacement workflow. Keep QA-DN-03 with the existing recovery ticket. No bug tickets, fixes, new product decisions or UI designs were created.
+This is the completed initial mapped review and correction-draft package, not certification of the whole flow. Three local descriptions are ready for review; no Linear issues, product fixes or new UI designs have been created.

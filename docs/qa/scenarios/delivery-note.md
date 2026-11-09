@@ -20,12 +20,12 @@ Evidence codes: **UI** = actual React components with mocked service/auth, **sou
 | DN-012 | Saved clean draft preview and dirty/busy guards | Existing helper tests pass; real PDF rendering open |
 | DN-013 | Issue first of several saved drafts | Source inspected; other saved draft actions remain; full execution open |
 | DN-014 | Cancel one issued note while another remains issued | Replacement creation source traced; resulting UI fixture reproduces QA-DN-02 |
-| DN-015 | Replacement preparation failure with existing siblings | Warning/source inspected; retry UX needs follow-up under FRO-283 |
+| DN-015 | Replacement preparation failure with existing siblings | Warning/source inspected; correction draft D2 includes preparation-only retry controls |
 | DN-016 | Acceptance, explicit rejection, allocated number/XML retention | Lifecycle/repository source; AADE/database integration open |
-| DN-017 | Ambiguous submission and safe reconciliation | Backend source exists; UI fixture reproduces missing action QA-DN-03, overlaps FRO-284 |
+| DN-017 | Ambiguous submission and safe reconciliation | Backend source exists; UI fixture reproduces missing action QA-DN-03; correction draft D2, FRO-284 reference only |
 | DN-018 | XML and PDF timestamps across offsets/midnight | Two expression observations reproduce QA-DN-04; real database round trip open |
 | DN-019 | Cancellation timeout versus explicit rejection | Source-only QA-DN-05 risk; simulated backend integration open |
-| DN-020 | Cancellation accepted but local completion fails | Source-only pending trap; recovery design under FRO-283/285 |
+| DN-020 | Cancellation accepted but local completion fails | Source-only pending trap; correction draft D2 requires isolated reproduction and safe local completion |
 | DN-021 | Note consequences of route/cargo edits | FRO-344/reconciler guards inspected only; full Shipment review intentionally excluded |
 | DN-022 | Partner denial, issuer scope, wrong Shipment/note PDF identity | Authorization/adapter source inspected; full role/API matrix open |
 | DN-023 | Standalone read-only list/details and cancelled history | Existing FRO-361/FRO-283 boundaries; not a new bug |

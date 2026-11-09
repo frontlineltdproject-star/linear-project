@@ -1,0 +1,55 @@
+**Delivery Notes** must support the existing cancellation/replacement flow and safe recovery of pending submissions without disturbing another company's issued note or treating an unknown AADE result as confirmed.
+
+## Problems to fix
+
+| Case | Reproduction and current result |
+| --- | --- |
+| QA-DN-02 — blocked replacement | Companies A and B have issued notes on one Shipment. Cancelling A prepares a fresh A draft with incomplete movement details. B remains issued, so the common editor is hidden and the replacement cannot be completed through the normal UI. |
+| QA-DN-03 — inaccessible reconciliation | A submission remains SUBMISSION_PENDING after an uncertain response. The backend can reconcile it, but the card exposes no action to reach that path. |
+| QA-DN-05 — uncertain cancellation | Every cancellation-call runtime failure returns the note to ISSUED, including a lost response after possible AADE acceptance. Failure saving an accepted response can instead leave CANCELLATION_PENDING without a recovery route. |
+
+The first two UI states were reproduced in isolation and their backend paths traced. QA-DN-05 is a source-supported risk requiring isolated backend reproduction; no production incident or AADE result was observed.
+
+## Acceptance criteria
+
+1. **Usable replacement:** after confirmed cancellation of A, allow an authorized operator to complete and save A's replacement movement details, preview it and issue it while B remains issued. Use the existing individual-draft update contract for mixed states. Check readiness against the target draft; preserve all-DRAFT atomic common saving when applicable.
+2. **Sibling/history protection:** leave B's status, fiscal identity, movement facts and documents unchanged. Retain cancelled A and its fiscal evidence. If replacement preparation fails, report cancellation as completed and preparation as failed; a preparation-only retry must create at most one current replacement and must not repeat cancellation.
+3. **Submission check:** expose **Check submission status** for an authorized SUBMISSION_PENDING note, with loading, confirmed and unresolved feedback. Invoke existing pending reconciliation with the note's expected version. Repeated clicks must not send another invoice, allocate another fiscal number or regenerate submitted XML. An inconclusive lookup remains pending.
+4. **Uncertain cancellation:** a transport timeout, lost response or unclassified error must remain CANCELLATION_PENDING. Return to ISSUED only after a confirmed rejection that establishes cancellation did not occur. Display the unresolved outcome; block blind cancellation retries and replacement preparation until the external result is established.
+5. **Confirmed-result recovery:** preserve available cancellation confirmation and allow local completion to be retried idempotently after a persistence failure, without another external cancellation. A transport-unknown result may be resolved only using authoritative evidence. The current adapter has no cancellation-status lookup: verify any proposed mechanism before using it. Without proof, retain pending status and explain that cancellation needs verification; do not claim an automatic reconciliation capability exists.
+6. **Guards and presentation:** retain Shipment/note ownership, issuer-company access, action permissions, expected-version checks and existing fiscal validation. Reject stale or unauthorized direct requests. Reuse existing note-card/form/button/feedback components, with EN/EL labels and feedback. Keep successful cancellation followed by replacement as the current default.
+7. **Verification:** reproduce each case independently in isolated frontend/backend/database tests. Cover A/B replacement, failed preparation and retry, pending lookup match/no-match/error, accepted cancellation with response loss, accepted cancellation with local-save failure, confirmed rejection, stale requests and duplicate clicks. Mock AADE; make no fiscal production calls.
+
+## Decisions and scope
+
+Group these corrections because they repair the current note lifecycle and its recovery entry points. **FRO-283/284 are references only, not prerequisites or implementation owners.** Do not change them. Exclude their broader future cancellation choices, history redesign and failed-submission policy. No cancellation-without-replacement feature, new recovery dashboard, grouping change or fiscal-number policy.
+
+## Context for agents
+
+Reviewed main: `6aa259553cd9c86a8aaa157902088aa9a6bca83e`; deployed version unverified.
+
+Client `frontline-forwarding-client/src/features/shipments/`: `components/delivery-notes-card.tsx` contains all-note edit/readiness checks and omits pending actions; `services/delivery-note-service.ts` chains cancellation and preparation.
+
+Backend prefix: `frontline-forwarding-app/src/main/java/com/frontline/forwarding/`:
+- `web/deliverynotes/service/DeliveryNotesApiService.java`: individual update exists; common update requires every current note DRAFT.
+- `web/deliverynotes/service/DeliveryNoteIssuanceService.java`: pending reconciliation uses the original submission reference through `findTransmittedInvoice`, without resending.
+- `web/deliverynotes/service/DeliveryNoteCancellationService.java`, `DeliveryNoteCancellationLifecycle.java` and `domain/deliverynotes/DeliveryNoteRepository.java`: broad failure handling, versioned transitions and local completion.
+- `system/aade/AadeMyDataClient.java`: submission lookup and cancellation contracts; no cancellation reconciliation operation.
+
+Affected operations: `updateDeliveryNoteDraft`, `createDeliveryNotesForShipment`, `issueDeliveryNote`, `cancelDeliveryNote`. Preserve `freight_delivery_note`, its lines and `delivery_note_number_counter` identity/history constraints. Do not bulk reset existing pending notes; reconcile each from its own evidence. Scenarios DN-014/015/017/019/020/022.
+
+## Post-deployment verification
+
+Read existing records and isolated evidence only; do not trigger production submission, cancellation or reconciliation mutations. Missing evidence remains Unverified.
+
+| Criterion | Check |
+| --- | --- |
+| 1 | Inspect the A/B recording and saved records: replacement A completes while B remains issued. |
+| 2 | Compare B and cancelled A before/after; inspect preparation failure/retry logs for one replacement and no second cancellation. |
+| 3 | Inspect matched, unmatched and failed lookup traces: original submission identity retained, no resend or new number. |
+| 4 | Inspect timeout/response-loss/rejection fixtures and persisted states; uncertainty must never appear as confirmed ISSUED. |
+| 5 | Review accepted-result persistence-failure/recovery evidence, retained confirmation and unresolved-result safeguards. |
+| 6 | Review role/company/version controls and EN/EL recordings using existing components. |
+| 7 | Review isolated backend/database results and external-call counts; compare tested and deployed build SHAs. |
+
+**Reference:** [FRO-247](https://linear.app/front-line-ltd/issue/FRO-247) · [FRO-307](https://linear.app/front-line-ltd/issue/FRO-307) · [FRO-283 — reference only](https://linear.app/front-line-ltd/issue/FRO-283) · [FRO-284 — reference only](https://linear.app/front-line-ltd/issue/FRO-284) · [QA findings](https://github.com/frontlineltdproject-star/linear-project/blob/8101d8ea12f0279782a7ff5d6dff8f94e80bb48b/docs/qa/runs/2026-11-09-delivery-note.md) · [UI evidence](https://github.com/frontlineltdproject-star/linear-project/blob/8101d8ea12f0279782a7ff5d6dff8f94e80bb48b/docs/qa/evidence/delivery-note-qa.test.tsx).
