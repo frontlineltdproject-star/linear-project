@@ -1,0 +1,529 @@
+{
+  "date": "2026-11-09",
+  "authorization": "User: Go ahead without reviewing",
+  "updated": 16,
+  "created": [
+    "FRO-396",
+    "FRO-397",
+    "FRO-398"
+  ],
+  "duplicates": {
+    "379": 378,
+    "380": 378,
+    "382": 381,
+    "385": 384,
+    "390": 389,
+    "392": 391,
+    "394": 393
+  },
+  "activeFlowQA": 19,
+  "verification": [
+    {
+      "id": "FRO-373",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-393",
+        "FRO-341",
+        "FRO-316",
+        "FRO-381"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-374",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-335",
+        "FRO-336",
+        "FRO-326"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-375",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-316",
+        "FRO-326",
+        "FRO-346",
+        "FRO-344",
+        "FRO-325",
+        "FRO-345"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-376",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-325",
+        "FRO-345"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-377",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-342",
+        "FRO-341",
+        "FRO-335",
+        "FRO-336"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-378",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-389",
+        "FRO-348",
+        "FRO-347",
+        "FRO-321",
+        "FRO-349",
+        "FRO-398"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-381",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-283",
+        "FRO-284",
+        "FRO-247",
+        "FRO-307",
+        "FRO-373"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-383",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-284",
+        "FRO-247",
+        "FRO-283"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-384",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-389",
+        "FRO-352",
+        "FRO-350",
+        "FRO-317"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-386",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-363",
+        "FRO-366",
+        "FRO-244"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-387",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-301",
+        "FRO-363",
+        "FRO-244",
+        "FRO-366"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-388",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-317",
+        "FRO-352"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-389",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-348",
+        "FRO-317",
+        "FRO-352",
+        "FRO-321",
+        "FRO-384",
+        "FRO-378"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-391",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-355",
+        "FRO-353",
+        "FRO-354",
+        "FRO-319"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-393",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-341",
+        "FRO-254",
+        "FRO-279",
+        "FRO-373"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-395",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-279",
+        "FRO-295",
+        "FRO-297",
+        "FRO-292"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-379",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-378",
+        "title": "Supplier Invoice — reliable creation, correction & cancellation"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-380",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-378",
+        "title": "Supplier Invoice — reliable creation, correction & cancellation"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-382",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-381",
+        "title": "Delivery Notes — preserve drafts & recover lifecycle actions"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-385",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-384",
+        "title": "Export — preserve drafts, reviewed changes & operation recovery"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-390",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-389",
+        "title": "VAT stamping — reviewed confirmations & uncertain-attempt recovery"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-392",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-391",
+        "title": "Customs Storage Entry — reliable drafts, recovery & Order relationships"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-394",
+      "status": "Duplicate",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": {
+        "id": "FRO-393",
+        "title": "Stock List — reliable controls & complete Shipment handoff"
+      },
+      "related": [],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-396",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-356",
+        "FRO-335"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-397",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-328"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    },
+    {
+      "id": "FRO-398",
+      "status": "Backlog",
+      "descriptionVerified": true,
+      "labelsVerified": true,
+      "priorityVerified": true,
+      "attachments": 0,
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "duplicateOf": null,
+      "related": [
+        "FRO-378",
+        "FRO-348",
+        "FRO-321",
+        "FRO-347"
+      ],
+      "blocks": [],
+      "blockedBy": []
+    }
+  ],
+  "notes": [
+    "Description verification tolerates Linear URL-angle/whitespace and issue-mention rendering; all substantive content preserved.",
+    "FRO-378 has the approved reciprocal FRO-398 relation.",
+    "duplicateOf alone creates the duplicate relation and moves status; explicit state+duplicateOf in one call was rejected before retirement and safely retried using duplicateOf only.",
+    "Duplicate operation transfers relations to retained tickets; verified union retained, no blocking dependencies introduced."
+  ]
+}

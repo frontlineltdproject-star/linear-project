@@ -1,5 +1,7 @@
 # Consolidated Flow QA drafts — review package
 
+**Applied to Linear on 9 November 2026**, following the user's instruction to proceed without review. The proposal below is retained as the approval baseline. Sixteen existing tickets were updated, seven sources marked Duplicate, and new FRO-396 (customs), FRO-397 (readiness follow-up), FRO-398 (Supplier Invoice list) created. All 19 active tickets are Backlog. Saved descriptions, complete labels, priorities, relations, duplicate targets and attachment preservation were verified; see [APPLIED.json](APPLIED.json). No production changes.
+
 Prepared 9 November 2026. **19 complete description drafts; no Linear writes.** Grouping is accepted; descriptions, retained IDs, labels and retirement actions below remain proposals for review.
 
 ## Review map
