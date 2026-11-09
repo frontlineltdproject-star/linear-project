@@ -114,3 +114,38 @@ It extracts the exact production Java resolution statements and helpers into a t
 Parent reran the saved portable script: five weight behavior checks plus the active network guard passed, exit 0. It also checks the actual history write/read and SQL guard statements. **Those static assertions do not execute the historical journey or database.** Full Java 25/Spring/PostgreSQL integration remains pending. The source checksums printed by the script are evidence fingerprints, not a successful policy-loader fingerprint.
 
 QA-OS-13 remains source-established pending integration; QA-OS-05–12 have the narrower runtime evidence described in the report. No browser/deployed-build or full-flow pass is claimed.
+
+## VAT-exemption paperwork — QA-VAT-01–09
+
+See [the VAT review](../runs/2026-11-09-vat-exemption-paperwork.md) for the nine findings, qualified observations, coverage and source references. Named main is 6aa259553cd9c86a8aaa157902088aa9a6bca83e. All 562 original client source files match that archive.
+
+Use an isolated copy of that pinned client with dependencies, the # alias to src, jsdom and the existing repository test helpers. Place the retained files at these client-relative paths (relative imports depend on placement):
+
+| Evidence file | Destination |
+| --- | --- |
+| [vat-print-qa.test.tsx](vat-print-qa.test.tsx) | src/features/exports/details/vat-print-qa.test.tsx |
+| [vat-bulk-qa.test.tsx](vat-bulk-qa.test.tsx) | src/features/exports/details/vat-bulk-qa.test.tsx |
+| [vat-single-qa.test.tsx](vat-single-qa.test.tsx) | src/features/supplier-invoices/vat-single-qa.test.tsx |
+
+Run from that isolated client:
+
+```text
+node node_modules/vitest/vitest.mjs run src/features/exports/details/vat-print-qa.test.tsx src/features/supplier-invoices/vat-single-qa.test.tsx --configLoader runner --no-cache
+node node_modules/vitest/vitest.mjs run src/features/exports/details/vat-bulk-qa.test.tsx --configLoader runner --no-cache
+```
+
+Parent reruns: 70/70 then 31/31, both exit 0. Existing export-detail-vat-docs, export-detail-rules, export-detail-mapping and supplier-invoice-export tests separately passed 53/53 (four files). Total 154 frontend checks. Node 24.13.0 / Vitest 4.1.6; cached dependencies, no clean lockfile installation. The runner loader avoids the default bundled-config temporary write under linked dependencies. Memory-router cases emit jsdom Window.scrollTo diagnostics, not test failures.
+
+Actual production page/dialog/DatePicker/query components are mounted with synthetic services and blocked real fetch/XHR/WebSocket. Print popup/blob plumbing is mocked. Bulk navigation uses actual memory-router POP and remount; individual navigation tests inspect real guard predicates under a mocked router hook. Neither is a complete native-browser/authenticated journey. No callback-only reproduction is represented as a real click.
+
+These are **observation and control tests, not fix-regression assertions**. Passing observations reproduce current defective behavior. B4 replay-count wording and conditional all-rejected/Completed-membership fixtures are explicitly qualified in the report, not additional confirmed bugs. Leaf-only missing-record recovery behavior is distinguished from actual Details unmounting.
+
+[vat-paperwork-guards-qa.py](vat-paperwork-guards-qa.py) executes extracted actual stamping/grouping methods with Java 17:
+
+```text
+python vat-paperwork-guards-qa.py <absolute-pinned-repository-root> --java <absolute-java-17-executable>
+```
+
+Parent executed the retained script twice, 40/40 controls and exit 0 both times. It generates and cleans a temporary Java source file, extracts 12 stamping and five YD method bodies, prints their fingerprints and uses synthetic DTO/repository/clock/authorization stand-ins. Python/Java network is blocked. Default host Java 11 is insufficient for its record/switch syntax; the explicit Java 17 executable was used.
+
+It does not run Spring, real authorization, SQL/transactions/row locks, PDF rendering or project Java 25. No complete persisted workflow, production deployment, real PDF content or backend concurrency pass is claimed. No production source fix, live event, email, AADE or database mutation was performed.
