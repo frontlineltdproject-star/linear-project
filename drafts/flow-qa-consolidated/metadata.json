@@ -1,0 +1,1515 @@
+{
+  "baselineMain": "6aa259553cd9c86a8aaa157902088aa9a6bca83e",
+  "linearWritesAuthorized": false,
+  "baseline": [
+    {
+      "id": "FRO-373",
+      "uuid": "FRO-373",
+      "updatedAt": "2026-11-09T14:58:50.141Z",
+      "title": "Shipment forms — preserve unfinished work during updates and tab changes",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-341",
+            "title": "Shipment Creation — Page Redesign"
+          },
+          {
+            "id": "FRO-316",
+            "title": "Shipment Details — Page Redesign"
+          },
+          {
+            "id": "FRO-394",
+            "title": "Stock List → Shipment — keep eligibility current and preserve selected Orders"
+          },
+          {
+            "id": "FRO-381",
+            "title": "Delivery Note drafts — preserve unsaved movement details"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-374",
+      "uuid": "FRO-374",
+      "updatedAt": "2026-11-09T10:35:28.996Z",
+      "title": "Order colli forms — prevent stock-entry crashes and reject invalid measurements",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-335",
+            "title": "Order Creation - Page Redesign"
+          },
+          {
+            "id": "FRO-336",
+            "title": "Order — select initial readiness state during creation"
+          },
+          {
+            "id": "FRO-326",
+            "title": "Order Details - Page Redesign"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-375",
+      "uuid": "FRO-375",
+      "updatedAt": "2026-11-09T10:35:34.283Z",
+      "title": "Order & Shipment — prevent stale overwrites and duplicate comment retries",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-316",
+            "title": "Shipment Details — Page Redesign"
+          },
+          {
+            "id": "FRO-326",
+            "title": "Order Details - Page Redesign"
+          },
+          {
+            "id": "FRO-346",
+            "title": "Order Details — combine details editing and readiness correction in one atomic save"
+          },
+          {
+            "id": "FRO-344",
+            "title": "Shipment Details — Editing pre-dispatch and readiness invalidation"
+          },
+          {
+            "id": "FRO-325",
+            "title": "Shipment — Split creation, repacking & dispatch"
+          },
+          {
+            "id": "FRO-345",
+            "title": "Shipment Details Page — status history, recorded operations and comments"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-376",
+      "uuid": "FRO-376",
+      "updatedAt": "2026-11-09T10:35:39.503Z",
+      "title": "Shipment packing — preserve omitted net weight and historical journey details",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Backend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-325",
+            "title": "Shipment — Split creation, repacking & dispatch"
+          },
+          {
+            "id": "FRO-345",
+            "title": "Shipment Details Page — status history, recorded operations and comments"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-377",
+      "uuid": "FRO-377",
+      "updatedAt": "2026-11-09T10:35:43.900Z",
+      "title": "Order & Shipment creation — diagnose and resolve attachment upload 401",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Integration",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-342",
+            "title": "Order & Shipment — structural support for file uploads during creation"
+          },
+          {
+            "id": "FRO-341",
+            "title": "Shipment Creation — Page Redesign"
+          },
+          {
+            "id": "FRO-335",
+            "title": "Order Creation - Page Redesign"
+          },
+          {
+            "id": "FRO-336",
+            "title": "Order — select initial readiness state during creation"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-378",
+      "uuid": "FRO-378",
+      "updatedAt": "2026-11-09T11:37:53.261Z",
+      "title": "Supplier Invoice creation — preserve draft ownership, files and saved results",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "supplier invoice",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-347",
+            "title": "Supplier Invoice — Create page UI"
+          },
+          {
+            "id": "FRO-321",
+            "title": "Supplier Invoice — entity, relationships & VAT exemption rules"
+          },
+          {
+            "id": "FRO-349",
+            "title": "Order Details — Create supplier invoice from Order Details"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-379",
+      "uuid": "FRO-379",
+      "updatedAt": "2026-11-09T13:38:22.000Z",
+      "title": "Supplier Invoice Details — protect edits, cancellation recovery and reviewed versions",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "supplier invoice",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-348",
+            "title": "Supplier Invoice — Details page UI"
+          },
+          {
+            "id": "FRO-321",
+            "title": "Supplier Invoice — entity, relationships & VAT exemption rules"
+          },
+          {
+            "id": "FRO-390",
+            "title": "VAT stamping — preserve and reconcile uncertain attempts"
+          },
+          {
+            "id": "FRO-389",
+            "title": "VAT stamping — protect reviewed confirmations, dates and displayed progress"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-380",
+      "uuid": "FRO-380",
+      "updatedAt": "2026-11-09T11:38:04.262Z",
+      "title": "Supplier Invoice vessel corrections — distinguish same-name records and preserve activity",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "supplier invoice",
+        "Pending_Review",
+        "Backend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-321",
+            "title": "Supplier Invoice — entity, relationships & VAT exemption rules"
+          },
+          {
+            "id": "FRO-348",
+            "title": "Supplier Invoice — Details page UI"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-381",
+      "uuid": "FRO-381",
+      "updatedAt": "2026-11-09T12:25:54.219Z",
+      "title": "Delivery Note drafts — preserve unsaved movement details",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "delivery note",
+        "Shipment",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-247",
+            "title": "Delivery Note"
+          },
+          {
+            "id": "FRO-307",
+            "title": "Shipment / Delivery Notes - Choose loading and destination addresses from a dropdown"
+          },
+          {
+            "id": "FRO-373",
+            "title": "Shipment forms — preserve unfinished work during updates and tab changes"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-382",
+      "uuid": "FRO-382",
+      "updatedAt": "2026-11-09T12:25:59.169Z",
+      "title": "Delivery Notes — correct cancellation, replacement and pending-submission recovery",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "delivery note",
+        "Shipment",
+        "Pending_Review",
+        "Integration",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-247",
+            "title": "Delivery Note"
+          },
+          {
+            "id": "FRO-283",
+            "title": "Decide cancelled delivery note workflow and history"
+          },
+          {
+            "id": "FRO-284",
+            "title": "Decide safe recovery for failed AADE delivery-note submissions"
+          },
+          {
+            "id": "FRO-307",
+            "title": "Shipment / Delivery Notes - Choose loading and destination addresses from a dropdown"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-383",
+      "uuid": "FRO-383",
+      "updatedAt": "2026-11-09T12:26:03.714Z",
+      "title": "Delivery Notes — keep movement dates and times consistent in XML and PDF",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "delivery note",
+        "Pending_Review",
+        "Backend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-284",
+            "title": "Decide safe recovery for failed AADE delivery-note submissions"
+          },
+          {
+            "id": "FRO-247",
+            "title": "Delivery Note"
+          },
+          {
+            "id": "FRO-283",
+            "title": "Decide cancelled delivery note workflow and history"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-384",
+      "uuid": "FRO-384",
+      "updatedAt": "2026-11-09T12:32:23.502Z",
+      "title": "Export creation — protect drafts, pending creation and file uploads",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "export",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-350",
+            "title": "Export Customs Declaration — Creation Page"
+          },
+          {
+            "id": "FRO-317",
+            "title": "Export Customs Declaration — entity & business rules"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-385",
+      "uuid": "FRO-385",
+      "updatedAt": "2026-11-09T13:38:22.009Z",
+      "title": "Export Details — protect edits, reviewed versions and confirmation recovery",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "export",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-352",
+            "title": "Export Customs Declaration — Details page UI"
+          },
+          {
+            "id": "FRO-317",
+            "title": "Export Customs Declaration — entity & business rules"
+          },
+          {
+            "id": "FRO-390",
+            "title": "VAT stamping — preserve and reconcile uncertain attempts"
+          },
+          {
+            "id": "FRO-389",
+            "title": "VAT stamping — protect reviewed confirmations, dates and displayed progress"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-386",
+      "uuid": "FRO-386",
+      "updatedAt": "2026-11-09T13:34:57.942Z",
+      "title": "Shipment Invoice — correct creation, replacement and saved-action recovery",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-363",
+            "title": "Shipment Invoice — Create page UI"
+          },
+          {
+            "id": "FRO-366",
+            "title": "Shipment Invoice — Details & draft editing UI"
+          },
+          {
+            "id": "FRO-244",
+            "title": "Shipment Invoice — entity & business rules"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-387",
+      "uuid": "FRO-387",
+      "updatedAt": "2026-11-09T13:35:13.126Z",
+      "title": "Shipment Invoice — preserve goods, totals and review after source changes",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Integration",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-301",
+            "title": "Order invoice rows — colli allocation and partial shipments"
+          },
+          {
+            "id": "FRO-363",
+            "title": "Shipment Invoice — Create page UI"
+          },
+          {
+            "id": "FRO-244",
+            "title": "Shipment Invoice — entity & business rules"
+          },
+          {
+            "id": "FRO-366",
+            "title": "Shipment Invoice — Details & draft editing UI"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-388",
+      "uuid": "FRO-388",
+      "updatedAt": "2026-11-09T13:38:01.425Z",
+      "title": "Print ΥΔ — protect selections and print attempts",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "export",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-317",
+            "title": "Export Customs Declaration — entity & business rules"
+          },
+          {
+            "id": "FRO-352",
+            "title": "Export Customs Declaration — Details page UI"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-389",
+      "uuid": "FRO-389",
+      "updatedAt": "2026-11-09T13:38:11.224Z",
+      "title": "VAT stamping — protect reviewed confirmations, dates and displayed progress",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "export",
+        "supplier invoice",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-348",
+            "title": "Supplier Invoice — Details page UI"
+          },
+          {
+            "id": "FRO-379",
+            "title": "Supplier Invoice Details — protect edits, cancellation recovery and reviewed versions"
+          },
+          {
+            "id": "FRO-385",
+            "title": "Export Details — protect edits, reviewed versions and confirmation recovery"
+          },
+          {
+            "id": "FRO-317",
+            "title": "Export Customs Declaration — entity & business rules"
+          },
+          {
+            "id": "FRO-352",
+            "title": "Export Customs Declaration — Details page UI"
+          },
+          {
+            "id": "FRO-321",
+            "title": "Supplier Invoice — entity, relationships & VAT exemption rules"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-390",
+      "uuid": "FRO-390",
+      "updatedAt": "2026-11-09T13:38:21.684Z",
+      "title": "VAT stamping — preserve and reconcile uncertain attempts",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "export",
+        "supplier invoice",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-385",
+            "title": "Export Details — protect edits, reviewed versions and confirmation recovery"
+          },
+          {
+            "id": "FRO-379",
+            "title": "Supplier Invoice Details — protect edits, cancellation recovery and reviewed versions"
+          },
+          {
+            "id": "FRO-317",
+            "title": "Export Customs Declaration — entity & business rules"
+          },
+          {
+            "id": "FRO-321",
+            "title": "Supplier Invoice — entity, relationships & VAT exemption rules"
+          },
+          {
+            "id": "FRO-348",
+            "title": "Supplier Invoice — Details page UI"
+          },
+          {
+            "id": "FRO-352",
+            "title": "Export Customs Declaration — Details page UI"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-391",
+      "uuid": "FRO-391",
+      "updatedAt": "2026-11-09T14:46:28.594Z",
+      "title": "Customs Storage Entry — protect drafts and recover creation/save outcomes",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "entry note",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-353",
+            "title": "Customs Storage Entry — Creation page UI"
+          },
+          {
+            "id": "FRO-354",
+            "title": "Customs Storage Entry — Details page UI"
+          },
+          {
+            "id": "FRO-319",
+            "title": "Customs Storage Entry — entity & business rules"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-392",
+      "uuid": "FRO-392",
+      "updatedAt": "2026-11-09T14:46:37.642Z",
+      "title": "Customs Storage Entry — correct Order relationships, warehouse warnings and admission actions",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "entry note",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-319",
+            "title": "Customs Storage Entry — entity & business rules"
+          },
+          {
+            "id": "FRO-355",
+            "title": "Order Details — Create or open Customs Storage Entry from Available actions"
+          },
+          {
+            "id": "FRO-354",
+            "title": "Customs Storage Entry — Details page UI"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-393",
+      "uuid": "FRO-393",
+      "updatedAt": "2026-11-09T14:58:44.913Z",
+      "title": "Stock List — correct filters, pagination and saved table settings",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 3,
+        "name": "Medium"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-254",
+            "title": "Stock List table Filtering"
+          },
+          {
+            "id": "FRO-279",
+            "title": "Add multi-PO selection toolbar and stock-list PDF printing"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-394",
+      "uuid": "FRO-394",
+      "updatedAt": "2026-11-09T14:58:49.721Z",
+      "title": "Stock List → Shipment — keep eligibility current and preserve selected Orders",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Frontend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-341",
+            "title": "Shipment Creation — Page Redesign"
+          },
+          {
+            "id": "FRO-373",
+            "title": "Shipment forms — preserve unfinished work during updates and tab changes"
+          },
+          {
+            "id": "FRO-279",
+            "title": "Add multi-PO selection toolbar and stock-list PDF printing"
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    },
+    {
+      "id": "FRO-395",
+      "uuid": "FRO-395",
+      "updatedAt": "2026-11-09T14:58:54.746Z",
+      "title": "Stock List PDF — correct current values and preserve readable output",
+      "status": "Backlog",
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Backend",
+        "Story",
+        "Bug"
+      ],
+      "priority": {
+        "value": 2,
+        "name": "High"
+      },
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relations": {
+        "blocks": [],
+        "blockedBy": [],
+        "relatedTo": [
+          {
+            "id": "FRO-279",
+            "title": "Add multi-PO selection toolbar and stock-list PDF printing"
+          },
+          {
+            "id": "FRO-295",
+            "title": "Order/Colli - Remove PCS field from colli"
+          },
+          {
+            "id": "FRO-297",
+            "title": "Order/Coli - New colli flags in PO"
+          },
+          {
+            "id": "FRO-292",
+            "title": "Order/Shipment - Internal/External Notes."
+          }
+        ],
+        "duplicateOf": null
+      },
+      "attachments": []
+    }
+  ],
+  "proposed": [
+    {
+      "retained": "FRO-373",
+      "sources": [
+        "FRO-373"
+      ],
+      "title": "Shipment forms — preserve drafts & expose Record arrival",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-341",
+        "FRO-316",
+        "FRO-393",
+        "FRO-381"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-374",
+      "sources": [
+        "FRO-374"
+      ],
+      "title": "Order colli forms — edit saved creation rows & validate measurements",
+      "status": "Backlog",
+      "priority": 3,
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-335",
+        "FRO-336",
+        "FRO-326"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-375",
+      "sources": [
+        "FRO-375"
+      ],
+      "title": "Order & Shipment — prevent stale overwrites and duplicate comment retries",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-316",
+        "FRO-326",
+        "FRO-346",
+        "FRO-344",
+        "FRO-325",
+        "FRO-345"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-376",
+      "sources": [
+        "FRO-376"
+      ],
+      "title": "Shipment packing — preserve omitted net weight and historical journey details",
+      "status": "Backlog",
+      "priority": 3,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Backend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-325",
+        "FRO-345"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-377",
+      "sources": [
+        "FRO-377"
+      ],
+      "title": "Order & Shipment creation — diagnose and resolve attachment upload 401",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Integration"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-342",
+        "FRO-341",
+        "FRO-335",
+        "FRO-336"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-378",
+      "sources": [
+        "FRO-378",
+        "FRO-379",
+        "FRO-380"
+      ],
+      "title": "Supplier Invoice — reliable creation, correction & cancellation",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "supplier invoice",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Integration"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-347",
+        "FRO-321",
+        "FRO-349",
+        "FRO-348",
+        "FRO-389"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-381",
+      "sources": [
+        "FRO-381",
+        "FRO-382"
+      ],
+      "title": "Delivery Notes — preserve drafts & recover lifecycle actions",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "delivery note",
+        "Shipment",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Integration"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-247",
+        "FRO-307",
+        "FRO-373",
+        "FRO-283",
+        "FRO-284"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-383",
+      "sources": [
+        "FRO-383"
+      ],
+      "title": "Delivery Notes — keep movement dates and times consistent in XML and PDF",
+      "status": "Backlog",
+      "priority": 3,
+      "labels": [
+        "Flow QA",
+        "delivery note",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Backend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-284",
+        "FRO-247",
+        "FRO-283"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-384",
+      "sources": [
+        "FRO-384",
+        "FRO-385"
+      ],
+      "title": "Export — preserve drafts, reviewed changes & operation recovery",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "export",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-350",
+        "FRO-317",
+        "FRO-352",
+        "FRO-389"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-386",
+      "sources": [
+        "FRO-386"
+      ],
+      "title": "Shipment Invoice — creation, replacement, recovery & consistent layout",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-363",
+        "FRO-366",
+        "FRO-244"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-387",
+      "sources": [
+        "FRO-387"
+      ],
+      "title": "Shipment Invoice — goods, totals, review & automatic packing",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Shipment",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Integration"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-301",
+        "FRO-363",
+        "FRO-244",
+        "FRO-366"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-388",
+      "sources": [
+        "FRO-388"
+      ],
+      "title": "Print ΥΔ — protect selections and print attempts",
+      "status": "Backlog",
+      "priority": 3,
+      "labels": [
+        "Flow QA",
+        "export",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-317",
+        "FRO-352"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-389",
+      "sources": [
+        "FRO-389",
+        "FRO-390"
+      ],
+      "title": "VAT stamping — reviewed confirmations & uncertain-attempt recovery",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "export",
+        "supplier invoice",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-348",
+        "FRO-378",
+        "FRO-384",
+        "FRO-317",
+        "FRO-352",
+        "FRO-321"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-391",
+      "sources": [
+        "FRO-391",
+        "FRO-392"
+      ],
+      "title": "Customs Storage Entry — reliable drafts, recovery & Order relationships",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "entry note",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Order",
+        "Frontend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-353",
+        "FRO-354",
+        "FRO-319",
+        "FRO-355"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-393",
+      "sources": [
+        "FRO-393",
+        "FRO-394"
+      ],
+      "title": "Stock List — reliable controls & complete Shipment handoff",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Shipment",
+        "Integration"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-254",
+        "FRO-279",
+        "FRO-341",
+        "FRO-373"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    },
+    {
+      "retained": "FRO-395",
+      "sources": [
+        "FRO-395"
+      ],
+      "title": "Stock List PDF — correct current values and preserve readable output",
+      "status": "Backlog",
+      "priority": 2,
+      "labels": [
+        "Flow QA",
+        "Order",
+        "Pending_Review",
+        "Story",
+        "Bug",
+        "Backend"
+      ],
+      "assignee": null,
+      "project": null,
+      "parentId": null,
+      "relatedTo": [
+        "FRO-279",
+        "FRO-295",
+        "FRO-297",
+        "FRO-292"
+      ],
+      "blocks": [],
+      "blockedBy": [],
+      "attachments": []
+    }
+  ],
+  "proposedRetirements": {
+    "379": 378,
+    "380": 378,
+    "382": 381,
+    "385": 384,
+    "390": 389,
+    "392": 391,
+    "394": 393
+  }
+}
