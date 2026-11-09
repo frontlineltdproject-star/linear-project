@@ -63,3 +63,5 @@ Expected scenario coverage is in [the scenario register](../scenarios/customs-st
 ## Initial review completed
 
 [9 November review](../runs/2026-11-09-customs-storage-entry.md) records ten isolated UI findings, 115 existing frontend checks, 27 new UI observations/controls and 155 backend controls. Parent independently reran retained evidence. All complete portal scenarios remain Not run; source inspection and extracted backend checks do not establish database concurrency/rollback or deployed correctness. No Linear creation or source fix occurred.
+
+The user subsequently accepted [two correction groups](../../../drafts/customs-storage-entry-bugs/README.md): draft/save recovery (QA-CSE-01–06/09, High) and Order relationships/admission actions (QA-CSE-07/08/10, Medium). Complete drafts are prepared for review; creation is not approved. Existing tickets are references only; FRO-358 and Export/VAT work remain excluded.

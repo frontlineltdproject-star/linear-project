@@ -27,7 +27,7 @@ All ten findings below are **demonstrated in isolated current-source UI tests**.
 | QA-CSE-09 | Medium | Preselection transport failure appears as missing/inaccessible Order; selected-Order draft failure leaves blank facts/disabled Create without error or Retry. | 008, 009 |
 | QA-CSE-10 | Medium | Confirm an Order in stock: Order status refreshes, but the independently cached entry shortcut still says Not admitted and keeps Create disabled. | 001, 004 |
 
-Finding IDs identify defects, not ten proposed tickets. No grouping, priorities/labels for creation or Linear writes have been approved by this review.
+Finding IDs identify defects, not ten proposed tickets. At the initial review, grouping, priorities/labels and Linear writes had not been approved. Subsequent accepted grouping and draft status are recorded below.
 
 ### QA-CSE-01 — silent creation-owner change
 
@@ -107,7 +107,11 @@ A conditional Create test injects INHERITED coverage after an initially eligible
 | Admission SQL, counter/row locks, atomic rollback, authenticated HTTP/GraphQL | Source-reviewed, runtime integration unverified |
 | Export/Customs/VAT writes, Stock List printing and FRO-358 work | Preserved, excluded, existing/separate owners |
 
-Current Bug searches for Customs Storage and Entry returned existing neighboring corrections, not an exact entry correction owner. No duplicate or ownership change is inferred merely from similar recovery symptoms. Existing tickets remain unchanged. Full drafts/grouping/creation require the later user review workflow.
+Current Bug searches for Customs Storage and Entry returned existing neighboring corrections, not an exact entry correction owner. No duplicate or ownership change is inferred merely from similar recovery symptoms. Existing tickets remain unchanged.
+
+## Accepted correction groups and drafts
+
+After discussing all ten findings, the user accepted two correction tickets and requested full drafts: [D1 draft/save recovery](../../../drafts/customs-storage-entry-bugs/01-drafts-and-save-recovery.md), High, owns QA-CSE-01–06/09; [D2 Order relationships/admission actions](../../../drafts/customs-storage-entry-bugs/02-order-relationships-and-admission-actions.md), Medium, owns QA-CSE-07/08/10. The [draft index](../../../drafts/customs-storage-entry-bugs/README.md) records all metadata, consumer ownership and 16 acceptance/verification pairs. Draft text and creation remain pending approval. Existing tickets are references only, not reopened, expanded or blocking owners. FRO-358 list/register/Excel/print/recipient-copy work, Export and VAT stamping remain excluded. No Linear or production writes and no new fix-test result are implied.
 
 ## Source references
 
