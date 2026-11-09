@@ -1,12 +1,22 @@
 # Order-to-arrival: five agreed ticket groups
 
-The user accepted these five groups on 9 November 2026 after reviewing the individual examples. **Ticket descriptions and metadata below are drafts for review, not approved Linear writes. No Linear issues have been created.** D1–D5 are local review identifiers, not reserved Linear IDs.
+The user accepted these five groups, reviewed the complete descriptions and metadata, then explicitly approved creating all five on 9 November 2026. **Created and verified in Linear as FRO-373–FRO-377.** D1–D5 remain local identifiers mapping the approved description files to the saved issues.
 
 This replaces the earlier nine-ticket proposal. Every finding is retained, including the two contract discrepancies attached to the upload investigation.
 
-## Drafts and proposed metadata
+## Approved descriptions and metadata
 
-All five: **Front Line LTD (FRO) · Backlog · Story · Bug · Pending_Review**. No project, milestone, assignee, parent, cycle, due date or estimate proposed. Related links only; no blocking dependencies. Priority and Area are proposals. Bug is an ungrouped label; each draft has exactly one Type and one Area.
+All five: **Front Line LTD (FRO) · Backlog · Story · Bug · Pending_Review · Flow QA**. No project, milestone, assignee, parent, cycle, due date or estimate. Related links only; no blocking dependencies. The approved priorities and Areas below were saved unchanged. Bug and Flow QA are ungrouped labels; each issue has exactly one Type and one Area.
+
+Flow QA is a reusable team label for bugs identified while reviewing regular business flows against agreed requirements. Created at the user's request, label ID `06ea4564-06f3-40c4-b546-404049f66151`, colour `#F2994A`; it supplements Bug and does not change readiness.
+
+| Local draft | Created issue | Priority | Complete saved label set |
+| --- | --- | --- | --- |
+| D1 | [FRO-373](https://linear.app/front-line-ltd/issue/FRO-373/shipment-forms-preserve-unfinished-work-during-updates-and-tab-changes) | High | Flow QA, Shipment, Pending_Review, Frontend, Story, Bug |
+| D2 | [FRO-374](https://linear.app/front-line-ltd/issue/FRO-374/order-colli-forms-prevent-stock-entry-crashes-and-reject-invalid) | Medium | Flow QA, Order, Pending_Review, Frontend, Story, Bug |
+| D3 | [FRO-375](https://linear.app/front-line-ltd/issue/FRO-375/order-and-shipment-prevent-stale-overwrites-and-duplicate-comment) | High | Flow QA, Shipment, Order, Pending_Review, Frontend, Story, Bug |
+| D4 | [FRO-376](https://linear.app/front-line-ltd/issue/FRO-376/shipment-packing-preserve-omitted-net-weight-and-historical-journey) | Medium | Flow QA, Shipment, Order, Pending_Review, Backend, Story, Bug |
+| D5 | [FRO-377](https://linear.app/front-line-ltd/issue/FRO-377/order-and-shipment-creation-diagnose-and-resolve-attachment-upload-401) | High | Flow QA, Shipment, Order, Pending_Review, Integration, Story, Bug |
 
 | Draft / title | Priority | Area / entity labels | Related issues | Findings |
 | --- | --- | --- | --- | --- |
@@ -18,11 +28,11 @@ All five: **Front Line LTD (FRO) · Backlog · Story · Bug · Pending_Review**.
 
 Priority rationale: D1 interrupts creation and loses drafts; D3 risks saved-data overwrite; D5 addresses the reported attachment blocker but has an unconfirmed cause. D2/D4 are Medium pending deployment impact evidence. These are not runtime frequency estimates.
 
-Each linked Markdown file is the **complete proposed Linear description**. Use the literal title and complete label set above/common defaults; do not paste this index or investigation process narrative into the descriptions.
+Each linked Markdown file is the **complete approved Linear description** used for creation. The files remain unchanged; Linear's equivalent Markdown rendering was normalized during verification. This index and investigation process narrative are not part of the issue descriptions.
 
 ## Consumer trace and ownership
 
-| Area / current defect | Required outcome / proposed owner | Preserved contract |
+| Area / current defect | Required outcome / owner | Preserved contract |
 | --- | --- | --- |
 | Origin candidate read remounts creation; Notes replaces sibling drafts; arrival state unmounts on tab change | D1 preserves the current valid draft across these boundaries | Existing cargo eligibility, per-card saves, permissions and lifecycle |
 | Stock panel dereferences missing new-colli draft; shared validator accepts API-invalid values | D2 reconciles current collis and validates before submission | Existing numeric types, stock prerequisites and reservation guards |
@@ -31,21 +41,23 @@ Each linked Markdown file is the **complete proposed Linear description**. Use t
 | Upload staging returns reported 401 with unresolved backend cause | D5 diagnoses and fixes the actual failure, verifies end-to-end association/recovery | Existing identity/context boundaries, optional files and atomic creation |
 | FRO-336 upload wording and FRO-335 no-file context mismatch | D5 records explicit contract resolution; owning-description edits separately reviewed | Neither discrepancy is promoted to a proved 401 cause |
 
-D1 and D3 touch Shipment editing/controller code; coordinate implementation without expanding either ticket. D3 and D4 both affect packing verification but protect different rules. No new UI direction, preview or production-source branch is part of this drafting task.
+D1 and D3 touch Shipment editing/controller code; coordinate implementation without expanding either ticket. D3 and D4 both affect packing verification but protect different rules. No new UI direction, preview or production-source branch is part of this ticket task.
 
 ## Evidence and remaining limits
 
 - Production source through authenticated gh: main `6aa259553cd9c86a8aaa157902088aa9a6bca83e`, rechecked unchanged for drafting; source access also verified against the current named-branch Shipment controller.
 - Full current descriptions re-read for FRO-316/325/326/335/336/341/342/344/345/346. All Done and unchanged from the review baseline. Done does not certify deployed behavior.
 - Current Type/Area labels and FRO Backlog status fetched. Story/Frontend/Backend/Integration and all listed entity/workflow labels exist and are not retired.
-- Fresh duplicate searches: draft (45), packing (41), retry (34), 401 (0), colli (75), each returned one complete page. No exact open duplicate identified. No issue edits were made.
+- During drafting, duplicate searches covered draft (45), packing (41), retry (34), 401 (0), colli (75), each returned one complete page. Before creation, all five title searches returned complete pages (75/79/83/84/78 results), with no exact matching title; no exact open duplicate was identified. Ten related owner descriptions were re-read unchanged. Existing issue descriptions and statuses were not edited; related links were added from the new issues.
 - [First-pass evidence](../../docs/qa/runs/2026-11-09-order-to-arrival.md); [second-pass evidence](../../docs/qa/runs/2026-11-09-order-to-arrival-second-pass.md); [35-scenario catalogue](../../docs/qa/scenarios/order-to-shipment-arrival.md).
 - Prior component/extracted-Java runs remain the evidence; drafting is not a new application test run. The historical journey read still needs database verification; the real upload 401 cause is still unknown. All full browser-flow scenarios remain Not run.
-- D5 intentionally exposes the unresolved no-file-context contract choice. Its resolution must not be invented by an implementation agent; draft review may decide it or leave it as an explicit investigation deliverable.
+- D5 intentionally leaves the no-file-context contract choice as an explicit investigation deliverable. Its resolution must not be invented by an implementation agent.
 
 ## Review and publication
 
-Review all five descriptions and proposed metadata. Acceptance of the five-group structure does not authorize creating their text in Linear. After text approval, recheck duplicate/metadata/related-issue freshness, create only the approved descriptions and verify saved contents and complete metadata. Keep Backlog/Pending_Review unless a separate instruction changes readiness.
+The user approved the complete drafts and requested creation plus a shared identifying label. All five were created with Flow QA, then re-read. Their titles, normalized descriptions, priorities, complete label sets, team, Backlog status and exact related-issue sets match the approved package. Optional metadata is unset, attachments/documents are empty, and there are no blocking or duplicate relations. Backlog/Pending_Review remains unchanged; creation approval does not mark the work Ready.
+
+Production main was rechecked at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. Label and status catalogues were fetched fresh; no equivalent flow-QA label existed. The new label was re-read successfully and is present on all five issues. Verification normalized only blank lines, list markers, table separators, URL angle brackets and Linear issue chips; no requirement text changed. No application test run or production mutation was part of creation.
 
 No glossary or architecture decision is introduced by this grouping. Production source and portal remain read-only in this planning project.
 

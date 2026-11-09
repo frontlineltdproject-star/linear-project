@@ -1,5 +1,14 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Five Flow QA bug tickets approved, created and verified
+
+- User approved the complete five drafts and explicitly requested creating them plus a shared identifying label. Created reusable FRO team label Flow QA (`06ea4564-06f3-40c4-b546-404049f66151`): bugs identified while reviewing regular business flows against agreed requirements. No equivalent label existed in the fresh catalogue.
+- D1 → FRO-373 (Shipment unfinished work); D2 → FRO-374 (Order colli crash/validation); D3 → FRO-375 (stale overwrites/comment retries); D4 → FRO-376 (packing weights/history); D5 → FRO-377 (upload 401 diagnosis/fix, with two explicit contract clarifications). Full URLs and complete metadata are in [the approved package index](drafts/order-to-arrival-bugs/README.md). All 13 findings retain their approved owners.
+- All FRO Backlog, Story + Bug + Pending_Review + Flow QA; D1/D2/D3 Frontend, D4 Backend, D5 Integration. Approved entity labels and exact related owner sets retained; no blockers. High D1/D3/D5, Medium D2/D4. No assignee/project/milestone/parent/cycle/due date/estimate or attachments/documents. No readiness promotion.
+- Planning pull succeeded. Production main remains `6aa259553cd9c86a8aaa157902088aa9a6bca83e`; ten linked owner descriptions freshly read unchanged. Five complete-page duplicate title searches found no exact matching title. Current labels/status fetched before writes.
+- Re-read all five saved issues and matched every approved description after normalizing only Linear Markdown/issue-chip rendering. Verified titles, team, Backlog, priorities, full label sets, exact related sets, empty blocking/duplicate relations and unset optional metadata. New Flow QA label re-read and present on all five. Existing issue descriptions/statuses were not edited; related links were added from the new issues.
+- Updated the draft index and QA catalogue with created-ticket tracking; approved description files unchanged. No production source/portal/database changes, previews, branches or application test runs. Upload root cause and historical journey runtime verification remain developer investigation work. Preserve unrelated FRO-326 and other local draft changes when syncing this planning update.
+
 ### 2026-11-09 — Five bug groups accepted; complete ticket drafts prepared
 
 - After reviewing simple examples one by one, user explicitly accepted five groups and requested complete drafts for review before Linear creation. This supersedes the earlier nine-ticket proposal; approval covers the grouping and local drafting, not the final descriptions/metadata or a Linear write.
