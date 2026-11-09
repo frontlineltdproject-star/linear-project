@@ -108,4 +108,16 @@ The user approved three correction groups and requested complete drafts for revi
 - Frontend command: `node node_modules/vitest/vitest.mjs run delivery-note-qa.test.tsx src/features/shipments/components/delivery-note-address-sources.test.ts src/features/shipments/components/delivery-note-form-validation.test.ts src/features/shipments/components/delivery-notes-card.test.ts src/features/shipments/services/delivery-note-service.test.ts --config vitest.config.ts`.
 - Scratch config uses jsdom, `#` alias to `src`, threads/maxWorkers=1 and a local cache directory. No package install or source change was needed.
 
-This is the completed initial mapped review and correction-draft package, not certification of the whole flow. Three local descriptions are ready for review; no Linear issues, product fixes or new UI designs have been created.
+### Approved correction tickets created
+
+After reviewing the complete drafts and proposed metadata, the user explicitly approved creation with the proposed priorities and labels, retaining FRO-283/284 as references only.
+
+| Draft | Created correction ticket | Priority |
+| --- | --- | --- |
+| D1 | [FRO-381 — preserve unsaved movement details](https://linear.app/front-line-ltd/issue/FRO-381) | High |
+| D2 | [FRO-382 — cancellation, replacement and pending-submission recovery](https://linear.app/front-line-ltd/issue/FRO-382) | High |
+| D3 | [FRO-383 — consistent XML/PDF movement dates and times](https://linear.app/front-line-ltd/issue/FRO-383) | Medium |
+
+All three were re-read and verified against the approved descriptions and full metadata: FRO Backlog, Pending_Review, Flow QA and the approved Type/Area/entity labels; related links only, no blocking dependencies. FRO-283/284 descriptions and workflow settings are unchanged. Full creation receipt is in the [draft package index](../../../drafts/delivery-note-bugs/README.md).
+
+This is the completed initial mapped review and ticket handoff, not certification of the whole flow or proof of fixes. No product implementation, new UI design, production/fiscal mutation or new application test execution occurred during creation.
