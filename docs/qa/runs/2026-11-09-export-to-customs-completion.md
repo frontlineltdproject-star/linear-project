@@ -126,9 +126,9 @@ Six findings demonstrated in the isolated frontend. They are **not six proposed 
 - Existing integration tests were inspected as context, not reported as executed. Normal-flow source guards do not prove the UI sends the correct reviewed version or that all related-Entry boundaries are enforced.
 - **Ruled out after full requirement reconciliation:** an initial interpretation treated every covered child's invoices as part of the Entry. FRO-319 explicitly says opening from a covered child shows the owning Order's invoices/Export, never substitutes child invoices or aggregates the family; its derived invoice set is active storage invoices of the owning Order only. The source's per-Order Export guard is consistent with this. An isolated query/rule harness observed the per-Order behavior (17 assertions), but its proposed defect expectation was wrong. Excluded from the bug count; flow/scenario corrected before completion. This is not a new business decision or a request to change that behavior.
 
-## Proposed ticket grouping — awaiting user agreement
+## Accepted ticket grouping — drafts awaiting review
 
-All six findings were reviewed with the user through simple examples. The user then requested grouping without excessive tickets. Recommend **two tickets**, aligned with the two operation lifecycles below. This is a proposal, not accepted scope, a complete draft or permission to create issues.
+All six findings were reviewed with the user through simple examples. The user accepted **two groups**, aligned with the two operation lifecycles below, and requested complete drafts before Linear creation. [The draft package](../../../drafts/export-bugs/README.md) contains both full descriptions, proposed metadata and finding-to-criterion coverage. Grouping is approved; final text and metadata await review. No Linear issues have been created.
 
 | Group / proposed title | Findings included | Complete outcome | Requirement links |
 | --- | --- | --- | --- |
@@ -143,4 +143,4 @@ G1/G2 are independently reviewable; no blocking relation is established. Existin
 
 Current FRO-317/350/352 were re-read and remain Done with unchanged descriptions; production main remains `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. Current Export + Bug search returned only Supplier Invoice scopes. FRO-378/379 were re-read: their approved scopes remain Supplier Invoice creation/Details, so do not expand them with Export defects. Their implementation patterns may be useful context, not assumed shared fixes or blocking dependencies. Current Flow QA label was verified active and can be reused. No Linear changes or application-test reruns were made for grouping.
 
-Once the groups are accepted, prepare complete drafts and proposed metadata for user review before Linear creation. This proposal does not decide priority, assignee, project or release. Detailed VAT-exemption paperwork remains a separate pass.
+Both drafts propose High priority, FRO Backlog and Story + Bug + Pending_Review + Flow QA + Frontend + export, with the related requirement links above and no blockers. No project, assignee or release is proposed. Metadata catalogues and current requirement descriptions were refreshed; source main remains unchanged. The complete descriptions retain separate acceptance checks for all six findings, source/evidence limits and read-only post-deployment verification. Existing presentation contracts are reused; no preview, branch, production mutation or new application execution. Detailed VAT-exemption paperwork remains a separate pass.
