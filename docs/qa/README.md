@@ -34,7 +34,7 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Stock List selection and printing](flows/stock-list-selection-printing.md) | Expected filtering, shared selection, complete Start shipment handoff and fixed PDF, reconciled against later tickets |
 | [Stock List scenarios](scenarios/stock-list-selection-printing.md) | 28 complete-flow cases plus finding-specific regression variations |
 | [Stock List review — 9 November 2026](runs/2026-11-09-stock-list-selection-printing.md) | Eleven bounded findings, two separate clarification items and retained UI/model/PDF evidence |
-| [Three Stock List correction drafts](../../drafts/stock-list-bugs/README.md) | Accepted groups/priorities: list controls (Medium), complete shipment handoff (High), correct/readable PDF (High); full drafts await review |
+| [Three Stock List correction tickets — FRO-393–FRO-395](../../drafts/stock-list-bugs/README.md) | Approved descriptions and verified creation: list controls (Medium), complete shipment handoff (High), correct/readable PDF (High); all carry Flow QA |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 

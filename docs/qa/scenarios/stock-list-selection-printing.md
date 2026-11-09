@@ -55,4 +55,4 @@ The [9 November review](../runs/2026-11-09-stock-list-selection-printing.md) rec
 
 Partial later warehouse measurements and the surviving FRO-254 per-column control requirements stay explicit clarification items in the report; do not convert them to settled acceptance criteria without resolving their scope.
 
-The user accepted three correction groups: S1 owns QA-SL-01–05; S2 owns QA-SL-06/07; S3 owns QA-SL-08–11. [Complete ticket drafts](../../../drafts/stock-list-bugs/README.md) contain 17 acceptance/verification pairs and await review. This changes ticket ownership, not scenario execution status; all 28 remain Not run.
+Approved correction tickets: [FRO-393](https://linear.app/front-line-ltd/issue/FRO-393) (S1, Medium) owns QA-SL-01–05; [FRO-394](https://linear.app/front-line-ltd/issue/FRO-394) (S2, High) owns QA-SL-06/07; [FRO-395](https://linear.app/front-line-ltd/issue/FRO-395) (S3, High) owns QA-SL-08–11. The [approved descriptions and creation receipt](../../../drafts/stock-list-bugs/README.md) retain 17 acceptance/verification pairs. All three are Backlog with Flow QA. This changes ticket ownership, not scenario execution status; all 28 remain Not run.

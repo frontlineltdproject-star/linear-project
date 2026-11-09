@@ -1,14 +1,14 @@
-# Stock List correction drafts
+# Stock List correction tickets
 
-The user accepted three groups and priorities on 9 November 2026 and requested complete drafts before Linear creation. **Descriptions and proposed metadata await review. No Linear issue has been created.**
+The user approved the complete drafts and their proposed priorities/labels on 9 November 2026. **Created and verified FRO-393, FRO-394 and FRO-395**, all in Backlog with Flow QA. The numbered files retain the approved description text; see the [creation verification receipt](creation-verification.md).
 
-| Draft | Proposed title | Accepted priority | Proposed labels | Proposed related references |
+| Approved description / created ticket | Title | Priority | Labels | Related references |
 | --- | --- | --- | --- | --- |
-| S1 — [List controls and settings](01-list-controls-and-settings.md) | Stock List — correct filters, pagination and saved table settings | Medium (3) | Story, Bug, Frontend, Pending_Review, Flow QA, Order | FRO-254, FRO-279 |
-| S2 — [Shipment selection and handoff](02-shipment-selection-and-handoff.md) | Stock List → Shipment — keep eligibility current and preserve selected Orders | High (2) | Story, Bug, Frontend, Pending_Review, Flow QA, Order, Shipment | FRO-279, FRO-341, FRO-373 |
-| S3 — [PDF values and formatting](03-pdf-values-and-formatting.md) | Stock List PDF — correct current values and preserve readable output | High (2) | Story, Bug, Backend, Pending_Review, Flow QA, Order | FRO-279, FRO-292, FRO-295, FRO-297 |
+| S1 — [List controls and settings](01-list-controls-and-settings.md) · [FRO-393](https://linear.app/front-line-ltd/issue/FRO-393) | Stock List — correct filters, pagination and saved table settings | Medium (3) | Story, Bug, Frontend, Pending_Review, Flow QA, Order | FRO-254, FRO-279 |
+| S2 — [Shipment selection and handoff](02-shipment-selection-and-handoff.md) · [FRO-394](https://linear.app/front-line-ltd/issue/FRO-394) | Stock List → Shipment — keep eligibility current and preserve selected Orders | High (2) | Story, Bug, Frontend, Pending_Review, Flow QA, Order, Shipment | FRO-279, FRO-341, FRO-373 |
+| S3 — [PDF values and formatting](03-pdf-values-and-formatting.md) · [FRO-395](https://linear.app/front-line-ltd/issue/FRO-395) | Stock List PDF — correct current values and preserve readable output | High (2) | Story, Bug, Backend, Pending_Review, Flow QA, Order | FRO-279, FRO-292, FRO-295, FRO-297 |
 
-Proposed team **FRO**, status **Backlog**. No assignee, project, milestone, cycle, parent, estimate, due date, attachments or documents proposed. No blocking/blocked-by/duplicate relations. Source/QA links remain in descriptions. Current metadata confirms Type and Area are single-select groups: each draft has one Type and one Area; the Frontend label on S1 does not exclude its necessary server preference-policy fix. Other labels are active and ungrouped. No readiness promotion or existing-ticket edits.
+Verified team **FRO**, status **Backlog**. No assignee, project, milestone, cycle, parent, estimate, due date, attachments or documents. No blocking/blocked-by/duplicate relations. Source/QA links remain in descriptions. Current metadata confirms Type and Area are single-select groups: each ticket has one Type and one Area; the Frontend label on S1 does not exclude its necessary server preference-policy fix. Other labels are active and ungrouped. No readiness promotion or existing-ticket content edits; approved related links are reciprocal.
 
 ## Finding coverage
 
@@ -52,7 +52,7 @@ Reference lookup found only StockListPdfService calling the Shipment repository'
 
 ## Decisions and preparation
 
-- The three groups and Medium/High/High priorities are accepted. Complete descriptions, labels, Backlog state and reference-only related links are proposed for review.
+- The three groups and Medium/High/High priorities are accepted. Complete descriptions, labels, Backlog state and reference-only related links were approved and saved as FRO-393–395.
 - Current FRO-254/279/292/295/297/341 are Done; FRO-373 is Backlog. Full descriptions were fetched again. The recent Flow QA inventory has no exact Stock List correction owner; the earlier exhaustive Stock List search and FRO-375/376 scope checks remain applicable. No existing issue was modified.
 - The broad surviving per-column/date-controls question and partial later-confirmation fallback question remain outside these drafts. S3 fixes the original DECLARED snapshot masking current values without deciding a new cross-stay partial-measurement rule.
 - Existing screens/components and the approved PDF template are reused. Canvas/preview steps are skipped; production changes and branches are outside this planning task. Supporting ticket-writing/grilling/domain-modeling instructions were read; no new vocabulary or ADR is warranted.
@@ -62,4 +62,4 @@ Reference lookup found only StockListPdfService calling the Shipment repository'
 
 ## Workflow status
 
-0. Preflight complete. 1. Findings discussed; grouping/priorities accepted. 2/2b. Existing presentation reused, no canvas/preview. 3. Consumer trace reconciled above. 4. Three full drafts prepared for review; no Linear writes. 4e. No production branch authorized or prepared. 5. Memory/catalogue updated. 6. Draft validation passed; planning synchronization is recorded in Git history and the handoff receipt. No production pass claimed.
+0. Preflight complete; planning pull, source SHA, current metadata and duplicate searches rechecked before creation. 1. Findings discussed; grouping/priorities accepted. 2/2b. Existing presentation reused, no canvas/preview. 3. Consumer trace reconciled above. 4. Approved descriptions created as FRO-393–395 and reread. 4e. No production branch authorized or prepared. 5. Memory/catalogue updated with ticket ownership. 6. Saved descriptions and all proposed metadata verified; planning synchronization is recorded in Git history. No production pass claimed.
