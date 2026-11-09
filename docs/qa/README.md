@@ -27,6 +27,9 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Shipment Invoice scenarios](scenarios/shipment-invoice.md) | 31 prioritized normal, failure, recovery and boundary cases |
 | [Shipment Invoice review — 9 November 2026](runs/2026-11-09-shipment-invoice.md) | Eight isolated findings, two agreed correction groups, parallel reviews, parent reruns and explicit backend/database limits |
 | [Two Shipment Invoice correction tickets — FRO-386–FRO-387](../../drafts/shipment-invoice-bugs/README.md) | Approved descriptions, saved metadata, references-only ownership and verified creation; both High with Flow QA |
+| [Customs Storage Entry flow](flows/customs-storage-entry.md) | Expected admission/coverage, Create, Details, Change Order and derived facts; Export/VAT/FRO-358 outputs excluded |
+| [Customs Storage Entry scenarios](scenarios/customs-storage-entry.md) | 30 prioritized normal, failure, recovery and boundary checks |
+| [Customs Storage Entry review — 9 November 2026](runs/2026-11-09-customs-storage-entry.md) | Ten isolated UI findings, parallel reviews, parent reruns and explicit backend/database limits |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 
