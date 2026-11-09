@@ -76,6 +76,21 @@ Current documentation describes the return-to-ISSUED behavior, so its recovery p
 
 ## Evidence and next review
 
+### Proposed ticket grouping — awaiting user agreement
+
+After reviewing all five examples, the user requested grouping with few new tickets and reuse of recovery work. Fresh full reads of FRO-283/284/285/373 and a Delivery Note issue search confirm the following proposal. Production main remains unchanged. This grouping does not approve final text, metadata, Linear writes or unresolved recovery decisions.
+
+| Group | Action | Finding coverage | Scope / reason |
+| --- | --- | --- | --- |
+| G1 | New focused bug: Delivery Note drafts — preserve unsaved movement details | QA-DN-01 | Refresh and delayed-save cases share form-state ownership; retain separate checks for both. Related FRO-307/373, but do not expand FRO-373's agreed three cases or its exclusion of saved-version conflict handling. |
+| G2 | New focused bug: Delivery Notes — consistent movement date/time in XML and PDF | QA-DN-04 | Distinct serialization/document-generation fix; require isolated backend/database verification and agreed timezone before claiming a complete fix. |
+| G3 | Reuse FRO-283: cancellation, replacement and recovery | QA-DN-02, QA-DN-05 | Include usable replacement beside issued siblings and explicit handling of unknown cancellation outcomes. Preserve existing history/replacement policy questions; distinguish reproduced UI blockage from source-only cancellation risk. Resolve decisions and backend evidence before declaring implementation-ready. |
+| G4 | Reuse FRO-284: submission reconciliation and recovery | QA-DN-03 | Align its stale context with current SUBMISSION_PENDING/backend reconciliation behavior and specify the missing authorized UI entry. Preserve confirmed-rejection and duplicate-identity questions; no blind resubmission. |
+
+Recommendation: **two new tickets, two existing tickets revised**, with every finding assigned once. FRO-285 stays the Phase B umbrella/reference rather than receiving duplicate acceptance criteria. FRO-283/284 are currently Business_Input/Spike tickets; this proposal does not change their type/status, silently discard existing scope, or promise that later implementation splitting will never be needed. Prefer complete reviewable rewrites of those tickets after decisions rather than appending a contradictory bug list.
+
+No new tests or production changes during grouping. Proposed new titles and ownership are not final ticket drafts. User agreement on the grouping is pending.
+
 - [UI observations](../evidence/delivery-note-qa.test.tsx): run in a scratch copy of the pinned client with its normal providers and cached dependencies. All fetch/XHR calls are blocked; service responses use synthetic fixtures.
 - [Timestamp observations](../evidence/delivery-note-time-repro.py): run with the pinned repository root as its argument. Source checks ensure the tested formatting expressions still exist.
 - Frontend command: `node node_modules/vitest/vitest.mjs run delivery-note-qa.test.tsx src/features/shipments/components/delivery-note-address-sources.test.ts src/features/shipments/components/delivery-note-form-validation.test.ts src/features/shipments/components/delivery-notes-card.test.ts src/features/shipments/services/delivery-note-service.test.ts --config vitest.config.ts`.
