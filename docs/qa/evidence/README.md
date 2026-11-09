@@ -2,6 +2,21 @@
 
 These are investigation harnesses, not production code or installed portal tests. Baseline: `Frontline-Forwarding/frontline-forwarding` commit `6aa259553cd9c86a8aaa157902088aa9a6bca83e`.
 
+## Export to Customs completion — QA-EX-01–06
+
+See [FLOW-EX](../flows/export-to-customs-completion.md), [28 scenarios](../scenarios/export-to-customs-completion.md) and [the review report](../runs/2026-11-09-export-to-customs-completion.md). These observations reproduce current defects and controls; passing is not fix verification.
+
+Use an isolated copy of the pinned client and the existing [audit Vitest configuration](warehouse-vitest.config.ts), saved as `vitest.config.ts`. Place:
+
+- [export-create-qa.test.tsx](export-create-qa.test.tsx) at `src/features/exports/components/export-create-qa.test.tsx`.
+- [export-details-qa.test.tsx](export-details-qa.test.tsx) at `src/features/exports/details/export-details-qa.test.tsx`.
+
+Run each with `node node_modules/vitest/vitest.mjs run --config vitest.config.ts --configLoader runner <test-path>`. Parent independent runs: Create 6/6 (14.09 s), Details 15/15 (16.35 s), exit 0. Node 24.13.0 / Vitest 4.1.6; local dependencies, not a clean installation. All 562 original source files matched the archive. Create mounts actual AppShell/memory-router navigation and simplifies DatePicker only; Details mounts actual page/cards/query/dialog/date controls. Synthetic service responses and blocked network. No server persistence or deployed equivalence claim.
+
+[export-customs-guards-qa.py](export-customs-guards-qa.py) accepts the pinned repository root as its required argument. It extracts the actual Java Customs/cancellation/version/date methods and runs 16 controls with Java 11 and DTO/repository/auth/clock/JSON stand-ins. Generated Java is temporary, network blocked, no downloads. Parent run exit 0: valid sequential events and rejection before stand-in persistence for invalid dates/versions/repeats/reasons/stages. No Spring/PostgreSQL/real authorization/transaction rollback execution.
+
+The initial inherited-Entry suspicion was excluded after reconciling the full FRO-319 contract: invoices derive from the owning Order only, not every covered child. Its temporary observation harness is not retained as a bug regression. Detailed VAT printing/stamping remains a later review.
+
 ## Supplier Invoice review — QA-SI-01–07
 
 See [the flow](../flows/supplier-invoice.md), [28 scenarios](../scenarios/supplier-invoice.md) and [review report](../runs/2026-11-09-supplier-invoice.md). These tests **observe the faulty behavior** and include controls; passing reproduces a finding rather than proving a fix.
