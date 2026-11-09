@@ -1,6 +1,6 @@
 # Stock List selection and printing — 9 November 2026
 
-Expected [flow](../flows/stock-list-selection-printing.md) and [28 scenarios](../scenarios/stock-list-selection-printing.md) were saved before reproductions. This review found **11 bounded findings** in current behavior. Findings are not proposed ticket counts; grouping, priority and ticket creation remain for user review. No Linear write or production fix was made.
+Expected [flow](../flows/stock-list-selection-printing.md) and [28 scenarios](../scenarios/stock-list-selection-printing.md) were saved before reproductions. This review found **11 bounded findings** in current behavior. The user accepted three correction groups and Medium/High/High priorities; [complete drafts](../../../drafts/stock-list-bugs/README.md) await review. No Linear write or production fix was made.
 
 ## Baseline and scope
 
@@ -84,17 +84,17 @@ Evidence: actual template/renderer plus visual and glyph-box checks; ID generati
 2. **Partial later measurements:** a dimensions-only later confirmation makes this PDF fall back to declared weight instead of an older confirmed weight. Reproduced as a separate observation. FRO-299 explicitly resolves latest nonempty confirmed values independently for Shipment consumers; FRO-279's wording does not fully settle cross-record fallback for this PDF. Keep the observation and clarify ownership/expected fallback before promoting it. QA-SL-08's original DECLARED snapshot defect does not depend on this ambiguity.
 3. **No missing-CREATE permission defect found:** current option reads were traced to their actual resolvers. Warehouse options use PURCHASE_ORDER_VIEW, and current partner viewer roles have COMPANY_VIEW. This does not establish every deployed user's assignments.
 
-## Proposed correction groups — awaiting user acceptance
+## Agreed correction groups — drafts awaiting review
 
-After discussing all eleven findings individually, the user requested grouping without excessive tickets. Recommendation: **three tickets**, with a separate acceptance/verification case for every finding. This is a proposal, not approved drafts or permission to create issues.
+After discussing all eleven findings individually, the user accepted **three tickets** with the priorities below and requested complete drafts. Each finding retains its own acceptance/verification case. Descriptions and proposed metadata await review; creation is not authorized yet.
 
-| Proposed ticket | Findings owned | Proposed priority | Reason for grouping |
+| Agreed ticket group | Findings owned | Accepted priority | Reason for grouping |
 | --- | --- | --- | --- |
 | Stock List — correct filters, pagination and saved table settings | QA-SL-01 compatible Vessel cleared; 02 truncated options; 03 stale preference responses; 04 Flags order; 05 stranded page | Medium | Five bounded list-control/preference problems on the same screen, verified through the same table and saved settings. |
 | Stock List → Shipment — keep eligibility current and preserve the complete selection | QA-SL-06 stale eligibility; 07 silent subset handoff | High | One selected set must remain correctly evaluated and fully accounted for from toolbar to creation draft. Missing intended cargo deserves separate tracking. |
 | Stock List PDF — correct current values and preserve readable output | QA-SL-08 obsolete measurements; 09 previous transport; 10 note line breaks; 11 overlapping child ID | High | One fixed PDF output contract; wrong operational values drive priority, with two small layout defects verified in the same representative output set. |
 
-Each of QA-SL-01–11 has exactly one proposed owner. No additional umbrella ticket or separate ticket for each symptom is recommended. The two requirement questions above remain outside these correction groups until their scope is resolved. The groups do not change current lifecycle/authority rules, broaden the audit into another entity or imply every case is verified in production.
+Each of QA-SL-01–11 has exactly one draft owner. The [draft index](../../../drafts/stock-list-bugs/README.md) maps all eleven findings and 17 acceptance/verification pairs. No additional umbrella ticket is planned. The two requirement questions above remain outside these correction groups until their scope is resolved. The groups do not change current lifecycle/authority rules, broaden the audit into another entity or imply every case is verified in production.
 
 Current Flow QA and Stock List searches found no exact existing correction owner. Full current FRO-373/375/376 were checked: FRO-373 owns creation origin-change/draft preservation, FRO-375 owns reviewed Details edits/comments, and FRO-376 owns load-unit omission/history. The proposed Shipment group owns Stock List eligibility and the initial complete-set handoff; coordinate its shared creation-hook code with FRO-373 without duplicating that ticket's draft/origin-change work. The proposed PDF group owns PDF readers/template, not load-unit packing mutation/history. FRO-254/279/292 remain current requirement references; their existing scopes are not rewritten by this proposal. Customs Storage Entry remains with the other chat.
 

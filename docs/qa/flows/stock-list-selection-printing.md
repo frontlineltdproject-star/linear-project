@@ -76,7 +76,7 @@ Paths are relative to the current source archive's client src or app Java/resour
 1. Requirements: later changes reconciled above; no new vocabulary or architectural decision.
 2. Canvas / 2b preview: skipped; existing UI and approved fixed print template reused.
 3. Spec/code trace: baseline saved before reproductions; review completed with 11 bounded findings and two separate requirement questions. See the run report.
-4. Ticket: findings must be reviewed before grouping/drafting/creation; no Linear writes in this audit.
+4. Ticket: all eleven findings discussed; three groups and priorities accepted. [Complete drafts](../../../drafts/stock-list-bugs/README.md) await review before creation; no Linear writes.
 4e. UI branch: excluded; production repository is read-only.
 5. Memory and planning records: flow, scenarios, report and retained evidence prepared for planning-repository synchronization only.
 6. Verification: retained parent reruns and limitations; all 28 full portal scenarios remain Not run.
