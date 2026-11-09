@@ -84,6 +84,22 @@ Evidence: actual template/renderer plus visual and glyph-box checks; ID generati
 2. **Partial later measurements:** a dimensions-only later confirmation makes this PDF fall back to declared weight instead of an older confirmed weight. Reproduced as a separate observation. FRO-299 explicitly resolves latest nonempty confirmed values independently for Shipment consumers; FRO-279's wording does not fully settle cross-record fallback for this PDF. Keep the observation and clarify ownership/expected fallback before promoting it. QA-SL-08's original DECLARED snapshot defect does not depend on this ambiguity.
 3. **No missing-CREATE permission defect found:** current option reads were traced to their actual resolvers. Warehouse options use PURCHASE_ORDER_VIEW, and current partner viewer roles have COMPANY_VIEW. This does not establish every deployed user's assignments.
 
+## Proposed correction groups — awaiting user acceptance
+
+After discussing all eleven findings individually, the user requested grouping without excessive tickets. Recommendation: **three tickets**, with a separate acceptance/verification case for every finding. This is a proposal, not approved drafts or permission to create issues.
+
+| Proposed ticket | Findings owned | Proposed priority | Reason for grouping |
+| --- | --- | --- | --- |
+| Stock List — correct filters, pagination and saved table settings | QA-SL-01 compatible Vessel cleared; 02 truncated options; 03 stale preference responses; 04 Flags order; 05 stranded page | Medium | Five bounded list-control/preference problems on the same screen, verified through the same table and saved settings. |
+| Stock List → Shipment — keep eligibility current and preserve the complete selection | QA-SL-06 stale eligibility; 07 silent subset handoff | High | One selected set must remain correctly evaluated and fully accounted for from toolbar to creation draft. Missing intended cargo deserves separate tracking. |
+| Stock List PDF — correct current values and preserve readable output | QA-SL-08 obsolete measurements; 09 previous transport; 10 note line breaks; 11 overlapping child ID | High | One fixed PDF output contract; wrong operational values drive priority, with two small layout defects verified in the same representative output set. |
+
+Each of QA-SL-01–11 has exactly one proposed owner. No additional umbrella ticket or separate ticket for each symptom is recommended. The two requirement questions above remain outside these correction groups until their scope is resolved. The groups do not change current lifecycle/authority rules, broaden the audit into another entity or imply every case is verified in production.
+
+Current Flow QA and Stock List searches found no exact existing correction owner. Full current FRO-373/375/376 were checked: FRO-373 owns creation origin-change/draft preservation, FRO-375 owns reviewed Details edits/comments, and FRO-376 owns load-unit omission/history. The proposed Shipment group owns Stock List eligibility and the initial complete-set handoff; coordinate its shared creation-hook code with FRO-373 without duplicating that ticket's draft/origin-change work. The proposed PDF group owns PDF readers/template, not load-unit packing mutation/history. FRO-254/279/292 remain current requirement references; their existing scopes are not rewritten by this proposal. Customs Storage Entry remains with the other chat.
+
+Production main rechecked unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. No new execution was needed for grouping; the bounded evidence below remains applicable. Existing presentation contracts are reused, so no new canvas, preview or production branch is part of this step. No Linear issue was created or modified.
+
 ## Verification receipt and limits
 
 | Evidence | Result | Meaning |
