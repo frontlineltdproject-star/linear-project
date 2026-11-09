@@ -1,21 +1,26 @@
 # Export: two agreed ticket groups
 
-The user accepted these two groups on 9 November 2026 and requested complete drafts before Linear creation. **Grouping is approved; descriptions and proposed metadata await review. No Export bug tickets have been created.**
+The user accepted these two groups, reviewed the complete descriptions and metadata, then explicitly approved creating both with the proposed priorities and labels, including Flow QA, on 9 November 2026. **Created and verified as FRO-384 and FRO-385.** D1/D2 map the unchanged approved description files to the saved issues.
 
-## Proposed descriptions and metadata
+## Approved descriptions and saved metadata
 
 Both: **Front Line LTD (FRO) · Backlog**. No project, milestone, assignee, parent, cycle, due date, estimate, attachments or documents. Related links only; no blocking dependency.
 
-| Draft / proposed title | Priority | Complete proposed label set | Related issues | Findings |
+| Draft / approved title | Priority | Complete saved label set | Related issues | Findings |
 | --- | --- | --- | --- | --- |
 | [D1 — Export creation — protect drafts, pending creation and file uploads](01-creation-drafts-and-uploads.md) | High | Story, Bug, Pending_Review, Flow QA, Frontend, export | FRO-317, FRO-350 | QA-EX-01, QA-EX-02, QA-EX-03 |
 | [D2 — Export Details — protect edits, reviewed versions and confirmation recovery](02-details-editing-and-confirmation-recovery.md) | High | Story, Bug, Pending_Review, Flow QA, Frontend, export | FRO-317, FRO-352 | QA-EX-04, QA-EX-05, QA-EX-06 |
 
-Priority rationale: D1 risks lost work and uploads inconsistent with accepted file choices. D2 risks unintended edits/removals, unreviewed confirmation and lost recovery. High is a proposal based on impact, not a measurement of deployed incidence.
+| Draft | Created issue | Priority / status |
+| --- | --- | --- |
+| D1 | [FRO-384 — creation, drafts and uploads](https://linear.app/front-line-ltd/issue/FRO-384/export-creation-protect-drafts-pending-creation-and-file-uploads) | High / Backlog |
+| D2 | [FRO-385 — Details, reviewed versions and recovery](https://linear.app/front-line-ltd/issue/FRO-385/export-details-protect-edits-reviewed-versions-and-confirmation) | High / Backlog |
 
-Current status and label catalogues were fetched. Every proposed label exists and is active; Story is the single Type and Frontend the single Area. Reuse Flow QA (`06ea4564-06f3-40c4-b546-404049f66151`). Creation approval will not imply Ready/Todo promotion.
+Priority rationale: D1 risks lost work and uploads inconsistent with accepted file choices. D2 risks unintended edits/removals, unreviewed confirmation and lost recovery. Both approved High priorities were saved unchanged; they are not measurements of deployed incidence.
 
-Each numbered file is the exact complete proposed Linear description. This index holds planning information outside the descriptions.
+Current status and label catalogues were fetched. Every approved label exists and is active; Story is the single Type and Frontend the single Area. Reused Flow QA (`06ea4564-06f3-40c4-b546-404049f66151`). No Ready/Todo promotion.
+
+Each numbered file contains the complete approved Linear description used for creation and remains unchanged. This index holds planning information outside the descriptions.
 
 ## Consumer trace and ownership
 
@@ -46,7 +51,7 @@ Detailed source references are in the descriptions and [review report](../../doc
 
 Both drafts separately require preservation and regression verification. All seven criteria per draft map to read-only post-deployment checks.
 
-- Reuse existing creation/Details presentation contracts; no new canvas/preview. Draft-only request excludes UI branch preparation and production changes.
+- Reuse existing creation/Details presentation contracts; no new canvas/preview. Authorization covers ticket creation and planning records; no production branch or source changes.
 - Existing Supplier Invoice tickets retain their entity boundaries. No expansion or new blocking dependency.
 - Detailed VAT printing/stamping, pending list/Entry-link work and other entities remain outside this package.
 - The Entry-family aggregation suspicion was ruled out by the owning-Order contract; it is not a defect or open business question.
@@ -55,12 +60,14 @@ Both drafts separately require preservation and regression verification. All sev
 ## Evidence and review basis
 
 - Mandatory planning pull succeeded. Authenticated gh account and production main were checked; source remains `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. Relevant source consumers re-read from the authenticated pinned archive. No production mutation.
-- Full current FRO-317/350/352 re-read, all Done and consistent with the audit baseline. Current labels/statuses fetched; Export + Bug search returned only existing Supplier Invoice scopes, no new Export duplicate. Repeat duplicate checks before eventual creation.
+- Full current FRO-317/350/352 re-read, all Done with unchanged descriptions. Current labels/statuses fetched. Before creation, complete Export creation/Details searches returned 75/79 results, with no matching bug duplicate; Export candidates were existing requirements with different scopes.
 - Prior evidence: 136 existing frontend tests, six creation observations/controls, 15 Details observations/controls and 16 extracted-Java guards. Passing observation tests establish baseline defects, not fixes.
 - Frontend service/persistence calls are mocked; Java guards use stand-ins. Full browser, object-store, Spring/PostgreSQL and deployed-build equivalence remain unverified. All 28 full portal scenarios remain Not run.
-- Documentation-only preparation: no new application tests, Linear writes, source changes, previews or branches.
+- Created only the two approved issues and their related links. No existing requirement description/status edits, new application tests, source changes, previews, branches or portal/database mutations.
 - [Flow](../../docs/qa/flows/export-to-customs-completion.md) · [Scenarios](../../docs/qa/scenarios/export-to-customs-completion.md) · [Evidence instructions](../../docs/qa/evidence/README.md).
 
-## Draft verification
+## Verification receipt
 
-Saved descriptions checked against prepared text; six findings assigned once across the two groups, all 14 criteria mapped to read-only checks, referenced source/evidence files and pinned links validated. Proposed labels/status checked against fresh metadata. Final text and metadata remain subject to user review.
+Both saved issues were re-read. Complete descriptions match the approved files after only Markdown presentation normalization (table separator length, list markers and angle brackets around link targets). Titles, High priorities, FRO Backlog, full label sets, exact related sets, empty blocking/duplicate relations and unset optional metadata all match. No attachments/documents. All six findings retain their approved owners and all 14 acceptance criteria remain present.
+
+The two description files still match approved commit `bf9a95b`. Source/evidence references and read-only post-deployment checks remain unchanged. This verifies ticket creation, not application fixes or deployment.
