@@ -59,4 +59,4 @@ No production source, portal, database, AADE or email writes. Current instructio
 
 The [completed initial review](../runs/2026-11-09-shipment-invoice.md) records eight isolated findings, passing controls, parent reruns and unexecuted end-to-end boundaries. Expected behavior above remains the requirements baseline, not a claim that every stage currently passes.
 
-The eight findings are assigned to [two agreed correction groups with full drafts for review](../../../drafts/shipment-invoice-bugs/README.md): creation/replacement/recovery and goods/totals/review/frozen history. Existing requirement tickets remain references only. No correction is implemented or published by this planning work.
+The eight findings are assigned to [created correction tickets FRO-386 and FRO-387](../../../drafts/shipment-invoice-bugs/README.md): creation/replacement/recovery and goods/totals/review/frozen history. Existing requirement tickets remain references only. Creation was verified; implementation and deployed fixes remain unverified.

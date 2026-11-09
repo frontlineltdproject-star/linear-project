@@ -26,7 +26,7 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Shipment Invoice flow](flows/shipment-invoice.md) | Expected creation, review, finalization, frozen history, cancellation and replacement |
 | [Shipment Invoice scenarios](scenarios/shipment-invoice.md) | 31 prioritized normal, failure, recovery and boundary cases |
 | [Shipment Invoice review — 9 November 2026](runs/2026-11-09-shipment-invoice.md) | Eight isolated findings, two agreed correction groups, parallel reviews, parent reruns and explicit backend/database limits |
-| [Two Shipment Invoice correction drafts](../../drafts/shipment-invoice-bugs/README.md) | Complete descriptions, proposed metadata, references-only ownership and verification coverage; awaiting review |
+| [Two Shipment Invoice correction tickets — FRO-386–FRO-387](../../drafts/shipment-invoice-bugs/README.md) | Approved descriptions, saved metadata, references-only ownership and verified creation; both High with Flow QA |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 

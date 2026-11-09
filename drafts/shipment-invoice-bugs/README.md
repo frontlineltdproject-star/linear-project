@@ -1,21 +1,26 @@
-# Shipment Invoice: two approved correction groups, full drafts for review
+# Shipment Invoice: correction tickets FRO-386 and FRO-387
 
-The user accepted the two groups on 9 November 2026 and requested complete drafts focused on current implemented behavior, with existing issues as references only. **Grouping is approved; final descriptions, proposed metadata and Linear creation remain under review.** No Linear issue was created or edited.
+The user reviewed the complete drafts and explicitly approved creating both tickets with the proposed priorities and labels, including Flow QA, on 9 November 2026. **Created and re-read as FRO-386 and FRO-387.** Existing issues remain references only. The numbered description files are unchanged from reviewed commit `bec1234`.
 
-## Proposed titles and metadata
+## Approved descriptions and saved metadata
 
 Both: **Front Line LTD (FRO) · Backlog**. No project, milestone, assignee, parent, cycle, due date, estimate, attachments or documents. Related references only; no blocks, blockedBy or duplicate relation. No dependency between the two correction groups was established.
 
-| Draft / proposed title | Priority | Complete proposed label set | Related references only | Findings |
+| Draft / approved title | Priority | Complete saved label set | Related references only | Findings |
 | --- | --- | --- | --- | --- |
 | [D1 — Shipment Invoice — correct creation, replacement and saved-action recovery](01-creation-replacement-and-recovery.md) | High | Story, Bug, Pending_Review, Flow QA, Frontend, Shipment | FRO-244, FRO-363, FRO-366 | QA-SHI-01, QA-SHI-04, QA-SHI-07, QA-SHI-08 |
 | [D2 — Shipment Invoice — preserve goods, totals and review after source changes](02-goods-totals-review-and-history.md) | High | Story, Bug, Pending_Review, Flow QA, Integration, Shipment | FRO-244, FRO-363, FRO-366, FRO-301 | QA-SHI-02, QA-SHI-03, QA-SHI-05, QA-SHI-06 |
 
+| Description | Created and verified issue | Priority / status |
+| --- | --- | --- |
+| D1 | [FRO-386 — creation, replacement and saved-action recovery](https://linear.app/front-line-ltd/issue/FRO-386/shipment-invoice-correct-creation-replacement-and-saved-action) | High / Backlog |
+| D2 | [FRO-387 — goods, totals and review after source changes](https://linear.app/front-line-ltd/issue/FRO-387/shipment-invoice-preserve-goods-totals-and-review-after-source-changes) | High / Backlog |
+
 Both High priorities follow the accepted grouping: D1 risks incorrect replacement data and another independent creation attempt; D2 risks lost displayed history and finalization with stale review. This is a severity assessment, not a measured production incident rate.
 
-Current label/status catalogues were fetched. Every proposed label exists and is active. Story is the single Type; D1 has Frontend and D2 Integration as its single Area. D2 spans shared backend evaluation/finalization and client identity/rendering consumers; Integration does not imply a new external service. There is currently no Shipment Invoice-specific label; use existing Shipment without creating another label. Reuse Flow QA (`06ea4564-06f3-40c4-b546-404049f66151`). No Ready/Todo promotion.
+Current label/status catalogues were fetched before creation. Every approved label exists and is active. Story is the single Type; D1 has Frontend and D2 Integration as its single Area. D2 spans shared backend evaluation/finalization and client identity/rendering consumers; Integration does not imply a new external service. Existing Shipment and Flow QA (`06ea4564-06f3-40c4-b546-404049f66151`) labels were reused; no new label or Ready/Todo promotion.
 
-The numbered files contain complete standalone proposed Linear descriptions. This index contains planning metadata and review notes outside the descriptions.
+The numbered files contain the complete approved Linear descriptions used for creation. This index contains planning metadata and verification receipts outside the descriptions. D1/G1 maps to FRO-386; D2/G2 maps to FRO-387 throughout the coverage tables.
 
 ## Consumer trace and ownership
 
@@ -53,9 +58,17 @@ All 15 acceptance criteria have matching read-only post-deployment checks. Separ
 ## References, evidence and limits
 
 - Fresh full FRO-244, FRO-363, FRO-366 and FRO-301 are Done and unchanged; FRO-244/363/366 comments are empty. They are requirement references only, with no description/status edits or blocking ownership. FRO-371 remains Backlog for global list/menu and is excluded. Future printing/PDF/discounts and broader allocation/backfill are excluded.
-- Current Shipment Invoice + Bug search returned only unrelated Supplier Invoice/Order corrections; all 13 current FRO Bug issues were also checked. Prior grouping review read plausible related scopes fully. No duplicate owner was found; repeat before any eventual creation. Existing FRO-373/375/376/378/379/382/384/385 scope remains unchanged.
+- The pre-creation Shipment Invoice + Bug search returned only unrelated Supplier Invoice/Order corrections, with no next page. All 13 then-current Bug issues and plausible scopes had also been checked during drafting/grouping. No duplicate owner was found. Existing FRO-373/375/376/378/379/382/384/385 scope remains unchanged.
 - Mandatory planning pull succeeded; authenticated gh and production main confirmed `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. Re-read relevant create/replay, replacement/reconciliation, selection, frozen output/schema, evaluation and fingerprint consumers from the pinned authenticated archive. A read-only subagent independently checked G2 source identities, totals and review compatibility. No production source change.
 - Existing API shapes support both groups: original Create is replayable with its original actor/payload; a frozen API line exposes position but not internal line ID; allocation location/version is already available to backend evaluation. No invented recovery lookup, replacement source ID or allocation endpoint.
 - Prior retained evidence: 70 existing frontend tests; 35 new integrated UI checks (25 controls, 10 observations); 80 backend controls plus four observations. Passing observations reproduce defects. No new application tests were run for drafting. Node24.13/Vitest4.1.6/jsdom cached dependencies and JDK17 extraction/stand-ins are not a full Java25/Spring/PostgreSQL or deployed-browser run. No duplicate production record, real rollback/concurrency result or deployed equivalence is claimed.
 - Reuse existing Create/Details components and EN/EL contracts; canvas/preview skipped because presentation is already owned and no redesign is needed. Production UI branch is outside authorization. No new vocabulary or qualifying ADR. Only planning artifacts are written and synchronized.
-- Workflow status: preflight and accepted grouping complete; consumer trace/spec check and full drafts complete; Linear write awaits explicit approval of full text/metadata; no production implementation/deployment. [Flow](../../docs/qa/flows/shipment-invoice.md), [scenarios](../../docs/qa/scenarios/shipment-invoice.md), [review report](../../docs/qa/runs/2026-11-09-shipment-invoice.md).
+- Workflow status: grouping, complete drafts, explicit creation approval, Linear creation and re-read verification complete; no production implementation/deployment. [Flow](../../docs/qa/flows/shipment-invoice.md), [scenarios](../../docs/qa/scenarios/shipment-invoice.md), [review report](../../docs/qa/runs/2026-11-09-shipment-invoice.md).
+
+## Creation verification receipt
+
+Both saved issues were re-read. Titles, High priorities, FRO Backlog, exact full label sets, reference-only related sets, empty blocking/duplicate relations and unset optional metadata match the approved package. Attachments/documents are empty. All eight findings and 15 acceptance/verification pairs are retained.
+
+Complete saved descriptions match the approved files after Markdown presentation normalization only: issue chips/reference links, bold markers, table separators, line endings and whitespace. The files themselves remain unchanged from `bec1234`. FRO-244/363/366/301 were re-read before/after: descriptions, titles, labels, priority, status, ownership/project metadata, attachments and existing blocking relations are unchanged. Only approved reciprocal related links to FRO-386/387 were added (FRO-301 to FRO-387 only).
+
+Mandatory planning pull and the source SHA check succeeded; main remains `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. No new application test run, production change or deployment claim. This receipt verifies ticket creation, not application fixes.
