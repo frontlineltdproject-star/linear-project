@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Next flow recommendation and parallel review boundary
+
+- After creating FRO-384/385, user requested the next review and flagged another active chat. Read the latest task in “Check production review progress” (01a1c024-28a1-7942-b662-f252b699586b): user explicitly assigned Shipment Invoice mapping/review there, with Export/Customs/VAT paperwork excluded. Delivery Note review there already produced FRO-381–383. No message or instruction was sent to that chat.
+- Recommend this chat next review VAT-exemption paperwork: Υ.Δ. protocol/printing → record dispatch for stamping → stamped return → paperwork sent to recipient, through individual Supplier Invoice and Export bulk actions. This is a recommendation, not user approval to start the next audit or a completed map. Keep Shipment Invoice work with the other chat.
+- Fresh full FRO-317/321/348/352 read Done. Production main authenticated through gh remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Reviewed current Export workflow, ExportYdService and ExportStampingService; verified corresponding Details entry points. Printing is read-only and allowed before Customs completion; stamping requires positive IE599/Completed. Customs completion does not itself exempt invoices; sending stamped paperwork retains Exempted status.
+- Proposed coverage: PDF selection/grouping/template/protocol and saved-data fidelity; individual-versus-bulk consistency; per-invoice partial results, date/eligibility checks, retries/concurrency and recovery; independent membership, Customs and history preservation. Map expected flow first, then isolate bugs and assess overlap with existing QA tickets before proposing new tickets.
+- Mandatory planning pull succeeded. No new findings, application runs, Linear writes, production mutations, UI preview/branch, new vocabulary or ADR. Record only this recommendation and preserve the parallel Shipment Invoice files plus unrelated draft/patch/.wrangler work during synchronization.
+
 ### 2026-11-09 — Two Export Flow QA tickets approved, created and verified
 
 - User approved both complete drafts and explicitly requested creating them with proposed priorities and labels, including Flow QA. D1 → FRO-384 (creation/drafts/pending creation/files); D2 → FRO-385 (Details edits/reviewed versions/confirmation recovery). Both High. Full URLs, unchanged descriptions and finding ownership are in [the package index](drafts/export-bugs/README.md).
