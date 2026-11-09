@@ -37,3 +37,5 @@ Defined before defect tests on 9 November 2026 from [the expected flow](../flows
 | SHI-031 | P1 | Deferred list/menu (FRO-371), printing/discounts and unrelated Export/VAT scope are not counted as bugs |
 
 Execution evidence is recorded in the [9 November run register](../runs/2026-11-09-shipment-invoice.md#scenario-execution-register). All complete portal journeys remain Not run end-to-end; the register distinguishes isolated controls, reproduced failures and source traces.
+
+Agreed correction ownership: [D1](../../../drafts/shipment-invoice-bugs/01-creation-replacement-and-recovery.md) covers QA-SHI-01/04/07/08; [D2](../../../drafts/shipment-invoice-bugs/02-goods-totals-review-and-history.md) covers QA-SHI-02/03/05/06. Full drafts include 15 acceptance/verification pairs; their preparation does not change the execution outcomes above.

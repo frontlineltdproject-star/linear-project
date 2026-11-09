@@ -115,35 +115,35 @@ The Order correction path `PurchaseOrdersApiService.java:643–650,791–796` ca
 
 **Evidence/ownership:** creation SHI-010 and Details SHI-025 observations. Host/router action contract; proposed correction owner. These are injected Promise failures; no real browser/router failure was observed.
 
-## Proposed correction grouping after example review
+## Accepted correction grouping and full drafts for review
 
-The user reviewed all eight findings through simple examples, then requested as few correction tickets as possible with reuse where appropriate. Recommend **two new correction tickets**, both High. This is a proposed grouping, not approved final descriptions, metadata or permission to write to Linear.
+The user reviewed all eight findings through simple examples, accepted **two correction groups**, and requested full drafts focused on current behavior with existing issues as references only. Both High priorities are retained in the proposed metadata. The [complete draft package](../../../drafts/shipment-invoice-bugs/README.md) contains two standalone descriptions, metadata, ownership and verification coverage. Final descriptions/metadata and Linear creation remain under review.
 
-| Group / proposed title | Findings and required correction | Requirement references |
+| Agreed group / draft title | Findings and required correction | Requirement references |
 | --- | --- | --- |
 | G1 — Shipment Invoice: correct creation, replacement and saved-action recovery | **QA-SHI-01:** retain prepared replacement date/cleared references and operator edits. **04:** retain and reconcile the original uncertain creation attempt across edits/departure/remount before independent creation. **07:** recognize authoritative Discarded and complete return navigation. **08:** handle asynchronous navigation failure using saved identity, including the smaller replacement-message variant. | FRO-244, FRO-363, FRO-366 |
 | G2 — Shipment Invoice: preserve goods, totals and review after source changes | **QA-SHI-02:** render frozen lines independently of live source-row existence. **03:** invalidate review when relevant allocation coverage changes and reject stale finalization. **05:** exclude unavailable row values from active totals while preserving warnings/refusal. **06:** retain still-eligible row selections under their current Order. | FRO-244, FRO-363, FRO-366; FRO-301 for the consumed allocation contract |
 
-G1 owns preparation and action-result recovery from creation through replacement/discard. G2 owns selected goods across live source changes, review, totals and frozen history. These are coherent business scopes, not a claim that all four findings in a group share one root cause or one small patch. Keep separate reproduction/acceptance checks for every finding. The high-priority defects in each group justify High for the group; the individual Medium classifications remain recorded above. No technical blocking dependency between the two groups was established. Selection preservation in G2 must still invalidate review for relevant allocation changes, and G1 must use current valid replacement selections rather than restore old ones.
+G1/D1 owns preparation and action-result recovery from creation through replacement/discard. G2/D2 owns selected goods across live source changes, review, totals and frozen history. These are coherent business scopes, not a claim that all four findings in a group share one root cause or one small patch. Every finding retains separate reproduction/acceptance coverage. The high-priority defects in each group justify High for the group; the individual Medium classifications remain recorded above. No technical blocking dependency between the two groups was established. Selection preservation in G2 must still invalidate review for relevant allocation changes, and G1 must use current valid replacement selections rather than restore old ones.
 
 **Reuse check, 9 November:** fresh full FRO-244/363/366/301 reads remain Done; FRO-371 remains Backlog and concerns the global list/menu only. Exact Shipment Invoice and shipment-invoices searches, broader recovery/frozen/allocation/fingerprint searches, and the complete current 13-issue FRO Bug list found no existing owner of these eight corrections. Plausible current owners were read fully: FRO-373/375/376 own ordinary Shipment/packing behavior; FRO-378/379 own Supplier Invoice; FRO-382 owns Delivery Note/AADE; FRO-384/385 own Export. Their scope is preserved. FRO-303 is a Delivery Note company-regrouping change; legacy FRO-17/101 are general invoice feature work. None should absorb this correction scope merely because its title mentions recovery or invoices.
 
 Reuse the Done tickets as **requirement references**, preserving their descriptions and status. FRO-371, future printing/PDF/discount work, broader allocation changes, Export and VAT paperwork are not dependencies or additional scope. No existing ticket is reopened or modified. Existing Create/Details presentation contracts cover these corrections; no new design preview or production branch is proposed.
 
-The source baseline was reverified unchanged at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`; relevant selection/evaluation code and the existing consumer trace were checked against the grouping. No application tests were rerun merely for grouping; the recorded isolated evidence and all execution limits remain unchanged. Each finding has one proposed owner below. Full standalone drafts and their metadata remain the next review stage after grouping agreement.
+The source baseline was reverified unchanged at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`; creation/replay, replacement/reconciliation, frozen output/schema, selection/evaluation and review consumers were re-read for the drafts. Current full requirement issues, comments, label/status catalogues and duplicate searches were refreshed. No application tests were rerun for drafting; the recorded isolated evidence and all execution limits remain unchanged. Each finding has one agreed draft owner below. D1 has eight criteria and D2 seven, each with a matching read-only post-deployment check. No Linear or production change.
 
 ## Impact and preserved behavior
 
 | Consumer / area | Current result and source | Required outcome | Owner |
 | --- | --- | --- | --- |
-| Replacement prefill/editor | Correct host prefill overwritten by original defaults | Retain current date and cleared references through display/submission | QA-SHI-01 → proposed G1 |
-| Frozen Details | Backend preserves frozen rows; mapping drops null live IDs | Render every frozen line with stable document identity | QA-SHI-02 → proposed G2 |
-| Review/finalize | Value changes detected, eligible coverage changes omitted | Bind review to relevant allocation state | QA-SHI-03 → proposed G2 |
-| Initial creation identity | Unchanged replay works; edit/remount changes unresolved request | Reconcile the first attempt before independent creation | QA-SHI-04 → proposed G1 |
-| Evaluation, draft Details/card totals | Offered-ineligible values remain in total | Exclude unavailable values, preserve warning/finalize refusal | QA-SHI-05 → proposed G2 |
-| Shared refresh selection | Same row regrouped under another Order is removed | Preserve eligible row identity and correct current grouping | QA-SHI-06 → proposed G2 |
-| Discard reconciliation | DISCARDED is mapped as Draft | Accurate terminal result and recovered destination | QA-SHI-07 → proposed G1 |
-| Saved navigation | Async Promise is ignored | Identity/retry recovery reaches real async failures | QA-SHI-08 → proposed G1 |
+| Replacement prefill/editor | Correct host prefill overwritten by original defaults | Retain current date and cleared references through display/submission | QA-SHI-01 → D1 |
+| Frozen Details | Backend preserves frozen rows; mapping drops null live IDs | Render every frozen line with stable document identity | QA-SHI-02 → D2 |
+| Review/finalize | Value changes detected, eligible coverage changes omitted | Bind review to relevant allocation state | QA-SHI-03 → D2 |
+| Initial creation identity | Unchanged replay works; edit/remount changes unresolved request | Reconcile the first attempt before independent creation | QA-SHI-04 → D1 |
+| Evaluation, draft Details/card totals | Offered-ineligible values remain in total | Exclude unavailable values, preserve warning/finalize refusal | QA-SHI-05 → D2 |
+| Shared refresh selection | Same row regrouped under another Order is removed | Preserve eligible row identity and correct current grouping | QA-SHI-06 → D2 |
+| Discard reconciliation | DISCARDED is mapped as Draft | Accurate terminal result and recovered destination | QA-SHI-07 → D1 |
+| Saved navigation | Async Promise is ignored | Identity/retry recovery reaches real async failures | QA-SHI-08 → D1 |
 | Numbering/authorization/guards | Passing method controls; SQL/callers inspected | Preserve current guards, request binding, frozen records and one-live replacement | Existing FRO-244/301/366 contracts; no new defect assigned |
 | Export/VAT/printing/global list | Separate chat or future tickets | No scope expansion | Other chat; FRO-244 future printing; FRO-371 |
 
@@ -200,4 +200,4 @@ Production references below are pinned; line numbers in findings use these files
 - [Backend outputs](https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/shipmentinvoices/service/ShipmentInvoiceOutputs.java#L143), [V47 schema](https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/resources/db/migration/V47__shipment_invoices.sql#L98).
 - [FRO-244](https://linear.app/front-line-ltd/issue/FRO-244), [FRO-363](https://linear.app/front-line-ltd/issue/FRO-363), [FRO-366](https://linear.app/front-line-ltd/issue/FRO-366), [FRO-301](https://linear.app/front-line-ltd/issue/FRO-301), [FRO-371](https://linear.app/front-line-ltd/issue/FRO-371).
 
-All eight findings have been discussed through examples. The two-ticket grouping above awaits agreement; no final draft, correction implementation or Linear publication is approved by this audit. Keep current implemented behavior corrections distinct from future functionality. Existing issue ownership was checked and is preserved.
+All eight findings have been discussed and assigned to the two approved groups. Complete drafts are ready for review; final descriptions/metadata, correction implementation and Linear publication are not approved by this audit. Existing issue ownership and future-work boundaries remain preserved.
