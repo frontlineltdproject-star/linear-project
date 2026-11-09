@@ -135,11 +135,13 @@ FRO-321's blanket “Block Order cancellation while active Supplier Invoices rem
 | QA-SI-06 | Later typing disappears when an earlier correction finishes | SI-016/018 | 2 isolated Details observations |
 | QA-SI-07 | Same-name vessel identity correction is ignored or omitted from activity | SI-028 | Extracted Java plus source trace |
 
-Seven findings are covered by the three accepted groups below; complete drafts await review and any subsequently approved issues can use Flow QA. Fresh Bug + “supplier invoice” duplicate search returned only FRO-375, whose approved scope is Order/Shipment rather than these Supplier Invoice paths. No Linear writes.
+Seven findings are covered by the three accepted groups below, now created and verified as FRO-378–FRO-380 with Flow QA. Before creation, the Bug + “supplier invoice” duplicate search returned only FRO-375, whose approved scope is Order/Shipment rather than these Supplier Invoice paths.
 
-## Accepted ticket grouping — drafts awaiting review
+## Accepted ticket grouping — created tickets
 
-After reviewing all seven examples individually, the user accepted these three groups on 9 November 2026 and requested [complete ticket drafts](../../../drafts/supplier-invoice-bugs/README.md). Each finding retains its own reproduction and acceptance checks. The descriptions and proposed metadata await review; no issues have been created.
+**Publication update:** the user subsequently approved the complete descriptions, proposed priorities/labels and Linear creation. The three tickets are created and verified; current status and links are in [the approved package](../../../drafts/supplier-invoice-bugs/README.md).
+
+After reviewing all seven examples individually, the user accepted these three groups on 9 November 2026. Each finding retains its own reproduction and acceptance checks. G1 → FRO-378 (High); G2 → FRO-379 (High); G3 → FRO-380 (Medium). All are Backlog with Story, Bug, Pending_Review, Flow QA and the approved Area/entity labels.
 
 | Group | Accepted scope | Findings | Why together / implementation owner |
 | --- | --- | --- | --- |
@@ -147,7 +149,7 @@ After reviewing all seven examples individually, the user accepted these three g
 | G2 — Supplier Invoice Details: protect edits and cancellation while requests are unresolved | Preserve pending/unknown cancellation protection and recovery after closing its dialog; keep cancellation tied to the reviewed version; preserve later typing when a save or original-attempt check completes. | QA-SI-04, QA-SI-05, QA-SI-06 | Saved Details operation handling, reviewed state and draft retention; Frontend. Existing contracts: FRO-348/FRO-321. |
 | G3 — Supplier Invoice vessel correction: compare identity and record history | Save a change between different eligible same-name vessel records; include the vessel change in activity even when other facts change in the same save. | QA-SI-07 | Independent backend reference comparison and audit behavior; Backend. Existing contracts: FRO-321/FRO-348. |
 
-G1's wrong-invoice upload risk remains prominent even though two related creation failures share its ticket. G2 groups work in one Details interaction area; this does not assert that all three symptoms have one root cause. G3 remains independently fixable and testable. Each grouped ticket needs every listed case verified before completion; grouping must not reduce coverage. Suggested implementation order: G1, G2, G3. Priority, assignee, status and other metadata remain subject to draft review.
+G1's wrong-invoice upload risk remains prominent even though two related creation failures share its ticket. G2 groups work in one Details interaction area; this does not assert that all three symptoms have one root cause. G3 remains independently fixable and testable. Each grouped ticket needs every listed case verified before completion; grouping must not reduce coverage. Suggested implementation order: G1, G2, G3. Saved metadata was verified against the approved package.
 
 Fresh grouping checks on 9 November 2026: production main remains `6aa259553cd9c86a8aaa157902088aa9a6bca83e`; full current FRO-321/347/348/349 descriptions are unchanged from this review. Supplier Invoice and same-name searches found no exact new bug ticket; FRO-375 was re-read and remains scoped to Order/Shipment saves and comment retries. Proposed Supplier Invoice groups do not expand that existing ticket. Reuse Flow QA if the later drafts are approved for creation.
 

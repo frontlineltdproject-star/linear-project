@@ -14,7 +14,7 @@ This catalogue explains everyday work and provides repeatable checks of the port
 | [Supplier Invoice flow](flows/supplier-invoice.md) | Expected Order-to-invoice capture, documents, corrections and guarded cancellation |
 | [Supplier Invoice scenarios](scenarios/supplier-invoice.md) | 28 prioritized normal, failure, concurrency and ownership cases |
 | [Supplier Invoice review — 9 November 2026](runs/2026-11-09-supplier-invoice.md) | Seven findings, isolated evidence, accepted full-split exception and three agreed ticket groups |
-| [Three Supplier Invoice bug drafts](../../drafts/supplier-invoice-bugs/README.md) | Complete proposed descriptions and metadata covering all seven findings; awaiting review before Linear creation |
+| [Three Supplier Invoice bug tickets — FRO-378–FRO-380](../../drafts/supplier-invoice-bugs/README.md) | Approved descriptions, Linear links and finding-to-ticket mapping for all seven findings; all carry Flow QA |
 
 Read the flow first. Run its normal journey, then the P0 scenarios, then P1. Use separate fixture copies for destructive or terminal branches so one test does not invalidate the next. An unsuccessful first step blocks dependent steps; it does not prove they fail independently.
 
