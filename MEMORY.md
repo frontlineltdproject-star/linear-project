@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-09 — Three Supplier Invoice bug groups proposed after example review
+
+- User reviewed all seven findings through simple examples, then requested grouping without excessive tickets. Proposed G1 creation (QA-SI-01/02/03), G2 saved Details editing/cancellation (04/05/06), G3 vessel identity/history (07). Full boundaries and rationale are in [the review report](docs/qa/runs/2026-11-09-supplier-invoice.md#proposed-ticket-grouping--awaiting-user-agreement). Grouping remains awaiting user agreement; no full ticket drafts, metadata approval or Linear writes.
+- G1 covers unresolved replacement, wrong-owner files, late Order lookup and lost saved confirmation. G2 covers pending/unknown cancellation recovery, reviewed-version preservation and later typing. G3 covers ignored same-name vessel corrections and omitted activity. All seven retain separate verification cases. Proposed implementation order G1, G2, G3; no automatic addition to existing Order/Shipment tickets.
+- Planning pull succeeded; production main remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Current full FRO-321/347/348/349 descriptions match the reviewed versions. Fresh Supplier Invoice/same-name searches found no exact bug duplicate; FRO-375 re-read and retains its Order/Shipment scope. Future approved issues can reuse Flow QA.
+- SI-Q01 remains an accepted split exception, not a bug; FRO-321 wording alignment needs a separate reviewed edit, not a new bug ticket. Existing presentation contracts reused; no canvas/preview, production branch, product changes or new application test runs. No new vocabulary or ADR. Preserve unrelated local draft/patch/.wrangler changes during planning synchronization.
+
 ### 2026-11-09 — Supplier Invoice flow mapped and first bug review completed
 
 - User approved Supplier Invoice capture/correction/cancellation as the next flow, explicitly asking to map expected behavior first and then check bugs. Saved [FLOW-SI](docs/qa/flows/supplier-invoice.md) before independent investigations, expanded to [28 scenarios](docs/qa/scenarios/supplier-invoice.md), and recorded [seven findings with evidence](docs/qa/runs/2026-11-09-supplier-invoice.md). Full Export assignment/exemption progression remains the later flow; existing guards are boundary checks here.
