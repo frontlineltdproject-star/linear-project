@@ -1,0 +1,62 @@
+{
+  "source_branch": "main",
+  "source_commit": "6aa259553cd9c86a8aaa157902088aa9a6bca83e",
+  "frontend": {
+    "selection": {
+      "numPassedTests": 16,
+      "numFailedTests": 0,
+      "numTotalTests": 16,
+      "success": true
+    },
+    "filters": {
+      "numPassedTests": 13,
+      "numFailedTests": 0,
+      "numTotalTests": 13,
+      "success": true
+    }
+  },
+  "existing_frontend_tests": 30,
+  "preview_controls": 4,
+  "backend": {
+    "returncode": 0,
+    "controls": 69,
+    "observations": 5,
+    "static_checks": {
+      "20_fixed_cells_match_record": true,
+      "escaped_th_text_no_utext": true,
+      "notes_direct_text": true,
+      "no_line_break_preserving_css": true,
+      "A4_landscape": true,
+      "repeated_header": true,
+      "timestamp_page_counter_footer": true
+    }
+  },
+  "pdf_template_sha256": "47b0701452856aac00b88593f99555cd09559956f9fa1d7893f5eb92e087a898",
+  "pdf_fixtures": [
+    {
+      "case": "normal-multipage",
+      "rows": 54
+    },
+    {
+      "case": "multiline-notes",
+      "rows": 1
+    },
+    {
+      "case": "long-unbroken",
+      "rows": 1
+    },
+    {
+      "case": "many-lines",
+      "rows": 1
+    },
+    {
+      "case": "split-child-id",
+      "rows": 2
+    }
+  ],
+  "pdf_pages_visually_inspected": 8,
+  "pdf_checks": 6,
+  "original_client_source_files": 562,
+  "source_mismatches": [],
+  "limits": "Read report; isolated controls/observations are not deployed end-to-end passes."
+}

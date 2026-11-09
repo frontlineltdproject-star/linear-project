@@ -1,0 +1,102 @@
+{
+  "baseline": "main 6aa259553cd9c86a8aaa157902088aa9a6bca83e (authenticated by parent)",
+  "command": [
+    "C:\\Program Files\\Java\\jdk-17\\bin\\java.exe",
+    "-Dfile.encoding=UTF-8",
+    "C:\\Users\\Giorgos\\.codex\\visualizations\\2026\\11\\08\\01a1bcaf-5410-7a03-8942-8d6d8a92da4a\\StockListModelQa.java"
+  ],
+  "returncode": 0,
+  "controls": 69,
+  "observations": 5,
+  "static_checks": {
+    "20_fixed_cells_match_record": true,
+    "escaped_th_text_no_utext": true,
+    "notes_direct_text": true,
+    "no_line_break_preserving_css": true,
+    "A4_landscape": true,
+    "repeated_header": true,
+    "timestamp_page_counter_footer": true
+  },
+  "stdout": "CONTROL PASS current DTO members: terminal excluded, each physical colli counted once\nCONTROL PASS latest measured gross and sum\nCONTROL PASS missing measured net independently falls back to declared net\nCONTROL PASS road sum excludes terminal\nCONTROL PASS sea sum\nCONTROL PASS air sum\nCONTROL PASS courier sum\nCONTROL PASS identical packing grouped, no PCS segment\nCONTROL PASS terminal DG alone does not mark Order\nCONTROL PASS current DG without class marks Order\nCONTROL PASS model keeps embedded newline and literal HTML text\nCONTROL PASS internal notes absent from print model\nCONTROL PASS empty external notes has no internal fallback\nCONTROL PASS null external notes has no internal fallback\nCONTROL PASS saved party and vessel values\nCONTROL PASS saved reference values\nCONTROL PASS zero colli Order retained as one row\nCONTROL PASS missing totals blank\nCONTROL PASS null DTO collection safe\nCONTROL PASS recorded zero net/volume stays zero\nCONTROL PASS measured zero net is present\nCONTROL PASS package only has no empty separator\nCONTROL PASS partial DTO missing dimension blank (robustness only)\nCONTROL PASS all absent packing blank\nCONTROL PASS measurement timestamp ties use higher id\nCONTROL PASS current warehouse and position\nCONTROL PASS unknown location marked last-known warehouse\nCONTROL PASS unknown without stay explicit\nCONTROL PASS known status without current stay blank\nCONTROL PASS fixed internal-number descending order, null last\nCONTROL PASS fixed print-time format\nCONTROL PASS invalid selection 0\nCONTROL PASS invalid selection 0 no lookup/render\nCONTROL PASS invalid selection 1\nCONTROL PASS invalid selection 1 no lookup/render\nCONTROL PASS invalid selection 2\nCONTROL PASS invalid selection 2 no lookup/render\nCONTROL PASS invalid selection 3\nCONTROL PASS invalid selection 3 no lookup/render\nCONTROL PASS invalid selection 4\nCONTROL PASS invalid selection 4 no lookup/render\nCONTROL PASS invalid selection 5\nCONTROL PASS invalid selection 5 no lookup/render\nCONTROL PASS invalid selection 6\nCONTROL PASS invalid selection 6 no lookup/render\nCONTROL PASS mixed authorized/unauthorized atomic rejection\nCONTROL PASS authorization fails before shipment lookup/render\nCONTROL PASS external read forwards actor-company scope\nCONTROL PASS missing ID rejects full request\nCONTROL PASS missing ID no partial PDF\nCONTROL PASS internal actor without view denied\nCONTROL PASS supplier participant allowed and scope forwarded\nCONTROL PASS 100 distinct mixed-status Orders accepted\nCONTROL PASS service fixed descending order\nCONTROL PASS fixed render template and filename\nCONTROL PASS internal actor unrestricted assembler scope\nCONTROL PASS render failure propagates\nOBSERVATION PASS B1 old DECLARED snapshot masks edited current gross/net 20/18 with 10/8\nOBSERVATION PASS B1 old DECLARED snapshot masks edited dimensions 40x50x60 with 10x20x30\nCONTROL PASS B1 control current values correct without snapshot\nCONTROL PASS B1 control later full confirmation wins\nOBSERVATION PASS B1 related observation later dimensions-only confirmation falls back to declared 20/18 rather than earlier confirmed 30/25\nDATA B1 stale snapshot=StockListPdfRow[purchaseOrderNumber=PO-0000000001, client=, vessel=, messageNumber=, ownerReference=, supplierReference=, supplier=, collis=1, grossWeightKg=10, netWeightKg=8, volumeWeightRoadKg=, volumeWeightSeaKg=, volumeWeightAirKg=, volumeWeightCourierKg=, packingInfo=Wooden box | 10 x 20 x 30 cm, idDetails=, dangerousGoods=, transportDocumentNumber=, hub=, position=]\nDATA B1 later dimensions-only=StockListPdfRow[purchaseOrderNumber=PO-0000000001, client=, vessel=, messageNumber=, ownerReference=, supplierReference=, supplier=, collis=1, grossWeightKg=20, netWeightKg=18, volumeWeightRoadKg=, volumeWeightSeaKg=, volumeWeightAirKg=, volumeWeightCourierKg=, packingInfo=Wooden box | 100 x 110 x 120 cm, idDetails=, dangerousGoods=, transportDocumentNumber=, hub=, position=]\nOBSERVATION PASS B2 previous dispatched leg wins over newer associated ready leg with CMR-NEW\nDATA B2 selected=CMR-OLD\nOBSERVATION PASS B2 newer associated ready leg without document still prints previous CMR-OLD instead of blank\nCONTROL PASS B2 control only ready leg prints trimmed CMR-NEW\nCONTROL PASS latest dispatched leg wins\nCONTROL PASS cancelled shipment excluded\nCONTROL PASS removed participation excluded\nCONTROL PASS other Order participation excluded\nCONTROL PASS null document blank\nCONTROL PASS blank number blank\nCONTROL PASS null repository lookup empty\nCONTROL PASS no associated shipment blank\nCONTROL PASS repository timestamp ties descending id\nTOTAL controls=69 observations=5\n",
+  "stderr": "WARNING: A terminally deprecated method in java.lang.System has been called\nWARNING: System::setSecurityManager has been called by StockListModelQa (file:/C:/Users/Giorgos/.codex/visualizations/2026/11/08/01a1bcaf-5410-7a03-8942-8d6d8a92da4a/StockListModelQa.java)\nWARNING: Please consider reporting this to the maintainers of StockListModelQa\nWARNING: System::setSecurityManager will be removed in a future release\n",
+  "source_sha256": {
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfModelFactory.java": "a4311af84bcaa5887f9e4a530b6aaa7102f70eff429b9ed9dac451d8f9b278e4",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfRow.java": "005075b3c3e041c92260ac11f825e8f447df1e8a880d6167606def3d118c96a7",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfModel.java": "092b3a636ebd289f831ff8e51e18a844323d2d5d8485973a7c38357c9deb0295",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfService.java": "5bb905bdbab703e27ae15e731e9a8c65e214f2f53cc0f2741e4e515af549d509",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/PurchaseOrderAuthorizationService.java": "3a8d040d85bf88bbd11d12db5770de207c005fa2d8ca9f17ad0889912d486e74",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/PurchaseOrdersApiService.java": "008e97e0950686eda47be89bc9f55361c495b5da5ce21902d86b2dc3bb2bbb9f",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/shipments/ShipmentRepository.java": "6cf14cfafc63a355e16d60c45622ebaea5457709c8e496437c5d20837d22f088",
+    "frontline-forwarding-app/src/main/resources/templates/stock-list.html": "47b0701452856aac00b88593f99555cd09559956f9fa1d7893f5eb92e087a898",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/PurchaseOrderOutputAssembler.java": "46b3f4035ffa4d5ab56a550bc61e3d2c338a337590991d90ac6740714bf97d2b",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/HandlingUnitRepository.java": "2622efb0758a768c40efdbf8608dad192208758ca467fa1fc92b3c3874659db6",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/HandlingUnitMembershipRepository.java": "cc3646beb2204d0126fc1b3483084b53b0af9983c98f5edc0af70176cdd9c8bc",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/HandlingUnitMeasurementRepository.java": "67af63a8dc6e7ed98bd0ba214328179ae7c641611c4098fc5e6b923f192ce556",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/PurchaseOrderWarehouseStayRepository.java": "8b10467f1510cd5b6a47c08056d22377c542d6e5b827f3a1e6367c4a39a35dcc",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/PurchaseOrderWarehouseStay.java": "6916b1a9ca61ce40a4d2d470179112b8922863aaefded16b30a57a116d6ecef4",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/HandlingUnitMeasurementResolver.java": "9695fa672635d48fb2cc34c5416e6ef9ea982739f9e4b90c6264aa0672a5e998",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/ResolvedHandlingUnitMeasurement.java": "0bdff0b57999bec8af43b1ba296d86849f4d955f32d285a92eddd62db7a40e17",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/shipments/ShipmentStatus.java": "7d0ce67ceac0fd80dadcebfa355be7ddd9c1c4c5666096d16791abd1ff263d80",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/shipments/ShipmentMovementCloseReason.java": "0013f50d8b901e802a360fb6873d75727dae9229cf571fc0eb15f621eee70ad0",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/PurchaseOrdersRestApi.java": "2c692b4dd2ec8967624fd5ef68ad466815d4f63e7581cd37879004a94d3551e3",
+    "frontline-forwarding-app/src/main/java/com/frontline/forwarding/system/pdf/PdfRenderService.java": "2535d8a510b96945612bedd3219ddeebeca223467c50f9165911695dcdcc4e5c"
+  },
+  "extractions": [
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfModelFactory.java",
+      "signature": "public class StockListPdfModelFactory",
+      "line": 24,
+      "sha256": "1f0cb01f839c9da1c23b437b6f5c5b82cff7f722042f42e80505b16632169c7a"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfRow.java",
+      "signature": "public record StockListPdfRow",
+      "line": 3,
+      "sha256": "f820d910cbfd5c5669db21f87edf37d4310ebae59504cffbfea7c61940c4f694"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfModel.java",
+      "signature": "public record StockListPdfModel",
+      "line": 5,
+      "sha256": "5a578a281f1f7d8c3f34cfc81cebeba482120b1a23effeefa17f46d7d0ab5990"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/StockListPdfService.java",
+      "signature": "public class StockListPdfService",
+      "line": 21,
+      "sha256": "9eacd4047927b02ea9928c3f46eb4ccad89da643b2a9fb2c676a1494a32ef51b"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/purchaseorders/PurchaseOrderAuthorizationService.java",
+      "signature": "public class PurchaseOrderAuthorizationService",
+      "line": 9,
+      "sha256": "8832e8d7c55f28b6348f4ee2ecd9b980cb8fb4c4d858eb0c61399279ad15845d"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/PurchaseOrdersApiService.java",
+      "signature": "public PurchaseOrderOutput findById(Long id)",
+      "line": 302,
+      "sha256": "77f14136ffb9eb63c21c2d896c1b55d55a78310529b6a4d85244d19cf6525ab8"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/purchaseorders/service/PurchaseOrdersApiService.java",
+      "signature": "private PurchaseOrder requirePurchaseOrder(Long id)",
+      "line": 2023,
+      "sha256": "ce957439fe17939eab50e69ef8ef19060ab9e8f402ba93f2e59b34ecce0b9780"
+    },
+    {
+      "file": "frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/shipments/ShipmentRepository.java",
+      "signature": "public Optional<Shipment> findLatestByPurchaseOrderId(Long purchaseOrderId)",
+      "line": 101,
+      "sha256": "b1428f44a53d33ef596b4c59e48a0368983fe5f1a800f96a0f2b090d9abffa88"
+    }
+  ],
+  "limits": [
+    "Java17 extraction, not Java25/Spring app",
+    "DTO/adapters are stand-ins; assembler inspected not executed",
+    "Repository exact fluent method executes on generic in-memory query stand-ins, not jOOQ/SQL/PostgreSQL",
+    "No HTTP auth, actual PDF renderer, deployed portal, DB, transaction or concurrency execution",
+    "Parent policy loader failed: authenticated archive has no Git metadata",
+    "Partial DTO dimension test is robustness only, not a persisted-data claim"
+  ]
+}

@@ -2,6 +2,10 @@
 
 These are investigation harnesses, not production code or installed portal tests. Baseline: `Frontline-Forwarding/frontline-forwarding` commit `6aa259553cd9c86a8aaa157902088aa9a6bca83e`.
 
+## Stock List selection and printing — QA-SL-01–11
+
+The [Stock List evidence guide](stock-list-evidence.md) indexes retained tests, backend source-extraction checks, synthetic rendered PDFs and replay instructions. The [run report](../runs/2026-11-09-stock-list-selection-printing.md) distinguishes 11 bounded findings from two requirement questions. Parent verification: 63 frontend tests, 69 backend controls plus five observations and seven static checks, five PDF fixtures/eight visually inspected pages and six PDF assertions. These isolated checks are not deployed or complete-flow passes; no production changes were made.
+
 ## Export to Customs completion — QA-EX-01–06
 
 See [FLOW-EX](../flows/export-to-customs-completion.md), [28 scenarios](../scenarios/export-to-customs-completion.md) and [the review report](../runs/2026-11-09-export-to-customs-completion.md). These observations reproduce current defects and controls; passing is not fix verification.
