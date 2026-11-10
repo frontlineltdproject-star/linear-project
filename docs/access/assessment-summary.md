@@ -17,12 +17,12 @@ The existing role structure is largely suitable. Retain role names and existing 
 | Operator cancellations | The four listed cancellation permissions belong to managers/system administrators | Front Line Operators may cancel issued Delivery Notes, Supplier Invoices, Exports and finalized Shipment Invoices. Preserve each workflow's eligibility checks and audit behavior. | Trace role mapping, backend checks and UI controls for all four workflows; do not grant blanket delete/cancel rights. |
 | Warehouse addresses | Operators can edit warehouse addresses | Restrict address editing to Front Line Managers/system administrators. Preserve operator reads/history and operational lookups. | Trace all maintenance entry points and API enforcement; keep this separate from editing a delivery destination. |
 | Manager-account administration | Managers can assign other manager roles through generic user management | CEO/designated person holds an additional permission to appoint/remove Front Line Managers. CEO remains a Front Line Manager, not a new role. Ordinary managers administer ordinary operator/client/supplier accounts. | Specify initial grant/delegation and protection of existing manager accounts, including role/status/credential changes that could bypass the intended boundary; trace API/UI consumers and audit needs. Retain technical system-admin role separately. |
-| Order file visibility | Authorized Order readers can list/download all active owned/inherited attachments; no per-file audience | Add Internal and External files as described below | Trace storage metadata, listing/download, exposed metadata, staged uploads, inheritance, APIs and UI. Map live components, prepare/verify required preview, then draft full implementation contract. |
+| Order file visibility | Authorized Order readers can list/download all active owned/inherited attachments; no per-file audience | Add Internal and External files as described below | Written backend/frontend contract prepared; no preview or UI implementation under the user's specification-only direction. |
 
 ## Order file contract agreed in the interview
 
 - Scope: Order attachments. Shipment, Supplier Invoice and Export files retain existing staff-only access.
-- Staff UI direction: two cards in the Attachments tab, following the Internal/External Notes pattern. This is a direction, not a completed design preview.
+- Staff UI contract: two cards in the Attachments tab, following the Internal/External Notes pattern. External readers see External files only. No standalone preview or UI implementation is part of this planning task.
 - Internal: available to all Front Line internal staff initially; hidden from external users. Narrower internal audiences are deferred.
 - External: available to authorized client and supplier readers of the Order, never public or unrelated-company access.
 - Both Front Line Operators and Managers may change visibility; record actor and time.
@@ -61,13 +61,12 @@ Internal files are a necessary step toward replacing server filing. They do not 
 
 ## Verification and implementation handoff
 
-Business decisions are recorded; the following remain outstanding:
+Consumer tracing and current Linear overlap review support three specification-only drafts in [the review package](../../drafts/access-assessment/README.md). The impact table there supersedes the preliminary work-needed column above. No canvas, preview or production UI branch is required for this handoff; eventual development still includes the specified frontend behavior.
 
-1. Complete consumer tracing for the four changes, using the current production revision and current related Linear issues. The preliminary attachment search was not complete duplicate clearance.
-2. Specify protected manager-account operations and assignment of the additional authority without adding a CEO role or enabling indirect privilege changes.
-3. Reconcile the selected attachment UI with current components and every relevant state; complete preview requirements before a UI handoff.
-4. Verify allowed and denied behavior using controlled accounts in an approved test environment. Cover client/supplier separation, Internal file bytes and metadata, inherited files, direct API paths, and external tracking history. No production writes for testing.
-5. Confirm deployment revision and actual role assignments. The user's missing Create button suggests missing COMPANY_CREATE but does not identify their role.
-6. Prepare complete standalone Linear drafts for agreed gaps, preserving other board work. Ticket titles, count, metadata and writes are not yet approved.
+The manager permission uses System Administrator bootstrap for the CEO, then delegation/revocation by current holders to other Front Line Managers, with last-active-holder protection. The user corrected an accidental selection of system-admin-only assignment. Protect all manager-target administrative changes and indirect disabling paths.
+
+Internal/External scope was explicitly confirmed as Order-only after reconsidering a temporary all-entities proposal. Other attachment owners remain staff-only.
+
+Outstanding: review the full drafts and metadata before Linear writes; implement and test in an isolated environment; verify deployment revision, actual account assignments and external tracking history before onboarding. The missing Create button alone does not identify the user's role. No production mutation tests or blanket role conversions are authorized.
 
 No production code, portal data, account permissions or Linear issues were changed during this assessment. The planning documents were committed and synchronized separately.

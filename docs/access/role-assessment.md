@@ -1,6 +1,6 @@
 # Portal access assessment
 
-Review opened: 2026-11-10. Planned business-decision rounds completed: 2026-11-10. Technical verification and implementation specifications remain pending. This assessment does not authorize production access changes.
+Review opened: 2026-11-10. Business-decision rounds and source consumer tracing completed; three specification-only drafts prepared for review. Runtime and deployment verification remain pending. This assessment does not authorize production access changes.
 
 ## Objective and evidence
 
@@ -49,7 +49,7 @@ Sources: [S1], [S2], [S3]. Order means the office's stock-list item, also called
 | I08 | Maintain vessel records and company-vessel associations | No | Yes; vessel creation uses COMPANY_EDIT on the target client | Yes, with company/type rules | **Fits prior decision** for internal split. External client-manager vessel rights need separate review in E06. | [S1], [S2], [S5], [S7] |
 | I09 | Deactivate/reactivate companies, including suppliers | No | Yes via COMPANY_EDIT and company active flag | Yes | **Fits prior decision** for internal split. **Deferred** by user: new vessel deactivation functionality. Inspected Vessel record/schema have no active field or equivalent command; retain existing maintenance and do not equate dissociation with deactivation. | [S5], [S7], [S8] |
 | I10 | View/create/edit ordinary user accounts, including status | No | Across companies, excluding system-admin targets and subject to role/company compatibility | Broad scope, still subject to role/company compatibility | **Fits prior decision**: managers create/edit/lock/disable ordinary internal operator accounts (round 2). Front Line Managers also create/edit/lock/disable client accounts (round 3), using Client Operator initially. Managers also create/edit/lock/disable Supplier Operator accounts; agent onboarding is deferred. Internal administrator-account changes remain subject to I11. ACTIVE/LOCKED/DISABLED are saved through USER_EDIT; no separate disabling authority. | [S1], [S3], [S6], [S9] |
-| I11 | Appoint another internal manager | No | Yes | Yes | **Change agreed in discussion**: reserve appointment/removal of business administrators to CEO/designated person. No separate CEO account type; exact implementation and protection of demotion/status changes still to specify. | [S3], [S6] |
+| I11 | Appoint another internal manager | No | Yes | Yes | **Change agreed**: CEO/designated Front Line Manager holds an individual manager-administration grant. System Administrator bootstraps the first holder; holders may delegate/revoke for other managers. Protect manager-target edits and last active holder. See draft 2 for the proposed implementation contract; no new CEO role. | [S3], [S6] |
 | I12 | View warehouse maintenance/history and edit warehouse address | Yes | Yes | Yes | **Change agreed in discussion**: restrict warehouse-address editing to managers/system administrators. This changes the current operator permission; retain operator read/history access unless separately decided. The command does not change warehouse identity/type/activity. | [S1], [S2] |
 | I13 | Read internal Order/Shipment notes | Yes within internal record access | Yes | Yes | **Fits prior decision**: retain staff-wide internal Order/Shipment note visibility (round 2). Future confidential invoice example is excluded. | [S2] |
 
@@ -130,7 +130,11 @@ Client tracking baseline retained by user: authorized external Order readers can
 | Files, documents and cross-client references | Existing scoped mechanisms documented | Review relevant consumers once desired client outputs are settled; no full-security-audit claim. |
 | Existing users and deployment | Actual assignments and deployed revision unknown | Confirm before any rollout or migration proposal. No blanket role conversion. |
 
-Workflow position: source-led assessment and planned business interview rounds complete; implementation-specific discovery and verification remain. Canvas, preview, final specification and ticket steps are not yet reached. Order Attachments two-card direction is agreed, but has not undergone component mapping or preview verification. Production branch work remains outside this planning scope. Memory is updated each round; deployed verification remains pending.
+Workflow position: source-led assessment, business interview and relevant consumer tracing complete. Three implementation specifications are drafted in `drafts/access-assessment/`; their impact map supersedes the preliminary trace notes above. Canvas, preview and UI implementation are skipped under the user's specification-only direction. The Order Attachments two-card contract is written, not visually verified. Linear writes await full draft review and approval; runtime/deployment verification remains pending.
+
+Final scope clarification: Internal/External applies to Orders only. Shipment, Supplier Invoice and Export attachments retain staff-only access. The user reconsidered the temporary all-entities proposal and explicitly accepted Order-only scope.
+
+Manager-administration clarification: a System Administrator bootstraps the CEO as the first holder; holders may grant/revoke for other Front Line Managers, with last-active-holder protection. This reflects the user's corrected first-choice answer, not the initial accidental selection. The draft protects manager-target account changes and indirect disabling paths as well as role assignment.
 
 ## Pinned sources
 
