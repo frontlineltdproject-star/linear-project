@@ -93,15 +93,17 @@ Current source gap: Order attachment metadata has no per-file internal/client au
 | Business need | Internal files are essential; current scope is a step toward replacing server filing | Full job aggregation is explicitly deferred. Do not claim current file visibility changes alone replace the whole job workflow. |
 | File owner | A case folder represents a job spanning potentially several business records | User defers a Job/Case aggregate linking those records to a later version. Keep current file work on existing entities; exact affected entities still to agree. Do not equate a job with one Order or Shipment. |
 | Internal audience | All internal Front Line staff for the first version, hidden from external clients | Agreed by user. Manager-only/subset restrictions may be considered later; no new role or per-department model now. Existing technical system-admin authority remains outside the business-role redesign. |
-| Shared-file actions | Not decided | Who uploads, changes visibility, shares with clients, edits/replaces or removes files? |
-| Existing uploads | Currently readable through permitted Orders | Explicitly decide compatibility/defaults; no automatic exposure or retroactive hiding approved. |
+| Shared-file actions | Both Front Line Operators and Managers may change Order-file visibility; record actor/time | Agreed. Existing upload/removal rules remain the baseline; sharing permissions must not bypass owner/inheritance rules. Revocation cannot recall downloaded copies. |
+| New uploads and existing files | New Order uploads default to internal-only; explicit choice makes them external | New-upload default agreed. Existing active uploads need a separate migration decision; no retroactive hiding or exposure approved. |
 | Splits/inheritance | Existing child Orders link original files and authorize through the child | New audience rules must be enforced in inherited listing/download too; resolve who controls shared-file visibility. |
 | Other consumers | Filenames, previews/downloads and APIs can expose information | Trace full affected surfaces after owner/audience decisions, including metadata and direct links. |
 | Server replacement | Business objective confirmed | Future operating workflow and any historical migration are separate scope decisions; no filesystem access authorized. |
 
 User example: importing a shipment for a client and storing its goods may involve a Shipment, multiple Orders and an import/customs procedure, together with agent/warehouse/duty/tax expenses and supplier invoices, packing lists and AWBs. This is a user-described job example, not verification that all those entities or expense functions are already implemented. User has seen imports and some exports, so do not extrapolate a universal job structure. Job/case vocabulary is captured in CONTEXT.md; implementation of the aggregate is explicitly deferred.
 
-Next interview: agree which existing entity uploads need the visibility change, then sharing authority/defaults and existing-file treatment. No new case entity, expense accounting or historical server migration in current scope.
+Agreed initial scope: add internal/external visibility to Order attachments; retain staff-only access for Shipment, Supplier Invoice and Export files. User chose two cards in the Attachments tab, analogous to Internal/External Notes. This is an approved layout direction, not a verified canvas or final UI contract; live components/tokens, empty/loading/error states, Greek layout and inaccessible-file metadata still need design/spec reconciliation.
+
+Next interview: existing-file migration, visibility changes on split-inherited shared files, and whether External includes existing authorized supplier readers or only clients. No new case entity, expense accounting or historical server migration in current scope.
 
 ## Review rounds
 

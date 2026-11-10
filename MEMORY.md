@@ -3171,3 +3171,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Internal-file audience agreed: all Front Line internal staff initially. Possible manager-only/subset restrictions are for later. Added Job (case) business vocabulary to CONTEXT.md, without implementing or specifying a technical aggregate. Updated internal-filing assessment section.
 - Next frontier: scope new file audience controls to client-readable Order uploads vs other actual gaps; decide who may share files and new-upload defaults, then existing uploads/inheritance. Preserve staff-only owners unless separately authorized.
 - Planning pull passed. No Linear/production/account/server/UI changes; assessment, glossary and memory only. No ADR warranted for deferred architecture.
+
+### 2026-11-10 — Order attachment visibility and two-card direction approved
+
+- User agrees initial scope: Order files get internal/external visibility; Shipment/Supplier Invoice/Export files retain staff-only behavior. User proposes two cards in Attachments tab analogous to Internal/External Notes (message says errors, interpreted in established context as notes pattern).
+- User approves both Front Line Operators and Managers changing file visibility, with actor/time audit as proposed. New Order uploads default internal-only with explicit sharing. Existing upload/remove/ownership/inheritance rules remain baseline; no recall of downloaded copies implied.
+- Updated internal-filing assessment. Pending: preserve or reclassify existing uploads; source-owned inherited-file visibility and propagation; whether External includes supplier readers currently authorized through Order participation. No migration or new external audience assumed.
+- UI direction is agreed, but component mapping/canvas/preview/spec checks still pending; do not claim a verified UI or draft final tickets yet. No production/UI/account/Linear changes. Planning pull passed; checked assessment diff and synchronize matrix/memory only.
