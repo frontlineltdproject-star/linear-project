@@ -3148,3 +3148,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User asks whether document review means the Order Documents tab or entities such as Delivery Note. Clarify three separate access surfaces: Order attachments, generated document/PDF, underlying business entity. No category or file sharing decision yet; PDF-only read access is a possible requirement, not a claim of existing capability.
 - Updated E03/E04/E10 in assessment. Need inspect existing client Order progress and Shipment-derived information before concluding a new tracking view is needed. Shared Shipments remain internal under current policy; any proposed output must be limited to the client's goods.
 - Planning pull succeeded; no Linear, production, UI or account changes. Synchronize assessment/memory only.
+
+### 2026-11-10 — Staff report on client-visible Order uploads; policy clarification pending
+
+- User initially agrees not to automatically show uploaded files to clients, then reports staff said clients actually see everything uploaded and the only internal field is a notes field.
+- Record separately: staff-reported current behavior versus desired policy. Do not infer that report reverses user's initial preference, proves Railway implementation, applies across every entity, or authorizes a new sharing control. E10 now explicitly awaits decision to preserve client visibility for all Order uploads or introduce selective sharing.
+- Next question explains tradeoff: preserve current workflow if all Order uploads are intended for clients; otherwise assess selective sharing and existing-file handling. No proposed defaults/migration rules adopted yet.
+- Planning pull passed; matrix/memory only. No Linear, production, account or UI changes.
