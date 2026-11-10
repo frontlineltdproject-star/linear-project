@@ -3141,3 +3141,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User accepts Front Line Managers creating/maintaining client accounts, including lock/disable. Initial onboarding uses Client Operator; future Client Manager activation/assignment policy remains open.
 - Updated assessment E02/E06/E08/I10/R03. Remaining client review concerns visible information, documents and shipment tracking, not repeat decisions on operational editing or self-administration. Supplier/agent use remains unresolved. No permissions changed in production or Linear.
 - Planning pull passed; checked targeted matrix diff; synchronize only matrix and memory.
+
+### 2026-11-10 — Client internal notes retained; tracking and document scope clarified
+
+- User keeps internal notes hidden from clients (E03). User sees client shipment tracking as helpful if supported; record as conditional interest pending source/UI capability check, not a new feature or whole-Shipment-access approval.
+- User asks whether document review means the Order Documents tab or entities such as Delivery Note. Clarify three separate access surfaces: Order attachments, generated document/PDF, underlying business entity. No category or file sharing decision yet; PDF-only read access is a possible requirement, not a claim of existing capability.
+- Updated E03/E04/E10 in assessment. Need inspect existing client Order progress and Shipment-derived information before concluding a new tracking view is needed. Shared Shipments remain internal under current policy; any proposed output must be limited to the client's goods.
+- Planning pull succeeded; no Linear, production, UI or account changes. Synchronize assessment/memory only.
