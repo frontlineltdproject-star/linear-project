@@ -3236,3 +3236,8 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User approved creating all three reviewed specifications. Created FRO-399 for routine operator cancellations and warehouse-address editing, FRO-400 for delegated manager administration, and FRO-401 for Order attachment visibility.
 - Re-read all three and verified titles, complete descriptions, FRO Backlog status, Story/Backend/Pending_Review labels, approved related issues, empty attachments and unset priority, assignee, project, milestone and parent. Linear normalized Markdown list markers, table separators and link syntax without changing content.
 - Production source remained at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Implementation and post-deployment verification remain pending. No production changes.
+
+### 2026-11-10 — Access tickets approved for development
+
+- Moved FRO-399, FRO-400 and FRO-401 to Todo and replaced Pending_Review with Ready at the user's request. Created the FRO team label Permissions and applied it to all three as requested.
+- Re-read each issue and verified Todo and the full label set (Ready, Permissions, Backend, Story). The descriptions, relations, attachments and other issue fields matched the pre-edit reads.

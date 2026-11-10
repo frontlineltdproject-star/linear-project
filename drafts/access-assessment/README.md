@@ -10,7 +10,7 @@
 | [FRO-400](https://linear.app/front-line-ltd/issue/FRO-400/users-protect-front-line-manager-administration-with-a-designated) | [2](02-manager-administration.md) | Users — protect Front Line Manager administration with a designated permission |
 | [FRO-401](https://linear.app/front-line-ltd/issue/FRO-401/order-attachments-internalexternal-visibility-and-inherited-file) | [3](03-order-attachment-visibility.md) | Order attachments — Internal/External visibility and inherited-file access |
 
-All three are in FRO Backlog with Story, Backend and Pending_Review labels. Each description includes frontend delivery. Priority, assignee, project, milestone and parent are unset. Verified related issues: FRO-399 to FRO-236 and FRO-306, FRO-400 to FRO-235, FRO-236 and FRO-243, and FRO-401 to FRO-342, FRO-326 and FRO-377.
+All three are in FRO Todo with Ready, Permissions, Story and Backend labels. Each description includes frontend delivery. Priority, assignee, project, milestone and parent are unset. Verified related issues: FRO-399 to FRO-236 and FRO-306, FRO-400 to FRO-235, FRO-236 and FRO-243, and FRO-401 to FRO-342, FRO-326 and FRO-377.
 
 ## Impact and ownership
 
