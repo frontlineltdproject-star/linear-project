@@ -10,6 +10,9 @@ Whether Front Line is responsible for collecting an Order's goods from the suppl
 
 ## Language
 
+**Job (case)**:
+The overall piece of work Front Line undertakes for a client, potentially spanning transport, multiple Orders, customs procedures, storage, expenses and supporting files. A server case folder collects material for that job; a job is not necessarily a single Order or Shipment, and its composition varies with the work.
+
 **Order DN Import / DN Export**:
 Independent text references to an Order's incoming and outgoing delivery-note documents. They are distinct from attachments and from drafting or issuing a Shipment delivery note.
 
