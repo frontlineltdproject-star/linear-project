@@ -3198,3 +3198,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User authorizes supplier access to External files and assumes it exists today. Clarify source baseline: authorized supplier Order readers currently list/download all active owned/inherited attachments; new audience mechanism limits them to External files and hides Internal files.
 - Approval is specifically file visibility, not blanket approval of client/invoicing-company identity, invoice-row prices/totals or other supplier Order output. Keep those fields as business-confirmation pending; do not silently decide them from a file-access answer.
 - Updated remaining external-access checks in assessment. Planning pull passed; no Linear, production, account or UI changes. Synchronize assessment/memory only.
+
+### 2026-11-10 — Supplier read scope retained; remaining assessment decisions
+
+- User explicitly keeps existing supplier access and requests moving on. Mark Supplier Operator initial use with existing Order field/read scope accepted, including previously highlighted client identity/invoice-row prices; new Internal/External file mechanism still applies. Supplier Manager retained for later; agents deferred. No actual account changes authorized.
+- Reconciled outdated matrix pending states and workflow status. Client tracking source already supports Order -> Collis -> tracking-code timeline with Shipment metadata; propose using this baseline rather than a new client Shipment page, subject to external history/output verification. No new tracking feature approved yet.
+- Next business round: retain existing tracking with full Shipment records internal; authorize Front Line Managers to administer Supplier Operator accounts analogous clients; defer new vessel-deactivation functionality to avoid expanding this access assessment. CEO-only manager account protection and relevant backend/UI consumers need detailed trace before final tickets; no repeated role-model decision required.
+- Planning pull passed. No new application tests, deployed checks, Linear/production/account/UI changes. Matrix reread and diff checked; synchronize only matrix/memory.
