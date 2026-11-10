@@ -3077,3 +3077,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User supports a CEO brief/matrix but prefers a simple first version based on existing operator/manager/admin distinctions, potentially reserving users/companies/suppliers/vessels creation for admins, instead of exhaustive departmental mapping. Exact powers are proposals, not approved requirements.
 - Next discussion separates ordinary operational access, business administration and confidential-file access. Clarify file audience and whether business administrators automatically receive it; confirm proposed initial administration boundary before detailed UI/spec work. External client scope remains provisional.
 - Planning pull succeeded; production main unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. No Linear, production, glossary or ADR changes.
+
+### 2026-11-10 — Initial administration split accepted for exploration
+
+- User clarified confidential file example is a future invoice issued by Front Line, not yet included in new portal. Explicitly exclude designing access around that example in current discovery. Whether business admins can read future confidential documents remains uncertain (probably not), not an approved permission rule.
+- User accepts as a starting proposal reserving creation of users, companies, suppliers and vessels for business administrators, with ordinary operators unable to create them; revisit if operational experience shows problems. This does not settle editing/deactivation, permission assignment, other operational powers or authorize implementation/Linear writes.
+- Next frontier: distinguish creating shared records from editing/deactivating existing ones; bound who may appoint another business administrator. Client scope remains an unconfirmed hypothesis for CEO review. No departmental role matrix or confidential-file design required now.
+- Planning pull succeeded. No Linear, production, glossary or ADR changes; memory-only planning synchronization.
