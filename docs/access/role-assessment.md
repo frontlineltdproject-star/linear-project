@@ -39,18 +39,18 @@ Sources: [S1], [S2], [S3]. Order means the office's stock-list item, also called
 
 | ID | Current capability | FO | FM | SA | Business fit / next decision | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| I01 | Operational record scope across customers | All customers, subject to workflow rules | Same | Same | **Decide**: retain cross-customer access or introduce a specific boundary? Coverage assignments do not currently restrict access. | [S2], [S3], [S4] |
+| I01 | Operational record scope across customers | All customers, subject to workflow rules | Same | Same | **Fits prior decision**: retain cross-customer operator access (round 1). Coverage assignments remain routing metadata, not access restrictions. | [S2], [S3], [S4] |
 | I02 | Create/edit Orders and work on Shipments | Yes | Yes | Yes | **Decide**: whether the same operational powers suit all internal operators. | [S1], [S2], [S4] |
 | I03 | View/create/edit Supplier Invoices | Yes | Yes | Yes | **Decide**: whether any internal department needs narrower access. | [S1], [S2] |
 | I04 | View/create/edit Exports and Customs Storage Entries | Yes | Yes | Yes | **Decide**: same question for customs work; no departmental restriction is assumed. | [S1], [S2] |
 | I05 | Create/issue Delivery Notes; create/edit/finalize Shipment Invoice drafts | Yes | Yes | Yes | **Decide**: whether these operational rights suit all operators. | [S1], [S2] |
-| I06 | Cancel issued Delivery Notes, Supplier Invoices, Exports and finalized Shipment Invoices | No | Yes, with each workflow's checks | Yes, with checks | **Decide**: retain manager-only cancellation? Does not assert a general rule for every kind of cancellation. | [S1], [S2] |
+| I06 | Cancel issued Delivery Notes, Supplier Invoices, Exports and finalized Shipment Invoices | No | Yes, with each workflow's checks | Yes, with checks | **Change agreed in discussion**: allow operators these four cancellation capabilities; user reports routine operational need and manager approval would delay everyday work. Preserve existing workflow eligibility/validation and audit behavior; no general cancellation or deletion permission inferred. | [S1], [S2] |
 | I07 | View shared companies/suppliers; create/edit them | View only | View/create/edit | View/create/edit | **Fits prior decision**: ordinary operators select existing records; business administrators maintain shared companies/suppliers. | [S1], [S3], [S5] |
 | I08 | Maintain vessel records and company-vessel associations | No | Yes; vessel creation uses COMPANY_EDIT on the target client | Yes, with company/type rules | **Fits prior decision** for internal split. External client-manager vessel rights need separate review in E06. | [S1], [S2], [S5], [S7] |
 | I09 | Deactivate/reactivate companies, including suppliers | No | Yes via COMPANY_EDIT and company active flag | Yes | **Fits prior decision** for internal split. **Verify** vessel deactivation separately: inspected Vessel record/schema have no active field or equivalent command. Do not equate dissociation with deactivation. | [S5], [S7], [S8] |
 | I10 | View/create/edit ordinary user accounts, including status | No | Across companies, excluding system-admin targets and subject to role/company compatibility | Broad scope, still subject to role/company compatibility | **Fits prior decision** for creating internal operators; **Decide** external accounts, editing and account disabling. ACTIVE/LOCKED/DISABLED are saved through USER_EDIT; no separate disabling authority. | [S1], [S3], [S6], [S9] |
 | I11 | Appoint another internal manager | No | Yes | Yes | **Change agreed in discussion**: reserve appointment/removal of business administrators to CEO/designated person. No separate CEO account type; exact implementation and protection of demotion/status changes still to specify. | [S3], [S6] |
-| I12 | View warehouse maintenance/history and edit warehouse address | Yes | Yes | Yes | **Decide**: warehouse-address maintenance is currently an exception to the proposed general idea of admin-only shared-data maintenance. The command does not change warehouse identity/type/activity. | [S1], [S2] |
+| I12 | View warehouse maintenance/history and edit warehouse address | Yes | Yes | Yes | **Change agreed in discussion**: restrict warehouse-address editing to managers/system administrators. This changes the current operator permission; retain operator read/history access unless separately decided. The command does not change warehouse identity/type/activity. | [S1], [S2] |
 | I13 | Read internal Order/Shipment notes | Yes within internal record access | Yes | Yes | **Decide**: retain staff-wide internal notes? Future confidential invoice example is excluded. | [S2] |
 
 ## B. External users matrix
@@ -84,7 +84,7 @@ Sources: [S1], [S2], [S3]. Order means the office's stock-list item, also called
 
 ## Review rounds
 
-1. Internal baseline: I01 (customer scope), I06 (cancellation), I12 (warehouse addresses). Wait for answers before recording fit/change.
+1. Completed: I01 retain cross-customer operator access; I06 extend the four named cancellation capabilities to operators; I12 restrict warehouse-address editing to managers/system administrators. Business decisions only, not deployed changes.
 2. Remaining internal workflows and account lifecycle: I02-I05, I08-I10, I13; preserve I07/I11 decisions unless user revisits them.
 3. Client tasks, information and self-administration: E01-E10, R03.
 4. Supplier/agent need and technical administration: R04-R05; then field/file and entry-point verification.

@@ -3119,3 +3119,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Prior company/supplier/internal-vessel administrator split retained as fitting; CEO-only manager appointment/removal retained as agreed change, not implemented. No broad approval for existing client-manager company deactivation/vessel creation/user administration inferred.
 - First round asks I01 cross-customer staff access, I06 manager-only cancellation of specified records, I12 operator warehouse-address editing. Recommendations remain pending user response. Other rows reviewed in later rounds; no UI design or Linear drafts/mutations yet. Files are assessment artifacts, not final ticket descriptions.
 - Re-read matrix and checked diff formatting. No runtime tests, test accounts, production mutations, glossary changes or ADR. Commit/push only matrix and memory, preserving unrelated local drafts/patches/.wrangler.
+
+### 2026-11-10 — Access assessment round 1 decisions
+
+- User keeps cross-customer operational access (I01). User changes I06: operators should cancel issued Delivery Notes, Supplier Invoices, Exports and finalized Shipment Invoices because these situations arise in daily work and manager dependency would be time consuming. Scope is these four capabilities, preserving workflow eligibility/validation/audit behavior, not blanket deletion or bypass of business rules.
+- User reserves warehouse-address editing to managers (I12), changing current operator edit access. No request to remove operator warehouse reads/history or existing system-admin authority.
+- Updated docs/access/role-assessment.md; existing current-behavior columns remain accurate and separate from desired policy. Next review: remaining daily workflow permissions I02-I05, staff notes I13, and internal operator-account editing/disabling under I10. External account powers and CEO-protected manager account lifecycle remain later questions.
+- Planning pull passed; re-read edited rows and checked diff formatting. No Linear, production, account or UI changes. Decisions are assessment outcomes, not implementation/write approval.
