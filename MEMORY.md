@@ -3178,3 +3178,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User approves both Front Line Operators and Managers changing file visibility, with actor/time audit as proposed. New Order uploads default internal-only with explicit sharing. Existing upload/remove/ownership/inheritance rules remain baseline; no recall of downloaded copies implied.
 - Updated internal-filing assessment. Pending: preserve or reclassify existing uploads; source-owned inherited-file visibility and propagation; whether External includes supplier readers currently authorized through Order participation. No migration or new external audience assumed.
 - UI direction is agreed, but component mapping/canvas/preview/spec checks still pending; do not claim a verified UI or draft final tickets yet. No production/UI/account/Linear changes. Planning pull passed; checked assessment diff and synchronize matrix/memory only.
+
+### 2026-11-10 — Mock attachment population, inheritance and external audience confirmed
+
+- User clarifies existing uploaded files are mock data. Do not preserve hypothetical real client visibility, but do not infer deletion permission or apply this assumption to future real imports. Existing mock classification still pending; propose Internal to match new-upload default without deleting files.
+- User approves source-owned visibility: inherited files keep original visibility, changes on owning Order apply everywhere inherited, child files remain read-only.
+- User approves External retaining authorized client and supplier readers within existing Order scope; Internal hidden from both. External is not public access and does not introduce new supplier/agent accounts.
+- Updated internal filing assessment; next round can close mock classification and supplier/agent rollout choice. No Linear/production/UI/accounts/files altered outside planning. Planning pull passed; synchronize matrix and memory only.
