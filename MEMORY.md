@@ -3192,3 +3192,9 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Fresh production SHA remains 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Read-only delegated supplier trace confirms external Order output includes client/invoicing-company identity, references, external notes, customs/warehouse/journey details and invoice-row prices/totals; relevant UI tabs are available read-only. Staff-only Supplier Invoice entity is distinct from Order invoice rows. Shared External file audience includes authorized clients and suppliers as already agreed.
 - Read-only tracking trace finds existing external colli timeline with warehouse stays and Shipment metadata; full Shipment link is gated. Historical cross-company reference review remains incomplete; no confirmed exposure defect or deployed verification. Do not invent a new tracking feature before assessing existing view.
 - Updated matrix mock-file decision, role rollout and remaining external-access checks. Pending immediate question: supplier read scope acceptance versus need for a narrower supplier view. No Linear/account/production changes or runtime tests. Planning pull passed; sync matrix/memory only.
+
+### 2026-11-10 — Supplier External-file access explicitly reconfirmed
+
+- User authorizes supplier access to External files and assumes it exists today. Clarify source baseline: authorized supplier Order readers currently list/download all active owned/inherited attachments; new audience mechanism limits them to External files and hides Internal files.
+- Approval is specifically file visibility, not blanket approval of client/invoicing-company identity, invoice-row prices/totals or other supplier Order output. Keep those fields as business-confirmation pending; do not silently decide them from a file-access answer.
+- Updated remaining external-access checks in assessment. Planning pull passed; no Linear, production, account or UI changes. Synchronize assessment/memory only.
