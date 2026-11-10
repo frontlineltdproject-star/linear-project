@@ -3126,3 +3126,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User reserves warehouse-address editing to managers (I12), changing current operator edit access. No request to remove operator warehouse reads/history or existing system-admin authority.
 - Updated docs/access/role-assessment.md; existing current-behavior columns remain accurate and separate from desired policy. Next review: remaining daily workflow permissions I02-I05, staff notes I13, and internal operator-account editing/disabling under I10. External account powers and CEO-protected manager account lifecycle remain later questions.
 - Planning pull passed; re-read edited rows and checked diff formatting. No Linear, production, account or UI changes. Decisions are assessment outcomes, not implementation/write approval.
+
+### 2026-11-10 — Access assessment round 2 and existing role names retained
+
+- User keeps existing operator operational powers across Orders, Shipments, Supplier Invoices, Exports, Customs Storage Entries, Delivery Notes and Shipment Invoices (I02-I05); keeps staff-wide internal notes (I13).
+- User agrees managers create/edit/lock/disable ordinary internal operator accounts (I10). This does not grant ordinary managers control over administrator accounts; CEO/designated-person appointment/removal boundary retained. External account administration remains undecided.
+- User prefers minimum modifications and existing role names unless renaming is necessary. No rename is needed for the agreed permission changes: retain Front Line Operator / Front Line Manager and all existing technical role names. Business Administrator is prior discussion shorthand, not a new implemented type. No deletion/merger of client/supplier/agent roles approved.
+- Updated assessment matrix. Next round: client read-only Order scope, client manager self-administration and internal manager onboarding of client accounts; do not assume that retaining names means retaining every permission or activating every existing role.
+- Planning pull passed; reviewed matrix diff. No Linear, production, UI or account changes. Synchronize only assessment and memory.
