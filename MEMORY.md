@@ -3241,3 +3241,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 
 - Moved FRO-399, FRO-400 and FRO-401 to Todo and replaced Pending_Review with Ready at the user's request. Created the FRO team label Permissions and applied it to all three as requested.
 - Re-read each issue and verified Todo and the full label set (Ready, Permissions, Backend, Story). The descriptions, relations, attachments and other issue fields matched the pre-edit reads.
+
+### 2026-11-10 — FRO-360 public concept preview published and linked
+
+- User requested publication of the existing preview without password and adding its link to the ticket. Explicitly approved browser OAuth as an exception to the Pages-only token rule for this deployment. First OAuth callback timed out; fresh login succeeded. No credentials recorded.
+- Pinned Wrangler 4.45.0 created only Pages project fro-360-ef9045; deployment456520a8. Public deep link: https://fro-360-ef9045.pages.dev/?layout=export&state=default . Built existing self-contained HTML unchanged; one-file deployment, fictional fixtures, no production connection or existing Cloudflare-resource changes.
+- Anonymous HTTP200 and exact local/public SHA256 c0fc7fa6bc8f4e0a6db1013b758cef41d088f771b953ef8a7ee1057d6d41d4ab. Local/hosted Chromium checks each passed56 EN/EL state/scenario combinations at1440/400px, plus creation rendering, visible state switching, language toggle/reset; zero console/page errors, failed requests and page-wide overflow. Inspected all56 hosted screenshots via contact sheets. Existing native selects abbreviate some narrow labels and navigation tabs scroll horizontally; no design changes or exhaustive business acceptance claim.
+- Added only resource Public concept preview — no sign-in (FRO-360), attachment f25fb1ca-1587-45f0-9c1c-c42523094618. Independent full reread verified exact unchanged description/title/Backlog/labels/import,Pending_Review,Frontend,Spike/priority/relations and the correct new URL. No production branch or ticket readiness promotion. Existing preview remains concept feedback scope.
+- Updated preview README. Planning pull passed; synchronize these two records only, preserving unrelated drafts/patches/.wrangler. UI redesign/interview/consumer tracing do not apply to publishing unchanged HTML and adding the expressly requested resource.
