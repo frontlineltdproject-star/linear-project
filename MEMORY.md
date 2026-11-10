@@ -3069,3 +3069,11 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - Planning pull succeeded. Read memory, glossary and workflow learnings; grilling/domain-modeling loaded. Linear read access verified with FRO-238. Read-only gh preflight verified frontlineltdproject-star and production main 6aa259553cd9c86a8aaa157902088aa9a6bca83e. Authorization documentation distinguishes operators, managers, partner users and system admins; COMPANY_CREATE differs between managers/admins and operators. Source model is not verification of deployed user assignments.
 - Proposed discovery separates permitted actions, record scope and interface; start with concrete internal restrictions and client jobs, then a CEO-reviewed access matrix before UI/tickets. Pending first-round answers: internal examples, external user/job, desired CEO-review deliverable. Recommendations remain proposals.
 - No Linear or production changes, design artifacts, preview or branch. Later workflow steps await discovery; no resolved new glossary terms or ADR.
+
+### 2026-11-10 — Access discovery: simple first version and confidential files
+
+- User supplied a concrete restriction: CEO-produced confidential files must not be accessible to everyone, with customs department given as an example of excluded users. Exact file type, allowed audience and visibility of file existence remain unresolved.
+- User assumes client access concerns its Orders/vessels rather than the whole portal; explicitly not confirmed CEO intent. Do not treat vessel association alone as an approved access rule.
+- User supports a CEO brief/matrix but prefers a simple first version based on existing operator/manager/admin distinctions, potentially reserving users/companies/suppliers/vessels creation for admins, instead of exhaustive departmental mapping. Exact powers are proposals, not approved requirements.
+- Next discussion separates ordinary operational access, business administration and confidential-file access. Clarify file audience and whether business administrators automatically receive it; confirm proposed initial administration boundary before detailed UI/spec work. External client scope remains provisional.
+- Planning pull succeeded; production main unchanged at 6aa259553cd9c86a8aaa157902088aa9a6bca83e. No Linear, production, glossary or ADR changes.
