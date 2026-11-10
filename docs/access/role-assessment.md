@@ -68,7 +68,7 @@ Sources: [S1], [S2], [S3]. Order means the office's stock-list item, also called
 | E07 | Create a company | No | No | No | No | No | **Decide**; recommendation is to retain internal administration. | [S1] |
 | E08 | View/create/edit users, including status | No | Own company, compatible non-system roles | No | Own company, compatible non-system roles | No | Client decision (round 3): Front Line Managers administer client accounts initially; retain existing Client Manager user-management functionality for future use. No existing-account downgrade authorized. Supplier self-administration and future activation policy remain **Decide**. | [S1], [S3], [S6], [S9] |
 | E09 | Warehouse address maintenance | No | No | No | No | No | **Decide**; operational warehouse reference lookup is a different capability. | [S1], [S2] |
-| E10 | Order files, history, exports/PDFs and field-level visibility | Requires detailed review | Requires detailed review | Requires detailed review | Requires detailed review | No Order-derived access per current policy | **Verify + Decide**: review Order Documents-tab attachments, generated documents/PDFs, and full underlying entities separately. Download access need not grant full entity access, and a visible tab need not authorize every file. User initially agreed against automatic file exposure, then relayed staff report that clients currently see every uploaded file and only a notes field is internal. Treat this as reported current behavior, not verified deployment or blanket evidence for all entity fields. Desired policy is unresolved: preserve all Order uploads as client-visible, or introduce selective sharing. No change or new sharing control approved. Existing policy covers attachment inheritance and scoped lineage; detailed exposure requires a focused trace. | [S2] |
+| E10 | Order files, history, exports/PDFs and field-level visibility | All active owned/inherited Order attachments within Order access | Same | Same | Same | No Order-derived access per current policy | **Change confirmed by CEO via user**: internal-file mechanism is essential to replace server-based case filing. Current Order attachments have no per-file audience rule. File ownership, internal audience, sharing/defaults, existing files and migration remain to define; see internal filing discovery below. Other document/entity visibility stays open. | [S2], [S10], [S11], [S12] |
 
 ## C. Role structure and boundaries
 
@@ -81,6 +81,25 @@ Sources: [S1], [S2], [S3]. Order means the office's stock-list item, also called
 | R05 | Technical system administrator | Existing SA holds all authorities; generic user create/update cannot assign SYSTEM_ADMIN because it matches no company type | Keep outside everyday business model. Actual provisioning/support arrangements and deployment verification remain open; no removal or account change authorized. |
 | R06 | Future confidential invoice | User's example concerns a future feature | **Deferred** by explicit instruction. It does not justify adding department/file-access rules now. |
 | R07 | Current user's role | Missing Companies Create button reported | **Verify** via authorized current-profile read or administrator confirmation; no role inferred. |
+
+## Internal filing discovery — confirmed requirement, scope open
+
+The CEO confirms internal files are essential. Staff currently keep a substantial workflow outside the portal in per-case folders at a central company-server filepath; the aim is to bring that work into the new portal. This supersedes the unresolved keep-all-uploads-visible option. It does not authorize server access, bulk migration, folder deletion or implementation.
+
+Current source gap: Order attachment metadata has no per-file internal/client audience field. Listing/download rely on access to the Order, including files inherited through splits. Staff-only Shipment/Supplier Invoice/Export files already exist through owner-level permissions; they do not provide internal files inside a client-readable Order. No folder hierarchy is established by the inspected attachment model. [S10], [S11], [S12]
+
+| Area | Agreed or current fact | Next decision / trace |
+| --- | --- | --- |
+| Business need | Internal files must be supported to replace external filing | Confirm a representative case and what staff do with its files; do not reduce the requirement to a tab toggle. |
+| File owner | Existing attachments belong to business records | What does one office case/folder represent: one Order, one Shipment, several records, or another unit? No mapping approved. |
+| Internal audience | Clients must not see designated internal files | All Front Line staff or a restricted subset? Do not assume a new role or department model. |
+| Shared-file actions | Not decided | Who uploads, changes visibility, shares with clients, edits/replaces or removes files? |
+| Existing uploads | Currently readable through permitted Orders | Explicitly decide compatibility/defaults; no automatic exposure or retroactive hiding approved. |
+| Splits/inheritance | Existing child Orders link original files and authorize through the child | New audience rules must be enforced in inherited listing/download too; resolve who controls shared-file visibility. |
+| Other consumers | Filenames, previews/downloads and APIs can expose information | Trace full affected surfaces after owner/audience decisions, including metadata and direct links. |
+| Server replacement | Business objective confirmed | Future operating workflow and any historical migration are separate scope decisions; no filesystem access authorized. |
+
+Next interview: clarify the business case/folder unit and internal audience before choosing a UI or ticket boundary. Business vocabulary remains unresolved; no new Case entity or glossary mapping is assumed.
 
 ## Review rounds
 
@@ -114,3 +133,7 @@ Workflow position: preflight complete for source-led assessment; interactive dis
 [S7]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/vessels/VesselService.java
 [S8]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/vessels/Vessel.java
 [S9]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/users/UserStatus.java
+
+[S10]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/docs/workflows/attachments.md
+[S11]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/domain/attachments/Attachment.java
+[S12]: https://github.com/Frontline-Forwarding/frontline-forwarding/blob/6aa259553cd9c86a8aaa157902088aa9a6bca83e/frontline-forwarding-app/src/main/java/com/frontline/forwarding/web/attachments/service/AttachmentsApiService.java
