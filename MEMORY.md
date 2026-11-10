@@ -3134,3 +3134,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 - User prefers minimum modifications and existing role names unless renaming is necessary. No rename is needed for the agreed permission changes: retain Front Line Operator / Front Line Manager and all existing technical role names. Business Administrator is prior discussion shorthand, not a new implemented type. No deletion/merger of client/supplier/agent roles approved.
 - Updated assessment matrix. Next round: client read-only Order scope, client manager self-administration and internal manager onboarding of client accounts; do not assume that retaining names means retaining every permission or activating every existing role.
 - Planning pull passed; reviewed matrix diff. No Linear, production, UI or account changes. Synchronize only assessment and memory.
+
+### 2026-11-10 — Client read-only baseline and manager functionality preservation
+
+- User keeps read-only Order access for clients in first version. User accepts initially using Client Operator but explicitly requires preserving Client Manager functionality for possible future use; do not delete the role or its features. No existing account downgrade/deactivation or migration authorized.
+- User accepts Front Line Managers creating/maintaining client accounts, including lock/disable. Initial onboarding uses Client Operator; future Client Manager activation/assignment policy remains open.
+- Updated assessment E02/E06/E08/I10/R03. Remaining client review concerns visible information, documents and shipment tracking, not repeat decisions on operational editing or self-administration. Supplier/agent use remains unresolved. No permissions changed in production or Linear.
+- Planning pull passed; checked targeted matrix diff; synchronize only matrix and memory.
