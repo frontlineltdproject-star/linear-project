@@ -1,16 +1,16 @@
-# Access assessment — proposed Linear handoff
+# Access assessment — Linear handoff
 
 2026-11-10. Source: production `main` at `6aa259553cd9c86a8aaa157902088aa9a6bca83e`. Repository evidence is not deployed verification.
 
-## Proposed tickets
+## Created tickets
 
-| Draft | Literal title |
-| --- | --- |
-| [1](01-operational-permissions.md) | Access — allow operator cancellations and restrict warehouse-address editing |
-| [2](02-manager-administration.md) | Users — protect Front Line Manager administration with a designated permission |
-| [3](03-order-attachment-visibility.md) | Order attachments — Internal/External visibility and inherited-file access |
+| Linear issue | Approved draft | Literal title |
+| --- | --- | --- |
+| [FRO-399](https://linear.app/front-line-ltd/issue/FRO-399/access-allow-operator-cancellations-and-restrict-warehouse-address) | [1](01-operational-permissions.md) | Access — allow operator cancellations and restrict warehouse-address editing |
+| [FRO-400](https://linear.app/front-line-ltd/issue/FRO-400/users-protect-front-line-manager-administration-with-a-designated) | [2](02-manager-administration.md) | Users — protect Front Line Manager administration with a designated permission |
+| [FRO-401](https://linear.app/front-line-ltd/issue/FRO-401/order-attachments-internalexternal-visibility-and-inherited-file) | [3](03-order-attachment-visibility.md) | Order attachments — Internal/External visibility and inherited-file access |
 
-For all three: FRO / Backlog; labels Story, Backend, Pending_Review. Backend is the single Area label; each description includes frontend delivery. Priority unset; no assignee, project, milestone or parent proposed in this review. No blocking relations. Proposed relatedTo: draft 1 FRO-236/FRO-306; draft 2 FRO-235/FRO-236/FRO-243; draft 3 FRO-342/FRO-326/FRO-377. Current status/label metadata and issue bodies were read before preparing these drafts. No Linear write has occurred; final text and metadata require approval.
+All three are in FRO Backlog with Story, Backend and Pending_Review labels. Each description includes frontend delivery. Priority, assignee, project, milestone and parent are unset. Verified related issues: FRO-399 to FRO-236 and FRO-306, FRO-400 to FRO-235, FRO-236 and FRO-243, and FRO-401 to FRO-342, FRO-326 and FRO-377.
 
 ## Impact and ownership
 
@@ -38,7 +38,7 @@ Current searches covered permission, user, attachment, warehouse address and can
 
 - Preflight, interview and source consumer tracing completed.
 - Canvas/preview/UI branch skipped under the user's specification-only direction.
-- Three full descriptions prepared for chat review; no production code/account/data changes.
+- Three full descriptions approved in chat, created in Linear and verified after saving.
 - Runtime role tests, visual checks and deployed revision/assignments remain unverified. Each draft specifies isolated tests and read-only post-deployment checks.
 - CEO bootstrap requires an explicitly identified account at rollout. No account identity is inferred here.
 - Existing role names and external manager functionality remain; client/supplier operator initial use and agent deferral are onboarding choices, not role deletions.
