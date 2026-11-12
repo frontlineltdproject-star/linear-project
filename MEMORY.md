@@ -3314,3 +3314,7 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-12 — Ticket A (Create Order layout) will be text-only
 
 - User accepted: ticket A specifies the regrouping in text with a text wireframe (sketch) in the description, reusing existing components; no canvas or Pages preview unless the boss asks to approve the look first. The text must still settle group headings (titles vs dividers, EN/EL), how groups of 2–4 fields wrap in the current 4/2/1-column grid, and Greek label length. Ticket A not started yet; FRO-335 is Done, so A will likely be a new ticket related to FRO-335 and FRO-415.
+
+### 2026-11-12 — Ticket A paused at grill round 1
+
+- User was told to wait for the developer's new workspace and will make ticket A there, with a UI. No answers to round 1 yet; no Linear write. Agreed decisions, facts and the 8 round-1 questions saved in drafts/ticketA-create-order-layout-paused.md. Resume there; re-check production main (was 08e3555) and whether the text-only decision still holds.
