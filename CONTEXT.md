@@ -49,6 +49,10 @@ An individually identified physical handling unit belonging to an Order. A shipm
 **Supplier readiness**:
 The supplier's readiness information for an Order, including its expected readiness date and confirmation that the goods are ready for collection. It is separate from warehouse receipt, stock confirmation and Shipment packing readiness.
 
+**Not ready / Ready (Μη έτοιμη / Έτοιμη)**:
+The two supplier-readiness states of an Order before its goods reach stock. Not ready means the supplier has not confirmed the goods are ready for collection, whether or not an expected readiness date is known; the presence of that date, not a separate state, tells the office whether a date has been received. Ready means the supplier has confirmed readiness. Replaces the earlier Awaiting Readiness Date / Received Readiness Date distinction.
+_Avoid_: Awaiting Readiness Date, Received Readiness Date (as states)
+
 **Order physical summary**:
 The breakdown of an Order's collis by their actual physical stages and locations. Warehouse-filtered counts describe the matching collis separately from the Order's overall contents.
 
