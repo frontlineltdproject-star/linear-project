@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-12 — FRO-414 AADE myDATA v2.0.2 Phase B1 created (child of FRO-285)
+
+- Trigger: user asked whether myDATA changed for delivery notes. Read production main `08e3555` (release 0.0.14): 9.3 via SendInvoices, RequestTransmittedDocs recovery, CancelInvoice. Official AADE Delivery Note API v2.0.2 and ERP API v2.0.2 PDFs (Sept 2026) read in full. Nothing breaks today (no new mandatory 9.3 fields; movePurpose 1–5/7–14/19/20 still valid; parser tolerant). Phase B1 is mandatory from 1/1/2027 per Α.1198/2026 (ΦΕΚ Β 5905/30.09.2026); B2 (TARIC/item coding) 1/1/2028.
+- Duplicate check: FRO-285 (Chris's Phase B epic, July, pre-v2.0.1, no deadline/children) exists → user chose a **new child**. Grill (clickable, Greek): Frontline is carrier **sometimes / third parties other times** (both); priority High, due 2026-12-31. The user asked why the recipient flags matter and said the office only needs to see *whether* a note closed and *who* closed it → status + last-event `actorVat` from GetDeliveryNoteStatus. Grill ran via AskUserQuestion rounds without loading grilling/domain-modeling; no vocabulary/ADR earned.
+- Created **FRO-414** (https://linear.app/front-line-ltd/issue/FRO-414/delivery-notes-aade-mydata-v202-phase-b1-digital-movement-tracking): Backlog, High, due 2026-12-31, parent FRO-285, labels Pending_Review / Business_Input / delivery note / Story / Integration. Both PDFs uploaded and linked at the end of the description (not Resources attachments). Re-read verified. Mentions auto-added related FRO-361/284/357/283 (user approved keeping them). Draft: `drafts/fro285-child-aade-phase-b1.md`.
+- Open before Ready: (1) `nonObligatedRecipient` / `withoutDigitalTransportTracking` per recipient → accountant; (2) RegisterTransfer as an explicit action vs on Shipment dispatch, and the default transportType; (3) source of carrier ΑΦΜ when Frontline carries. Key gotcha recorded in the ticket: AADE CancelInvoice works only while the movement status is `Registered`.
+
 ### 2026-11-09 — Next flow recommendation and parallel review boundary
 
 - After creating FRO-384/385, user requested the next review and flagged another active chat. Read the latest task in “Check production review progress” (01a1c024-28a1-7942-b662-f252b699586b): user explicitly assigned Shipment Invoice mapping/review there, with Export/Customs/VAT paperwork excluded. Delivery Note review there already produced FRO-381–383. No message or instruction was sent to that chat.

@@ -242,3 +242,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-354 step 4e record](MEMORY.md#2026-10-27--fro-354-frontend-prepared-and-verified-push-gate-pending).
 - Action next time: Open pickers with a click in scripted checks, and confirm `document.activeElement` instead of relying on focus events or timing.
 - Status: Active.
+
+### 2026-11-12 — Ticket work started from the wrong folder's rules
+
+- Problem: FRO-414 was started from a session rooted in `FrontLine/` and followed the global `frontline-ticket-flow` skill plus `FrontLine/Linear/MEMORY.md`, not this project's AGENTS.md. The user caught it mid-draft. The mandatory planning pull, WORKFLOW_LEARNINGS read and consumer trace only happened after the correction.
+- Evidence: [FRO-414 record](MEMORY.md#2026-11-12--fro-414-aade-mydata-v202-phase-b1-created-child-of-fro-285).
+- Action next time: For any FRO ticket work, whatever the session's starting folder, open `Linear/Tickets with George/AGENTS.md` first, run its `git pull --ff-only`, and use its MEMORY/CONTEXT/drafts. Do this before the grill.
+- Status: Active.
