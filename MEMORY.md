@@ -1,5 +1,13 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-19 — FRO-285 gains AADE phase roadmap + Phase B2 section
+
+- User asked to add to FRO-285 what has to be built in the future. Planning pull OK; FRO-285 unchanged since 2026-11-12 before the save. Production main `25f747b` read for B2 facts: 9.3 lines today = one per Order (itemCode = Order id, itemDescr "Stock ID n", qty = collis, unit 1); supplier invoice rows (`freight_purchase_order_invoice_row`) have description (required), hs_code (optional), quantity, unit PC/SET/PKT; splits move rows to the child.
+- ERP API v2.0.2 §5.4: `TaricNo` optional, exactly 10 chars; `itemCode` free text ≤50; AADE gives no code catalogue or source for either.
+- **Decision (user):** for B2, the portal user enters item code + TARIC manually; automation (supplier invoices, customs declarations, EU TARIC lookup, Helper) is researched separately and does not block B2.
+- Inserted "## Roadmap by AADE phase" (A in force / FRO-247 + Railway prod-enablement still to confirm; B1 1/1/2027 → FRO-414; B2 1/1/2028, not yet ticketed) and "### Phase B2 — item coding" before "## Related decision" via patch. Re-read: labels Integration/Epic/delivery note, assignee and relations (FRO-247, FRO-284) unchanged; no auto-added FRO-414 relation. Draft `drafts/fro285-phase-roadmap-addition.md`.
+- Open before a B2 ticket: published AADE B2 field spec and date (one source says 2027); lines sourced from invoice rows? Orders with no rows; where manual entry happens and handling of non-10-char TARIC; PC/SET/PKT → AADE measurementUnit mapping.
+
 ### 2026-11-12 — FRO-414 AADE myDATA v2.0.2 Phase B1 created (child of FRO-285)
 
 - Trigger: user asked whether myDATA changed for delivery notes. Read production main `08e3555` (release 0.0.14): 9.3 via SendInvoices, RequestTransmittedDocs recovery, CancelInvoice. Official AADE Delivery Note API v2.0.2 and ERP API v2.0.2 PDFs (Sept 2026) read in full. Nothing breaks today (no new mandatory 9.3 fields; movePurpose 1–5/7–14/19/20 still valid; parser tolerant). Phase B1 is mandatory from 1/1/2027 per Α.1198/2026 (ΦΕΚ Β 5905/30.09.2026); B2 (TARIC/item coding) 1/1/2028.
