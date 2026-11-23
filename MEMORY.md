@@ -1,5 +1,12 @@
 # Linear — ticket creation and editing memory
 
+### 2026-11-23 — FRO-302 implementation check (read-only)
+
+- User asked whether FRO-302 is outdated or already implemented. FRO-302 is now Todo/Ready+Order, assigned to Chris, 0.0.17. Its description already has a "may be done on main" warning added today. Production main still `25f747b`.
+- Verified via gh: the core change is already on main. The shipment partial selection creates an IN_STOCK child holding the selected collis; unselected collis stay on the parent. Each partial shipment from the parent adds a sibling. Collis keep their identity. Invoice rows move under FRO-301, which is live. Shipping the full Order creates no split.
+- Gaps against the ticket: (1) `PurchaseOrderSplitLineageTag.from` tags a parent BALANCE only if it has no parent itself, and keeps the tag even when no collis remain. (2) The parent's Split relationships card (`order-family-card.tsx`) shows root/parent/child links and a tree with status. It has no per-child split date, reason or colli shipment/destination list. Split dates are only in the invoice-row reconciliation; reasons are only in History. Old-split preservation was not verified.
+- No Linear write. A recommendation was given in chat. Earlier cancellation proposal (FRO-362 context) still unapproved.
+
 ### 2026-11-19 — FRO-285 gains AADE phase roadmap + Phase B2 section
 
 - User asked to add to FRO-285 what has to be built in the future. Planning pull OK; FRO-285 unchanged since 2026-11-12 before the save. Production main `25f747b` read for B2 facts: 9.3 lines today = one per Order (itemCode = Order id, itemDescr "Stock ID n", qty = collis, unit 1); supplier invoice rows (`freight_purchase_order_invoice_row`) have description (required), hs_code (optional), quantity, unit PC/SET/PKT; splits move rows to the child.
