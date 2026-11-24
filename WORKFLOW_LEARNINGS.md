@@ -249,3 +249,10 @@ AGENTS.md remains the authoritative workflow.
 - Evidence: [FRO-414 record](MEMORY.md#2026-11-12--fro-414-aade-mydata-v202-phase-b1-created-child-of-fro-285).
 - Action next time: For any FRO ticket work, whatever the session's starting folder, open `Linear/Tickets with George/AGENTS.md` first, run its `git pull --ff-only`, and use its MEMORY/CONTEXT/drafts. Do this before the grill.
 - Status: Active.
+
+### 2026-11-24 — "#5" in a description becomes a pull-request link
+
+- Problem: FRO-444's description referred to table rows as "#5, #6, #7"; Linear auto-linked them to unrelated pull requests in another repository (Outlook-optimization #5–#7).
+- Evidence: [FRO-444 record](MEMORY.md#2026-11-24--fro-444-created-every-picker-and-list-reaches-all-records).
+- Action next time: Never write a bare `#<number>` in Linear text; say "row 5" / "Scope rows 5–7". Re-read the saved description for `<pull-request` tags.
+- Status: Active.

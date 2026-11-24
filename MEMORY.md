@@ -3333,3 +3333,10 @@ Resumed policy: committed at3820e89, fingerprint b1a66b227355e92a45dc1cafa04530b
 ### 2026-11-12 — Ticket A paused at grill round 1
 
 - User was told to wait for the developer's new workspace and will make ticket A there, with a UI. No answers to round 1 yet; no Linear write. Agreed decisions, facts and the 8 round-1 questions saved in drafts/ticketA-create-order-layout-paused.md. Resume there; re-check production main (was 08e3555) and whether the text-only decision still holds.
+
+### 2026-11-24 — FRO-444 created: every picker and list reaches all records
+
+- Trigger: after the old-portal Third Country migration + all-metadata import into the Railway UAT DB (291 clients, 3,857 suppliers), the user saw that the Order form Supplier picker does not show them. Cause: `GetPurchaseOrderFormOptions` loads clients/suppliers with `size: 100` and the combobox only filters locally.
+- Flow: pull, preflight (gh frontlineltdproject-star, push true; main 25f747b120073b09c75afcb81dace2392518d914; Linear read), duplicate search (none; related FRO-418, FRO-428), grill round 1 (Q1 user: "every list related to the portal has to be complete"; Q2–Q5 recommended: server search 20/≈300 ms, client vessels + invoicing via companyById on pick, cache ~5 min + selected name always shown + trigram index only as optional follow-up + server cap 100 stays, one Story). Round 2 skipped by user; rows 5–7 (historical-arrival candidates, eligible Orders: search + Load more; Users card: Load more + total) use my round-2 recommendations as defaults. Canvas/preview/4e skipped (no new UI, draft-only request).
+- Saved FRO-444 (Backlog; Story, Frontend, Order, Shipment, Improvement, Pending_Review; project Pre-releases 0.0.x, milestone 0.0.17 at user request; relatedTo FRO-418, FRO-428). Area single-select → Frontend only although row 4 (REST /api/v1/suppliers + MCP frontline_query_suppliers) is backend. Re-read verified labels, milestone, relations.
+- Out of scope recorded: vessel lists (load all 1,705), already-paged tables, raising the cap, name index (follow-up).
